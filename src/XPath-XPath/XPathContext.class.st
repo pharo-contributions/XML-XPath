@@ -30,6 +30,21 @@ XPathContext class >> new [
 ]
 
 { #category : #instructions }
+XPathContext >> andAttributes: namesCollection [
+	"Look up an attribute"
+	| allAttributes |
+	
+	allAttributes := OrderedCollection new: stack size.
+	self pop do:
+		[:element | 
+			| attributes |
+			attributes := element attributes keys asSet.
+			( attributes = namesCollection asSet )
+				ifTrue: [ allAttributes add: element attributes ] ].
+	self push: ( allAttributes collect: [: each | each values ] )
+]
+
+{ #category : #instructions }
 XPathContext >> at: nameIndex [ 
 	| name values attribute |
 	name := path literalAt: nameIndex.
@@ -175,6 +190,21 @@ XPathContext >> name: nameIndex [
 		[:element | (element name = name) or: [name = '*']]).
 		"[:element | (element tag type = name) or: [name = '*']])."
 	self push: matches.
+]
+
+{ #category : #instructions }
+XPathContext >> orAttributes: namesCollection [
+	"Look up an attribute"
+	| allAttributes |
+	
+	allAttributes := OrderedCollection new.
+	self pop do:
+		[:element | 
+			| attributes |
+			attributes := element attributes asSet.
+			( attributes includesAnyOf: namesCollection asSet )
+				ifTrue: [ allAttributes add: element attributes ] ].
+	self push: allAttributes values
 ]
 
 { #category : #instructions }

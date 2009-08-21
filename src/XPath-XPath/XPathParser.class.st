@@ -28,14 +28,37 @@ XPathParser >> emit: string [
 ]
 
 { #category : #emitting }
+XPathParser >> emitAndBetween: operandCollection [
+
+	| code |
+	
+	code := String streamContents: [: s |
+		s nextPutAll: 'self andAttributes: ';
+			nextPut: ${;
+			space.
+		operandCollection do: [: each |
+			s nextPutAll: ( self quoted: each ).
+			  ( operandCollection indexOf: each ) = operandCollection size
+				ifFalse: [ s nextPut: $. ] ].
+		s nextPut: $};
+			nextPut: $. ].
+	self emit: code.
+]
+
+{ #category : #emitting }
 XPathParser >> emitArgList: args [
 ]
 
 { #category : #emitting }
 XPathParser >> emitAttribute: name [ 
-	| |
-	self emit: 'self attribute: '
-			, (self quoted: name) , '.'
+	
+	| code |
+
+	code := String streamContents: [: str |
+		str nextPutAll: 'self attribute: ';
+			nextPutAll: (self quoted: name);
+			nextPut: $.. ].
+	self emit: code
 ]
 
 { #category : #emitting }
@@ -45,8 +68,15 @@ XPathParser >> emitDescendants [
 
 { #category : #emitting }
 XPathParser >> emitElement: name [ 
-	self emit: 'self element: '
-			, (self quoted: name) , '.'
+
+	| code |
+
+	code := String streamContents: [: str |
+		str nextPutAll: 'self element: ';
+			nextPutAll: (self quoted: name);
+			nextPut: $.. ].
+	self emit: code
+
 ]
 
 { #category : #emitting }
@@ -64,6 +94,37 @@ XPathParser >> emitFunction: name [
 	"No lookup of function name in a reserved word table; assume it's right and embed in  
 	instructions"
 	self emit: ('self ' , name , '.').
+]
+
+{ #category : #emitting }
+XPathParser >> emitOperation: aCollection [
+	
+	| operandsCollection |
+
+	operandsCollection := aCollection select: [: each | ( aCollection indexOf: each ) odd ].
+	aCollection second = 'and'
+		ifTrue: [ self emitAndBetween: operandsCollection ]
+		ifFalse: [ aCollection second = '|'
+					ifTrue: [ self emitOrBetween: operandsCollection ] ].
+
+]
+
+{ #category : #emitting }
+XPathParser >> emitOrBetween: operandCollection [
+
+	| code |
+	
+	code := String streamContents: [: s |
+		s nextPutAll: 'self orAttributes: ';
+			nextPut: ${;
+			space.
+		operandCollection do: [: each |
+			s nextPutAll: ( self quoted: each ).
+		  ( operandCollection indexOf: each ) = operandCollection size
+			ifFalse: [ s nextPut: $. ] ].
+		s nextPut: $};
+			nextPut: $. ].
+	self emit: code.
 ]
 
 { #category : #emitting }
@@ -131,16 +192,30 @@ XPathParser >> nextNumber [
 
 ]
 
+{ #category : #streaming }
+XPathParser >> nextOperator [
+	"Assume the stream is positioned at the beginning of an operator. 
+	Read in that name and return it as a string." 
+	
+	^ String streamContents: [: s |	
+		| char |
+		[ char := self peek. 
+		char = Character space ]
+			whileFalse: [ 
+				char := self next.
+				s nextPut: char ]
+		].
+
+		
+
+]
+
 { #category : #parsing }
 XPathParser >> parse [
 	"Parse the path found on the stream"
 	self parseExpression.
 	self emitFinish.
 	^ pathSource
-]
-
-{ #category : #'parsing-unimplemented' }
-XPathParser >> parseAndExpression [
 ]
 
 { #category : #parsing }
@@ -219,9 +294,9 @@ XPathParser >> parseLocation [
 	| char |
 	[char := self peek.
 	char notNil & ((char = $)) not)]
-		whileTrue: ["Check to see if it's an element test"
-			(char isLetter
-					or: [char = $*])
+		whileTrue: [
+			"Check to see if it's an element test"
+			( char isLetter or: [char = $*] )
 				ifTrue: [self parseElementOrFunction].
 			char = $@
 				ifTrue: [self parseAttribute].
@@ -230,7 +305,9 @@ XPathParser >> parseLocation [
 			char = $/
 				ifTrue: [self parseSlash].
 			char = $[
-				ifTrue: [self parseFilter]]
+				ifTrue: [self parseFilter].
+			char = $(
+				ifTrue: [self parseOperator] ]
 ]
 
 { #category : #'parsing-unimplemented' }
@@ -239,6 +316,29 @@ XPathParser >> parseNotExpression [
 
 { #category : #'parsing-unimplemented' }
 XPathParser >> parseNumber [
+]
+
+{ #category : #parsing }
+XPathParser >> parseOperator [
+
+	| nameLeft operator nameRight |
+	
+	" Skip the ( "
+	self next.
+	" Skip the @ "
+	self next.
+	nameLeft := self nextName.
+	self peek = Character space
+		ifTrue: [ 
+			self next.
+			operator := self nextOperator ].
+	" Skip space "
+	self next.		
+	" Skip the @ "
+	self next.		
+	nameRight := self nextName.
+	self emitOperation: { nameLeft . operator . nameRight }.
+
 ]
 
 { #category : #'parsing-unimplemented' }
