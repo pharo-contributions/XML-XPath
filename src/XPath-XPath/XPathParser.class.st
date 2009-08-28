@@ -321,8 +321,10 @@ XPathParser >> parseNumber [
 { #category : #parsing }
 XPathParser >> parseOperator [
 
-	| nameLeft operator nameRight |
+	| nameLeft operator rem |
 	
+	self needsWork. " a lot really "
+	rem := OrderedCollection new.
 	" Skip the ( "
 	self next.
 	" Skip the @ "
@@ -332,12 +334,22 @@ XPathParser >> parseOperator [
 		ifTrue: [ 
 			self next.
 			operator := self nextOperator ].
-	" Skip space "
-	self next.		
-	" Skip the @ "
-	self next.		
-	nameRight := self nextName.
-	self emitOperation: { nameLeft . operator . nameRight }.
+	rem add: nameLeft;
+		add: operator.
+	[ self peek = Character space and: [ self peek ~= $) ] ]
+		whileTrue: [ 
+			" Skip space "
+			self next.		
+			" Skip the @ "
+			self next.		
+			rem add: self nextName.
+			self peek = $)
+				ifFalse: [ self next.
+						rem add: self nextOperator ]
+		].
+				
+				
+	self emitOperation: rem.
 
 ]
 
