@@ -7,7 +7,7 @@ Class {
 	#classVars : [
 		'CanonicalTable'
 	],
-	#category : 'XPath-XML'
+	#category : #'XPath-XML'
 }
 
 { #category : #accessing }
@@ -20,6 +20,11 @@ XMLNode >> contentsDo: aBlock [
 ]
 
 { #category : #enumerating }
+XMLNode >> elementsAndContentsDo: aBlock [
+	self elementsDo: aBlock
+]
+
+{ #category : #enumerating }
 XMLNode >> elementsDo: aBlock [
 ]
 
@@ -29,7 +34,7 @@ XMLNode >> firstTagNamed: aSymbol [
 
 	| answer |
 
-	self elementsDo: [:node | (answer _ node firstTagNamed: aSymbol) ifNotNil: [^answer]].
+	self elementsDo: [:node | (answer := node firstTagNamed: aSymbol) ifNotNil: [^answer]].
 	^nil
 ]
 
@@ -41,7 +46,7 @@ XMLNode >> firstTagNamed: aSymbol with: aBlock [
 	| answer |
 
 	self elementsDo: [:node |
-		(answer _ node firstTagNamed: aSymbol with: aBlock) ifNotNil: [^answer]].
+		(answer := node firstTagNamed: aSymbol with: aBlock) ifNotNil: [^answer]].
 	^nil
 ]
 

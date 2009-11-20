@@ -15,7 +15,7 @@ Class {
 		'source',
 		'block'
 	],
-	#category : 'XPath-XPath'
+	#category : #'XPath-XPath'
 }
 
 { #category : #'instance creation' }

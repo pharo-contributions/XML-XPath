@@ -12,7 +12,7 @@ Class {
 		'results',
 		'done'
 	],
-	#category : 'XPath-XPath'
+	#category : #'XPath-XPath'
 }
 
 { #category : #'instance creation' }

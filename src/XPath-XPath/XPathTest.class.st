@@ -5,7 +5,7 @@ Class {
 		'xml',
 		'document'
 	],
-	#category : 'XPath-Tests'
+	#category : #'XPath-Tests'
 }
 
 { #category : #'as yet unclassified' }

@@ -6,7 +6,7 @@ Class {
 		'path',
 		'pathSource'
 	],
-	#category : 'XPath-XPath'
+	#category : #'XPath-XPath'
 }
 
 { #category : #'as yet unclassified' }
