@@ -3,7 +3,7 @@ Extension { #name : #XMLDOMParser }
 { #category : #'*xpath-content' }
 XMLDOMParser >> characters: aString [ 
 	| newElement |
-	newElement := XMLStringNode string: aString.
+	newElement := XMLString string: aString.
 	newElement parent: self top.
 	self top addContent: newElement
 ]
