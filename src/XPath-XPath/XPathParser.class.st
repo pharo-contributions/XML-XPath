@@ -9,12 +9,12 @@ Class {
 	#category : #'XPath-XPath'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 XPathParser class >> new [
 	^super new initialize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 XPathParser class >> on: aStream [
 	| parser |
 	parser := self new.
@@ -396,7 +396,7 @@ XPathParser >> peek [
 	^stream peek
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 XPathParser >> quoted: string [
 	^ ($' asString) , string , ($' asString)
 ]

@@ -55,7 +55,7 @@ XPath >> block: aBlock [
 	block := aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 XPath >> compile [
 	| methodNode |
 	methodNode := Parser new
@@ -65,10 +65,20 @@ XPath >> compile [
 				context: nil
 				notifying: nil
 				ifFail: [].
-	^ methodNode generate: #(0 0 0 0 )
+	^ methodNode generate: self emptyTrailer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
+XPath >> emptyTrailer [
+	
+	| cmtClass |
+
+	^ ( Smalltalk hasClassNamed: ( cmtClass := #CompiledMethodTrailer ) )
+		ifTrue: [ ( Smalltalk at: cmtClass ) empty ]
+		ifFalse: [ #(0 0 0 0) ]
+]
+
+{ #category : #private }
 XPath >> in: root [ 
 	"Search the specified document / root for nodes matching this xpath"
 	| context |

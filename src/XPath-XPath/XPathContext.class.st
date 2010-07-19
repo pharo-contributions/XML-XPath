@@ -24,7 +24,7 @@ XPathContext class >> for: aPath in: aDocument [
 	^context
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 XPathContext class >> new [
 	^super new initialize.
 ]
@@ -174,7 +174,7 @@ XPathContext >> last [
 				collect: [:element | element elements last])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 XPathContext >> mark [
 	stack push: pc.
 	marker := stack size.
@@ -268,7 +268,7 @@ XPathContext >> results [
 	^results
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 XPathContext >> revert [
 	[stack size > marker]
 		whileTrue: [stack pop].
