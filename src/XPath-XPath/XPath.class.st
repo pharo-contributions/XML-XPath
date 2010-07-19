@@ -83,8 +83,8 @@ XPath >> in: root [
 
 { #category : #initialization }
 XPath >> initialize [
-	instructions _ OrderedCollection new.
-	literals _ OrderedCollection new.
+	instructions := OrderedCollection new.
+	literals := OrderedCollection new.
 	^self
 ]
 
