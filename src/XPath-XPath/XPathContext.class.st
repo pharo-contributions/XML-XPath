@@ -111,7 +111,7 @@ XPathContext >> descendants [
 	children := OrderedCollection new.
 	[parents isEmpty]
 		whileFalse: [parents
-				do: [:parent | parent isTag
+				do: [:parent | parent isElement
 						ifTrue: [children addAll: parent elements]].
 			allDescendants addAll: children.
 			parents := children.
@@ -124,17 +124,15 @@ XPathContext >> either: arg1 or: arg2 [
 ]
 
 { #category : #instructions }
-XPathContext >> element: name [
+XPathContext >> element: elemName [
 	| children matches |
 	children := OrderedCollection new.
-	self pop
-		do: [:element | "[:element | children addAll: element elements]."
-			element isTag
-				ifTrue: [children
-						addAll: (element elements
-								select: [:element2 | element2 isTag])]].
-	matches := (children select:
-		[:element | (element name = name) or: [name = '*']]).
+	self root name = elemName
+		ifTrue: [ self parent pop do: [ : element | children addAll: (element elements select: #isElement) ] ]
+		ifFalse: [ self pop do: [ : element | 
+					element isElement
+						ifTrue: [ children addAll: (element elements select: #isElement) ] ] ].
+	matches := (children select: [ : element | element name = elemName or: [ elemName = '*' ] ]).
 	self push: matches.
 ]
 
@@ -144,10 +142,10 @@ XPathContext >> elements [
 	children := OrderedCollection new.
 	self pop
 		do: [:element | "[:element | children addAll: element elements]."
-			element isTag
+			element isElement
 				ifTrue: [children
 						addAll: (element elements
-								select: [:element2 | element2 isTag])]].
+								select: [:element2 | element2 isElement])]].
 	self push: children
 ]
 

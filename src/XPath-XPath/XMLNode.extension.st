@@ -1,12 +1,6 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XPath' }
-XMLNode >> addContent: contentString [
-
-	SAXParseException signal: 'Illegal string data.'
-]
-
-{ #category : #'*XPath' }
 XMLNode >> contentsDo: aBlock [
 
 ]
