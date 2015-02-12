@@ -8,8 +8,8 @@ Class {
 		'function',
 		'returnType',
 		'functionName',
-		'maxArguments',
 		'minArguments',
+		'maxArguments',
 		'argumentTypes'
 	],
 	#classInstVars : [

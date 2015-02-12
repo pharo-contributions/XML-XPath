@@ -21,14 +21,17 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each | | totalAdded |
+	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestor |
 		totalAdded := 0.
-		each ancestorNodesDo: [:ancestor |
-			((copy includes: ancestor) not
-				and: [aNodeTestBlock value: ancestor])
-				ifTrue: [
-					copy addLast: ancestor.
-					totalAdded := totalAdded + 1]].
+		ancestor := each parent.
+		[ancestor isNil
+			or: [copy includes: ancestor]]
+			whileFalse: [
+				(aNodeTestBlock value: ancestor)
+					ifTrue: [
+						copy addLast: ancestor.
+						totalAdded := totalAdded + 1].
+				ancestor := ancestor parent].
 		totalAdded > 1
 			ifTrue: [
 				copy
@@ -44,19 +47,22 @@ XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each | | totalAdded |
+	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestor |
 		totalAdded := 0.
 		((copy includes: each) not
 			and: [aNodeTestBlock value: each])
 			ifTrue: [
 				copy addLast: each.
 				totalAdded := 1].
-		each ancestorNodesDo: [:ancestor |
-			((copy includes: ancestor) not
-				and: [aNodeTestBlock value: ancestor])
-				ifTrue: [
-					copy addLast: ancestor.
-					totalAdded := totalAdded + 1]].
+		ancestor := each parent.
+		[ancestor isNil
+			or: [copy includes: ancestor]]
+			whileFalse: [
+				(aNodeTestBlock value: ancestor)
+					ifTrue: [
+						copy addLast: ancestor.
+						totalAdded := totalAdded + 1].
+				ancestor := ancestor parent].
 		totalAdded > 1
 			ifTrue: [
 				copy

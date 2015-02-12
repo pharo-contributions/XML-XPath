@@ -25,6 +25,8 @@ or with one message:
 			(XPathContext new
 				variableAt: 'name' put: 'value';
 				yourself).
+
+Compiled XPaths are cached for performance.
 "
 Class {
 	#name : #XPath,

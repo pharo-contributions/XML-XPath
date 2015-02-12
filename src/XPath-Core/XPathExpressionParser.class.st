@@ -259,12 +259,17 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 	self peekForLocationPathSeparator
 		ifFalse: [^ false].
 
+	"// followed by a node test is the same as
+	descendant:: followed by the node test"
 	currentAxis axisSpecifier: 'descendant'.
 	nodeTestParser parse
 		ifTrue: [
 			self peekForPredicates.
 			^ true]
 		ifFalse: [
+			"// followed by an abbreviated step or step with an
+			explicit axis is the same as descendant-or-self::node()/
+			followed by the step"
 			currentAxis
 				axisSpecifier: 'descendant-or-self';
 				handleWith: handler.
