@@ -69,8 +69,13 @@ XPathTest >> testAncestor [
 { #category : #testing }
 XPathTest >> testAncestorOrSelf [
 	self assert:
-		(XPath for: '//ancestor-or-self::node()' in: document) =
-			document allNodes reversed
+		(XPath
+			for: '//node() [ count( child::node() ) = 0]'
+			in: document) = (document allNodesSelect: [:each | each hasChildren not]).
+	self assert:
+		(XPath
+			for: '//node( )[count(child::node( ))=0]/ancestor-or-self::node( )'
+			in: document) = document allNodes reversed
 ]
 
 { #category : #testing }
