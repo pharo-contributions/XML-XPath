@@ -45,7 +45,7 @@ ConfigurationOfXPath class >> catalogContactInfo [
 { #category : #catalog }
 ConfigurationOfXPath class >> catalogDescription [
 
-	^ 'A basic XPath library for Squeak and Pharo, leveraging the XML parsing capabilities now included in the base image. Modifies XMLNode to better support XPath. Handles basic XPath locator expressions for elements and attributes; returns a collection of XMLNodes matching the expression, if any.'
+	^ 'An XPath library for Pharo, Squeak, and Gemstone leveraging the XML parsing capabilities of XMLParser. Supports XPath 1.0 syntax with extensions.'
 ]
 
 { #category : #catalog }
@@ -57,7 +57,7 @@ The following example retrieves the language types as found in the UNICODE Commo
 [[[ 
 | doc |
 doc := (XMLDOMParser onURL: ''http://unicode.org/repos/cldr/trunk/common/supplemental/supplementalData.xml'') parseDocument.
-(XPath for: ''/languageData/language/@type'') in: doc.
+(XPath for: ''//languageData/language/@type'') in: doc.
 ]]]
 
 The package contains SUnit tests in the XPathTest class.'
@@ -220,7 +220,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.1'.
+	spec for: #'common' version: '1.0.2'.
 
 ]
 
@@ -232,6 +232,17 @@ ConfigurationOfXPath >> version101: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.8'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.4'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version102: spec [ 
+        <version: '1.0.2' imports: #('1.0.1-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.9'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.5'.
                 ].
 ]
 
