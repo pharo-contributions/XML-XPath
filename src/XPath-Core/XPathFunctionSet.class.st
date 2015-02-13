@@ -18,6 +18,7 @@ XPathFunctionSet class >> default [
 		XPathConcatFunction +
 		XPathContainsFunction +
 		XPathCountFunction +
+		XPathEndsWithFunction +
 		XPathFalseFunction +
 		XPathFloorFunction +
 		XPathLangFunction +

@@ -7,10 +7,10 @@ Class {
 	#name : #XPathContext,
 	#superclass : #Object,
 	#instVars : [
-		'functionStack',
-		'functions',
 		'variables',
-		'namespaceScope'
+		'functions',
+		'namespaceScope',
+		'functionStack'
 	],
 	#classInstVars : [
 		'defaultFunctions'
@@ -28,7 +28,7 @@ XPathContext class >> defaultFunctions: aFunctionSet [
 	defaultFunctions := aFunctionSet
 ]
 
-{ #category : #functions }
+{ #category : #accessing }
 XPathContext >> addFunction: aFunction [
 	functions := self functions + aFunction
 ]
@@ -73,22 +73,23 @@ XPathContext >> functions [
 	^ functions ifNil: [functions := self class defaultFunctions]
 ]
 
-{ #category : #functions }
+{ #category : #accessing }
 XPathContext >> functions: aFunctionSet [
 	functions := aFunctionSet
 ]
 
-{ #category : #namespaces }
-XPathContext >> hasNamepaces [
-	^ namespaceScope notNil and: [namespaceScope hasNamespaces]
+{ #category : #testing }
+XPathContext >> hasNamespaces [
+	^ namespaceScope notNil
+		and: [namespaceScope hasNamespaces]
 ]
 
-{ #category : #functions }
+{ #category : #testing }
 XPathContext >> includesFunction: aFunction [
 	^ self functions includes: aFunction
 ]
 
-{ #category : #variables }
+{ #category : #testing }
 XPathContext >> includesVariable: aVariableName [
 	^ self variables includesKey: aVariableName
 ]
@@ -97,11 +98,6 @@ XPathContext >> includesVariable: aVariableName [
 XPathContext >> initialize [
 	super initialize.
 	functionStack := OrderedCollection new.
-]
-
-{ #category : #namespaces }
-XPathContext >> isDeclaredPrefix: aPrefix [
-	^ self namespaceScope includesPrefix: aPrefix
 ]
 
 { #category : #private }
@@ -126,7 +122,7 @@ XPathContext >> push: anObject [
 	^ functionStack addLast: anObject
 ]
 
-{ #category : #functions }
+{ #category : #accessing }
 XPathContext >> removeFunction: aFunction [
 	functions := self functions - aFunction
 ]
@@ -138,7 +134,7 @@ XPathContext >> resolvePrefix: aPrefix [
 
 { #category : #private }
 XPathContext >> testForAnyLocalNameAfterPrefix: aPrefix [
-	self hasNamepaces
+	self hasNamespaces
 		ifTrue: [| namespaceUri |
 			namespaceUri := self resolvePrefix: aPrefix.
 			^ [:node |
@@ -155,7 +151,7 @@ XPathContext >> testForAnyLocalNameAfterPrefix: aPrefix [
 
 { #category : #private }
 XPathContext >> testForLocalName: aLocalName [
-	self hasNamepaces
+	self hasNamespaces
 		ifTrue: [
 			"in this mode an unqualified name matches only another
 			unqualfied name with the same local part"
@@ -170,7 +166,7 @@ XPathContext >> testForLocalName: aLocalName [
 
 { #category : #private }
 XPathContext >> testForPrefix: aPrefix localName: aLocalName [
-	self hasNamepaces
+	self hasNamespaces
 		ifTrue: [| namespaceUri |
 			namespaceUri := self resolvePrefix: aPrefix.
 			^ [:node |
@@ -192,28 +188,28 @@ XPathContext >> undeclarePrefix: aPrefix [
 	self namespaceScope unmapPrefix: aPrefix
 ]
 
-{ #category : #variables }
+{ #category : #accessing }
 XPathContext >> variableAt: aVariableName [
 	^ self variables
 		at: aVariableName
 		ifAbsent: [self errorUndeclaredVariable: aVariableName]
 ]
 
-{ #category : #variables }
+{ #category : #accessing }
 XPathContext >> variableAt: aVariableName ifAbsent: aBlock [
 	^ self variables
 		at: aVariableName
 		ifAbsent: aBlock
 ]
 
-{ #category : #variables }
+{ #category : #accessing }
 XPathContext >> variableAt: aVariableName ifAbsentPut: aBlock [
 	^ self variables
 		at: aVariableName
 		ifAbsentPut: aBlock
 ]
 
-{ #category : #variables }
+{ #category : #accessing }
 XPathContext >> variableAt: aVariableName put: aValue [
 	^ self variables
 		at: aVariableName
@@ -223,4 +219,12 @@ XPathContext >> variableAt: aVariableName put: aValue [
 { #category : #private }
 XPathContext >> variables [
 	^ variables ifNil: [variables := Dictionary new]
+]
+
+{ #category : #accessing }
+XPathContext >> variables: anAssociationCollection [
+	variables :=
+		anAssociationCollection isDictionary
+			ifTrue: [anAssociationCollection]
+			ifFalse: [Dictionary withAll: anAssociationCollection]
 ]
