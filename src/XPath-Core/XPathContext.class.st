@@ -28,6 +28,36 @@ XPathContext class >> defaultFunctions: aFunctionSet [
 	defaultFunctions := aFunctionSet
 ]
 
+{ #category : #'instance creation' }
+XPathContext class >> functions: aFunctionSet [
+	^ self new functions: aFunctionSet
+]
+
+{ #category : #'instance creation' }
+XPathContext class >> namespaces: anAssociationCollection [
+	^ self new declareNamespaces: anAssociationCollection
+]
+
+{ #category : #'instance creation' }
+XPathContext class >> variables: anAssociationCollection [
+	^ self new variables: anAssociationCollection
+]
+
+{ #category : #'instance creation' }
+XPathContext class >> variables: aVariableAssociationCollection namespaces: aNamepsaceAssociationCollection [
+	^ self new
+		variables: aVariableAssociationCollection;
+		declareNamespaces: aNamepsaceAssociationCollection
+]
+
+{ #category : #'instance creation' }
+XPathContext class >> variables: aVariableAssociationCollection namespaces: aNamepsaceAssociationCollection functions: aFunctionSet [
+	^ self new
+		variables: aVariableAssociationCollection;
+		declareNamespaces: aNamepsaceAssociationCollection;
+		functions: aFunctionSet
+]
+
 { #category : #accessing }
 XPathContext >> addFunction: aFunction [
 	functions := self functions + aFunction
@@ -98,6 +128,16 @@ XPathContext >> includesVariable: aVariableName [
 XPathContext >> initialize [
 	super initialize.
 	functionStack := OrderedCollection new.
+]
+
+{ #category : #testing }
+XPathContext >> isDeclaredPrefix: aPrefix [
+	^ self namespaceScope includesPrefix: aPrefix
+]
+
+{ #category : #testing }
+XPathContext >> isDeclaredPrefix: aPrefix uri: aUri [
+	^ self namespaceScope includesPrefix: aPrefix mappedTo: aUri
 ]
 
 { #category : #private }

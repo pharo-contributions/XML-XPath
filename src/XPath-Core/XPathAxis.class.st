@@ -31,6 +31,12 @@ XPathAxis >> handleWith: aHandler [
 	self reset.
 ]
 
+{ #category : #initialization }
+XPathAxis >> initialize [
+	super initialize.
+	self reset.
+]
+
 { #category : #testing }
 XPathAxis >> isImplicit [
 	^ isImplicit
