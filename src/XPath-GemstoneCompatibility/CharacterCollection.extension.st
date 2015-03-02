@@ -1,22 +1,22 @@
 Extension { #name : #CharacterCollection }
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /!=/ anObject [
+CharacterCollection >> //!= anObject [
 	^ anObject xPathNotEqualsString: self
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /*/ anObject [
+CharacterCollection >> //* anObject [
 	^ self asXPathNumber * anObject asXPathNumber
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /+/ anObject [
+CharacterCollection >> //+ anObject [
 	^ self asXPathNumber + anObject asXPathNumber
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /-/ anObject [
+CharacterCollection >> //- anObject [
 	^ self asXPathNumber - anObject asXPathNumber
 ]
 
@@ -26,34 +26,34 @@ CharacterCollection >> /// anObject [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /</ anObject [
+CharacterCollection >> //< anObject [
 	^ anObject xPathGreaterThanString: self
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /<=/ anObject [
+CharacterCollection >> //<= anObject [
 	^ (anObject xPathGreaterThanString: self)
 		or: [anObject xPathEqualsString: self]
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /=/ anObject [
+CharacterCollection >> //= anObject [
 	^ anObject xPathEqualsString: self
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> />/ anObject [
+CharacterCollection >> //> anObject [
 	^ anObject xPathLessThanString: self
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> />=/ anObject [
+CharacterCollection >> //>= anObject [
 	^ (anObject xPathLessThanString: self)
 		or: [anObject xPathEqualsString: self]
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> /\\/ anObject [
+CharacterCollection >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
