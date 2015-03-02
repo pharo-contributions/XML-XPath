@@ -129,36 +129,13 @@ XPathParser >> nextNCNameOptional: aBoolean [
 
 { #category : #parsing }
 XPathParser >> nextName [
-	inputStream hasPushedBackToken
-		ifTrue: [
-			inputStream pushedBackToken isNameToken
-				ifTrue: [^ inputStream nextPushedBackToken].
-			inputStream pushedBackToken isNCNameToken
-				ifTrue: [
-					writeStream
-						reset;
-						nextPutAll: inputStream nextPushedBackToken.
-					(inputStream peekFor: $:)
-						ifTrue: [
-							writeStream
-								nextPut: $:;
-								nextPutAll: self nextNCName].
-					^ writeStream contents]].
-
-	writeStream reset.
-	(XMLWellFormedParserTokenizer
-		nextNameFrom: inputStream
-		on: writeStream)
-			ifFalse: [self errorExpectedName].
-	^ writeStream contents.
+	^ self nextNameOptional: false
 ]
 
 { #category : #parsing }
 XPathParser >> nextNameOptional: aBoolean [
 	inputStream hasPushedBackToken
 		ifTrue: [
-			inputStream pushedBackToken isNameToken
-				ifTrue: [^ inputStream nextPushedBackToken].
 			inputStream pushedBackToken isNCNameToken
 				ifTrue: [
 					writeStream
@@ -168,7 +145,9 @@ XPathParser >> nextNameOptional: aBoolean [
 						ifTrue: [
 							writeStream
 								nextPut: $:;
-								nextPutAll: (self nextNCNameOptional: aBoolean)].
+								nextPutAll:
+									((self nextNCNameOptional: aBoolean)
+										ifNil: [^ nil])].
 					^ writeStream contents]].
 
 	writeStream reset.

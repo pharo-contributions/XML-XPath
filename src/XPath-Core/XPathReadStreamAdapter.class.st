@@ -106,6 +106,14 @@ XPathReadStreamAdapter >> position: aPosition [
 ]
 
 { #category : #accessing }
+XPathReadStreamAdapter >> pushBackNCName: anNcName position: aPosition [
+	self pushBackToken:
+		(XPathPushedBackNCNameToken
+			token: anNcName
+			position: aPosition)
+]
+
+{ #category : #accessing }
 XPathReadStreamAdapter >> pushBackToken: aPushedBackToken [
 	pushedBackToken := aPushedBackToken.
 	self position: aPushedBackToken position.

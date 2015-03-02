@@ -78,26 +78,6 @@ XPathNodeSet >> / aNodeTestStringOrBlock [
 	^ self.
 ]
 
-{ #category : #operators }
-XPathNodeSet >> /!=/ anObject [
-	^ anObject xPathNotEqualsNodeSet: self
-]
-
-{ #category : #operators }
-XPathNodeSet >> /*/ anObject [
-	^ self asXPathNumber * anObject asXPathNumber
-]
-
-{ #category : #operators }
-XPathNodeSet >> /+/ anObject [
-	^ self asXPathNumber + anObject asXPathNumber
-]
-
-{ #category : #operators }
-XPathNodeSet >> /-/ anObject [
-	^ self asXPathNumber - anObject asXPathNumber
-]
-
 { #category : #enumerating }
 XPathNodeSet >> // aNodeTestStringOrBlock [
 	"descendant axis"
@@ -112,8 +92,60 @@ XPathNodeSet >> // aNodeTestStringOrBlock [
 ]
 
 { #category : #operators }
+XPathNodeSet >> //!= anObject [
+	^ anObject xPathNotEqualsNodeSet: self
+]
+
+{ #category : #operators }
+XPathNodeSet >> //* anObject [
+	^ self asXPathNumber * anObject asXPathNumber
+]
+
+{ #category : #operators }
+XPathNodeSet >> //+ anObject [
+	^ self asXPathNumber + anObject asXPathNumber
+]
+
+{ #category : #operators }
+XPathNodeSet >> //- anObject [
+	^ self asXPathNumber - anObject asXPathNumber
+]
+
+{ #category : #operators }
 XPathNodeSet >> /// anObject [
 	^ self asXPathNumber / anObject asXPathNumber
+]
+
+{ #category : #operators }
+XPathNodeSet >> //< anObject [
+	^ anObject xPathGreaterThanNodeSet: self
+]
+
+{ #category : #operators }
+XPathNodeSet >> //<= anObject [
+	^ (anObject xPathGreaterThanNodeSet: self)
+		or: [anObject xPathEqualsNodeSet: self]
+]
+
+{ #category : #operators }
+XPathNodeSet >> //= anObject [
+	^ anObject xPathEqualsNodeSet: self
+]
+
+{ #category : #operators }
+XPathNodeSet >> //> anObject [
+	^ anObject xPathLessThanNodeSet: self
+]
+
+{ #category : #operators }
+XPathNodeSet >> //>= anObject [
+	^ (anObject xPathLessThanNodeSet: self)
+		or: [anObject xPathEqualsNodeSet: self]
+]
+
+{ #category : #operators }
+XPathNodeSet >> //\\ anObject [
+	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
 { #category : #enumerating }
@@ -127,38 +159,6 @@ XPathNodeSet >> //~ aNodeTestStringOrBlock [
 	self size = 1
 		ifTrue: [^ self first //~ aNodeTestStringOrBlock].
 	^ self.
-]
-
-{ #category : #operators }
-XPathNodeSet >> /</ anObject [
-	^ anObject xPathGreaterThanNodeSet: self
-]
-
-{ #category : #operators }
-XPathNodeSet >> /<=/ anObject [
-	^ (anObject xPathGreaterThanNodeSet: self)
-		or: [anObject xPathEqualsNodeSet: self]
-]
-
-{ #category : #operators }
-XPathNodeSet >> /=/ anObject [
-	^ anObject xPathEqualsNodeSet: self
-]
-
-{ #category : #operators }
-XPathNodeSet >> />/ anObject [
-	^ anObject xPathLessThanNodeSet: self
-]
-
-{ #category : #operators }
-XPathNodeSet >> />=/ anObject [
-	^ (anObject xPathLessThanNodeSet: self)
-		or: [anObject xPathEqualsNodeSet: self]
-]
-
-{ #category : #operators }
-XPathNodeSet >> /\\/ anObject [
-	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
 { #category : #enumerating }
@@ -297,7 +297,7 @@ XPathNodeSet >> afterAddingLast: aNode [
 { #category : #private }
 XPathNodeSet >> afterRemoving: aNode [
 	self set remove: aNode.
-	sortOrder := nil.
+	"removing does not change order"
 	super afterRemoving: aNode.
 ]
 

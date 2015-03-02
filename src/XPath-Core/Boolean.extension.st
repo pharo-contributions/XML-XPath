@@ -1,22 +1,22 @@
 Extension { #name : #Boolean }
 
 { #category : #'*XPath-Core' }
-Boolean >> /!=/ anObject [
+Boolean >> //!= anObject [
 	^ anObject xPathNotEqualsBoolean: self
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /*/ anObject [
+Boolean >> //* anObject [
 	^ self asXPathNumber * anObject asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /+/ anObject [
+Boolean >> //+ anObject [
 	^ self asXPathNumber + anObject asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /-/ anObject [
+Boolean >> //- anObject [
 	^ self asXPathNumber - anObject asXPathNumber
 ]
 
@@ -26,34 +26,34 @@ Boolean >> /// anObject [
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /</ anObject [
+Boolean >> //< anObject [
 	^ anObject xPathGreaterThanBoolean: self
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /<=/ anObject [
+Boolean >> //<= anObject [
 	^ (anObject xPathGreaterThanBoolean: self)
 		or: [anObject xPathEqualsBoolean: self]
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /=/ anObject [
+Boolean >> //= anObject [
 	^ anObject xPathEqualsBoolean: self
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> />/ anObject [
+Boolean >> //> anObject [
 	^ anObject xPathLessThanBoolean: self
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> />=/ anObject [
+Boolean >> //>= anObject [
 	^ (anObject xPathLessThanBoolean: self)
 		or: [anObject xPathEqualsBoolean: self]
 ]
 
 { #category : #'*XPath-Core' }
-Boolean >> /\\/ anObject [
+Boolean >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 

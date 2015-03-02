@@ -67,7 +67,17 @@ XPathNamespaceNode >> hasExpandedName [
 ]
 
 { #category : #testing }
+XPathNamespaceNode >> hasNamespaceURI [
+	^ false
+]
+
+{ #category : #testing }
 XPathNamespaceNode >> hasPrefix [
+	^ false
+]
+
+{ #category : #testing }
+XPathNamespaceNode >> hasPrefixedNamespaceURI: aNamespaceUri [
 	^ false
 ]
 

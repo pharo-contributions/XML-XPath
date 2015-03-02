@@ -9,15 +9,10 @@ Class {
 
 { #category : #handling }
 XPathStringNodeTestParserHandler >> handleEmptyTest [
-	self errorExpected: 'XPath node test'
-]
-
-{ #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForAnyLocalNameAfterPrefix: aPrefix [
 	self parsingResult:
 		[:node |
 			node isPrincipalNode
-				and: [node prefix = aPrefix]]
+				and: [node name isEmpty]]
 ]
 
 { #category : #handling }
@@ -26,16 +21,111 @@ XPathStringNodeTestParserHandler >> handleTestForAnyName [
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForAnyPrefixBeforeLocalName: aLocalName [
+XPathStringNodeTestParserHandler >> handleTestForAnyNodeType [
+	self parsingResult: [:node | true]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithAnyName [
+	self parsingResult: [:node | node isAttribute]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithLocalName: aLocalName [
 	self parsingResult:
 		[:node |
-			node isPrincipalNode
+			node isAttribute
 				and: [node localName = aLocalName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithName: aName [
+	self parsingResult:
+		[:node |
+			node isAttribute
+				and: [node name = aName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aNamespaceUri localName: aLocalName [
+	self parsingResult:
+		[:node |
+			node isAttribute
+				and: [node localName = aLocalName
+					and: [node namespaceURI = aNamespaceUri]]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
+	self parsingResult:
+		[:node |
+			node isAttribute
+				and: [node prefix = aPrefix]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
+	| name |
+
+	name := aLocalName qualifyWithPrefix: aPrefix.	
+	self parsingResult:
+		[:node |
+			node isAttribute
+				and: [node name = name]]
 ]
 
 { #category : #handling }
 XPathStringNodeTestParserHandler >> handleTestForCommentType [
 	self parsingResult: [:node | node isComment]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForElementWithAnyName [
+	self parsingResult: [:node | node isElement]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForElementWithLocalName: aLocalName [
+	self parsingResult:
+		[:node |
+			node isElement
+				and: [node localName = aLocalName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForElementWithName: aName [
+	self parsingResult:
+		[:node |
+			node isElement
+				and: [node name = aName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aNamespaceUri localName: aLocalName [
+	self parsingResult:
+		[:node |
+			node isElement
+				and: [node localName = aLocalName
+					and: [node namespaceURI = aNamespaceUri]]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix [
+	self parsingResult:
+		[:node |
+			node isElement
+				and: [node prefix = aPrefix]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
+	| name |
+
+	name := aLocalName qualifyWithPrefix: aPrefix.	
+	self parsingResult:
+		[:node |
+			node isElement
+				and: [node name = name]]
 ]
 
 { #category : #handling }
@@ -47,37 +137,57 @@ XPathStringNodeTestParserHandler >> handleTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForName: aLocalName [
+	self parsingResult:
+		[:node |
+			node isPrincipalNode
+				and: [node name = aLocalName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForNamespaceType [
+	self parsingResult: [:node | node isNamespace]
+]
+
+{ #category : #handling }
 XPathStringNodeTestParserHandler >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName [
 	self parsingResult:
 		[:node |
 			node isPrincipalNode
-				and: [node namespaceURI = aNamespaceUri
-					and: [node localName = aLocalName]]]
+				and: [node localName = aLocalName
+					and: [node namespaceURI = aNamespaceUri]]]
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForNodeType [
-	self parsingResult: [:node | true]
+XPathStringNodeTestParserHandler >> handleTestForPIType [
+	self parsingResult: [:node | node isPI]
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForPIType: aName [
-	aName isEmpty
-		ifTrue: [self parsingResult: [:node | node isPI]]
-		ifFalse: [
-			self parsingResult:
-				[:node |
-					node isPI
-						and: [node target = aName]]]
+XPathStringNodeTestParserHandler >> handleTestForPIWithName: aName [
+	self parsingResult:
+		[:node |
+			node isPI
+				and: [node target = aName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForPrefix: aPrefix [
+	self parsingResult:
+		[:node |
+			node isPrincipalNode
+				and: [node prefix = aPrefix]]
 ]
 
 { #category : #handling }
 XPathStringNodeTestParserHandler >> handleTestForPrefix: aPrefix localName: aLocalName [
+	| name |
+
+	name := aLocalName qualifyWithPrefix: aPrefix.	
 	self parsingResult:
 		[:node |
 			node isPrincipalNode
-				and: [node localName = aLocalName
-					and: [node prefix = aPrefix]]]
+				and: [node name = name]]
 ]
 
 { #category : #handling }

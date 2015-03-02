@@ -32,8 +32,8 @@ Class {
 	#name : #XPath,
 	#superclass : #Object,
 	#instVars : [
-		'compiler',
-		'xPathSource'
+		'xPathSource',
+		'compiledXPath'
 	],
 	#classInstVars : [
 		'compiledXPathCache'
@@ -50,14 +50,21 @@ XPath class >> clearCompiledXPathCache [
 { #category : #accessing }
 XPath class >> compiledXPathCache [
 	^ compiledXPathCache
-		ifNil: [compiledXPathCache := XMLKeyValueCache maxSize: 256]
+		ifNil: [compiledXPathCache := XMLKeyValueCache maxSize: 512]
 ]
 
 { #category : #private }
-XPath class >> compiledXPathCacheAt: anXPathString ifAbsentPut: aBlock [
+XPath class >> compiledXPathCacheAt: anXPathSourceString ifAbsent: aBlock [
 	^ self compiledXPathCache
-		at: anXPathString
-		ifAbsentPut: aBlock
+		at: anXPathSourceString
+		ifAbsent: aBlock
+]
+
+{ #category : #private }
+XPath class >> compiledXPathCacheAt: anXPathSourceString put: aCompiledXPath [
+	^ self compiledXPathCache
+		at: anXPathSourceString
+		put: aCompiledXPath
 ]
 
 { #category : #'instance creation' }
@@ -102,21 +109,27 @@ XPath >> asXPath [
 	^ self
 ]
 
+{ #category : #compiling }
+XPath >> compile [
+	^ self compileWith: self compilerClass new
+]
+
+{ #category : #compiling }
+XPath >> compileWith: anXPathCompiler [
+	compiledXPath := anXPathCompiler compile: self xPathSource.
+	self class
+		compiledXPathCacheAt: self xPathSource
+		put: compiledXPath.
+	^ compiledXPath.
+]
+
 { #category : #accessing }
 XPath >> compiledXPath [
-	^ self class
-		compiledXPathCacheAt: self xPathSource
-		ifAbsentPut: [self compiler compile: self xPathSource]
-]
-
-{ #category : #accessing }
-XPath >> compiler [
-	^ compiler ifNil: [compiler := self compilerClass new]
-]
-
-{ #category : #accessing }
-XPath >> compiler: aCompiler [
-	compiler := aCompiler
+	^ compiledXPath ifNil: [
+		compiledXPath :=
+			self class
+				compiledXPathCacheAt: self xPathSource
+				ifAbsent: [self compile]]
 ]
 
 { #category : #accessing }

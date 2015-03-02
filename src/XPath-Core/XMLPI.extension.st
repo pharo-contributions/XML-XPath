@@ -16,7 +16,17 @@ XMLPI >> hasExpandedName [
 ]
 
 { #category : #'*XPath-Core-DOM' }
+XMLPI >> hasNamespaceURI [
+	^ false
+]
+
+{ #category : #'*XPath-Core-DOM' }
 XMLPI >> hasPrefix [
+	^ false
+]
+
+{ #category : #'*XPath-Core-DOM' }
+XMLPI >> hasPrefixedNamespaceURI: aNamespaceUri [
 	^ false
 ]
 

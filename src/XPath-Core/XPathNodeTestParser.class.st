@@ -5,10 +5,10 @@ Class {
 	#name : #XPathNodeTestParser,
 	#superclass : #XPathParser,
 	#instVars : [
-		'nameStartPosition'
+		'context'
 	],
 	#classVars : [
-		'NodeTypeParserSelectors'
+		'NodeTypeTestParserSelectors'
 	],
 	#category : #'XPath-Core-Parsers'
 }
@@ -17,140 +17,200 @@ Class {
 XPathNodeTestParser class >> initialize [ 
 	"self initialize"
 
-	self initializeNodeTypeParserSelectors
+	self initializeNodeTypeTestParserSelectors
 ]
 
 { #category : #'class initialization' }
-XPathNodeTestParser class >> initializeNodeTypeParserSelectors [
-	(NodeTypeParserSelectors := Dictionary new)
-		at: 'comment' put: #nextCommentNodeTypeTest;
-		at: 'text' put: #nextTextNodeTypeTest;
-		at: 'processing-instruction' put: #nextPINodeTypeTest;
-		at: 'node' put: #nextNodeNodeTypeTest
+XPathNodeTestParser class >> initializeNodeTypeTestParserSelectors [
+	(NodeTypeTestParserSelectors := Dictionary new)
+		at: 'comment' put: #nextCommentTypeTest;
+		at: 'text' put: #nextTextTypeTest;
+		at: 'processing-instruction' put: #nextPITypeTest;
+		at: 'node' put: #nextAnyNodeTypeTest;
+		at: 'element' put: #nextElementTypeTest;
+		at: 'attribute' put: #nextAttributeTypeTest;
+		at: 'namespace' put: #nextNamespaceTypeTest
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextCommentNodeTypeTest [
-	self nextEmptyArgumentList.
-	handler handleTestForCommentType.
+XPathNodeTestParser >> nextAnyNodeTypeTest [
+	self nextEndArgumentList.
+	context handleTestForAnyNodeTypeWith: handler.
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextExpandedNameTest [
-	handler
-		handleTestForNamespaceURI: (self expectUpTo: $})
-		localName: self nextNCName
+XPathNodeTestParser >> nextAttributeTypeTest [
+	context := XPathAttributeTypeNodeTestParserContext new.
+	self
+		peekForNodeTest;
+		nextEndArgumentList.
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextLocalNameOrNodeTypeTest: aName [
+XPathNodeTestParser >> nextCommentTypeTest [
+	self nextEndArgumentList.
+	context handleTestForCommentTypeWith: handler.
+]
+
+{ #category : #parsing }
+XPathNodeTestParser >> nextElementTypeTest [
+	context := XPathElementTypeNodeTestParserContext new.
+	self
+		peekForNodeTest;
+		nextEndArgumentList.
+]
+
+{ #category : #parsing }
+XPathNodeTestParser >> nextEmptyTest [
+	context handleEmptyTestWith: handler
+]
+
+{ #category : #parsing }
+XPathNodeTestParser >> nextNamespaceTypeTest [
+	self nextEndArgumentList.
+	context handleTestForNamespaceTypeWith: handler.
+]
+
+{ #category : #parsing }
+XPathNodeTestParser >> nextPITypeTest [
+	| name |
+
 	inputStream skipSeparators.
-	inputStream peek == $: "axis specifier"
-		ifTrue: [^ self pushBackNCName: aName].
-	inputStream peek == $(
-		ifTrue: [^ self nextNodeTypeTestOrFunction: aName].
-
-	handler handleTestForLocalName: aName.
-]
-
-{ #category : #parsing }
-XPathNodeTestParser >> nextNodeNodeTypeTest [
-	self nextEmptyArgumentList.
-	handler handleTestForNodeType.
-]
-
-{ #category : #parsing }
-XPathNodeTestParser >> nextNodeTypeTestOrFunction: aNodeType [
-	self perform:
-		(NodeTypeParserSelectors
-			at: aNodeType
-			ifAbsent: [^ self pushBackNCName: aNodeType])
-]
-
-{ #category : #parsing }
-XPathNodeTestParser >> nextPINodeTypeTest [
-	self nextStartArgumentList.
-	inputStream skipSeparators.
-	handler handleTestForPIType:
-		((self nextStringLiteralOptional: true) ifNil: ['']).
+	(name := self nextStringLiteralOptional: true)
+		ifNil: [context handleTestForPITypeWith: handler]
+		ifNotNil: [
+			context
+				handleTestForPIWithName: name
+				with: handler].
 	self nextEndArgumentList.
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextQualifiedNameTestOrFunction: aPrefix [
-	| localName |
-
-	(inputStream peekFor: $*)
-		ifTrue: [^ handler handleTestForAnyLocalNameAfterPrefix: aPrefix].
-	localName := self nextNCName.
-	inputStream skipSeparators.
-	inputStream peek == $( "function"
-		ifTrue: [^ self pushBackName: (localName qualifyWithPrefix: aPrefix)].
-	^ handler
-		handleTestForPrefix: aPrefix
-		localName: localName.
-]
-
-{ #category : #parsing }
-XPathNodeTestParser >> nextTextNodeTypeTest [
-	self nextEmptyArgumentList.
-	handler handleTestForTextType.
-]
-
-{ #category : #parsing }
-XPathNodeTestParser >> nextWildCardNameTest [
-	(inputStream peekFor: $:)
-		ifTrue: [
-			(inputStream peekFor: $*)
-				ifTrue: [handler handleTestForAnyName]
-				ifFalse: [handler handleTestForAnyPrefixBeforeLocalName: self nextNCName]]
-		ifFalse: [handler handleTestForAnyName]
+XPathNodeTestParser >> nextTextTypeTest [
+	self nextEndArgumentList.
+	context handleTestForTextTypeWith: handler.
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> parseInput [
-	| name |
+	context := XPathInitialNodeTestParserContext new.
+	self peekForNodeTest.
+]
 
-	inputStream skipSeparators.
-	inputStream atEnd
-		ifTrue: [
-			handler handleEmptyTest.
-			^ self].
-
-	(inputStream peekFor: $*)
-		ifTrue: [^ self nextWildCardNameTest].
-
-	nameStartPosition := inputStream position.
-	(name := self nextNCNameOptional: true)
-		ifNil: [
-			handler handleEmptyTest.
-			^ self].
-	(name = 'Q'
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForExpandedNameTest: aName [
+	(aName = 'Q'
 		and: [inputStream peekFor: ${])
-		ifTrue: [^ self nextExpandedNameTest].
+		ifTrue: [| uri localName |
+			uri := self expectUpTo: $}.
+			localName := self nextNCName.
+			context
+				handleTestForNamespaceURI: uri
+				localName: localName
+				with: handler.
+			^ true]
+		ifFalse: [^ false]
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNameTestStartingWith: anNcName [
 	(inputStream peekFor: $:)
 		ifTrue: [
-			(inputStream peekFor: $:) "axis specifier"
-				ifTrue: [^ self pushBackName: name]
-				ifFalse: [^ self nextQualifiedNameTestOrFunction: name]].
-
-	self nextLocalNameOrNodeTypeTest: name.
+			inputStream peek == $:
+				ifTrue: [^ false]
+				ifFalse: [^ self peekForQualifiedNameTestWithPrefix: anNcName]]
+		ifFalse: [
+			inputStream skipSeparators.
+			(inputStream peekFor: $:)
+				ifTrue: [^ false] "axis specifier"
+				ifFalse: [
+					(context isTypeTestParserContext not
+						and: [self peekForStartArgumentList])
+						ifTrue: [^ self peekForNodeTypeTest: anNcName]
+						ifFalse: [
+							context
+								handleTestForName: anNcName
+								with: handler.
+							^ true]]]
 ]
 
-{ #category : #private }
-XPathNodeTestParser >> pushBackNCName: aLocalName [
-	inputStream pushBackToken:
-		(XPathPushedBackNCNameToken
-			token: aLocalName
-			position: nameStartPosition).
-	handler handleEmptyTest.
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNodeTest [
+	inputStream skipSeparators.
+	(inputStream atEnd not
+		and: [self peekForWildCardNameTest
+			or: [self peekForNonWildCardNameTest]])
+		ifTrue: [^ true]
+		ifFalse: [
+			self nextEmptyTest.
+			^ false]
 ]
 
-{ #category : #private }
-XPathNodeTestParser >> pushBackName: aLocalName [
-	inputStream pushBackToken:
-		(XPathPushedBackNameToken
-			token: aLocalName
-			position: nameStartPosition).
-	handler handleEmptyTest.
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNodeTypeTest: aNodeTypeOrFunctionName [
+	self perform:
+		(NodeTypeTestParserSelectors
+			at: aNodeTypeOrFunctionName
+			ifAbsent: [^ false]).
+	^ true.
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNonWildCardNameTest [
+	| startPosition ncName |
+
+	startPosition := inputStream position.
+	((ncName := self nextNCNameOptional: true) notNil
+		and: [self peekForNameTestStartingWith: ncName])
+		ifTrue: [^ true]
+		ifFalse: [
+			ncName
+				ifNotNil: [
+					inputStream
+						pushBackNCName: ncName
+						position: startPosition].
+			^ false].
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForQualifiedNameTestWithPrefix: aPrefix [
+	(inputStream peekFor: $*)
+		ifTrue: [
+			context
+				handleTestForPrefix: aPrefix
+				with: handler.
+			^ true]
+		ifFalse: [| localName |
+			localName := self nextNCName.
+			self peekForStartArgumentList "function"
+				ifTrue: [^ false]
+				ifFalse: [
+					context
+						handleTestForPrefix: aPrefix
+						localName: localName
+						with: handler.
+					^ true]].
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForStartArgumentList [
+	inputStream skipSeparators.
+	^ inputStream peekFor: $(.
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForWildCardNameTest [
+	(inputStream peekFor: $*)
+		ifFalse: [^ false].
+
+	(inputStream peekFor: $:)
+		ifTrue: [
+			(inputStream peekFor: $*)
+				ifTrue: [context handleTestForAnyNameWith: handler]
+				ifFalse: [
+					context
+						handleTestForLocalName: self nextNCName
+						with: handler]]
+		ifFalse: [context handleTestForAnyNameWith: handler].
+	^ true.
 ]

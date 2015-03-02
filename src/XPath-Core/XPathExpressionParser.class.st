@@ -256,7 +256,7 @@ XPathExpressionParser >> peekForAbbreviatedAxis [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbbreviatedDescendantStep [
-	self peekForLocationPathSeparator
+	(inputStream peekFor: $/)
 		ifFalse: [^ false].
 
 	"// followed by a node test is the same as
@@ -273,7 +273,7 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 			currentAxis
 				axisSpecifier: 'descendant-or-self';
 				handleWith: handler.
-			handler handleTestForNodeType.
+			handler handleTestForAnyNodeType.
 			^ false].
 ]
 
@@ -295,7 +295,7 @@ XPathExpressionParser >> peekForAbbreviatedStep [
 					^ true].
 			currentAxis axisSpecifier: 'self'].
 	currentAxis handleWith: handler.
-	handler handleTestForNodeType.
+	handler handleTestForAnyNodeType.
 
 	"abbreviated steps cannot have filters"
 	^ true.
@@ -339,42 +339,39 @@ XPathExpressionParser >> peekForArgumentSeparator [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAttributePredicate [
-	| startPosition name isEquals literal |
+	| startPosition namePosition ncName isNotEquals stringLiteral |
 
-	inputStream peek == $@
-		ifFalse: [^ false].
-	
 	startPosition := inputStream position.
-	inputStream
-		next;
-		skipSeparators.
-	(name := self nextNameOptional: true)
+	(inputStream peekFor: $@)
+		ifFalse: [^ false].
+
+	inputStream skipSeparators.
+	namePosition := inputStream position.
+	(ncName := self nextNCNameOptional: true)
 		ifNil: [^ self peekFailedAt: startPosition].
 
 	inputStream skipSeparators.
+	isNotEquals := inputStream peekFor: $!.
 	(inputStream peekFor: $=)
-		ifTrue: [isEquals := true]
-		ifFalse: [
-			(inputStream peekForAll: '!=')
-				ifTrue: [isEquals := false]
-				ifFalse: [^ self peekFailedAt: startPosition]].
-
-	inputStream skipSeparators.
-	(literal := self nextStringLiteralOptional: true)
-		ifNil: [^ self peekFailedAt: startPosition].
-
-	self peekForEndPredicate
-		ifFalse: [^ self peekFailedAt: startPosition].
-	isEquals
 		ifTrue: [
-			handler
-				handlePredicateAttribute: name
-				equalsStringLiteral: literal]
-		ifFalse: [
-			handler
-				handlePredicateAttribute: name
-				notEqualsStringLiteral: literal].
-	^ true.
+			inputStream skipSeparators.
+			((stringLiteral := self nextStringLiteralOptional: true) notNil
+				and: [self peekForEndPredicate])
+				ifTrue: [
+					isNotEquals
+						ifTrue: [
+							handler
+								handlePredicateAttribute: ncName
+								notEqualsStringLiteral: stringLiteral]
+						ifFalse: [
+							handler
+								handlePredicateAttribute: ncName
+								equalsStringLiteral: stringLiteral].
+					^ true]].
+	inputStream
+		pushBackNCName: ncName
+		position: namePosition.
+	^ self peekFailedAt: startPosition.
 ]
 
 { #category : #'parsing - peeking' }
@@ -390,10 +387,9 @@ XPathExpressionParser >> peekForAxis [
 	((inputStream peekFor: $:)
 		and: [inputStream peekFor: $:])
 		ifFalse: [
-			inputStream pushBackToken:
-				(XPathPushedBackNCNameToken
-					token: ncName
-					position: startPosition).
+			inputStream
+				pushBackNCName: ncName
+				position: startPosition.
 			^ false].
 	currentAxis axisSpecifier: ncName.
 	^ true.

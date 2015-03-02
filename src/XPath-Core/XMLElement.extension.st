@@ -42,6 +42,12 @@ XMLElement >> hasNamespaceNodes [
 ]
 
 { #category : #'*XPath-Core-DOM' }
+XMLElement >> hasPrefixedNamespaceURI: aNamespaceUri [
+	^ self hasPrefix
+		and: [self namespaceURI = aNamespaceUri]
+]
+
+{ #category : #'*XPath-Core-DOM' }
 XMLElement >> isPrincipalNode [
 	^ true
 ]

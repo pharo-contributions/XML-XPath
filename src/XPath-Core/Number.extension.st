@@ -1,22 +1,22 @@
 Extension { #name : #Number }
 
 { #category : #'*XPath-Core' }
-Number >> /!=/ anObject [
+Number >> //!= anObject [
 	^ anObject xPathNotEqualsNumber: self
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /*/ anObject [
+Number >> //* anObject [
 	^ self asXPathNumber * anObject asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /+/ anObject [
+Number >> //+ anObject [
 	^ self asXPathNumber + anObject asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /-/ anObject [
+Number >> //- anObject [
 	^ self asXPathNumber - anObject asXPathNumber
 ]
 
@@ -26,34 +26,34 @@ Number >> /// anObject [
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /</ anObject [
+Number >> //< anObject [
 	^ anObject xPathGreaterThanNumber: self
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /<=/ anObject [
+Number >> //<= anObject [
 	^ (anObject xPathGreaterThanNumber: self)
 		or: [anObject xPathEqualsNumber: self]
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /=/ anObject [
+Number >> //= anObject [
 	^ anObject xPathEqualsNumber: self
 ]
 
 { #category : #'*XPath-Core' }
-Number >> />/ anObject [
+Number >> //> anObject [
 	^ anObject xPathLessThanNumber: self
 ]
 
 { #category : #'*XPath-Core' }
-Number >> />=/ anObject [
+Number >> //>= anObject [
 	^ (anObject xPathLessThanNumber: self)
 		or: [anObject xPathEqualsNumber: self]
 ]
 
 { #category : #'*XPath-Core' }
-Number >> /\\/ anObject [
+Number >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 

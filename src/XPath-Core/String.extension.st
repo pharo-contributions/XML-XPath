@@ -1,22 +1,22 @@
 Extension { #name : #String }
 
 { #category : #'*XPath-Core' }
-String >> /!=/ anObject [
+String >> //!= anObject [
 	^ anObject xPathNotEqualsString: self
 ]
 
 { #category : #'*XPath-Core' }
-String >> /*/ anObject [
+String >> //* anObject [
 	^ self asXPathNumber * anObject asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }
-String >> /+/ anObject [
+String >> //+ anObject [
 	^ self asXPathNumber + anObject asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }
-String >> /-/ anObject [
+String >> //- anObject [
 	^ self asXPathNumber - anObject asXPathNumber
 ]
 
@@ -26,34 +26,34 @@ String >> /// anObject [
 ]
 
 { #category : #'*XPath-Core' }
-String >> /</ anObject [
+String >> //< anObject [
 	^ anObject xPathGreaterThanString: self
 ]
 
 { #category : #'*XPath-Core' }
-String >> /<=/ anObject [
+String >> //<= anObject [
 	^ (anObject xPathGreaterThanString: self)
 		or: [anObject xPathEqualsString: self]
 ]
 
 { #category : #'*XPath-Core' }
-String >> /=/ anObject [
+String >> //= anObject [
 	^ anObject xPathEqualsString: self
 ]
 
 { #category : #'*XPath-Core' }
-String >> />/ anObject [
+String >> //> anObject [
 	^ anObject xPathLessThanString: self
 ]
 
 { #category : #'*XPath-Core' }
-String >> />=/ anObject [
+String >> //>= anObject [
 	^ (anObject xPathLessThanString: self)
 		or: [anObject xPathEqualsString: self]
 ]
 
 { #category : #'*XPath-Core' }
-String >> /\\/ anObject [
+String >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 

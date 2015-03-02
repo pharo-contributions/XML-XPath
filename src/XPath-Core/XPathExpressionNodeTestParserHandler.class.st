@@ -29,21 +29,55 @@ XPathExpressionNodeTestParserHandler >> handleStartParsing [
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForAnyLocalNameAfterPrefix: aPrefix [
-	self startNodeTest.
-	expressionParserHandler handleTestForAnyLocalNameAfterPrefix: aPrefix.
-]
-
-{ #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleTestForAnyName [
 	self startNodeTest.
 	expressionParserHandler handleTestForAnyName.
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForAnyPrefixBeforeLocalName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForAnyNodeType [
 	self startNodeTest.
-	expressionParserHandler handleTestForAnyPrefixBeforeLocalName: aLocalName.
+	expressionParserHandler handleTestForAnyNodeType.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithAnyName [
+	self startNodeTest.
+	expressionParserHandler handleTestForAttributeWithAnyName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithLocalName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler handleTestForAttributeWithLocalName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithName: aName [
+	self startNodeTest.
+	expressionParserHandler handleTestForAttributeWithName: aName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aNamespaceUri localName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler
+		handleTestForAttributeWithNamespaceURI: aNamespaceUri
+		localName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
+	self startNodeTest.
+	expressionParserHandler handleTestForAttributeWithPrefix: aPrefix.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler
+		handleTestForAttributeWithPrefix: aPrefix
+		localName: aLocalName.
 ]
 
 { #category : #handling }
@@ -53,9 +87,27 @@ XPathExpressionNodeTestParserHandler >> handleTestForCommentType [
 ]
 
 { #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithAnyName [
+	self startNodeTest.
+	expressionParserHandler handleTestForElementWithAnyName.
+]
+
+{ #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleTestForLocalName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler handleTestForLocalName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler handleTestForName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceType [
+	self startNodeTest.
+	expressionParserHandler handleTestForNamespaceType.
 ]
 
 { #category : #handling }
@@ -67,15 +119,21 @@ XPathExpressionNodeTestParserHandler >> handleTestForNamespaceURI: aNamespaceUri
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForNodeType [
+XPathExpressionNodeTestParserHandler >> handleTestForPIType [
 	self startNodeTest.
-	expressionParserHandler handleTestForNodeType.
+	expressionParserHandler handleTestForPIType.
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForPIType: aName [
+XPathExpressionNodeTestParserHandler >> handleTestForPIWithName: aName [
 	self startNodeTest.
-	expressionParserHandler handleTestForPIType: aName.
+	expressionParserHandler handleTestForPIWithName: aName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForPrefix: aPrefix [
+	self startNodeTest.
+	expressionParserHandler handleTestForPrefix: aPrefix.
 ]
 
 { #category : #handling }

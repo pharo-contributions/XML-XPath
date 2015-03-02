@@ -23,11 +23,6 @@ XPathPushedBackToken >> isNCNameToken [
 	^ false
 ]
 
-{ #category : #testing }
-XPathPushedBackToken >> isNameToken [
-	^ false
-]
-
 { #category : #accessing }
 XPathPushedBackToken >> position [
 	^ position

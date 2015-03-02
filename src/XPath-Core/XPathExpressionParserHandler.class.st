@@ -174,7 +174,7 @@ XPathExpressionParserHandler >> generateVariableNames [
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleAddition [
-	outputStream nextPutAll: '/+/'
+	outputStream nextPutAll: '//+'
 ]
 
 { #category : #'handling - location paths' }
@@ -281,17 +281,17 @@ XPathExpressionParserHandler >> handleEndUnionExpression [
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleEquals [
-	outputStream nextPutAll: '/=/'
+	outputStream nextPutAll: '//='
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleGreaterThan [
-	outputStream nextPutAll: '/>/'
+	outputStream nextPutAll: '//>'
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleGreaterThanOrEqualTo [
-	outputStream nextPutAll: '/>=/'
+	outputStream nextPutAll: '//>='
 ]
 
 { #category : #'handling - predicates' }
@@ -311,32 +311,32 @@ XPathExpressionParserHandler >> handleLastFunctionCall [
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleLessThan [
-	outputStream nextPutAll: '/</'
+	outputStream nextPutAll: '//<'
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleLessThanOrEqualTo [
-	outputStream nextPutAll: '/<=/'
+	outputStream nextPutAll: '//<='
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleModulus [
-	outputStream nextPutAll: '/\\/'
+	outputStream nextPutAll: '//\\'
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleMultiplication [
-	outputStream nextPutAll: '/*/'
+	outputStream nextPutAll: '//*'
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleNegation [
-	outputStream nextPutAll: '-1/*/'
+	outputStream nextPutAll: '-1//*'
 ]
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleNotEquals [
-	outputStream nextPutAll: '/!=/'
+	outputStream nextPutAll: '//!='
 ]
 
 { #category : #handling }
@@ -479,15 +479,7 @@ XPathExpressionParserHandler >> handleStringLiteral: aString [
 
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleSubtraction [
-	outputStream nextPutAll: '/-/'
-]
-
-{ #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForAnyLocalNameAfterPrefix: aPrefix [
-	outputStream
-		nextPutAll: '(c testForAnyLocalNameAfterPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: ''')'
+	outputStream nextPutAll: '//-'
 ]
 
 { #category : #'handling - node tests' }
@@ -496,11 +488,57 @@ XPathExpressionParserHandler >> handleTestForAnyName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForAnyPrefixBeforeLocalName: aLocalName [
+XPathExpressionParserHandler >> handleTestForAnyNodeType [
+	outputStream nextPutAll: '[:n|true]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForAttributeWithAnyName [
+	outputStream nextPutAll: '[:n|n isAttribute]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForAttributeWithLocalName: aLocalName [
 	outputStream
-		nextPutAll: '[:n|n isPrincipalNode and:[n localName=''';
+		nextPutAll: '[:n|n isAttribute and:[n localName=''';
 		nextPutAll: aLocalName;
 		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForAttributeWithName: aName [
+	outputStream
+		nextPutAll: '[:n|n isAttribute and:[n name=''';
+		nextPutAll: aName;
+		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForAttributeWithNamespaceURI: aNamespaceUri localName: aLocalName [
+	outputStream
+		nextPutAll: '[:n|n isAttribute and:[n localName=''';
+		nextPutAll: aLocalName;
+		nextPutAll: '''and:[node namespaceURI=''';
+		nextPutAll: aNamespaceUri;
+		nextPutAll: ''']]]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
+	outputStream
+		nextPutAll: '(c testForAttributeWithPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: ''')'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
+	outputStream
+		nextPutAll: '(c testForAttributeWithPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: '''localName:''';
+		nextPutAll: aLocalName;
+		nextPutAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
@@ -509,37 +547,104 @@ XPathExpressionParserHandler >> handleTestForCommentType [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForLocalName: aLocalName [
+XPathExpressionParserHandler >> handleTestForElementWithAnyName [
+	outputStream nextPutAll: '[:n|n isElement]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForElementWithLocalName: aLocalName [
 	outputStream
-		nextPutAll: '(c testForLocalName:''';
+		nextPutAll: '[:n|n isElement and:[n localName=''';
+		nextPutAll: aLocalName;
+		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForElementWithName: aName [
+	outputStream
+		nextPutAll: '[:n|n isElement and:[n name=''';
+		nextPutAll: aName;
+		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForElementWithNamespaceURI: aNamespaceUri localName: aLocalName [
+	outputStream
+		nextPutAll: '[:n|n isElement and:[n localName=''';
+		nextPutAll: aLocalName;
+		nextPutAll: '''and:[node namespaceURI=''';
+		nextPutAll: aNamespaceUri;
+		nextPutAll: ''']]]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix [
+	outputStream
+		nextPutAll: '(c testForElementWithPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: ''')'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
+	outputStream
+		nextPutAll: '(c testForElementWithPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: '''localName:''';
 		nextPutAll: aLocalName;
 		nextPutAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForLocalName: aLocalName [
+	outputStream
+		nextPutAll: '[:n|n isPrincipalNode and:[n localName=''';
+		nextPutAll: aLocalName;
+		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForName: aLocalName [
+	outputStream
+		nextPutAll: '[:n|n isPrincipalNode and:[n name=''';
+		nextPutAll: aLocalName;
+		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForNamespaceType [
+	outputStream nextPutAll: '[:n|n isNamespace]'
+]
+
+{ #category : #'handling - node tests' }
 XPathExpressionParserHandler >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName [
 	outputStream
-		nextPutAll: '[:n|no isPrincipalNode and:[n namespaceURI=''';
-		nextPutAll: aNamespaceUri;
-		nextPutAll: '''and:[n localName=''';
+		nextPutAll: '[:n|n isPrincipalNode and:[n localName=''';
 		nextPutAll: aLocalName;
+		nextPutAll: '''and:[n namespaceURI=''';
+		nextPutAll: aNamespaceUri;
 		nextPutAll: ''']]]'
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForNodeType [
-	outputStream nextPutAll: '[:n|true]'
+XPathExpressionParserHandler >> handleTestForPIType [
+	outputStream nextPutAll: '[:n|n isPI]'
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForPIType: aName [
-	aName isEmpty
-		ifTrue: [outputStream nextPutAll: '[:n|n isPI]']
-		ifFalse: [
-			outputStream
-				nextPutAll: '[:n|n isPI and:[n target=''';
-				nextPutAll: aName;
-				nextPutAll: ''']]']
+XPathExpressionParserHandler >> handleTestForPIWithName: aName [
+	outputStream
+		nextPutAll: '[:n|n isPI and:[n target=''';
+		nextPutAll: aName;
+		nextPutAll: ''']]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForPrefix: aPrefix [
+	outputStream
+		nextPutAll: '(c testForPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: ''')'
 ]
 
 { #category : #'handling - node tests' }

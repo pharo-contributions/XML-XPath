@@ -11,6 +11,12 @@ XMLAttribute >> hasExpandedName [
 ]
 
 { #category : #'*XPath-Core-DOM' }
+XMLAttribute >> hasPrefixedNamespaceURI: aNamespaceUri [
+	"unprefixed attributes cannot be namespaced"
+	^ self namespaceURI = aNamespaceUri
+]
+
+{ #category : #'*XPath-Core-DOM' }
 XMLAttribute >> isPrincipalNode [
 	^ true
 ]
