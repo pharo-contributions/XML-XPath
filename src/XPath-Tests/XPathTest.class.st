@@ -97,7 +97,24 @@ XPathTest >> testAttribute [
 ]
 
 { #category : #testing }
-XPathTest >> testCommentNodeTest [
+XPathTest >> testAttributeTypeTest [
+	| results |
+
+	results := XMLNodeList new.
+	document allNodesDo: [:each |
+		each isElement
+			ifTrue: [results addAll: each attributeNodes]
+			ifFalse: [
+				each isStringNode
+					ifTrue: [results addLast: each]]].
+	self assert: (document xPath: '//attribute::* | //text()') = results.
+	self assert:
+		(document xPath: '(//attribute::* | //text())/ self :: attribute()') =
+			(results select: [:each | each isAttribute]).
+]
+
+{ #category : #testing }
+XPathTest >> testCommentTypeTest [
 	| comments |
 
 	comments := document xPath: '//comment()'.
@@ -182,6 +199,11 @@ XPathTest >> testDotDotTooHigh [
 ]
 
 { #category : #testing }
+XPathTest >> testElementTypeTest [
+	self assert: (document // 'element()') = document allElements
+]
+
+{ #category : #testing }
 XPathTest >> testFollowingSibling [
 	| siblings |
 
@@ -207,6 +229,22 @@ XPathTest >> testFollowingSibling [
 		(XPath
 			for: '//following-sibling::node()'
 			in: document) = siblings.
+]
+
+{ #category : #testing }
+XPathTest >> testInvalidAbbreviatedLocationPath [
+	self
+		should: ['/ /one' asXPath compile]
+		raise: XPathSyntaxException.
+	self
+		should: ['one/ /two' asXPath compile]
+		raise: XPathSyntaxException.
+	self
+		should: ['//' asXPath compile]
+		raise: XPathSyntaxException.
+	self
+		should: ['//one/' asXPath compile]
+		raise: XPathSyntaxException.
 ]
 
 { #category : #testing }
@@ -318,6 +356,21 @@ XPathTest >> testPrecedence [
 ]
 
 { #category : #testing }
+XPathTest >> testProcessingInstructionTypeTest [
+	| xml |
+
+	xml := '<root><?one two?><?three four?></root>' parseXML.
+	self assert:
+		(xml xPath: '// processing-instruction ()') =
+			(xml allNodesSelect: [:each | each isPI]).
+	self assert:
+		(xml xPath: '// processing-instruction ( "three" )') =
+			(xml allNodesSelect: [:each |
+				each isPI
+					and: [each target = 'three']]).
+]
+
+{ #category : #testing }
 XPathTest >> testReverseAxis [
 	| results |
 
@@ -395,6 +448,13 @@ XPathTest >> testSubstringFunction [
 ]
 
 { #category : #testing }
+XPathTest >> testTextTypeTest [
+	self assert:
+		(document xPath: ' //text( ) ') =
+			(document allNodesSelect: [:each | each isStringNode])
+]
+
+{ #category : #testing }
 XPathTest >> testThreeLevel [
 	| path results |
 	path := XPath for: '*/person/contact-info/email'.
@@ -461,7 +521,7 @@ XPathTest >> testUnion [
 		(XPath
 			for:
 				'addressbook/person[position() = 1 or position() = 4] |
-				(addressbook/person[4]/preceding-sibling::*[position() < 4])'
+				(addressbook/person[4]/ preceding-sibling::* [position() < 4])'
 			in: document) = (document allElementsNamed: 'person')
 ]
 

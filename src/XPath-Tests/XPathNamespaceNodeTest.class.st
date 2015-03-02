@@ -1,11 +1,11 @@
 Class {
-	#name : #XPathNamespacenodeTest,
+	#name : #XPathNamespaceNodeTest,
 	#superclass : #XMLNodeTest,
 	#category : #'XPath-Tests'
 }
 
 { #category : #'instance creation' }
-XPathNamespacenodeTest >> newNamespaceNode [
+XPathNamespaceNodeTest >> newNamespaceNode [
 	^ self nodeClass
 		element: self newElementWithAttributes
 		prefix: 'prefix'
@@ -13,12 +13,12 @@ XPathNamespacenodeTest >> newNamespaceNode [
 ]
 
 { #category : #accessing }
-XPathNamespacenodeTest >> nodeClass [
+XPathNamespaceNodeTest >> nodeClass [
 	^ XPathNamespaceNode
 ]
 
 { #category : #tests }
-XPathNamespacenodeTest >> testEquals [
+XPathNamespaceNodeTest >> testEquals [
 	| firstNamespace secondNamespace |
 
 	firstNamespace := self newNamespaceNode.
