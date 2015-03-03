@@ -29,7 +29,7 @@ XPathUnknownSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
 	aNodeSet sorted reverseDo: aBlock
 ]
 
-{ #category : #private }
+{ #category : #sorting }
 XPathUnknownSortOrder >> reverseDocumentOrderSort: aNodeSet [
 	aNodeSet
 		sort: [:a :b | b occursInDocumentBeforeNode: a];

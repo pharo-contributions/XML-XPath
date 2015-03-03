@@ -113,25 +113,31 @@ XPathNodeTestParser >> peekForExpandedNameTest: aName [
 ]
 
 { #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNameTestOrNoteTypeTest: aLocalName [
+	inputStream skipSeparators.
+	(inputStream peekFor: $:)
+		ifTrue: [^ false]. ": after spaces; axis specifier"
+
+	(context isTypeTestParserContext not
+		and: [self peekForStartArgumentList])
+		ifTrue: [^ self peekForNodeTypeTest: aLocalName]
+		ifFalse: [
+			context
+				handleTestForName: aLocalName
+				with: handler.
+			^ true].
+]
+
+{ #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNameTestStartingWith: anNcName [
 	(inputStream peekFor: $:)
 		ifTrue: [
-			inputStream peek == $:
+			inputStream peek == $: ":: axis specifier"
 				ifTrue: [^ false]
 				ifFalse: [^ self peekForQualifiedNameTestWithPrefix: anNcName]]
 		ifFalse: [
-			inputStream skipSeparators.
-			(inputStream peekFor: $:)
-				ifTrue: [^ false] "axis specifier"
-				ifFalse: [
-					(context isTypeTestParserContext not
-						and: [self peekForStartArgumentList])
-						ifTrue: [^ self peekForNodeTypeTest: anNcName]
-						ifFalse: [
-							context
-								handleTestForName: anNcName
-								with: handler.
-							^ true]]]
+			^ (self peekForExpandedNameTest: anNcName)
+				or: [self peekForNameTestOrNoteTypeTest: anNcName]]
 ]
 
 { #category : #'parsing - peeking' }

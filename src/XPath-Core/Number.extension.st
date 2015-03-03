@@ -77,14 +77,9 @@ Number >> asXPathString [
 		ifTrue: [
 			self < 0
 				ifTrue: [^ '-Infinity']
-				ifFalse: [^ 'Infinity']]
-		ifFalse: [| stream |
-			"printString does not return decimal strings on Gemstone"
-			stream := (String new: 10) writeStream.
-			self
-				printOn: stream
-				base: 10.
-			^ stream contents].
+				ifFalse: [^ 'Infinity']].
+	"overridden in gemstone version to use greaseString"
+	^ self printString.
 ]
 
 { #category : #'*XPath-Core' }

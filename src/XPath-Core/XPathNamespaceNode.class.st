@@ -124,7 +124,8 @@ XPathNamespaceNode >> occursInParentAfterNamespace: aNamespace [
 		each = aNamespace
 			ifTrue: [^ true].
 		each = self
-			ifTrue: [^ false]]
+			ifTrue: [^ false]].
+	^ false.
 ]
 
 { #category : #private }

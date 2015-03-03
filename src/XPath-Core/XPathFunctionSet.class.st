@@ -61,6 +61,14 @@ XPathFunctionSet >> + aFunctionOrFunctionSet [
 	^ aFunctionOrFunctionSet asFunctionSetWithFunctions: self
 ]
 
+{ #category : #copying }
+XPathFunctionSet >> , aCollection [
+	", is not defined for non-sequenceable collections on gemstone"
+	^ self copy
+		addAll: aCollection;
+		yourself
+]
+
 { #category : #composition }
 XPathFunctionSet >> - aFunctionOrFunctionSet [
 	^ aFunctionOrFunctionSet asFunctionSetSubtractedFromFunctions: self
@@ -78,7 +86,7 @@ XPathFunctionSet >> = aFunctionSet [
 	^ self allSatisfy: [:each | aFunctionSet includes: each].
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XPathFunctionSet >> add: aFunction [
 	^ functionsByName
 		at: aFunction functionName
@@ -107,10 +115,7 @@ XPathFunctionSet >> asFunctionSetWithFunction: aFunction [
 
 { #category : #converting }
 XPathFunctionSet >> asFunctionSetWithFunctions: aFunctionSet [
-	", is not portable for non-sequenceable collections"
-	^ self copy
-		addAll: aFunctionSet;
-		yourself
+	^ self, aFunctionSet
 ]
 
 { #category : #enumerating }
@@ -162,7 +167,7 @@ XPathFunctionSet >> postCopy [
 	functionsByName := functionsByName copy
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XPathFunctionSet >> remove: aFunction ifAbsent: aBlock [
 	^ functionsByName
 		removeKey: aFunction functionName

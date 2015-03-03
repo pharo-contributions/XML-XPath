@@ -1,7 +1,7 @@
 "
 An XPath context is used to evaluate XPath expressions. Each context has a function library and optionally also variable bindings and namespace mappings.
 
-If no namespace mappings are set, then name tests like 'prefix:name', '*:name', and 'prefix:*' will ignore namespaces and match against the names directly.
+If no namespace mappings are set, then name tests like 'prefix:name', '*:name', and 'prefix:*' will match against the name part(s) directly with wildcards matching any name part.
 "
 Class {
 	#name : #XPathContext,
@@ -89,6 +89,13 @@ XPathContext >> errorUndeclaredVariable: aVariableName [
 		with: aVariableName
 ]
 
+{ #category : #namespaces }
+XPathContext >> errorUnmappedPrefix: aPrefix [
+	XPathUndeclaredPrefixException
+		formatSignal: 'Prefix "{1}" was not mapped in XPath context'
+		with: aPrefix
+]
+
 { #category : #private }
 XPathContext >> function: aFunctionName contextNode: aContextNode [
 	^ (self functions
@@ -169,7 +176,9 @@ XPathContext >> removeFunction: aFunction [
 
 { #category : #namespaces }
 XPathContext >> resolvePrefix: aPrefix [
-	^ self namespaceScope resolvePrefix: aPrefix
+	^ self namespaceScope
+		resolvePrefix: aPrefix
+		ifUnresolvable: [self errorUnmappedPrefix: aPrefix]
 ]
 
 { #category : #private }

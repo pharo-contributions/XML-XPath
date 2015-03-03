@@ -64,12 +64,20 @@ Boolean >> asXPathBoolean [
 
 { #category : #'*XPath-Core' }
 Boolean >> asXPathNumber [
-	self subclassResponsibility
+	"Gemstone has TrueClass/FalseClass instead of True/False subclasses,
+	so this is implemented in the superclass for portability"
+	^ self
+		ifTrue: [1.0]
+		ifFalse: [0.0]
 ]
 
 { #category : #'*XPath-Core' }
 Boolean >> asXPathString [
-	self subclassResponsibility
+	"Gemstone has TrueClass/FalseClass instead of True/False subclasses,
+	so this is implemented in the superclass for portability"
+	^ self
+		ifTrue: ['true']
+		ifFalse: ['false']
 ]
 
 { #category : #'*XPath-Core' }

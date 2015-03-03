@@ -25,7 +25,9 @@ XMLAttribute >> isPrincipalNode [
 XMLAttribute >> occursInParentAfterAttribute: anAttribute [
 	self element attributeNodesDo: [:each |
 		each = anAttribute
-			ifTrue: [^ true]].
+			ifTrue: [^ true].
+		each = self
+			ifTrue: [^ false]].
 	^ false.
 ]
 

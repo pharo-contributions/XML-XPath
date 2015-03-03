@@ -252,7 +252,8 @@ XMLNode >> occursInParentAfterSibling: aNode [
 		each = aNode
 			ifTrue: [^ true].
 		each = self
-			ifTrue: [^ false]]
+			ifTrue: [^ false]].
+	^ false.
 ]
 
 { #category : #'*XPath-Core-DOM' }

@@ -90,8 +90,7 @@ XPath class >> for: anXPathSourceString in: aNode context: aContext [
 XPath class >> initialize [
 	"self initialize"
 
-	self clearCompiledXPathCache.
-	self allSubclassesDo: [:each | self clearCompiledXPathCache]
+	self clearCompiledXPathCache
 ]
 
 { #category : #accessing }

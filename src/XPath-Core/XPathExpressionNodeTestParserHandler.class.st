@@ -93,6 +93,40 @@ XPathExpressionNodeTestParserHandler >> handleTestForElementWithAnyName [
 ]
 
 { #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithLocalName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler handleTestForElementWithLocalName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithName: aName [
+	self startNodeTest.
+	expressionParserHandler handleTestForElementWithName: aName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aNamespaceUri localName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler
+		handleTestForElementWithNamespaceURI: aNamespaceUri
+		localName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix [
+	self startNodeTest.
+	expressionParserHandler handleTestForElementWithPrefix: aPrefix.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler
+		handleTestForElementWithPrefix: aPrefix
+		localName: aLocalName.
+]
+
+{ #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleTestForLocalName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler handleTestForLocalName: aLocalName.
