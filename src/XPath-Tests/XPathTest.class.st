@@ -2,61 +2,22 @@ Class {
 	#name : #XPathTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'document'
+		'document',
+		'namespacedDocument'
 	],
 	#category : #'XPath-Tests'
 }
 
-{ #category : #accessing }
-XPathTest >> addressBookXML [
-	^'<addressbook>
-  <person employee-number="A0000" family-name="Gates" first-name="Bob">
-    <contact-info><!--Confidential--></contact-info>
-    <address city="Los Angeles" number="1239" state="CA" street="Pine Rd."/>
-    <job-info employee-type="Full-Time" is-manager="no" job-description="Manager"/>
-    <manager employee-number="A0000"/>
-  </person>
-  <person employee-number="A7000" family-name="Brown"
-    first-name="Robert" middle-initial="L.">
-    <contact-info>
-      <email address="robb@iro.ibm.com"/>
-      <home-phone number="03-3987873"/>
-    </contact-info>
-    <address city="New York" number="344" state="NY" street="118 St."/>
-    <job-info employee-type="Full-Time" is-manager="yes" job-description="Group Leader"/>
-    <manager employee-number="A0000"/>
-  </person>
-  <person employee-number="A7890" family-name="DePaiva"
-    first-name="Kassie" middle-initial="W.">
-    <contact-info><!-- Kassie''s agent phone: 03-987654 --></contact-info>
-    <address city="Los Angeles" number="1234" state="CA" street="Pine Rd."/>
-    <job-info employee-type="Full-Time" is-manager="no" job-description="Actor"/>
-    <manager employee-number="A0000"/>
-    <misc-info>One of the most talented actresses on Daytime. Kassie
-      plays the devious and beautiful Blair Cramer on ABC&apos;s
-      &quot;One Life To Live.&quot;</misc-info>
-  </person>
-  <person employee-number="A7987" family-name="Smith" first-name="Joe">
-    <contact-info>
-      <email address="joes@iro.ibm.com"/>
-      <mobile-phone number="888-7657765"/>
-      <home-phone number="03-8767898"/>
-      <home-phone number="03-8767871"/>
-    </contact-info>
-    <address city="New York" number="12789" state="NY" street="W. 15th Ave."/>
-    <job-info employee-type="Part-Time" is-manager="no" job-description="Hacker"/>
-    <manager employee-number="A7000"/>
-  </person>
-</addressbook>
-'
-]
-
-{ #category : #accessing }
+{ #category : #running }
 XPathTest >> setUp [
 	document :=
-		(XMLDOMParser on: self addressBookXML)
+		(XMLDOMParser on: XMLParserTest addressBookXML)
 			preservesCommentNodes: true;
-			parseDocument
+			parseDocument.
+	namespacedDocument := 
+		(XMLDOMParser on: XMLDOMParserTest addressBookNamespacePrefixedXML)
+			preservesCommentNodes: true;
+			parseDocument.
 ]
 
 { #category : #testing }
@@ -199,8 +160,131 @@ XPathTest >> testDotDotTooHigh [
 ]
 
 { #category : #testing }
+XPathTest >> testElementExpandedNameTest [
+	| persons |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	self assert:
+		(namespacedDocument xPath:
+			'element( Q{bookNS}addressbook ) / element( Q{personNS}person )') = persons.
+	self assert: (namespacedDocument xPath: 'element(Q{undeclared}addressbook)') isEmpty.
+	self
+		should: [namespacedDocument xPath: 'element(Q{bookNS} addressbook)']
+		raise: XPathSyntaxException.
+	self
+		should: [namespacedDocument xPath: 'element(Q {bookNS}addressbook)']
+		raise: XPathSyntaxException.
+]
+
+{ #category : #testing }
+XPathTest >> testElementLocalNameWildcardTest [
+	| persons mappings |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	mappings := 
+		Array
+			with: 'one' -> 'bookNS'
+			with: 'two' -> 'personNS'.
+	self
+		assert: (namespacedDocument xPath: 'element(book:*)/element(ps:*)') = persons;
+		assert: (namespacedDocument xPath: 'element(book:*)/element(undeclared:*)') isEmpty.
+	self assert:
+		(XPath
+			for: 'element(one:*)/element(two:*)'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) = persons.
+	self assert:
+		(XPath
+			for: 'element(one:*)/element(one:*)'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) isEmpty.
+	self
+		should: [
+			(XPath
+				for: 'element(undeclared:*)'
+				in: namespacedDocument
+				context: (XPathContext namespaces: mappings))]
+		raise: XPathUndeclaredPrefixException.
+]
+
+{ #category : #testing }
+XPathTest >> testElementPrefixWildcardTest [
+	| persons |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	self
+		assert: (namespacedDocument xPath: 'element(*:addressbook)/element(*:person)') = persons;
+		assert: (namespacedDocument xPath: 'element(*:addressbook)/element(*:contaxt-info)') isEmpty.
+	self assert:
+		(XPath
+			for: 'element(one:addressbook)/element(*:person)'
+			in: namespacedDocument
+			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) = persons.
+	self assert:
+		(XPath
+			for: 'element(one:addressbook)/element(*:contact-info)'
+			in: namespacedDocument
+			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) isEmpty.
+]
+
+{ #category : #testing }
+XPathTest >> testElementQualfiedNameTest [
+	| persons mappings |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	mappings := 
+		Array
+			with: 'one' -> 'bookNS'
+			with: 'two' -> 'personNS'.
+	self assert:
+		(namespacedDocument xPath:
+			'element(book:addressbook)/element(ps:person)') = persons.
+	self assert:
+		(namespacedDocument xPath:
+			'element(book:addressbook)/element(undeclared:person)') isEmpty.
+	self assert:
+		(XPath
+			for: 'element(one:addressbook)/element(two:person)'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) = persons.
+	self assert:
+		(XPath
+			for: 'element(one:addressbook)/element(one:person)'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) isEmpty.
+	self
+		should: [
+			(XPath
+				for: 'element(undeclared:addressbook)'
+				in: namespacedDocument
+				context: (XPathContext namespaces: mappings))]
+		raise: XPathUndeclaredPrefixException.
+]
+
+{ #category : #testing }
 XPathTest >> testElementTypeTest [
 	self assert: (document // 'element()') = document allElements
+]
+
+{ #category : #testing }
+XPathTest >> testExpandedNameTest [
+	| persons |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	self
+		assert: (namespacedDocument xPath: 'Q{bookNS}addressbook/Q{personNS}person') = persons;
+		assert: (namespacedDocument xPath: 'Q{undeclared}addressbook') isEmpty.
+	self
+		should: [namespacedDocument xPath: 'Q{bookNS} addressbook']
+		raise: XPathSyntaxException.
+	self
+		should: [namespacedDocument xPath: 'Q {bookNS}addressbook']
+		raise: XPathSyntaxException.
+]
+
+{ #category : #testing }
+XPathTest >> testFalseFunction [
+	self deny: 'false()' asXPath evaluate
 ]
 
 { #category : #testing }
@@ -298,6 +382,37 @@ XPathTest >> testLocalNameFunction [
 ]
 
 { #category : #testing }
+XPathTest >> testLocalNameWildcardTest [
+	| persons mappings |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	mappings := 
+		Array
+			with: 'one' -> 'bookNS'
+			with: 'two' -> 'personNS'.
+	self
+		assert: (namespacedDocument xPath: 'book:*/ps:*') = persons;
+		assert: (namespacedDocument xPath: 'book:*/undeclared:*') isEmpty.
+	self assert:
+		(XPath
+			for: 'one:*/two:*'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) = persons.
+	self assert:
+		(XPath
+			for: 'one:*/one:*'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) isEmpty.
+	self
+		should: [
+			(XPath
+				for: 'undeclared:*'
+				in: namespacedDocument
+				context: (XPathContext namespaces: mappings))]
+		raise: XPathUndeclaredPrefixException.
+]
+
+{ #category : #testing }
 XPathTest >> testLogicalOperators [
 	self
 		deny: '0 or 0 or 0' asXPath evaluate;
@@ -356,6 +471,26 @@ XPathTest >> testPrecedence [
 ]
 
 { #category : #testing }
+XPathTest >> testPrefixWildcardTest [
+	| persons |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	self
+		assert: (namespacedDocument xPath: '*:addressbook/*:person') = persons;
+		assert: (namespacedDocument xPath: '*:addressbook/*:contaxt-info') isEmpty.
+	self assert:
+		(XPath
+			for: 'one:addressbook/*:person'
+			in: namespacedDocument
+			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) = persons.
+	self assert:
+		(XPath
+			for: 'one:addressbook/*:contact-info'
+			in: namespacedDocument
+			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) isEmpty.
+]
+
+{ #category : #testing }
 XPathTest >> testProcessingInstructionTypeTest [
 	| xml |
 
@@ -368,6 +503,37 @@ XPathTest >> testProcessingInstructionTypeTest [
 			(xml allNodesSelect: [:each |
 				each isPI
 					and: [each target = 'three']]).
+]
+
+{ #category : #testing }
+XPathTest >> testQualfiedNameTest [
+	| persons mappings |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	mappings := 
+		Array
+			with: 'one' -> 'bookNS'
+			with: 'two' -> 'personNS'.
+	self
+		assert: (namespacedDocument xPath: 'book:addressbook/ps:person') = persons;
+		assert: (namespacedDocument xPath: 'book:addressbook/undeclared:person') isEmpty.
+	self assert:
+		(XPath
+			for: 'one:addressbook/two:person'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) = persons.
+	self assert:
+		(XPath
+			for: 'one:addressbook/one:person'
+			in: namespacedDocument
+			context: (XPathContext namespaces: mappings)) isEmpty.
+	self
+		should: [
+			(XPath
+				for: 'undeclared:addressbook'
+				in: namespacedDocument
+				context: (XPathContext namespaces: mappings))]
+		raise: XPathUndeclaredPrefixException.
 ]
 
 { #category : #testing }
@@ -485,6 +651,11 @@ XPathTest >> testTranslateFunction [
 		assert: 'translate("onetwothree", "oe", "O")' asXPath evaluate = 'OntwOthr';
 		assert: 'translate("onetwothree", "oe", "OEN")' asXPath evaluate = 'OnEtwOthrEE';
 		assert: 'translate("onetwothree", "z", "x")' asXPath evaluate = 'onetwothree'
+]
+
+{ #category : #testing }
+XPathTest >> testTrueFunction [
+	self assert: 'true()' asXPath evaluate
 ]
 
 { #category : #testing }
