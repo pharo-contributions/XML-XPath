@@ -173,6 +173,17 @@ ConfigurationOfXPath >> baseline105: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfXPath >> baseline106: spec [
+	<version: '1.0.6-baseline' imports: #('1.0-baseline')>
+
+	spec for: #gemstone do: [
+		spec blessing: #baseline.
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.4'. ].
+]
+
+{ #category : #baselines }
 ConfigurationOfXPath >> baseline10: spec [
 	<version: '1.0-baseline'>
 
@@ -234,7 +245,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.5'.
+	spec for: #'common' version: '1.0.6'.
 
 ]
 
@@ -290,6 +301,17 @@ ConfigurationOfXPath >> version105: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.12'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.7'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version106: spec [ 
+        <version: '1.0.6' imports: #('1.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.13'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.8'.
                 ].
 ]
 
