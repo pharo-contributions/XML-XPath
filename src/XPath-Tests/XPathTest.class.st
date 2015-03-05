@@ -134,6 +134,7 @@ XPathTest >> testDescendantOrSelf [
 { #category : #testing }
 XPathTest >> testDot [
 	| path results |
+
 	path := XPath for: 'addressbook/person/address/./@city'.
 	results := path in: document.
 	self assert: results size = 4 & (results size > 0).
@@ -494,15 +495,16 @@ XPathTest >> testPrefixWildcardTest [
 XPathTest >> testProcessingInstructionTypeTest [
 	| xml |
 
-	xml := '<root><?one two?><?three four?></root>' parseXML.
+	xml := '<root>before<?one two?><?three four?>after</root>' parseXML.
 	self assert:
 		(xml xPath: '// processing-instruction ()') =
-			(xml allNodesSelect: [:each | each isPI]).
+			(xml root nodes copyFrom: 2 to: 3).
 	self assert:
 		(xml xPath: '// processing-instruction ( "three" )') =
-			(xml allNodesSelect: [:each |
-				each isPI
-					and: [each target = 'three']]).
+			(xml root nodes copyFrom: 3 to: 3).
+	self assert:
+		(xml xPath: '// processing-instruction ( one )') =
+			(xml root nodes copyFrom: 2 to: 2).
 ]
 
 { #category : #testing }
