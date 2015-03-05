@@ -82,18 +82,18 @@ XPathContext >> errorUndeclaredFunction: aFunctionName [
 		with: aFunctionName
 ]
 
+{ #category : #namespaces }
+XPathContext >> errorUndeclaredPrefix: aPrefix [
+	XPathUndeclaredPrefixException
+		formatSignal: 'Prefix "{1}" was not declared in the XPath context'
+		with: aPrefix
+]
+
 { #category : #private }
 XPathContext >> errorUndeclaredVariable: aVariableName [
 	XPathUndeclaredVariableException
 		formatSignal: 'Undeclared variable reference ${1}'
 		with: aVariableName
-]
-
-{ #category : #namespaces }
-XPathContext >> errorUnmappedPrefix: aPrefix [
-	XPathUndeclaredPrefixException
-		formatSignal: 'Prefix "{1}" was not mapped in XPath context'
-		with: aPrefix
 ]
 
 { #category : #private }
@@ -178,7 +178,7 @@ XPathContext >> removeFunction: aFunction [
 XPathContext >> resolvePrefix: aPrefix [
 	^ self namespaceScope
 		resolvePrefix: aPrefix
-		ifUnresolvable: [self errorUnmappedPrefix: aPrefix]
+		ifUnresolvable: [self errorUndeclaredPrefix: aPrefix]
 ]
 
 { #category : #private }

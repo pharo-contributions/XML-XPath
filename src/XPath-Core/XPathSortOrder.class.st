@@ -111,20 +111,6 @@ XPathSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
-{ #category : #private }
-XPathSortOrder >> childAxisOnSiblings: aNodeSet select: aNodeTestBlock [
-	| copy |
-
-	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each |
-		each hasChildren
-			ifTrue: [
-				each nodesDo: [:node |
-					(aNodeTestBlock value: node)
-						ifTrue: [copy addLast: node]]]].
-	^ copy sortOrder: XPathLevelDocumentSortOrder new.
-]
-
 { #category : #copying }
 XPathSortOrder >> copy [
 	^ self
@@ -192,22 +178,6 @@ XPathSortOrder >> followingAxisOn: aNodeSet select: aNodeTestBlock [
 
 ]
 
-{ #category : #private }
-XPathSortOrder >> followingAxisOnSiblings: aNodeSet select: aNodeTestBlock [
-	| copy |
-
-	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each | | lastParentAddedFrom |
-		(lastParentAddedFrom notNil
-			and: [each parent = lastParentAddedFrom])
-			ifFalse: [
-				each followingNodesDo: [:sibling | 
-					(aNodeTestBlock value: sibling)
-						ifTrue: [copy addLast: sibling]].
-				lastParentAddedFrom := each]].
-	^ copy sortOrder: XPathDocumentSortOrder new.
-]
-
 { #category : #enumerating }
 XPathSortOrder >> followingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
@@ -223,7 +193,37 @@ XPathSortOrder >> followingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 ]
 
 { #category : #private }
-XPathSortOrder >> followingSiblingAxisOnSiblings: aNodeSet select: aNodeTestBlock [
+XPathSortOrder >> levelOrderChildAxisOn: aNodeSet select: aNodeTestBlock [
+	| copy |
+
+	copy := aNodeSet copyEmpty.
+	self documentOrderOn: aNodeSet do: [:each |
+		each hasChildren
+			ifTrue: [
+				each nodesDo: [:node |
+					(aNodeTestBlock value: node)
+						ifTrue: [copy addLast: node]]]].
+	^ copy sortOrder: XPathLevelDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> levelOrderFollowingAxisOn: aNodeSet select: aNodeTestBlock [
+	| copy |
+
+	copy := aNodeSet copyEmpty.
+	self documentOrderOn: aNodeSet do: [:each | | lastParentAddedFrom |
+		(lastParentAddedFrom notNil
+			and: [each parent = lastParentAddedFrom])
+			ifFalse: [
+				each followingNodesDo: [:sibling | 
+					(aNodeTestBlock value: sibling)
+						ifTrue: [copy addLast: sibling]].
+				lastParentAddedFrom := each]].
+	^ copy sortOrder: XPathDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> levelOrderFollowingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
@@ -236,6 +236,38 @@ XPathSortOrder >> followingSiblingAxisOnSiblings: aNodeSet select: aNodeTestBloc
 						ifTrue: [copy addLast: sibling]].
 				lastParentAddedFrom := each]].
 	^ copy sortOrder: XPathLevelDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> levelOrderPrecedingAxisOn: aNodeSet select: aNodeTestBlock [
+	| copy |
+
+	copy := aNodeSet copyEmpty.
+	self reverseDocumentOrderOn: aNodeSet do: [:each | | lastParentAddedFrom |
+		(lastParentAddedFrom notNil
+			and: [each parent = lastParentAddedFrom])
+			ifFalse: [
+				each precedingNodesDo: [:sibling | 
+					(aNodeTestBlock value: sibling)
+						ifTrue: [copy addLast: sibling]].
+				lastParentAddedFrom := each]].
+	^ copy sortOrder: XPathReverseDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> levelOrderPrecedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
+	| copy |
+
+	copy := aNodeSet copyEmpty.
+	self reverseDocumentOrderOn: aNodeSet do: [:each | | lastParentAddedFrom |
+		(lastParentAddedFrom notNil
+			and: [each parent = lastParentAddedFrom])
+			ifFalse: [
+				each precedingSiblingNodesDo: [:sibling | 
+					(aNodeTestBlock value: sibling)
+						ifTrue: [copy addLast: sibling]].
+				lastParentAddedFrom := each]].
+	^ copy sortOrder: XPathLevelReverseDocumentSortOrder new.
 ]
 
 { #category : #enumerating }
@@ -283,6 +315,7 @@ XPathSortOrder >> nextChildrenInDocumentOrderFrom: aNodeWithChildrenCollection s
 						nextNodeWithChildren := aNodeWithChildrenCollection at: 1 ifAbsent: nil].
 				totalChildrenVisited = totalChildren
 					or: [nextNodeWithChildren isNil]].
+
 			(totalChildrenVisited = totalChildren)
 				ifFalse: [
 					totalChildrenVisited + 1 to: totalChildren do: [:i | | node |
@@ -318,22 +351,6 @@ XPathSortOrder >> precedingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ copy reverseSort.
 ]
 
-{ #category : #private }
-XPathSortOrder >> precedingAxisOnSiblings: aNodeSet select: aNodeTestBlock [
-	| copy |
-
-	copy := aNodeSet copyEmpty.
-	self reverseDocumentOrderOn: aNodeSet do: [:each | | lastParentAddedFrom |
-		(lastParentAddedFrom notNil
-			and: [each parent = lastParentAddedFrom])
-			ifFalse: [
-				each precedingNodesDo: [:sibling | 
-					(aNodeTestBlock value: sibling)
-						ifTrue: [copy addLast: sibling]].
-				lastParentAddedFrom := each]].
-	^ copy sortOrder: XPathReverseDocumentSortOrder new.
-]
-
 { #category : #enumerating }
 XPathSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
@@ -346,22 +363,6 @@ XPathSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 					(aNodeTestBlock value: sibling)
 						ifTrue: [copy addLast: sibling]]]].
 	^ copy reverseSort.
-]
-
-{ #category : #private }
-XPathSortOrder >> precedingSiblingAxisOnSiblings: aNodeSet select: aNodeTestBlock [
-	| copy |
-
-	copy := aNodeSet copyEmpty.
-	self reverseDocumentOrderOn: aNodeSet do: [:each | | lastParentAddedFrom |
-		(lastParentAddedFrom notNil
-			and: [each parent = lastParentAddedFrom])
-			ifFalse: [
-				each precedingSiblingNodesDo: [:sibling | 
-					(aNodeTestBlock value: sibling)
-						ifTrue: [copy addLast: sibling]].
-				lastParentAddedFrom := each]].
-	^ copy sortOrder: XPathLevelReverseDocumentSortOrder new.
 ]
 
 { #category : #private }

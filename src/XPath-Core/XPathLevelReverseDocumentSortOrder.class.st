@@ -10,34 +10,34 @@ Class {
 { #category : #enumerating }
 XPathLevelReverseDocumentSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
-		childAxisOnSiblings: aNodeSet
+		levelOrderChildAxisOn: aNodeSet
 		select: aNodeTestBlock
 ]
 
 { #category : #enumerating }
 XPathLevelReverseDocumentSortOrder >> followingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
-		followingAxisOnSiblings: aNodeSet
+		levelOrderFollowingAxisOn: aNodeSet
 		select: aNodeTestBlock
 ]
 
 { #category : #enumerating }
 XPathLevelReverseDocumentSortOrder >> followingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
-		followingSiblingAxisOnSiblings: aNodeSet
+		levelOrderFollowingSiblingAxisOn: aNodeSet
 		select: aNodeTestBlock
 ]
 
 { #category : #enumerating }
 XPathLevelReverseDocumentSortOrder >> precedingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
-		precedingAxisOnSiblings: aNodeSet
+		levelOrderPrecedingAxisOn: aNodeSet
 		select: aNodeTestBlock
 ]
 
 { #category : #enumerating }
 XPathLevelReverseDocumentSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
-		precedingSiblingAxisOnSiblings: aNodeSet
+		levelOrderPrecedingSiblingAxisOn: aNodeSet
 		select: aNodeTestBlock
 ]

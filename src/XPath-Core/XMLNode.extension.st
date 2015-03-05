@@ -198,6 +198,8 @@ XMLNode >> occursInDocumentBeforeNode: aNode [
 	self = aNode
 		ifTrue: [^ false].
 
+	"handle easy cases where one is a root or one is the parent of the other
+	or they share parents"
 	(self hasParent not
 		or: [aNode parent = self])
 		ifTrue: [^ true].

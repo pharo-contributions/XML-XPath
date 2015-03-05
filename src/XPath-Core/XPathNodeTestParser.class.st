@@ -76,7 +76,10 @@ XPathNodeTestParser >> nextPITypeTest [
 	| name |
 
 	inputStream skipSeparators.
-	(name := self nextStringLiteralOptional: true)
+	name :=
+		(self nextStringLiteralOptional: true)
+			ifNil: [self nextNCNameOptional: true].
+	name
 		ifNil: [context handleTestForPITypeWith: handler]
 		ifNotNil: [
 			context
