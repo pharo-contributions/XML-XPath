@@ -32,16 +32,21 @@ XMLPI >> hasPrefixedNamespaceURI: aNamespaceUri [
 
 { #category : #'*XPath-Core-DOM' }
 XMLPI >> localName [
-	^ self target
+	^ self name
 ]
 
 { #category : #'*XPath-Core-DOM' }
 XMLPI >> name [
-	^ self localName
+	^ self target
 ]
 
 { #category : #'*XPath-Core-DOM' }
 XMLPI >> namespaceURI [
-	"The spec says the namespace URI part of an expanded name is null"
+	"The spec says the namespace URI part of a PI expanded name is null"
+	^ ''
+]
+
+{ #category : #'*XPath-Core-DOM' }
+XMLPI >> prefix [
 	^ ''
 ]

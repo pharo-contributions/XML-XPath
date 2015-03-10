@@ -5,17 +5,17 @@ Class {
 	#name : #XPathNamespaceNode,
 	#superclass : #XMLNode,
 	#instVars : [
-		'prefix',
+		'name',
 		'uri'
 	],
 	#category : #'XPath-Core-DOM'
 }
 
 { #category : #'instance creation' }
-XPathNamespaceNode class >> element: anElement prefix: aPrefix uri: aNamespaceUri [
+XPathNamespaceNode class >> element: anElement name: aPrefixName uri: aNamespaceUri [
 	^ self new
 		setElement: anElement
-		prefix: aPrefix
+		name: aPrefixName
 		uri: aNamespaceUri
 ]
 
@@ -23,7 +23,7 @@ XPathNamespaceNode class >> element: anElement prefix: aPrefix uri: aNamespaceUr
 XPathNamespaceNode class >> withXMLNamespaceOnElement: anElement [
 	^ self
 		element: anElement
-		prefix: 'xml'
+		name: 'xml'
 		uri: XMLNamespaceScope xmlNamespaceURI
 ]
 
@@ -42,7 +42,7 @@ XPathNamespaceNode >> = anObject [
 
 	"elements don't share namespace nodes according to the spec"
 	^ self element = anObject element
-		and: [self prefix = anObject prefix
+		and: [self name = anObject name
 			and: [self uri = anObject uri]].
 ]
 
@@ -73,6 +73,8 @@ XPathNamespaceNode >> hasNamespaceURI [
 
 { #category : #testing }
 XPathNamespaceNode >> hasPrefix [
+	"this returns true only if the name is prefixed, and namespace
+	names cannot be prefixed"
 	^ false
 ]
 
@@ -83,7 +85,7 @@ XPathNamespaceNode >> hasPrefixedNamespaceURI: aNamespaceUri [
 
 { #category : #comparing }
 XPathNamespaceNode >> hash [
-	^ self prefix hash bitXor: self uri hash
+	^ self name hash bitXor: self uri hash
 ]
 
 { #category : #testing }
@@ -98,18 +100,18 @@ XPathNamespaceNode >> isPrincipalNode [
 
 { #category : #accessing }
 XPathNamespaceNode >> localName [
-	^ self prefix
+	^ self name
 ]
 
 { #category : #accessing }
 XPathNamespaceNode >> name [
-	^ self localName
+	^ name ifNil: [name := '']
 ]
 
 { #category : #namespaces }
 XPathNamespaceNode >> namespaceURI [
-	"namespace nodes cannot be namespaced.
-	the spec says their namespace is null"
+	"spec says namespace nodes cannot be namespaced
+	(the namespace part of the expanded name is null)"
 	^ ''
 ]
 
@@ -142,15 +144,16 @@ XPathNamespaceNode >> position [
 
 { #category : #namespaces }
 XPathNamespaceNode >> prefix [
-	^ prefix ifNil: [prefix := '']
+	"the name of a namespace node cannot be prefixed"
+	^ ''
 ]
 
 { #category : #initialization }
-XPathNamespaceNode >> setElement: anElement prefix: aPrefix uri: aUri [
+XPathNamespaceNode >> setElement: anElement name: aPrefixName uri: aNamespaceUri [
 	"reuse parent inst var, like in XMLAttribute"
 	parent := anElement.
-	prefix := aPrefix.
-	uri := aUri.
+	name := aPrefixName.
+	uri := aNamespaceUri.
 ]
 
 { #category : #namespaces }
@@ -162,8 +165,8 @@ XPathNamespaceNode >> uri [
 XPathNamespaceNode >> writeXMLOn: aWriter [
 	aWriter
 		writeName:
-			(self prefix
+			(self name
 				ifEmpty: ['xmlns']
-				ifNotEmpty: ['xmlns:', self prefix])
+				ifNotEmpty: ['xmlns:', self name])
 		escapedContentValue: self uri
 ]

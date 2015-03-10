@@ -66,6 +66,6 @@ XMLElement >> namespaceNodesDo: aBlock [
 				aBlock value:
 					(XPathNamespaceNode
 						element: self
-						prefix: prefix
+						name: prefix
 						uri: uri)]].
 ]
