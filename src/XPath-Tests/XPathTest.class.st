@@ -42,14 +42,14 @@ XPathTest >> testAddFunction [
 ]
 
 { #category : #testing }
-XPathTest >> testAncestor [
+XPathTest >> testAncestorAxis [
 	self assert:
 		(XPath for: '//ancestor::node()' in: document) =
 			(document allNodesSelect: [:each | each hasChildren]) reversed
 ]
 
 { #category : #testing }
-XPathTest >> testAncestorOrSelf [
+XPathTest >> testAncestorOrSelfAxis [
 	self assert:
 		(XPath
 			for: '//node() [ count( child::node() ) = 0]'
@@ -61,7 +61,7 @@ XPathTest >> testAncestorOrSelf [
 ]
 
 { #category : #testing }
-XPathTest >> testAttribute [
+XPathTest >> testAttributeAxis [
 	| results |
 
 	results :=
@@ -132,7 +132,7 @@ XPathTest >> testCountFunction [
 ]
 
 { #category : #testing }
-XPathTest >> testDescendant [
+XPathTest >> testDescendantAxis [
 	| path results |
 	path := XPath for: '//address/@city'.
 	results := path in: document.
@@ -142,7 +142,7 @@ XPathTest >> testDescendant [
 ]
 
 { #category : #testing }
-XPathTest >> testDescendantOrSelf [
+XPathTest >> testDescendantOrSelfAxis [
 	self
 		assert: (XPath for: '//.' in: document) = document allNodes;
 		assert: (XPath for: '//./node()' in: document) = document allNodes allButFirst;
@@ -342,7 +342,7 @@ XPathTest >> testFalseFunction [
 ]
 
 { #category : #testing }
-XPathTest >> testFollowingSibling [
+XPathTest >> testFollowingSiblingAxis [
 	| siblings |
 
 	siblings := (document allElementsNamed: 'person') allButFirst.
@@ -567,22 +567,24 @@ XPathTest >> testNameFunction [
 ]
 
 { #category : #testing }
-XPathTest >> testNamespace [
+XPathTest >> testNamespaceAxis [
 	| nodes |
 
 	nodes := XPathNodeSet new.
 	namespacedDocument allElementsDo: [:each |
 		nodes
 			add: (XPathNamespaceNode withXMLNamespaceOnElement: each);
-			add: (XPathNamespaceNode element: each prefix: '' uri: 'defaultNS');
-			add: (XPathNamespaceNode element: each prefix: 'book' uri: 'bookNS');
-			add: (XPathNamespaceNode element: each prefix: 'ps' uri: 'personNS')].
+			add: (XPathNamespaceNode element: each name: '' uri: 'defaultNS');
+			add: (XPathNamespaceNode element: each name: 'book' uri: 'bookNS');
+			add: (XPathNamespaceNode element: each name: 'ps' uri: 'personNS')].
 	self
 		assert: nodes size = (namespacedDocument allElements size * 4);
 		assert: (namespacedDocument xPath: '//namespace::*') = nodes;
 		assert:
 			(namespacedDocument xPath: '//namespace::book') =
-				(nodes select: [:each | each prefix ='book']).
+				(nodes select: [:each | each name ='book']);
+		assert: (namespacedDocument xPath: '//namespace::book:*') isEmpty;
+		assert: (namespacedDocument xPath: '//namespace::namespace()') = nodes.
 
 	nodes :=
 		document allElementsCollect: [:each |
@@ -636,6 +638,26 @@ XPathTest >> testPrecedence [
 	self
 		assert: (XPath for: '1 + 2 * 3 + 4 div 2' in: nil) rounded = 9;
 		assert: (XPath for: '(1 + 2) * (3 + 4) mod 5' in: nil) rounded = 1.
+]
+
+{ #category : #testing }
+XPathTest >> testPrecedingSiblingAxis [
+	| results |
+
+	results :=
+		XPath
+			for: 'addressbook/person[4]/preceding-sibling::node()'
+			in: document.
+	self assert: results = document root nodes allButLast reversed.
+
+	results :=
+		XPath
+			for: 'addressbook/person[4]/preceding-sibling::node()/manager'
+			in: document.
+	self assert:
+		results =
+			(document root nodes allButLast
+				collect: [:each | each elementAt: 'manager']).
 ]
 
 { #category : #testing }
@@ -703,26 +725,6 @@ XPathTest >> testQualfiedNameTest [
 				in: namespacedDocument
 				context: (XPathContext namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
-]
-
-{ #category : #testing }
-XPathTest >> testReverseAxis [
-	| results |
-
-	results :=
-		XPath
-			for: 'addressbook/person[4]/preceding-sibling::node()'
-			in: document.
-	self assert: results = document root nodes allButLast reversed.
-
-	results :=
-		XPath
-			for: 'addressbook/person[4]/preceding-sibling::node()/manager'
-			in: document.
-	self assert:
-		results =
-			(document root nodes allButLast
-				collect: [:each | each elementAt: 'manager']).
 ]
 
 { #category : #testing }
