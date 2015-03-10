@@ -21,6 +21,27 @@ XPathTest >> setUp [
 ]
 
 { #category : #testing }
+XPathTest >> testAddFunction [
+	| functionSet context |
+
+	functionSet := XPathFunctionSet default copyWithout: XPathCeilingFunction.
+	self
+		should: [
+			XPath
+				for: 'ceiling()'
+				in: nil
+				context: (XPathContext functions: functionSet)]
+		raise: XPathUndeclaredFunctionException.
+
+	(context := XPathContext functions: functionSet)
+		addFunction: XPathCeilingFunction.
+	self
+		assert: (context includesFunction: XPathCeilingFunction);
+		deny: (functionSet includes: XPathCeilingFunction);
+		assert: (XPath for: 'ceiling(1.9)' in: nil context: context) = 2.
+]
+
+{ #category : #testing }
 XPathTest >> testAncestor [
 	self assert:
 		(XPath for: '//ancestor::node()' in: document) =
@@ -158,6 +179,38 @@ XPathTest >> testDotDotTooHigh [
 	path := XPath for: 'person/address/../../../address/@city'.
 	results := path in: document.
 	self assert: (results size = 0).
+]
+
+{ #category : #testing }
+XPathTest >> testDoubleWildcard [
+	self assert:
+		(XPath for: 'addressbook/*:*' in: document) =
+			(document allElementsNamed: 'person').
+	self assert:
+		(XPath for: 'book:addressbook/*:*' in: namespacedDocument) =
+			(namespacedDocument allElementsNamed: 'person').
+	self assert:
+		(XPath
+			for: '*:*/*:*'
+			in: namespacedDocument
+			context: (XPathContext new declarePrefix: 'two' uri: 'personNS')) =
+				(namespacedDocument allElementsNamed: 'person').
+]
+
+{ #category : #testing }
+XPathTest >> testElementDoubleWildcard [
+	self assert:
+		(XPath for: 'addressbook/element(*:*)' in: document) =
+			(document allElementsNamed: 'person').
+	self assert:
+		(XPath for: 'book:addressbook/element(*:*)' in: namespacedDocument) =
+			(namespacedDocument allElementsNamed: 'person').
+	self assert:
+		(XPath
+			for: 'element(*:*)/element(*:*)'
+			in: namespacedDocument
+			context: (XPathContext new declarePrefix: 'two' uri: 'personNS')) =
+				(namespacedDocument allElementsNamed: 'person').
 ]
 
 { #category : #testing }
@@ -317,6 +370,61 @@ XPathTest >> testFollowingSibling [
 ]
 
 { #category : #testing }
+XPathTest >> testFunctions [
+	| functionSet |
+
+	functionSet := XPathFunctionSet default.
+	self
+		assert: XPathContext new functions = functionSet;
+		deny: XPathContext new functions == functionSet;
+		assert: (XPathContext functions: functionSet) functions == functionSet;
+		assert: (XPathContext new functions: functionSet) functions == functionSet.
+]
+
+{ #category : #testing }
+XPathTest >> testIDFunction [
+	| xmlWithIds documentWithIds idElements |
+
+	xmlWithIds :=
+		'<!DOCTYPE one [
+			<!ELEMENT one ANY>
+			<!ATTLIST one id ID #REQUIRED>
+			<!ELEMENT two ANY>
+			<!ATTLIST two id2 ID #IMPLIED>
+			<!ELEMENT three ANY>
+			<!ATTLIST three
+				id ID #REQUIRED
+				id3 CDATA #IMPLIED>
+			<!ELEMENT four ANY>
+			<!ATTLIST four id4 ID #REQUIRED>
+			<!ELEMENT five ANY>
+			<!ATTLIST five id CDATA #IMPLIED>
+			<!ELEMENT six ANY>
+			<!ATTLIST six id2 CDATA #IMPLIED>
+			<!ELEMENT seven ANY>
+			<!ATTLIST seven id4 CDATA #IMPLIED>
+		]>
+		<one id="first"><two/><three id="third" id3="non-id"><four id4="fourth">
+			<five id="non-id">first</five>
+			<six id2="non-id">third</six>
+			<seven id4="non=id">non-id</seven>
+		</four></three></one>'.
+	documentWithIds :=
+		XMLDOMParser
+			parse: xmlWithIds
+			usingNamespaces: true
+			validation: true.
+
+	idElements :=
+		documentWithIds allElements select: [:each |
+				each isNamedAny: #('one' 'three')].
+	self
+		assert: (documentWithIds xPath: 'id("  first  third  non-id  ")') = idElements;
+		assert: (documentWithIds xPath: 'id("first third non-id")') = idElements;
+		assert: (documentWithIds xPath: 'id(//*)') = idElements.
+]
+
+{ #category : #testing }
 XPathTest >> testInvalidAbbreviatedLocationPath [
 	self
 		should: ['/ /one' asXPath compile]
@@ -423,11 +531,70 @@ XPathTest >> testLogicalOperators [
 ]
 
 { #category : #testing }
-XPathTest >> testNamespace [
+XPathTest >> testNameFunction [
+	| element |
+
+	(element := XMLElement named: 'test')
+		addNode: (XMLElement named: 'test-two');
+		addNode: 'test-three' asXMLString.
+	self
+		assert: (XPath for: 'name()' in: element) = 'test';
+		assert: (XPath for: 'name(//.)' in: element) = 'test'.
+
+	element name: 'test' namespaceURI: 'defaultNS'.
+	self assert: (XPath for: 'name()' in: element) = 'test'.
 	self assert:
-		(document xPath: '//namespace::*') =
-			(document allElementsCollect: [:each |
-				XPathNamespaceNode withXMLNamespaceOnElement: each]).
+		(XPath
+			for: 'name()'
+			in: element
+			context:
+				(XPathContext new
+					declarePrefix: 'one'
+					uri: 'defaultNS')) = 'test'.
+
+	element name: 'prefix:test' namespaceURI: 'prefixNS'.
+	self assert: (XPath for: 'name()' in: element) = 'prefix:test'.
+	self assert:
+		(XPath
+			for: 'name()'
+			in: element
+			context:
+				(XPathContext new
+					declarePrefix: 'two'
+					uri: 'prefixNS')) = 'two:test'.
+
+	self assert: (XPath for: 'name(//text())' in: element) isEmpty.
+]
+
+{ #category : #testing }
+XPathTest >> testNamespace [
+	| nodes |
+
+	nodes := XPathNodeSet new.
+	namespacedDocument allElementsDo: [:each |
+		nodes
+			add: (XPathNamespaceNode withXMLNamespaceOnElement: each);
+			add: (XPathNamespaceNode element: each prefix: '' uri: 'defaultNS');
+			add: (XPathNamespaceNode element: each prefix: 'book' uri: 'bookNS');
+			add: (XPathNamespaceNode element: each prefix: 'ps' uri: 'personNS')].
+	self
+		assert: nodes size = (namespacedDocument allElements size * 4);
+		assert: (namespacedDocument xPath: '//namespace::*') = nodes;
+		assert:
+			(namespacedDocument xPath: '//namespace::book') =
+				(nodes select: [:each | each prefix ='book']).
+
+	nodes :=
+		document allElementsCollect: [:each |
+				XPathNamespaceNode withXMLNamespaceOnElement: each].
+	self assert: (document xPath: '//namespace::*') = nodes.
+]
+
+{ #category : #testing }
+XPathTest >> testNestedFunctionCalls [
+	self
+		assert: 'ceiling(3.5 + floor(1.5))' asXPath evaluate = 5;
+		assert: 'contains(concat("one", "two", string("three")), "two")' asXPath evaluate
 ]
 
 { #category : #testing }
