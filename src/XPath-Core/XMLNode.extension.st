@@ -182,6 +182,18 @@ XMLNode >> isPrincipalNode [
 ]
 
 { #category : #'*XPath-Core-DOM' }
+XMLNode >> lastAncestorOfChildrenIn: aNode [
+	self parent = aNode
+		ifTrue: [^ self].
+	self parent = aNode parent
+		ifTrue: [^ nil].
+	self ancestorNodesDo: [:each |
+		(each parent = aNode)
+			ifTrue: [^ each]].
+	^ nil.
+]
+
+{ #category : #'*XPath-Core-DOM' }
 XMLNode >> newNodeSet [
 	^ XPathNodeSet new
 ]

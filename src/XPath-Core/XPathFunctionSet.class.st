@@ -21,6 +21,7 @@ XPathFunctionSet class >> default [
 		XPathEndsWithFunction +
 		XPathFalseFunction +
 		XPathFloorFunction +
+		XPathIDFunction +
 		XPathLangFunction +
 		XPathLocalNameFunction +
 		XPathNameFunction +

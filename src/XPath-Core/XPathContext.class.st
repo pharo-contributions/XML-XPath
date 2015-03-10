@@ -1,7 +1,7 @@
 "
 An XPath context is used to evaluate XPath expressions. Each context has a function library and optionally also variable bindings and namespace mappings.
 
-If no namespace mappings are set, then name tests like 'prefix:name', '*:name', and 'prefix:*' will match against the name part(s) directly with wildcards matching any name part.
+If no namespace mappings are set in the context, then name tests like 'prefix:name', '*:name', and 'prefix:*' will match against the name part(s) directly with wildcards matching any name part.
 "
 Class {
 	#name : #XPathContext,
@@ -25,12 +25,20 @@ XPathContext class >> defaultFunctions [
 
 { #category : #accessing }
 XPathContext class >> defaultFunctions: aFunctionSet [
+	"can be used to replace default function set with a custom function set"
 	defaultFunctions := aFunctionSet
 ]
 
 { #category : #'instance creation' }
 XPathContext class >> functions: aFunctionSet [
 	^ self new functions: aFunctionSet
+]
+
+{ #category : #'class initialization' }
+XPathContext class >> initialize [
+	"self initialize"
+
+	self defaultFunctions: nil
 ]
 
 { #category : #'instance creation' }
@@ -144,7 +152,9 @@ XPathContext >> isDeclaredPrefix: aPrefix [
 
 { #category : #testing }
 XPathContext >> isDeclaredPrefix: aPrefix uri: aUri [
-	^ self namespaceScope includesPrefix: aPrefix mappedTo: aUri
+	^ self namespaceScope
+		includesPrefix: aPrefix
+		mappedTo: aUri
 ]
 
 { #category : #private }

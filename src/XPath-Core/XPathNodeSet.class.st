@@ -347,6 +347,7 @@ XPathNodeSet >> movedNode: aNode to: anIndex [
 
 { #category : #enumerating }
 XPathNodeSet >> reject: aBlock [
+	"select doesn't change sort order"
 	^ (super reject: aBlock) sortOrderFrom: self
 ]
 
@@ -382,6 +383,7 @@ XPathNodeSet >> reverseSorted [
 
 { #category : #enumerating }
 XPathNodeSet >> select: aBlock [
+	"select doesn't change sort order"
 	^ (super select: aBlock) sortOrderFrom: self
 ]
 

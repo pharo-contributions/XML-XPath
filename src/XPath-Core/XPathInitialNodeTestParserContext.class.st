@@ -1,5 +1,5 @@
 "
-An initial context for node test parsers.
+An initial context for parsing node test.
 "
 Class {
 	#name : #XPathInitialNodeTestParserContext,

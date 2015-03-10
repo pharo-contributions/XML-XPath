@@ -1,5 +1,5 @@
 "
-Abstract class for node sort orders.
+Abstract class for node sort orders. Instances are immutable and shared.
 "
 Class {
 	#name : #XPathSortOrder,
@@ -12,7 +12,7 @@ Class {
 
 { #category : #'instance creation' }
 XPathSortOrder class >> new [
-	"these classes are only initialized once for performance"
+	"these classes are immutable and shared, so they are only initialized once"
 	^ instance ifNil: [instance := self basicNew initialize]
 ]
 
@@ -20,6 +20,8 @@ XPathSortOrder class >> new [
 XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
+	"copy will contain the list of ancestors in document order which is then
+	reversed to get a list of ancestors in reverse document order"
 	copy := aNodeSet copyEmpty.
 	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestor |
 		totalAdded := 0.
@@ -32,11 +34,15 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 						copy addLast: ancestor.
 						totalAdded := totalAdded + 1].
 				ancestor := ancestor parent].
+
+		"ancestors are added in reverse document order, so if more than one was
+		added, reverse them in place to keep copy in document order"
 		totalAdded > 1
 			ifTrue: [
 				copy
 					reverseInPlaceFrom: (copy size - totalAdded) + 1
 					to: copy size]].
+
 	^ copy
 		reverseInPlace;
 		sortOrder: XPathReverseDocumentSortOrder new.
@@ -46,28 +52,29 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
+	"copy will contain the list of nodes and ancestors in document order which
+	is then reversed to get a list of nodes and ancestors in reverse document order"
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestor |
+	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestorOrSelf |
 		totalAdded := 0.
-		((copy includes: each) not
-			and: [aNodeTestBlock value: each])
-			ifTrue: [
-				copy addLast: each.
-				totalAdded := 1].
-		ancestor := each parent.
-		[ancestor isNil
-			or: [copy includes: ancestor]]
+		ancestorOrSelf := each.
+		[ancestorOrSelf isNil
+			or: [copy includes: ancestorOrSelf]]
 			whileFalse: [
-				(aNodeTestBlock value: ancestor)
+				(aNodeTestBlock value: ancestorOrSelf)
 					ifTrue: [
-						copy addLast: ancestor.
+						copy addLast: ancestorOrSelf.
 						totalAdded := totalAdded + 1].
-				ancestor := ancestor parent].
+				ancestorOrSelf := ancestorOrSelf parent].
+
+		"nodes and ancestors are added in reverse document order, so if more
+		than one was added, reverse them in place to keep copy in document order"
 		totalAdded > 1
 			ifTrue: [
 				copy
 					reverseInPlaceFrom: (copy size - totalAdded) + 1
 					to: copy size]].
+
 	^ copy
 		reverseInPlace;
 		sortOrder: XPathReverseDocumentSortOrder new.
@@ -95,24 +102,53 @@ XPathSortOrder >> attributeAxisOn: aNodeSet select: aNodeTestBlock [
 
 { #category : #enumerating }
 XPathSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy nodesWithChildren |
+	| copy parents |
 
 	copy := aNodeSet copyEmpty.
-	nodesWithChildren := OrderedCollection new.
+	parents := OrderedCollection new.
 	self documentOrderOn: aNodeSet do: [:each |
 		each hasChildren
-			ifTrue: [nodesWithChildren addLast: each]].
-	[nodesWithChildren notEmpty]
-		whileTrue: [
+			ifTrue: [parents addLast: each]].
+	[parents isEmpty]
+		whileFalse: [
 			self
-				nextChildrenInDocumentOrderFrom: nodesWithChildren
+				childrenOfNextParentFrom: parents
 				select: aNodeTestBlock
 				into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
+{ #category : #private }
+XPathSortOrder >> childrenOfNextParentFrom: aParentCollection select: aNodeTestBlock into: aNodeSet [
+	| parent ancestorOfNextChildrenInParent |
+
+	parent := aParentCollection removeFirst.
+	aParentCollection isEmpty
+		ifFalse: [
+			ancestorOfNextChildrenInParent :=
+				aParentCollection first
+					lastAncestorOfChildrenIn: parent].
+	parent nodesDo: [:each |
+		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each].
+		ancestorOfNextChildrenInParent
+			ifNotNil: [
+				each = ancestorOfNextChildrenInParent
+					ifTrue: [
+						self
+							childrenOfNextParentFrom: aParentCollection
+							select: aNodeTestBlock
+							into: aNodeSet.
+						aParentCollection isEmpty
+							ifFalse: [
+								ancestorOfNextChildrenInParent :=
+									aParentCollection first
+										lastAncestorOfChildrenIn: parent]]]].
+]
+
 { #category : #copying }
 XPathSortOrder >> copy [
+	"instances are immutable and shared"
 	^ self
 ]
 
@@ -283,45 +319,6 @@ XPathSortOrder >> namespaceAxisOn: aNodeSet select: aNodeTestBlock [
 					(aNodeTestBlock value: namespace)
 						ifTrue: [copy addLast: namespace]]]].
 	^ copy sortOrder: XPathElementMetaNodeDocumentSortOrder new.
-]
-
-{ #category : #private }
-XPathSortOrder >> nextChildrenInDocumentOrderFrom: aNodeWithChildrenCollection select: aNodeTestBlock into: aNodeSet [
-	| nodeWithChildren nextNodeWithChildren |
-
-	nodeWithChildren := aNodeWithChildrenCollection removeFirst.
-	nextNodeWithChildren := aNodeWithChildrenCollection at: 1 ifAbsent: nil.
-	(nextNodeWithChildren isNil
-		or: [nextNodeWithChildren parent = nodeWithChildren parent])
-		ifTrue: [
-			nodeWithChildren nodesDo: [:each |
-				(aNodeTestBlock value: each)
-					ifTrue: [aNodeSet addLast: each]]]
-		ifFalse: [| totalChildren totalChildrenVisited |
-			totalChildren := nodeWithChildren nodes size.
-			totalChildrenVisited := 0.
-			nodeWithChildren descendentNodesDetect: [:each |
-				each parent = nodeWithChildren
-					ifTrue: [
-						(aNodeTestBlock value: each)
-							ifTrue: [aNodeSet addLast: each].
-						totalChildrenVisited := totalChildrenVisited + 1].
-				each = nextNodeWithChildren
-					ifTrue: [
-						self
-							nextChildrenInDocumentOrderFrom: aNodeWithChildrenCollection
-							select: aNodeTestBlock
-							into: aNodeSet.
-						nextNodeWithChildren := aNodeWithChildrenCollection at: 1 ifAbsent: nil].
-				totalChildrenVisited = totalChildren
-					or: [nextNodeWithChildren isNil]].
-
-			(totalChildrenVisited = totalChildren)
-				ifFalse: [
-					totalChildrenVisited + 1 to: totalChildren do: [:i | | node |
-						node := nodeWithChildren nodeAt: i.
-						(aNodeTestBlock value: node)
-							ifTrue: [aNodeSet addLast: node]]]].
 ]
 
 { #category : #enumerating }
