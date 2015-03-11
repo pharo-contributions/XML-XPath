@@ -60,6 +60,11 @@ XPathParser >> errorExpectedRelativeLocationPath [
 ]
 
 { #category : #private }
+XPathParser >> errorExpectedStringLiteral [
+	self errorExpected: 'single or double quoted string literal'
+]
+
+{ #category : #private }
 XPathParser >> expectNext: aCharacter [
 	| nextChar |
 
@@ -89,6 +94,24 @@ XPathParser >> handler [
 { #category : #accessing }
 XPathParser >> inputStream [
 	^ inputStream
+]
+
+{ #category : #parsing }
+XPathParser >> nextArgument [
+	"override to parse arguments in argument lists"
+	self subclassResponsibility
+]
+
+{ #category : #parsing }
+XPathParser >> nextArgumentList [
+	"a template method; nextArgument must be overriden to handle arguments"
+	self nextStartArgumentList.
+	self peekForEndArgumentList
+		ifFalse: [
+			self nextArgument.
+			[self peekForArgumentSeparator]
+				whileTrue: [self nextArgument].
+			self nextEndArgumentList].
 ]
 
 { #category : #parsing }
@@ -179,7 +202,7 @@ XPathParser >> nextStringLiteralOptional: aBoolean [
 		ifTrue: [^ self expectUpTo: inputStream next]
 		ifFalse: [
 			aBoolean
-				ifFalse: [self errorExpected: 'single or double quoted string literal'].
+				ifFalse: [self errorExpectedStringLiteral].
 			^ nil]
 ]
 
@@ -210,6 +233,18 @@ XPathParser >> parse [
 { #category : #parsing }
 XPathParser >> parseInput [
 	self subclassResponsibility
+]
+
+{ #category : #'parsing - peeking' }
+XPathParser >> peekForArgumentSeparator [
+	inputStream skipSeparators.
+	^ inputStream peekFor: $,
+]
+
+{ #category : #'parsing - peeking' }
+XPathParser >> peekForEndArgumentList [
+	inputStream skipSeparators.
+	^ inputStream peekFor: $)
 ]
 
 { #category : #parsing }

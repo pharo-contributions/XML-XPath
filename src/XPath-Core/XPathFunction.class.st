@@ -122,6 +122,8 @@ XPathFunction class >> minArguments [
 
 { #category : #private }
 XPathFunction class >> parseFunctionPrototype [
+	"self allSubclassesDo: [:each | each parseFunctionPrototype]"
+
 	(XPathFunctionPrototypeParser
 		on: self functionPrototype
 		for: (XPathFunctionPrototypeParserHandler function: self))

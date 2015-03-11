@@ -204,7 +204,7 @@ XPathSortOrder >> followingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
-	aNodeSet documentOrderOn: aNodeSet do: [:each |
+	self documentOrderOn: aNodeSet do: [:each |
 		(copy includes: each)
 			ifFalse: [
 				each followingNodesDo: [:followingNode |
@@ -339,7 +339,7 @@ XPathSortOrder >> precedingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
-	aNodeSet reverseDocumentOrderOn: aNodeSet do: [:each |
+	self reverseDocumentOrderOn: aNodeSet do: [:each |
 		(copy includes: each)
 			ifFalse: [
 				each precedingNodesDo: [:precedingNode |
@@ -353,7 +353,7 @@ XPathSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
-	aNodeSet reverseDocumentOrderOn: aNodeSet do: [:each |
+	self reverseDocumentOrderOn: aNodeSet do: [:each |
 		(copy includes: each)
 			ifFalse: [
 				each precedingSiblingNodesDo: [:sibling |

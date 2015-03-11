@@ -27,45 +27,31 @@ XPathFunctionPrototypeParser >> nextArgument [
 	handler hasUnboundedArgument
 		ifTrue: [self errorArgumentAfterUnboundedArgument].
 
-	self nextArgumentTypeAndModifier.
-	
 	inputStream skipSeparators.
-	inputStream peek == $)
-		ifFalse: [self expectNext: $,].
-]
-
-{ #category : #parsing }
-XPathFunctionPrototypeParser >> nextArgumentList [
-	self nextStartArgumentList.
-	[inputStream skipSeparators.
-	inputStream peek == $)]
-		whileFalse: [self nextArgument].
-	self nextEndArgumentList.
-]
-
-{ #category : #parsing }
-XPathFunctionPrototypeParser >> nextArgumentTypeAndModifier [
-	| argument |
-	
-	argument := self nextName.
-	(inputStream peekFor: $*)
-		ifTrue: [
-			handler hasOptionalArgument
-				ifTrue: [self errorUnboundedArgumentAfterOptional].
-			handler handleUnboundedArgument: argument]
-		ifFalse: [
-			(inputStream peekFor: $?)
-				ifTrue: [handler handleOptionalArgument: argument]
-				ifFalse: [
-					handler hasOptionalArgument
-						ifTrue: [self errorNonOptionalArgumentAfterOptional].
-					handler handleArgument: argument]].
+	self nextModifierForArgument: self nextName.
 ]
 
 { #category : #parsing }
 XPathFunctionPrototypeParser >> nextFunctionName [
 	inputStream skipSeparators.
 	handler handleFunctionName: self nextName.
+]
+
+{ #category : #parsing }
+XPathFunctionPrototypeParser >> nextModifierForArgument: anArgument [
+	inputStream skipSeparators.
+	(inputStream peekFor: $*)
+		ifTrue: [
+			handler hasOptionalArgument
+				ifTrue: [self errorUnboundedArgumentAfterOptional].
+			handler handleUnboundedArgument: anArgument]
+		ifFalse: [
+			(inputStream peekFor: $?)
+				ifTrue: [handler handleOptionalArgument: anArgument]
+				ifFalse: [
+					handler hasOptionalArgument
+						ifTrue: [self errorNonOptionalArgumentAfterOptional].
+					handler handleArgument: anArgument]]
 ]
 
 { #category : #parsing }

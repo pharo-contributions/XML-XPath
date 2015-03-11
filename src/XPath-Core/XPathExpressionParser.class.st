@@ -29,8 +29,10 @@ XPathExpressionParser class >> initializeAbbreviatedAxisSpecifierCharacters [
 
 { #category : #testing }
 XPathExpressionParser >> atDigit [
-	^ inputStream peek notNil
-		and: [inputStream peek isDigit]
+	| nextChar |
+
+	^ (nextChar := inputStream peek) notNil
+		and: [nextChar isDigit]
 ]
 
 { #category : #private }
@@ -83,6 +85,13 @@ XPathExpressionParser >> nextAndExpression [
 ]
 
 { #category : #parsing }
+XPathExpressionParser >> nextArgument [
+	handler handleStartFunctionArgument.
+	self nextOrExpression.
+	handler handleEndFunctionArgument.
+]
+
+{ #category : #parsing }
 XPathExpressionParser >> nextDigitsOnWriteStream [
 	"first digit"
 	writeStream nextPut: inputStream next.
@@ -107,13 +116,6 @@ XPathExpressionParser >> nextFilterExpression [
 ]
 
 { #category : #parsing }
-XPathExpressionParser >> nextFunctionArgument [
-	handler handleStartFunctionArgument.
-	self nextOrExpression.
-	handler handleEndFunctionArgument.
-]
-
-{ #category : #parsing }
 XPathExpressionParser >> nextFunctionCall [
 	| name |
 
@@ -128,14 +130,7 @@ XPathExpressionParser >> nextFunctionCall [
 			^ self nextEmptyArgumentList].
 
 	handler handleStartFunctionCall: name.
-	self nextStartArgumentList.
-	inputStream skipSeparators.
-	inputStream peek == $)
-		ifFalse: [
-			self nextFunctionArgument.
-			[self peekForArgumentSeparator]
-				whileTrue: [self nextFunctionArgument]].
-	self nextEndArgumentList.
+	self nextArgumentList.
 	handler handleEndFunctionCall.
 ]
 
@@ -329,12 +324,6 @@ XPathExpressionParser >> peekForAdditiveOperator [
 XPathExpressionParser >> peekForAndOperator [
 	inputStream skipSeparators.
 	^ inputStream peekForAll: 'and'.
-]
-
-{ #category : #'parsing - peeking' }
-XPathExpressionParser >> peekForArgumentSeparator [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $,
 ]
 
 { #category : #'parsing - peeking' }
