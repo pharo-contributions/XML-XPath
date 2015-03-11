@@ -342,19 +342,51 @@ XPathTest >> testFalseFunction [
 ]
 
 { #category : #testing }
+XPathTest >> testFollowingAxis [
+	| following |
+
+	following := XMLNodeList new.
+	(document allElementsNamed: 'person') allButFirst do: [:person |
+		person allNodesDo: [:each | following addLast: each]].
+	self assert:
+		(XPath
+			for: 'addressbook/person/following::node()'
+			in: document) = following.
+
+	following removeAll.
+	document allElementsNamed: 'person' do: [:person |
+		 person nodes allButFirst do: [:node |
+			node allNodesDo: [:each | following addLast: each]]].
+	self assert:
+		(XPath
+			for: 'addressbook/person/node()/following::node()'
+			in: document) = following.
+
+	following removeAll.
+	(document allElementsNamed: 'person') first descendentNodesDo: [:each |
+		each previousNode
+			ifNotNil: [following addLast: each]].
+	(document allElementsNamed: 'person') allButFirst do: [:person |
+		person allNodesDo: [:each | following addLast: each]].
+	self assert:
+		(XPath
+			for: '//following::node()'
+			in: document) = following.
+]
+
+{ #category : #testing }
 XPathTest >> testFollowingSiblingAxis [
 	| siblings |
 
 	siblings := (document allElementsNamed: 'person') allButFirst.
 	self assert:
 		(XPath
-			for: 'addressbook/person/following-sibling::node()'
+			for: 'addressbook/person/following-sibling::person'
 			in: document) = siblings.
 
 	siblings := XMLNodeList new.
 	document allElementsNamed: 'person' do: [:each |
-		each nodes allButFirstDo: [:node |
-			siblings addLast:node]].
+		siblings addAll: each nodes allButFirst].
 	self assert:
 		(XPath
 			for: 'addressbook/person/node()/following-sibling::node()'
