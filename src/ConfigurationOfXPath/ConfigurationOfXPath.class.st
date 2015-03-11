@@ -245,7 +245,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.0.9'.
+	spec for: #'common' version: '1.1.0'.
 
 ]
 
@@ -360,4 +360,15 @@ ConfigurationOfXPath >> version10: spec [
 		spec timestamp: '31/1/2014 21:15'.
 		spec package: 'XPath' with: 'XPath-HernanMoralesDurand.12'. ].
 
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version110: spec [ 
+        <version: '1.1.0' imports: #('1.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.17'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.12'.
+                ].
 ]
