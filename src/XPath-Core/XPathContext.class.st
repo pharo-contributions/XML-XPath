@@ -168,10 +168,8 @@ XPathContext >> pop [
 ]
 
 { #category : #namespaces }
-XPathContext >> prefixOfNamespaceURI: aNamespaceUri [
-	^ self namespaceScope prefixMappings
-		keyAtValue: aNamespaceUri
-		ifAbsent: ['']
+XPathContext >> prefixesOfNamespaceURI: aNamespaceUri [
+	^ self namespaceScope prefixesOfNamespaceURI: aNamespaceUri
 ]
 
 { #category : #private }
