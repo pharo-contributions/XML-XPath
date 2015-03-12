@@ -673,6 +673,38 @@ XPathTest >> testPrecedence [
 ]
 
 { #category : #testing }
+XPathTest >> testPrecedingAxis [
+	| preceding |
+
+	preceding := XMLNodeList new.
+	(document allElementsNamed: 'person') allButLast reverseDo: [:person |
+		person allNodesReverseDo: [:each | preceding addLast: each]].
+	self assert:
+		(XPath
+			for: 'addressbook/person/preceding::node()'
+			in: document) = preceding.
+
+	preceding removeAll.
+	(document allElementsNamed: 'person') reverseDo: [:person |
+		 person nodes allButLast reverseDo: [:node |
+			node allNodesReverseDo: [:each | preceding addLast: each]]].
+	self assert:
+		(XPath
+			for: 'addressbook/person/node()/preceding::node()'
+			in: document) = preceding.
+
+	preceding removeAll.
+	(document allElementsNamed: 'person') last
+		descendentNodes allButLast reverseDo: [:each | preceding addLast: each].
+	(document allElementsNamed: 'person') allButLast reverseDo: [:person |
+		person allNodesReverseDo: [:each | preceding addLast: each]].
+	self assert:
+		(XPath
+			for: '//preceding::node()'
+			in: document) = preceding.
+]
+
+{ #category : #testing }
 XPathTest >> testPrecedingSiblingAxis [
 	| results |
 
