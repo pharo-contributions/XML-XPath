@@ -61,6 +61,18 @@ XPathTest >> testAncestorOrSelfAxis [
 ]
 
 { #category : #testing }
+XPathTest >> testAsXPath [
+	| result src |
+
+	result := document elements.
+	src := '/addressbook'.
+	self
+		assert: (document xPath: src asXPath) = result;
+		assert: (document xPath: (XPath for: src) asXPath) = result;
+		assert: (src asXPath in: document) = result.
+]
+
+{ #category : #testing }
 XPathTest >> testAttributeAxis [
 	| results |
 
