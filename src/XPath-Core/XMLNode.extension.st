@@ -316,10 +316,15 @@ XMLNode >> precedingSiblingNodesDo: aBlock [
 ]
 
 { #category : #'*XPath-Core-DOM' }
-XMLNode >> xPath: anXPathString [
-	^ XPath
-		for: anXPathString
+XMLNode >> xPath: anXPathOrXPathString [
+	^ anXPathOrXPathString asXPath in: self
+]
+
+{ #category : #'*XPath-Core-DOM' }
+XMLNode >> xPath: anXPathOrXPathString context: aContext [
+	^ anXPathOrXPathString asXPath
 		in: self
+		context: aContext
 ]
 
 { #category : #'*XPath-Core-DOM' }
