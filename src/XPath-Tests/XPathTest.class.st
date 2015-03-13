@@ -637,10 +637,21 @@ XPathTest >> testNamespaceAxis [
 ]
 
 { #category : #testing }
+XPathTest >> testNamespaceURIFunction [
+	self
+		assert: (document xPath: 'namespace-uri(/*)') isEmpty;
+		assert: (document root xPath: 'namespace-uri()') isEmpty;
+		assert: (document xPath: 'namespace-uri(/*/*)') isEmpty;
+		assert: (namespacedDocument xPath: 'namespace-uri(/*)') = 'bookNS';
+		assert: (namespacedDocument root xPath: 'namespace-uri()') = 'bookNS';
+		assert: (namespacedDocument xPath: 'namespace-uri(/*/*)') = 'personNS'
+]
+
+{ #category : #testing }
 XPathTest >> testNestedFunctionCalls [
 	self
-		assert: 'ceiling(3.5 + floor(1.5))' asXPath evaluate = 5;
-		assert: 'contains(concat("one", "two", string("three")), "two")' asXPath evaluate
+		assert: 'number(ceiling(3.5) + floor(1.5))' asXPath evaluate = 5;
+		assert: 'contains(concat(concat("one", "two"), string("three")), "two")' asXPath evaluate
 ]
 
 { #category : #testing }
