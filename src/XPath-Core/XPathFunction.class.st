@@ -1,7 +1,9 @@
 "
-An abstract class for XPath functions. Subclasses need to override the class-side functionPrototype method to return a string containing an XPath function prototype and then implement the instance-side function method.
+An abstract class for XPath functions. Subclasses need to override the class-side functionPrototype method to return a string containing an XPath function prototype and then implement the instance-side function method to implement the function.
 
-The arguments are pushed onto the stack and need to be manually popped off (functions can have optional arguments, or take an unbounded number of arguments)
+Arguments are passed to functions using a stack and are popped off in LIFO order (last arg popped off first). This is because functions can have optional arguments or even an unbounded number of arguments.
+
+Arguments and return values are automatically converted to the types specified by the prototype.
 "
 Class {
 	#name : #XPathFunction,

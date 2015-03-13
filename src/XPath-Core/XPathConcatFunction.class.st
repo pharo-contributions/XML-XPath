@@ -1,5 +1,5 @@
 "
-XPath string concatenation function.
+XPath string concatenation function. Concatenates two or more strings.
 "
 Class {
 	#name : #XPathConcatFunction,

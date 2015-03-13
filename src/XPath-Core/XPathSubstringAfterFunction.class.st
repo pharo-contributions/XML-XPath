@@ -1,5 +1,5 @@
 "
-XPath substring after function.
+XPath function to return substring after another substring.
 "
 Class {
 	#name : #XPathSubstringAfterFunction,

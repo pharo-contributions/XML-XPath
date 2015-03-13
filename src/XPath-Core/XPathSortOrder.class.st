@@ -120,20 +120,20 @@ XPathSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
 
 { #category : #private }
 XPathSortOrder >> childrenOfNextParentFrom: aParentCollection select: aNodeTestBlock into: aNodeSet [
-	| parent ancestorOfNextChildrenInParent |
+	| parent ancestorOfNextChildren |
 
 	parent := aParentCollection removeFirst.
 	aParentCollection isEmpty
 		ifFalse: [
-			ancestorOfNextChildrenInParent :=
+			ancestorOfNextChildren :=
 				aParentCollection first
-					lastAncestorOfChildrenIn: parent].
+					ancestorOrSelfChildOfParent: parent].
 	parent nodesDo: [:each |
 		(aNodeTestBlock value: each)
 			ifTrue: [aNodeSet addLast: each].
-		ancestorOfNextChildrenInParent
+		ancestorOfNextChildren
 			ifNotNil: [
-				each = ancestorOfNextChildrenInParent
+				each = ancestorOfNextChildren
 					ifTrue: [
 						self
 							childrenOfNextParentFrom: aParentCollection
@@ -141,9 +141,9 @@ XPathSortOrder >> childrenOfNextParentFrom: aParentCollection select: aNodeTestB
 							into: aNodeSet.
 						aParentCollection isEmpty
 							ifFalse: [
-								ancestorOfNextChildrenInParent :=
+								ancestorOfNextChildren :=
 									aParentCollection first
-										lastAncestorOfChildrenIn: parent]]]].
+										ancestorOrSelfChildOfParent: parent]]]].
 ]
 
 { #category : #copying }

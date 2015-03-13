@@ -36,7 +36,7 @@ XPathNodeSet >> % aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first % aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -49,7 +49,7 @@ XPathNodeSet >> %% aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first %% aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -62,7 +62,7 @@ XPathNodeSet >> %%~ aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first %%~ aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -75,7 +75,7 @@ XPathNodeSet >> / aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first / aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -88,7 +88,7 @@ XPathNodeSet >> // aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first // aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #operators }
@@ -158,7 +158,7 @@ XPathNodeSet >> //~ aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first //~ aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -171,7 +171,7 @@ XPathNodeSet >> << aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first << aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -184,7 +184,7 @@ XPathNodeSet >> <<< aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first <<< aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -197,7 +197,7 @@ XPathNodeSet >> >> aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first >> aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -210,7 +210,7 @@ XPathNodeSet >> >>> aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first >>> aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -250,7 +250,7 @@ XPathNodeSet >> @ aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first @ aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #enumerating }
@@ -263,7 +263,7 @@ XPathNodeSet >> @@ aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first @@ aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
 
 { #category : #private }
@@ -318,7 +318,40 @@ XPathNodeSet >> asXPathString [
 
 { #category : #copying }
 XPathNodeSet >> copy [
+	"copies that don't add or replace have same sort order"
 	^ super copy sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyFrom: aStartIndex to: anEndIndex [
+	"copies that don't add or replace have same sort order"
+	^ (super
+		copyFrom: aStartIndex
+		to: anEndIndex) sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyUpTo: anObject [
+	"copies that don't add or replace have same sort order"
+	^ (super copyUpTo: anObject) sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyUpToLast: anObject [
+	"copies that don't add or replace have same sort order"
+	^ (super copyUpToLast: anObject) sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyWithout: anObject [
+	"copies that don't add or replace have same sort order"
+	^ (super copyWithout: anObject) sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyWithoutAll: aCollection [
+	"copies that don't add or replace have same sort order"
+	^ (super copyWithoutAll: aCollection) sortOrderFrom: self
 ]
 
 { #category : #accessing }
@@ -347,7 +380,7 @@ XPathNodeSet >> movedNode: aNode to: anIndex [
 
 { #category : #enumerating }
 XPathNodeSet >> reject: aBlock [
-	"select doesn't change sort order"
+	"reject doesn't change sort order"
 	^ (super reject: aBlock) sortOrderFrom: self
 ]
 
@@ -545,5 +578,5 @@ XPathNodeSet >> ~ aNodeTestStringOrBlock [
 				select: aNodeTestStringOrBlock asNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first ~ aNodeTestStringOrBlock].
-	^ self.
+	^ self copyEmpty.
 ]
