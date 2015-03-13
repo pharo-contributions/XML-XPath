@@ -54,21 +54,19 @@ ConfigurationOfXPath class >> catalogDescription [
 { #category : #catalog }
 ConfigurationOfXPath class >> catalogKeyClassesAndExample [
 
-	^ ' ==XPath== is the main public class of the package. It is the class to interact with as shown by the tests. 
+	^ ' ==XPath==, ==XPathContext==, and ==XPathNodeSet== are the main public classes of the package.
 
 The following example retrieves the language types as found in the UNICODE Common Locale Data Repository (CDLR) 
 [[[ 
 | doc |
-doc := (XMLDOMParser onURL: ''http://unicode.org/repos/cldr/trunk/common/supplemental/supplementalData.xml'') parseDocument.
+doc := (XMLDOMParser parseURL: ''http://unicode.org/repos/cldr/trunk/common/supplemental/supplementalData.xml'').
 (XPath for: ''//languageData/language/@type'') in: doc.
-]]]
-
-The package contains SUnit tests in the XPathTest class.'
+]]]'
 ]
 
 { #category : #catalog }
 ConfigurationOfXPath class >> catalogKeywords [
-	^ #(XPath XML web query parsing)
+	^ #(XPath XML DOM HTML web query parsing)
 ]
 
 { #category : #private }
@@ -245,7 +243,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.2'.
+	spec for: #'common' version: '1.1.3'.
 
 ]
 
@@ -392,5 +390,16 @@ ConfigurationOfXPath >> version112: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.19'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.14'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version113: spec [ 
+        <version: '1.1.3' imports: #('1.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.20'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.15'.
                 ].
 ]
