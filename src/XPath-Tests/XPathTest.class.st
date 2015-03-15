@@ -666,6 +666,20 @@ XPathTest >> testNormalizeSpaceFunction [
 ]
 
 { #category : #testing }
+XPathTest >> testNotFunction [
+	self	
+		deny: 'not(true())' asXPath evaluate;
+		assert: 'not(false())' asXPath evaluate;
+		deny: 'not(1) or not("1")' asXPath evaluate;
+		assert: 'not(0) and not("")' asXPath evaluate;
+		deny: (document xPath: 'not(/node())');
+		assert: (document xPath: 'not(/text())').
+	self
+		should: ['not()' asXPath evaluate]
+		raise: XPathArgumentNumberException.
+]
+
+{ #category : #testing }
 XPathTest >> testOneLevel [
 	| path results |
 	path := XPath for: 'addressbook/person'.
@@ -869,6 +883,16 @@ XPathTest >> testSubstringFunction [
 		assert: 'substring("onetwothree", 12, 2)' asXPath evaluate isEmpty;
 		assert: 'substring("", 0, 1)' asXPath evaluate isEmpty;
 		assert: 'substring("", 0)' asXPath evaluate isEmpty
+]
+
+{ #category : #testing }
+XPathTest >> testSumFunction [
+	self assert:
+		('<nums><one>1</one><two>2</two><three>3</three></nums>' parseXML
+			xPath: 'sum(/nums/*)') = 6.
+	self
+		should: ['sum()' asXPath evaluate]
+		raise: XPathArgumentNumberException.
 ]
 
 { #category : #testing }
