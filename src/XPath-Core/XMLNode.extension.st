@@ -140,6 +140,7 @@ XMLNode >> ancestorOrSelfChildOfParent: aParent [
 
 { #category : #'*XPath-Core-DOM' }
 XMLNode >> asXPathString [
+	"returns XPath node string-value"
 	 ^ ''
 ]
 
