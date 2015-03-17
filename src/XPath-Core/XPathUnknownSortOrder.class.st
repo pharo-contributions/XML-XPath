@@ -26,7 +26,7 @@ XPathUnknownSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 
 { #category : #private }
 XPathUnknownSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
-	aNodeSet sorted reverseDo: aBlock
+	aNodeSet reverseSorted do: aBlock
 ]
 
 { #category : #sorting }

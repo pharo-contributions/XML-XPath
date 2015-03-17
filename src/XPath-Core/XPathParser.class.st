@@ -98,8 +98,7 @@ XPathParser >> inputStream [
 
 { #category : #parsing }
 XPathParser >> nextArgument [
-	"override to parse arguments in argument lists"
-	self subclassResponsibility
+	"override to parse arguments in function argument lists"
 ]
 
 { #category : #parsing }
