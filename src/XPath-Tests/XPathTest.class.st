@@ -830,22 +830,18 @@ XPathTest >> testQualfiedNameTest [
 
 { #category : #testing }
 XPathTest >> testSorting [
-	| allNodes nodeSet reversedNodesNodeSet |
+	| allNodes |
 
 	allNodes := document allNodes.
-	nodeSet := XPathNodeSet newFrom: allNodes.
-	self
-		assert: nodeSet sorted = allNodes;
-		assert: nodeSet reverseSorted = allNodes reversed;
-		assert: nodeSet sorted reversed sorted = allNodes;
-		assert: nodeSet reverseSorted reversed reverseSorted = allNodes reversed.
-
-	reversedNodesNodeSet := XPathNodeSet newFrom: allNodes reversed.
-	self	
-		assert: reversedNodesNodeSet sorted = allNodes;
-		assert: reversedNodesNodeSet reverseSorted = allNodes reversed;
-		assert: reversedNodesNodeSet sorted reversed sorted = allNodes;
-		assert: reversedNodesNodeSet reverseSorted reversed reverseSorted = allNodes reversed.
+	(Array
+		with: (XPathNodeSet newFrom: allNodes)
+		with: (XPathNodeSet newFrom: allNodes reversed))
+		do: [:nodeSet |
+			self
+				assert: nodeSet sorted = allNodes;
+				assert: nodeSet reverseSorted = allNodes reversed;
+				assert: nodeSet sorted reversed sorted = allNodes;
+				assert: nodeSet reverseSorted reversed reverseSorted = allNodes reversed].
 ]
 
 { #category : #testing }
