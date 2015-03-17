@@ -223,7 +223,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0.1-baseline'.
+	spec for: #'common' version: '1.0.6-baseline'.
 ]
 
 { #category : #accessing }
