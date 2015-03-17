@@ -35,8 +35,7 @@ ConfigurationOfXPath class >> baseConfigurationClassIfAbsent: aBlock [
 { #category : #catalog }
 ConfigurationOfXPath class >> catalogChangeLog [
     		
-     ^ '- Development moved to Baseline 1.0.6, for ci build on pharo-contribution ci.
-- Version 1.0 migrated to Pharo 3.0'
+     ^ '- Version 1.0 migrated to Pharo 3.0'
 
 
 ]
@@ -224,7 +223,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0.6-baseline'.
+	spec for: #'common' version: '1.0.1-baseline'.
 ]
 
 { #category : #accessing }
@@ -244,7 +243,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.1.4'.
+	spec for: #'common' version: '1.1.5'.
 
 ]
 
@@ -413,5 +412,16 @@ ConfigurationOfXPath >> version114: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.21'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.16'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version115: spec [ 
+        <version: '1.1.5' imports: #('1.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.22'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.17'.
                 ].
 ]
