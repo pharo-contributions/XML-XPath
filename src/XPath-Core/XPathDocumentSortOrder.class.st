@@ -17,6 +17,14 @@ XPathDocumentSortOrder >> documentOrderOn: aNodeSet do: aBlock [
 	aNodeSet do: aBlock
 ]
 
+{ #category : #private }
+XPathDocumentSortOrder >> documentOrderOn: aNodeSet indexOfNextParentAfterIndex: anIndex [
+	anIndex + 1 to: aNodeSet size do: [:i |
+		(aNodeSet at: i) hasChildren
+			ifTrue: [^ i]].
+	^ nil.
+]
+
 { #category : #sorting }
 XPathDocumentSortOrder >> documentOrderSort: aNodeSet [
 	"already in document order"

@@ -12,6 +12,20 @@ XPathReverseDocumentSortOrder >> documentOrderOn: aNodeSet do: aBlock [
 	aNodeSet reverseDo: aBlock
 ]
 
+{ #category : #private }
+XPathReverseDocumentSortOrder >> documentOrderOn: aNodeSet indexOfNextParentAfterIndex: anIndex [
+	| firstIndex |
+
+	firstIndex :=
+		anIndex > 0
+			ifTrue: [anIndex]
+			ifFalse: [aNodeSet size + 1].
+	firstIndex - 1 to: 1 by: -1 do: [:i |
+		(aNodeSet at: i) hasChildren
+			ifTrue: [^ i]].
+	^ nil.
+]
+
 { #category : #sorting }
 XPathReverseDocumentSortOrder >> documentOrderSort: aNodeSet [
 	aNodeSet

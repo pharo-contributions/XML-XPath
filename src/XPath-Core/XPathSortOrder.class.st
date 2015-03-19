@@ -23,24 +23,19 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 	"copy will contain the list of ancestors in document order which is then
 	reversed to get a list of ancestors in reverse document order"
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestor |
-		totalAdded := 0.
-		ancestor := each parent.
-		[ancestor isNil
-			or: [copy includes: ancestor]]
-			whileFalse: [
-				(aNodeTestBlock value: ancestor)
-					ifTrue: [
-						copy addLast: ancestor.
-						totalAdded := totalAdded + 1].
-				ancestor := ancestor parent].
+	self documentOrderOn: aNodeSet do: [:each | | oldSize |
+		oldSize := copy size.
+		self
+			ancestorsOfNode: each
+			select: aNodeTestBlock
+			into: copy.
 
 		"ancestors are added in reverse document order, so if more than one was
 		added, reverse them in place to keep copy in document order"
-		totalAdded > 1
+		(copy size - oldSize) > 1
 			ifTrue: [
 				copy
-					reverseInPlaceFrom: (copy size - totalAdded) + 1
+					reverseInPlaceFrom: oldSize + 1
 					to: copy size]].
 
 	^ copy
@@ -55,29 +50,37 @@ XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 	"copy will contain the list of nodes and ancestors in document order which
 	is then reversed to get a list of nodes and ancestors in reverse document order"
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each | | totalAdded ancestorOrSelf |
-		totalAdded := 0.
-		ancestorOrSelf := each.
-		[ancestorOrSelf isNil
-			or: [copy includes: ancestorOrSelf]]
-			whileFalse: [
-				(aNodeTestBlock value: ancestorOrSelf)
-					ifTrue: [
-						copy addLast: ancestorOrSelf.
-						totalAdded := totalAdded + 1].
-				ancestorOrSelf := ancestorOrSelf parent].
+	self documentOrderOn: aNodeSet do: [:each | | oldSize |
+		oldSize := copy size.
+		(copy includes: each)
+			ifFalse: [
+				(aNodeTestBlock value: each)
+					ifTrue: [copy addLast: each].
+				self
+					ancestorsOfNode: each
+					select: aNodeTestBlock
+					into: copy].
 
 		"nodes and ancestors are added in reverse document order, so if more
 		than one was added, reverse them in place to keep copy in document order"
-		totalAdded > 1
+		(copy size - oldSize) > 1
 			ifTrue: [
 				copy
-					reverseInPlaceFrom: (copy size - totalAdded) + 1
+					reverseInPlaceFrom: oldSize + 1
 					to: copy size]].
 
 	^ copy
 		reverseInPlace;
 		sortOrder: XPathReverseDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> ancestorsOfNode: aNode select: aNodeTestBlock into: aNodeSet [
+	aNode ancestorNodesDo: [:each |
+		(aNodeSet includes: each)
+			ifTrue: [^ self].
+		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each]]
 ]
 
 { #category : #converting }
@@ -102,48 +105,57 @@ XPathSortOrder >> attributeAxisOn: aNodeSet select: aNodeTestBlock [
 
 { #category : #enumerating }
 XPathSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy parents |
+	| copy nextParentIndex |
 
 	copy := aNodeSet copyEmpty.
-	parents := OrderedCollection new.
-	self documentOrderOn: aNodeSet do: [:each |
-		each hasChildren
-			ifTrue: [parents addLast: each]].
-	[parents isEmpty]
+	nextParentIndex :=
+		self
+			documentOrderOn: aNodeSet
+			indexOfNextParentAfterIndex: 0.
+	[nextParentIndex isNil]
 		whileFalse: [
-			self
-				childrenOfNextParentFrom: parents
-				select: aNodeTestBlock
-				into: copy].
+			nextParentIndex :=
+				self
+					childrenOfNodeAt: nextParentIndex
+					from: aNodeSet
+					select: aNodeTestBlock
+					into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #private }
-XPathSortOrder >> childrenOfNextParentFrom: aParentCollection select: aNodeTestBlock into: aNodeSet [
-	| parent ancestorOfNextChildren |
+XPathSortOrder >> childrenOfNodeAt: anIndex from: anOldNodeSet select: aNodeTestBlock into: aNewNodeSet [
+	| parent indexOfNextParent ancestorOfNextChildren |
 
-	parent := aParentCollection removeFirst.
-	aParentCollection isEmpty
-		ifFalse: [
+	parent := anOldNodeSet at: anIndex.
+	indexOfNextParent :=
+		self
+			documentOrderOn: anOldNodeSet
+			indexOfNextParentAfterIndex: anIndex.
+	indexOfNextParent
+		ifNotNil: [
 			ancestorOfNextChildren :=
-				aParentCollection first
+				(anOldNodeSet at: indexOfNextParent)
 					ancestorOrSelfChildOfParent: parent].
 	parent nodesDo: [:each |
 		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each].
-		ancestorOfNextChildren
-			ifNotNil: [
-				each = ancestorOfNextChildren
-					ifTrue: [
-						self
-							childrenOfNextParentFrom: aParentCollection
-							select: aNodeTestBlock
-							into: aNodeSet.
-						aParentCollection isEmpty
-							ifFalse: [
-								ancestorOfNextChildren :=
-									aParentCollection first
-										ancestorOrSelfChildOfParent: parent]]]].
+			ifTrue: [aNewNodeSet addLast: each].
+		(ancestorOfNextChildren notNil
+			and: [each = ancestorOfNextChildren])
+			ifTrue: [
+				indexOfNextParent :=
+					self
+						childrenOfNodeAt: indexOfNextParent
+						from: anOldNodeSet
+						select: aNodeTestBlock
+						into: aNewNodeSet.
+				indexOfNextParent
+					ifNil: [ancestorOfNextChildren := nil]
+					ifNotNil: [
+						ancestorOfNextChildren :=
+							(anOldNodeSet at: indexOfNextParent)
+								ancestorOrSelfChildOfParent: parent]]].
+	^ indexOfNextParent.
 ]
 
 { #category : #copying }
@@ -158,13 +170,10 @@ XPathSortOrder >> descendantAxisOn: aNodeSet select: aNodeTestBlock [
 
 	copy := aNodeSet copyEmpty.
 	self documentOrderOn: aNodeSet do: [:each |
-		each descendentNodesDetect: [:descendant |
-			(copy includes: descendant)
-				ifTrue: [true]
-				ifFalse: [
-					(aNodeTestBlock value: descendant)
-						ifTrue: [copy addLast: descendant].
-					false]]].
+		self
+			descendantsOfNode: each
+			select: aNodeTestBlock
+			into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
@@ -174,14 +183,24 @@ XPathSortOrder >> descendantOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 
 	copy := aNodeSet copyEmpty.
 	self documentOrderOn: aNodeSet do: [:each |
-		each allNodesDetect: [:descendant |
-			(copy includes: descendant)
-				ifTrue: [true]
-				ifFalse: [
-					(aNodeTestBlock value: descendant)
-						ifTrue: [copy addLast: descendant].
-					false]]].
+		(copy includes: each)
+			ifFalse: [
+				(aNodeTestBlock value: each)
+					ifTrue: [copy addLast: each].
+				self
+					descendantsOfNode: each
+					select: aNodeTestBlock
+					into: copy]].
 	^ copy sortOrder: XPathDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> descendantsOfNode: aNode select: aNodeTestBlock into: aNodeSet [
+	aNode descendentNodesDo: [:each |
+		(aNodeSet includes: each)
+			ifTrue: [^ self].
+		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each]]
 ]
 
 { #category : #private }
