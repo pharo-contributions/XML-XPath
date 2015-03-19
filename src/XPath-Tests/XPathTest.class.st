@@ -161,7 +161,10 @@ XPathTest >> testDescendantOrSelfAxis [
 		assert: (XPath for: '//~node()' in: document) = document allNodes;
 		assert: (XPath for: '// self :: node()' in: document) = document allNodes;
 		assert: (XPath for: '/ descendant-or-self ::node()' in: document) = document allNodes;
-		assert: (XPath for: '//*' in: document) = document allElements
+		assert: (XPath for: '//*' in: document) = document allElements;
+		assert:
+			(XPath for: '//comment()/descendant-or-self::comment()' in: document) =
+				(document allNodesSelect: [:each | each isComment]).
 ]
 
 { #category : #testing }
@@ -826,6 +829,19 @@ XPathTest >> testQualfiedNameTest [
 				in: namespacedDocument
 				context: (XPathContext namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
+]
+
+{ #category : #testing }
+XPathTest >> testReverseForwardAxisCombination [
+	| nodes |
+
+	nodes := XPathNodeSet new.
+	(document allElementsNamed: 'person') allButLast do: [:person |
+		person descendentNodesDo: [:each |
+			nodes addLast: each]].
+	self assert:
+		(XPath for: '*/person[last()]/preceding::node()/node()' in: document) =
+			nodes.
 ]
 
 { #category : #testing }
