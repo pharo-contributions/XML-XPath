@@ -658,6 +658,45 @@ XPathTest >> testNestedFunctionCalls [
 ]
 
 { #category : #testing }
+XPathTest >> testNodeSetComparing [
+	self assert:
+		('<list>
+			<a>1</a><a>2</a><a>3</a>
+			<b>0</b>
+			<c>4</c>
+		</list>' parseXML xPath:
+			'list/a < list/a
+				and list/a <= list/a
+				and list/a > list/a
+				and list/a >= list/a
+				and list/b < list/a
+				and list/b <= list/a
+				and not(list/b > list/a)
+				and not(list/b >= list/a)
+				and not(list/c < list/a)
+				and not(list/c <= list/a)
+				and list/c > list/a
+				and list/c >= list/a')
+]
+
+{ #category : #testing }
+XPathTest >> testNodeSetEquality [
+	self assert:
+		('<list>
+			<a>one</a><a>two</a><a>three</a>
+			<b>four</b>
+		</list>' parseXML xPath:
+			'list/a = list/a
+				and list/a != list/a
+				and not(list/b = list/a)
+				and list/b != list/a
+				and not(list/absent = list/a)
+				and not(list/absent = list/absent)
+				and not(list/absent != list/a)
+				and not(list/absent != list/absent)')
+]
+
+{ #category : #testing }
 XPathTest >> testNormalizeSpaceFunction [
 	self assert:
 		'normalize-space("
