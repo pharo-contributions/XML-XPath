@@ -462,7 +462,7 @@ XPathNodeSet >> xPathEqualsNodeSet: aNodeSet [
 
 	stringValues := Set new: self size.
 	self do: [:each | stringValues add: each asXPathString].
-	^ aNodeSet anySatisfy: [:node | stringValues includes: node stringValue].
+	^ aNodeSet anySatisfy: [:node | stringValues includes: node asXPathString].
 ]
 
 { #category : #operators }
@@ -546,9 +546,15 @@ XPathNodeSet >> xPathNotEqualsBoolean: aBoolean [
 XPathNodeSet >> xPathNotEqualsNodeSet: aNodeSet [
 	| stringValues |
 
-	stringValues := Set new: self size.
-	self do: [:each | stringValues add: each asXPathString].
-	^ aNodeSet anySatisfy: [:node | (stringValues includes: node stringValue) not].
+	"should return true according to spec when aNodeSet and self each have at least
+	one node that don't have the same string-values"
+	stringValues := self collect: [:each | each asXPathString].
+	aNodeSet do: [:node | | stringValue |
+		stringValue := node asXPathString.
+		stringValues do: [:each |
+			each = stringValue
+				ifFalse: [^ true]]].
+	^ false.
 ]
 
 { #category : #operators }

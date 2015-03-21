@@ -1,5 +1,5 @@
 "
-This class evaluates XPath expressions in the context of XMLNodes using optional context objects to control evaluation. It supports all XPath 1.0 syntax.
+This class evaluates XPath expressions in the context of XMLNodes using optional context objects to control evaluation. It supports all XPath 1.0 syntax with extensions.
 
 This is the usage:
 	path := XPath for: anXPathString.
@@ -27,6 +27,8 @@ or with one message:
 				yourself).
 
 Compiled XPaths are cached for performance.
+
+The syntax extensions supported are prefix wildcards in name tests like ""*:name"", attribute() and element() type tests that can contain embedded name tests like ""element(prefix:name)"", namespace() type tests, and the ability to match literal prefixes instead of the namespaces bound to them (See XPathContext for more information).
 "
 Class {
 	#name : #XPath,

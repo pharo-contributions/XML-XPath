@@ -345,6 +345,7 @@ XPathSortOrder >> parentAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
+	"parent axis is a forward axis, according to spec"
 	self documentOrderOn: aNodeSet do: [:each | | parent |
 		(each hasParent
 			and: [(copy includes: (parent := each parent)) not
