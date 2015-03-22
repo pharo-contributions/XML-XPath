@@ -26,7 +26,7 @@ XMLPI >> hasPrefix [
 ]
 
 { #category : #'*XPath-Core-DOM' }
-XMLPI >> hasPrefixedNamespaceURI: aNamespaceUri [
+XMLPI >> hasPrefixedNamespaceURI: aURI [
 	^ false
 ]
 

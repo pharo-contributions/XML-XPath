@@ -77,10 +77,10 @@ XPathContext >> declareNamespaces: anAssociationCollection [
 ]
 
 { #category : #namespaces }
-XPathContext >> declarePrefix: aPrefix uri: aUri [
+XPathContext >> declarePrefix: aPrefix uri: aURI [
 	self namespaceScope
 		mapPrefix: aPrefix
-		to: aUri
+		to: aURI
 ]
 
 { #category : #private }
@@ -151,10 +151,10 @@ XPathContext >> isDeclaredPrefix: aPrefix [
 ]
 
 { #category : #testing }
-XPathContext >> isDeclaredPrefix: aPrefix uri: aUri [
+XPathContext >> isDeclaredPrefix: aPrefix uri: aURI [
 	^ self namespaceScope
 		includesPrefix: aPrefix
-		mappedTo: aUri
+		mappedTo: aURI
 ]
 
 { #category : #private }
@@ -168,8 +168,8 @@ XPathContext >> pop [
 ]
 
 { #category : #namespaces }
-XPathContext >> prefixesOfNamespaceURI: aNamespaceUri [
-	^ self namespaceScope prefixesOfNamespaceURI: aNamespaceUri
+XPathContext >> prefixesOfNamespaceURI: aURI [
+	^ self namespaceScope prefixesOfNamespaceURI: aURI
 ]
 
 { #category : #private }

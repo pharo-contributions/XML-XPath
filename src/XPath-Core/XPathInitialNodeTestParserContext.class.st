@@ -43,9 +43,9 @@ XPathInitialNodeTestParserContext >> handleTestForNamespaceTypeWith: aHandler [
 ]
 
 { #category : #handling }
-XPathInitialNodeTestParserContext >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName with: aHandler [
+XPathInitialNodeTestParserContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
 	aHandler
-		handleTestForNamespaceURI: aNamespaceUri
+		handleTestForNamespaceURI: aURI
 		localName: aLocalName
 ]
 

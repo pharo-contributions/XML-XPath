@@ -12,11 +12,11 @@ Class {
 }
 
 { #category : #'instance creation' }
-XPathNamespaceNode class >> element: anElement name: aPrefixName uri: aNamespaceUri [
+XPathNamespaceNode class >> element: anElement name: aPrefix uri: aURI [
 	^ self new
 		setElement: anElement
-		name: aPrefixName
-		uri: aNamespaceUri
+		name: aPrefix
+		uri: aURI
 ]
 
 { #category : #'instance creation' }
@@ -79,7 +79,7 @@ XPathNamespaceNode >> hasPrefix [
 ]
 
 { #category : #testing }
-XPathNamespaceNode >> hasPrefixedNamespaceURI: aNamespaceUri [
+XPathNamespaceNode >> hasPrefixedNamespaceURI: aURI [
 	^ false
 ]
 
@@ -149,11 +149,11 @@ XPathNamespaceNode >> prefix [
 ]
 
 { #category : #initialization }
-XPathNamespaceNode >> setElement: anElement name: aPrefixName uri: aNamespaceUri [
+XPathNamespaceNode >> setElement: anElement name: aPrefix uri: aURI [
 	"reuse parent inst var, like in XMLAttribute"
 	parent := anElement.
-	name := aPrefixName.
-	uri := aNamespaceUri.
+	name := aPrefix.
+	uri := aURI.
 ]
 
 { #category : #namespaces }

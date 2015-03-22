@@ -42,9 +42,9 @@ XMLElement >> hasNamespaceNodes [
 ]
 
 { #category : #'*XPath-Core-DOM' }
-XMLElement >> hasPrefixedNamespaceURI: aNamespaceUri [
+XMLElement >> hasPrefixedNamespaceURI: aURI [
 	^ self hasPrefix
-		and: [self namespaceURI = aNamespaceUri]
+		and: [self namespaceURI = aURI]
 ]
 
 { #category : #'*XPath-Core-DOM' }

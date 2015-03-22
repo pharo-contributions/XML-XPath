@@ -514,12 +514,12 @@ XPathExpressionParserHandler >> handleTestForAttributeWithName: aName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForAttributeWithNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathExpressionParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
 	outputStream
 		nextPutAll: '[:n|n isAttribute and:[n localName=''';
 		nextPutAll: aLocalName;
 		nextPutAll: '''and:[n namespaceURI=''';
-		nextPutAll: aNamespaceUri;
+		nextPutAll: aURI;
 		nextPutAll: ''']]]'
 ]
 
@@ -568,12 +568,12 @@ XPathExpressionParserHandler >> handleTestForElementWithName: aName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForElementWithNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathExpressionParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
 	outputStream
 		nextPutAll: '[:n|n isElement and:[n localName=''';
 		nextPutAll: aLocalName;
 		nextPutAll: '''and:[n namespaceURI=''';
-		nextPutAll: aNamespaceUri;
+		nextPutAll: aURI;
 		nextPutAll: ''']]]'
 ]
 
@@ -617,12 +617,12 @@ XPathExpressionParserHandler >> handleTestForNamespaceType [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathExpressionParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
 	outputStream
 		nextPutAll: '[:n|n isPrincipalNode and:[n localName=''';
 		nextPutAll: aLocalName;
 		nextPutAll: '''and:[n namespaceURI=''';
-		nextPutAll: aNamespaceUri;
+		nextPutAll: aURI;
 		nextPutAll: ''']]]'
 ]
 

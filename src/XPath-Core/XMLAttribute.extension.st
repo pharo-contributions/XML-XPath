@@ -11,9 +11,9 @@ XMLAttribute >> hasExpandedName [
 ]
 
 { #category : #'*XPath-Core-DOM' }
-XMLAttribute >> hasPrefixedNamespaceURI: aNamespaceUri [
+XMLAttribute >> hasPrefixedNamespaceURI: aURI [
 	"unprefixed attributes cannot be namespaced"
-	^ self namespaceURI = aNamespaceUri
+	^ self namespaceURI = aURI
 ]
 
 { #category : #'*XPath-Core-DOM' }

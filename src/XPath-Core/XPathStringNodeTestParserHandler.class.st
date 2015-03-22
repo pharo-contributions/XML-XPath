@@ -47,12 +47,12 @@ XPathStringNodeTestParserHandler >> handleTestForAttributeWithName: aName [
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathStringNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
 	self parsingResult:
 		[:node |
 			node isAttribute
 				and: [node localName = aLocalName
-					and: [node namespaceURI = aNamespaceUri]]]
+					and: [node namespaceURI = aURI]]]
 ]
 
 { #category : #handling }
@@ -101,12 +101,12 @@ XPathStringNodeTestParserHandler >> handleTestForElementWithName: aName [
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathStringNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
 	self parsingResult:
 		[:node |
 			node isElement
 				and: [node localName = aLocalName
-					and: [node namespaceURI = aNamespaceUri]]]
+					and: [node namespaceURI = aURI]]]
 ]
 
 { #category : #handling }
@@ -150,12 +150,12 @@ XPathStringNodeTestParserHandler >> handleTestForNamespaceType [
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathStringNodeTestParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
 	self parsingResult:
 		[:node |
 			node isPrincipalNode
 				and: [node localName = aLocalName
-					and: [node namespaceURI = aNamespaceUri]]]
+					and: [node namespaceURI = aURI]]]
 ]
 
 { #category : #handling }

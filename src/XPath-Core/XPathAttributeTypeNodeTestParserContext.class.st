@@ -28,9 +28,9 @@ XPathAttributeTypeNodeTestParserContext >> handleTestForName: aName with: aHandl
 ]
 
 { #category : #handling }
-XPathAttributeTypeNodeTestParserContext >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName with: aHandler [
+XPathAttributeTypeNodeTestParserContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
 	aHandler
-		handleTestForAttributeWithNamespaceURI: aNamespaceUri
+		handleTestForAttributeWithNamespaceURI: aURI
 		localName: aLocalName
 ]
 

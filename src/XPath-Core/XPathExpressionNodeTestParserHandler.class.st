@@ -59,10 +59,10 @@ XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithName: aName [
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleTestForAttributeWithNamespaceURI: aNamespaceUri
+		handleTestForAttributeWithNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
@@ -105,10 +105,10 @@ XPathExpressionNodeTestParserHandler >> handleTestForElementWithName: aName [
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleTestForElementWithNamespaceURI: aNamespaceUri
+		handleTestForElementWithNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
@@ -145,10 +145,10 @@ XPathExpressionNodeTestParserHandler >> handleTestForNamespaceType [
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForNamespaceURI: aNamespaceUri localName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleTestForNamespaceURI: aNamespaceUri
+		handleTestForNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
