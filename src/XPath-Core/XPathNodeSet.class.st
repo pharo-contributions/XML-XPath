@@ -313,7 +313,9 @@ XPathNodeSet >> asXPathNumber [
 
 { #category : #converting }
 XPathNodeSet >> asXPathString [
-	^ (self firstInDocumentOrder ifNil: ['']) asXPathString
+	^ self firstInDocumentOrder
+		ifNotNil: [:node | node stringValue]
+		ifNil: ['']
 ]
 
 { #category : #copying }
@@ -461,18 +463,18 @@ XPathNodeSet >> xPathEqualsNodeSet: aNodeSet [
 	| stringValues |
 
 	stringValues := Set new: self size.
-	self do: [:each | stringValues add: each asXPathString].
-	^ aNodeSet anySatisfy: [:node | stringValues includes: node asXPathString].
+	self do: [:each | stringValues add: each stringValue].
+	^ aNodeSet anySatisfy: [:node | stringValues includes: node stringValue].
 ]
 
 { #category : #operators }
 XPathNodeSet >> xPathEqualsNumber: aNumber [
-	^ self anySatisfy: [:each | each asXPathString asXPathNumber = aNumber]
+	^ self anySatisfy: [:each | each stringValue asXPathNumber = aNumber]
 ]
 
 { #category : #operators }
 XPathNodeSet >> xPathEqualsString: aString [
-	^ self anySatisfy: [:each | each asXPathString = aString]
+	^ self anySatisfy: [:each | each stringValue = aString]
 ]
 
 { #category : #operators }
@@ -485,17 +487,17 @@ XPathNodeSet >> xPathGreaterThanNodeSet: aNodeSet [
 	| least |
 
 	aNodeSet do: [:each | | number |
-		number := each asXPathString asXPathNumber.
+		number := each stringValue asXPathNumber.
 		(least isNil
 			or: [number < least])
 			ifTrue: [least := number]].
 	^ least notNil
-		and: [self anySatisfy: [:each | each asXPathString asXPathNumber > least]].
+		and: [self anySatisfy: [:each | each stringValue asXPathNumber > least]].
 ]
 
 { #category : #operators }
 XPathNodeSet >> xPathGreaterThanNumber: aNumber [
-	^ self anySatisfy: [:each | each asXPathString asXPathNumber > aNumber]
+	^ self anySatisfy: [:each | each stringValue asXPathNumber > aNumber]
 ]
 
 { #category : #operators }
@@ -503,7 +505,7 @@ XPathNodeSet >> xPathGreaterThanString: aString [
 	| number |
 
 	number := aString asXPathNumber.
-	^ self anySatisfy: [:each | each asXPathString asXPathNumber > number]
+	^ self anySatisfy: [:each | each stringValue asXPathNumber > number]
 ]
 
 { #category : #operators }
@@ -516,17 +518,17 @@ XPathNodeSet >> xPathLessThanNodeSet: aNodeSet [
 	| greatest |
 
 	aNodeSet do: [:each | | number |
-		number := each asXPathString asXPathNumber.
+		number := each stringValue asXPathNumber.
 		(greatest isNil
 			or: [number > greatest])
 			ifTrue: [greatest := number]].
 	^ greatest notNil
-		and: [self anySatisfy: [:each | each asXPathString asXPathNumber < greatest]].
+		and: [self anySatisfy: [:each | each stringValue asXPathNumber < greatest]].
 ]
 
 { #category : #operators }
 XPathNodeSet >> xPathLessThanNumber: aNumber [
-	^ self anySatisfy: [:each | each asXPathString asXPathNumber < aNumber]
+	^ self anySatisfy: [:each | each stringValue asXPathNumber < aNumber]
 ]
 
 { #category : #operators }
@@ -548,9 +550,9 @@ XPathNodeSet >> xPathNotEqualsNodeSet: aNodeSet [
 
 	"should return true according to spec when aNodeSet and self each have at least
 	one node that don't have the same string-values"
-	stringValues := self collect: [:each | each asXPathString].
+	stringValues := self collect: [:each | each stringValue].
 	aNodeSet do: [:node | | stringValue |
-		stringValue := node asXPathString.
+		stringValue := node stringValue.
 		stringValues do: [:each |
 			each = stringValue
 				ifFalse: [^ true]]].
@@ -559,12 +561,12 @@ XPathNodeSet >> xPathNotEqualsNodeSet: aNodeSet [
 
 { #category : #operators }
 XPathNodeSet >> xPathNotEqualsNumber: aNumber [
-	^ self anySatisfy: [:each | each asXPathString asXPathNumber ~= aNumber]
+	^ self anySatisfy: [:each | each stringValue asXPathNumber ~= aNumber]
 ]
 
 { #category : #operators }
 XPathNodeSet >> xPathNotEqualsString: aString [
-	^ self anySatisfy: [:each | each asXPathString ~= aString]
+	^ self anySatisfy: [:each | each stringValue ~= aString]
 ]
 
 { #category : #copying }

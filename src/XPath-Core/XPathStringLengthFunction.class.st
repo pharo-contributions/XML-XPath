@@ -17,5 +17,5 @@ XPathStringLengthFunction class >> functionPrototype [
 XPathStringLengthFunction >> function [
 	self totalPushedArguments > 0
 		ifTrue: [^ self pop size]
-		ifFalse: [^ self contextNode asXPathString size]
+		ifFalse: [^ self contextNode stringValue size]
 ]

@@ -1,6 +1,6 @@
 Extension { #name : #PositionableStream }
 
-{ #category : #'*XPath-Core-Streams' }
+{ #category : #'*XPath-Core-converting' }
 PositionableStream >> asXPathReadStreamAdapter [
 	^ XPathReadStreamAdapter on: self
 ]

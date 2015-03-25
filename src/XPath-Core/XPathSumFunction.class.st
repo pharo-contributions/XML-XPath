@@ -16,5 +16,5 @@ XPathSumFunction class >> functionPrototype [
 XPathSumFunction >> function [
 	^ self pop
 		inject: 0
-		into: [:i :each | i + each asXPathString asXPathNumber]
+		into: [:i :each | i + each stringValue asXPathNumber]
 ]

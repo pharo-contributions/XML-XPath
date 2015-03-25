@@ -46,11 +46,6 @@ XPathNamespaceNode >> = anObject [
 			and: [self uri = anObject uri]].
 ]
 
-{ #category : #converting }
-XPathNamespaceNode >> asXPathString [
-	^ self uri
-]
-
 { #category : #accessing }
 XPathNamespaceNode >> element [
 	^ parent
@@ -154,6 +149,11 @@ XPathNamespaceNode >> setElement: anElement name: aPrefix uri: aURI [
 	parent := anElement.
 	name := aPrefix.
 	uri := aURI.
+]
+
+{ #category : #accessing }
+XPathNamespaceNode >> stringValue [
+	^ self uri
 ]
 
 { #category : #namespaces }

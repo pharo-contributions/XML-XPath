@@ -128,33 +128,33 @@ XPathSortOrder >> childrenOfNodeAt: anIndex from: anOldNodeSet select: aNodeTest
 	| parent indexOfNextParent ancestorOfNextChildren |
 
 	parent := anOldNodeSet at: anIndex.
-	indexOfNextParent :=
+	(indexOfNextParent :=
 		self
 			documentOrderOn: anOldNodeSet
-			indexOfNextParentAfterIndex: anIndex.
-	indexOfNextParent
+			indexOfNextParentAfterIndex: anIndex)
 		ifNotNil: [
 			ancestorOfNextChildren :=
 				(anOldNodeSet at: indexOfNextParent)
 					ancestorOrSelfChildOfParent: parent].
+
 	parent nodesDo: [:each |
 		(aNodeTestBlock value: each)
 			ifTrue: [aNewNodeSet addLast: each].
 		(ancestorOfNextChildren notNil
 			and: [each = ancestorOfNextChildren])
 			ifTrue: [
-				indexOfNextParent :=
+				(indexOfNextParent :=
 					self
 						childrenOfNodeAt: indexOfNextParent
 						from: anOldNodeSet
 						select: aNodeTestBlock
-						into: aNewNodeSet.
-				indexOfNextParent
+						into: aNewNodeSet)
 					ifNil: [ancestorOfNextChildren := nil]
 					ifNotNil: [
 						ancestorOfNextChildren :=
 							(anOldNodeSet at: indexOfNextParent)
 								ancestorOrSelfChildOfParent: parent]]].
+
 	^ indexOfNextParent.
 ]
 

@@ -1,6 +1,6 @@
 Extension { #name : #XMLString }
 
-{ #category : #'*XPath-Core-DOM' }
-XMLString >> asXPathString [
+{ #category : #'*XPath-Core-accessing' }
+XMLString >> stringValue [
 	^ self string
 ]

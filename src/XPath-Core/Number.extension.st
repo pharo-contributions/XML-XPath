@@ -1,73 +1,73 @@
 Extension { #name : #Number }
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //!= anObject [
 	^ anObject xPathNotEqualsNumber: self
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //* anObject [
 	^ self asXPathNumber * anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //+ anObject [
 	^ self asXPathNumber + anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //- anObject [
 	^ self asXPathNumber - anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> /// anObject [
 	^ self asXPathNumber / anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //< anObject [
 	^ anObject xPathGreaterThanNumber: self
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //<= anObject [
 	^ (anObject xPathGreaterThanNumber: self)
 		or: [anObject xPathEqualsNumber: self]
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //= anObject [
 	^ anObject xPathEqualsNumber: self
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //> anObject [
 	^ anObject xPathLessThanNumber: self
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //>= anObject [
 	^ (anObject xPathLessThanNumber: self)
 		or: [anObject xPathEqualsNumber: self]
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-converting' }
 Number >> asXPathBoolean [
 	^ (self isZero or: [self isNaN]) not
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-converting' }
 Number >> asXPathNumber [
 	^ self asFloat
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-converting' }
 Number >> asXPathString [
 	self isNaN
 		ifTrue: [^ 'NaN'].
@@ -82,62 +82,62 @@ Number >> asXPathString [
 	^ self printString.
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathEqualsBoolean: aBoolean [
 	^ self asXPathBoolean = aBoolean
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathEqualsNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self = each asXPathString asXPathNumber]
+	^ aNodeSet anySatisfy: [:each | self = each stringValue asXPathNumber]
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathEqualsNumber: aNumber [
 	^ self = aNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathEqualsString: aString [
 	^ self = aString asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathGreaterThanBoolean: aBoolean [
 	^ self > aBoolean asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathGreaterThanNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self > each asXPathString asXPathNumber]
+	^ aNodeSet anySatisfy: [:each | self > each stringValue asXPathNumber]
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathGreaterThanNumber: aNumber [
 	^ self > aNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathGreaterThanString: aString [
 	^ self > aString asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathLessThanBoolean: aBoolean [
 	^ self < aBoolean asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathLessThanNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self < each asXPathString asXPathNumber]
+	^ aNodeSet anySatisfy: [:each | self < each stringValue asXPathNumber]
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathLessThanNumber: aNumber [
 	^ self < aNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathLessThanString: aString [
 	^ self < aString asXPathNumber
 ]
@@ -147,22 +147,22 @@ Number class >> xPathNewFrom: anObject [
 	^ anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathNotEqualsBoolean: aBoolean [
 	^ self asXPathBoolean ~= aBoolean
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathNotEqualsNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self ~= each asXPathString asXPathNumber]
+	^ aNodeSet anySatisfy: [:each | self ~= each stringValue asXPathNumber]
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathNotEqualsNumber: aNumber [
 	^ self ~= aNumber
 ]
 
-{ #category : #'*XPath-Core' }
+{ #category : #'*XPath-Core-private' }
 Number >> xPathNotEqualsString: aString [
 	^ self ~= aString asXPathNumber
 ]

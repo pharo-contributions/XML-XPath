@@ -1,27 +1,22 @@
 Extension { #name : #XMLAttribute }
 
-{ #category : #'*XPath-Core-DOM' }
-XMLAttribute >> asXPathString [
-	^ self value
-]
-
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLAttribute >> hasExpandedName [
 	^ true
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLAttribute >> hasPrefixedNamespaceURI: aURI [
 	"unprefixed attributes cannot be namespaced"
 	^ self namespaceURI = aURI
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLAttribute >> isPrincipalNode [
 	^ true
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLAttribute >> occursInParentAfterAttribute: anAttribute [
 	self element attributeNodesDo: [:each |
 		each = anAttribute
@@ -31,14 +26,19 @@ XMLAttribute >> occursInParentAfterAttribute: anAttribute [
 	^ false.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLAttribute >> occursInParentBeforeNode: aNode [
 	^ aNode occursInParentAfterAttribute: self
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-accessing' }
 XMLAttribute >> position [
 	self hasParent
 		ifTrue: [^ self parent attributeNodes indexOf: self]
 		ifFalse: [^ 1]
+]
+
+{ #category : #'*XPath-Core-accessing' }
+XMLAttribute >> stringValue [
+	^ self value
 ]

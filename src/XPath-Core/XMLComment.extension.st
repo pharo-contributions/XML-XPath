@@ -1,6 +1,6 @@
 Extension { #name : #XMLComment }
 
-{ #category : #'*XPath-Core-DOM' }
-XMLComment >> asXPathString [
+{ #category : #'*XPath-Core-accessing' }
+XMLComment >> stringValue [
 	^ self string
 ]

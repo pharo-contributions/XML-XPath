@@ -1,6 +1,6 @@
 Extension { #name : #XMLNodeWithElements }
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNodeWithElements >> / aNodeTestStringOrBlock [
 	"child axis"
 	| nodeSet nodeTestBlock |
@@ -15,7 +15,7 @@ XMLNodeWithElements >> / aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathLevelDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNodeWithElements >> // aNodeTestStringOrBlock [
 	"descendant axis"
 	| nodeSet nodeTestBlock |
@@ -28,7 +28,7 @@ XMLNodeWithElements >> // aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNodeWithElements >> //~ aNodeTestStringOrBlock [
 	"descendant-or-self axis"
 	| nodeSet nodeTestBlock |
@@ -41,8 +41,8 @@ XMLNodeWithElements >> //~ aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
-XMLNodeWithElements >> asXPathString [
+{ #category : #'*XPath-Core-accessing' }
+XMLNodeWithElements >> stringValue [
 	"spec says the string-value of documents and elements is all text
 	descendants concatenated, so contentString can't be used because it
 	inserts spaces"

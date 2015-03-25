@@ -1,6 +1,6 @@
 Extension { #name : #XMLElement }
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLElement >> @ aNodeTestStringOrBlock [
 	"attribute axis"
 	| nodeSet nodeTestBlock |
@@ -15,7 +15,7 @@ XMLElement >> @ aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathElementMetaNodeDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLElement >> @@ aNodeTestStringOrBlock [
 	"namespace axis"
 	| nodeSet nodeTestBlock |
@@ -30,29 +30,29 @@ XMLElement >> @@ aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathElementMetaNodeDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLElement >> hasExpandedName [
 	^ true
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLElement >> hasNamespaceNodes [
 	"elements have at least one node for the default xml namespace"
 	^ self usesNamespaces
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLElement >> hasPrefixedNamespaceURI: aURI [
 	^ self hasPrefix
 		and: [self namespaceURI = aURI]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLElement >> isPrincipalNode [
 	^ true
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating' }
 XMLElement >> namespaceNodesDo: aBlock [
 	"every element has a node for the default xml namespace.
 	if it isn't explicitly defined, then it's first in order"

@@ -1,6 +1,6 @@
 Extension { #name : #XMLNode }
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> % aNodeTestStringOrBlock [
 	"parent axis"
 	(self hasParent
@@ -9,7 +9,7 @@ XMLNode >> % aNodeTestStringOrBlock [
 		ifFalse: [^ self newNodeSet]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> %% aNodeTestStringOrBlock [
 	"ancestor axis"
 	| nodeSet nodeTestBlock |
@@ -22,7 +22,7 @@ XMLNode >> %% aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathReverseDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> %%~ aNodeTestStringOrBlock [
 	"ancestor-or-self axis"
 	| nodeSet nodeTestBlock |
@@ -37,19 +37,19 @@ XMLNode >> %%~ aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathReverseDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> / aNodeTestStringOrBlock [
 	"child axis"
 	^ self newNodeSet
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> // aNodeTestStringOrBlock [
 	"descendant axis"
 	^ self newNodeSet
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> //~ aNodeTestStringOrBlock [
 	"descendant-or-self axis"
 	(aNodeTestStringOrBlock asNodeTestBlock value: self)
@@ -57,7 +57,7 @@ XMLNode >> //~ aNodeTestStringOrBlock [
 		ifFalse: [^ self newNodeSet]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> << aNodeTestStringOrBlock [
 	"preceding axis"
 	| nodeSet nodeTestBlock |
@@ -70,7 +70,7 @@ XMLNode >> << aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathReverseDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> <<< aNodeTestStringOrBlock [
 	"preceding-sibling axis"
 	| nodeSet nodeTestBlock |
@@ -83,7 +83,7 @@ XMLNode >> <<< aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathLevelReverseDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> >> aNodeTestStringOrBlock [
 	"following axis"
 	| nodeSet nodeTestBlock |
@@ -96,7 +96,7 @@ XMLNode >> >> aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> >>> aNodeTestStringOrBlock [
 	"following-sibling axis"
 	| nodeSet nodeTestBlock |
@@ -109,24 +109,24 @@ XMLNode >> >>> aNodeTestStringOrBlock [
 	^ nodeSet sortOrder: XPathLevelDocumentSortOrder new.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> @ aNodeTestStringOrBlock [
 	"attribute axis"
 	^ self newNodeSet
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> @@ aNodeTestStringOrBlock [
 	"namespace axis"
 	^ self newNodeSet
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating' }
 XMLNode >> allNodesReverseDo: aBlock [
 	aBlock value: self
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> ancestorOrSelfChildOfParent: aParent [
 	self parent = aParent
 		ifTrue: [^ self].
@@ -138,14 +138,10 @@ XMLNode >> ancestorOrSelfChildOfParent: aParent [
 	^ nil.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
-XMLNode >> asXPathString [
-	"returns XPath node string-value"
-	 ^ ''
-]
-
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-accessing' }
 XMLNode >> documentRoot [
+	"returns the root of the DOM tree, a document node if there is one or the
+	last ancestor or self otherwise"
 	| documentRoot |
 
 	documentRoot := self.
@@ -153,7 +149,7 @@ XMLNode >> documentRoot [
 	^ documentRoot.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating' }
 XMLNode >> followingNodesDo: aBlock [
 	self hasParent
 		ifTrue: [| visitedSelf |
@@ -166,7 +162,7 @@ XMLNode >> followingNodesDo: aBlock [
 							ifTrue: [visitedSelf := true]]]]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating' }
 XMLNode >> followingSiblingNodesDo: aBlock [
 	self hasParent
 		ifTrue: [| visitedSelf |
@@ -179,32 +175,32 @@ XMLNode >> followingSiblingNodesDo: aBlock [
 							ifTrue: [visitedSelf := true]]]]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLNode >> hasExpandedName [
 	^ false
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLNode >> isNamespace [
 	^ false
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLNode >> isPrincipalNode [
 	^ false
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> newNodeSet [
 	^ XPathNodeSet new
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> newNodeSetWith: aNode [
 	^ XPathNodeSet with: aNode
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-testing' }
 XMLNode >> occursInDocumentBeforeNode: aNode [
 	| selfAncestors aNodeAncestors selfLastAncestor aNodeLastAncestor selfAncestorOffset aNodeAncestorOffset |
 
@@ -251,17 +247,17 @@ XMLNode >> occursInDocumentBeforeNode: aNode [
 	^ false.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentAfterAttribute: anAttribute [
 	^ true
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentAfterNamespace: aNamespace [
 	^ true
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentAfterSibling: aNode [
 	self parent nodesDo: [:each |
 		each = aNode
@@ -271,26 +267,26 @@ XMLNode >> occursInParentAfterSibling: aNode [
 	^ false.
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentBeforeNode: aNode [
 	^ aNode occursInParentAfterSibling: self
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-accessing' }
 XMLNode >> parentSize [
 	self hasParent
 		ifTrue: [^ self parent nodes size]
 		ifFalse: [^ 1]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-accessing' }
 XMLNode >> position [
 	self hasParent
 		ifTrue: [^ self parent nodes indexOf: self]
 		ifFalse: [^ 1]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating' }
 XMLNode >> precedingNodesDo: aBlock [
 	self hasParent
 		ifTrue: [| visitedSelf |
@@ -303,7 +299,7 @@ XMLNode >> precedingNodesDo: aBlock [
 							ifTrue: [visitedSelf := true]]]]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating' }
 XMLNode >> precedingSiblingNodesDo: aBlock [
 	self hasParent
 		ifTrue: [| visitedSelf |
@@ -316,19 +312,25 @@ XMLNode >> precedingSiblingNodesDo: aBlock [
 							ifTrue: [visitedSelf := true]]]]
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-accessing' }
+XMLNode >> stringValue [
+	"returns XPath node string-value"
+	 ^ ''
+]
+
+{ #category : #'*XPath-Core-evaluating' }
 XMLNode >> xPath: anXPathOrXPathString [
 	^ anXPathOrXPathString asXPath in: self
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-evaluating' }
 XMLNode >> xPath: anXPathOrXPathString context: aContext [
 	^ anXPathOrXPathString asXPath
 		in: self
 		context: aContext
 ]
 
-{ #category : #'*XPath-Core-DOM' }
+{ #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> ~ aNameOrBlock [
 	"self axis"
 	((aNameOrBlock asNodeTestBlock value: self)

@@ -43,7 +43,7 @@ XPathIDFunction >> function [
 		ifTrue: [
 			object do: [:each |
 				self
-					splitSpaceSeparatedIDs: each asXPathString
+					splitSpaceSeparatedIDs: each stringValue
 					into: ids]]
 		ifFalse: [
 			self
