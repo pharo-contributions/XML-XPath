@@ -353,7 +353,10 @@ XPathTest >> testExpandedNameTest [
 
 { #category : #testing }
 XPathTest >> testFalseFunction [
-	self deny: 'false()' asXPath evaluate
+	self deny: 'false()' asXPath evaluate.
+	self
+		should: ['false(1)' asXPath evaluate]
+		raise: XPathArgumentNumberException.
 ]
 
 { #category : #testing }
@@ -658,6 +661,42 @@ XPathTest >> testNestedFunctionCalls [
 ]
 
 { #category : #testing }
+XPathTest >> testNodeSetAndNonNodeSetEquality [
+	self assert:
+		('<list><a>1</a><a>two</a></list>' parseXML xPath:
+			'list/a = 1.0
+				and 1.0 = list/a
+				and not(list/a = 2.0)
+				and not(2.0 = list/a)
+				and list/a = "two"
+				and "two" = list/a
+				and not(list/a = "one")
+				and not("one" = list/a)
+				and list/a = true()
+				and true() = list/a
+				and not(list/absent = true())
+				and not(true() = list/absent)')
+]
+
+{ #category : #testing }
+XPathTest >> testNodeSetAndNonNodeSetInequality [
+	self assert:
+		('<list><a>1</a><b>two</b></list>' parseXML xPath:
+			'list/a != 2.0
+				and 2.0 != list/a
+				and not(list/a != 1.0)
+				and not(1.0 != list/a)
+				and list/b != "one"
+				and "one" != list/b
+				and not(list/b != "two")
+				and not("two" != list/b)
+				and list/a != false()
+				and false() != list/a
+				and list/absent != true()
+				and true() != list/absent')
+]
+
+{ #category : #testing }
 XPathTest >> testNodeSetComparing [
 	self assert:
 		('<list>
@@ -719,6 +758,17 @@ XPathTest >> testNotFunction [
 	self
 		should: ['not()' asXPath evaluate]
 		raise: XPathArgumentNumberException.
+]
+
+{ #category : #testing }
+XPathTest >> testNumberTokenizing [
+	| result |
+
+	result :=  '.1' asXPath evaluate.
+	self assert: (result isNumber and: [result > 0]).
+
+	result := '-.1' asXPath evaluate.
+	self assert: (result isNumber and: [result < 0]).
 ]
 
 { #category : #testing }
@@ -988,7 +1038,10 @@ XPathTest >> testTranslateFunction [
 
 { #category : #testing }
 XPathTest >> testTrueFunction [
-	self assert: 'true()' asXPath evaluate
+	self assert: 'true()' asXPath evaluate.
+	self
+		should: ['true(1)' asXPath evaluate]
+		raise: XPathArgumentNumberException.
 ]
 
 { #category : #testing }
