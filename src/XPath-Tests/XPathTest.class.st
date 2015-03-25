@@ -958,6 +958,14 @@ XPathTest >> testStartsWithFunction [
 ]
 
 { #category : #testing }
+XPathTest >> testStringLengthFunction [
+	self
+		assert: 'string-length("test")' asXPath evaluate = 4;
+		assert: 'string-length(false())' asXPath evaluate = 5;
+		assert: ('string-length()' asXPath in: 'string-value' asXMLString) = 12
+]
+
+{ #category : #testing }
 XPathTest >> testSubstringAfterFunction [
 	self
 		assert: 'substring-after("onetwothree", "one")' asXPath evaluate = 'twothree';
