@@ -7,12 +7,12 @@ XMLDocument >> documentRoot [
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLDocument >> occursInParentAfterAttribute: aNode [
+XMLDocument >> occursInParentAfterAttribute: anAttribute [
 	^ false
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLDocument >> occursInParentAfterNamespace: aNode [
+XMLDocument >> occursInParentAfterNamespace: aNamespaceNode [
 	^ false
 ]
 

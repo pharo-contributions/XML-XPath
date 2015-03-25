@@ -57,8 +57,9 @@ String >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core-private' }
+{ #category : #'*XPath-Core-converting' }
 String >> asNodeTestBlock [
+	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser
 		on: self
 		for: XPathStringNodeTestParserHandler new) parse

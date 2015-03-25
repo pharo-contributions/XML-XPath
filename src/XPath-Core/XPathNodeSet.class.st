@@ -314,14 +314,26 @@ XPathNodeSet >> asXPathNumber [
 { #category : #converting }
 XPathNodeSet >> asXPathString [
 	^ self firstInDocumentOrder
-		ifNotNil: [:node | node stringValue]
 		ifNil: ['']
+		ifNotNil: [:node | node stringValue]
 ]
 
 { #category : #copying }
 XPathNodeSet >> copy [
 	"copies that don't add or replace have same sort order"
 	^ super copy sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyAfter: anObject [
+	"copies that don't add or replace have same sort order"
+	^ (super copyAfter: anObject) sortOrderFrom: self
+]
+
+{ #category : #copying }
+XPathNodeSet >> copyAfterLast: anObject [
+	"copies that don't add or replace have same sort order"
+	^ (super copyAfterLast: anObject) sortOrderFrom: self
 ]
 
 { #category : #copying }
@@ -451,6 +463,15 @@ XPathNodeSet >> sortOrder: aSortOrder [
 { #category : #private }
 XPathNodeSet >> sortOrderFrom: aNodeSet [
 	sortOrder := aNodeSet sortOrder copy
+]
+
+{ #category : #accessing }
+XPathNodeSet >> swap: aFirstIndex with: aSecondIndex [
+	super
+		swap: aFirstIndex
+		with: aSecondIndex.
+
+	sortOrder := nil.
 ]
 
 { #category : #operators }

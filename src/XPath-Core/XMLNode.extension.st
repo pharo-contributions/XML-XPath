@@ -253,7 +253,7 @@ XMLNode >> occursInParentAfterAttribute: anAttribute [
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> occursInParentAfterNamespace: aNamespace [
+XMLNode >> occursInParentAfterNamespace: aNamespaceNode [
 	^ true
 ]
 

@@ -604,10 +604,10 @@ XPathExpressionParserHandler >> handleTestForLocalName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForName: aLocalName [
+XPathExpressionParserHandler >> handleTestForName: aName [
 	outputStream
 		nextPutAll: '[:n|n isPrincipalNode and:[n name=''';
-		nextPutAll: aLocalName;
+		nextPutAll: aName;
 		nextPutAll: ''']]'
 ]
 

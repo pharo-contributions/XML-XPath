@@ -116,9 +116,9 @@ XPathNamespaceNode >> occursInParentAfterAttribute: anAttribute [
 ]
 
 { #category : #private }
-XPathNamespaceNode >> occursInParentAfterNamespace: aNamespace [
+XPathNamespaceNode >> occursInParentAfterNamespace: aNamespaceNode [
 	self parent namespaceNodesDo: [:each |
-		each = aNamespace
+		each = aNamespaceNode
 			ifTrue: [^ true].
 		each = self
 			ifTrue: [^ false]].

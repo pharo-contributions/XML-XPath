@@ -137,11 +137,11 @@ XPathStringNodeTestParserHandler >> handleTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForName: aLocalName [
+XPathStringNodeTestParserHandler >> handleTestForName: aName [
 	self parsingResult:
 		[:node |
 			node isPrincipalNode
-				and: [node name = aLocalName]]
+				and: [node name = aName]]
 ]
 
 { #category : #handling }

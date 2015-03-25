@@ -133,9 +133,9 @@ XPathExpressionNodeTestParserHandler >> handleTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForName: aName [
 	self startNodeTest.
-	expressionParserHandler handleTestForName: aLocalName.
+	expressionParserHandler handleTestForName: aName.
 ]
 
 { #category : #handling }
