@@ -26,7 +26,7 @@ XPathNodeSet class >> xPathNewFrom: anObject [
 	^ anObject.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> % aNodeTestStringOrBlock [
 	"parent axis"
 	self size > 1
@@ -39,7 +39,7 @@ XPathNodeSet >> % aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> %% aNodeTestStringOrBlock [
 	"ancestor axis"
 	self size > 1
@@ -52,7 +52,7 @@ XPathNodeSet >> %% aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> %%~ aNodeTestStringOrBlock [
 	"ancestor-or-self axis"
 	self size > 1
@@ -65,7 +65,7 @@ XPathNodeSet >> %%~ aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> / aNodeTestStringOrBlock [
 	"child axis"
 	self size > 1
@@ -78,7 +78,7 @@ XPathNodeSet >> / aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> // aNodeTestStringOrBlock [
 	"descendant axis"
 	self size > 1
@@ -148,7 +148,7 @@ XPathNodeSet >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> //~ aNodeTestStringOrBlock [
 	"descendant-or-self axis"
 	self size > 1
@@ -161,7 +161,7 @@ XPathNodeSet >> //~ aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> << aNodeTestStringOrBlock [
 	"preceding axis"
 	self size > 1
@@ -174,7 +174,7 @@ XPathNodeSet >> << aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> <<< aNodeTestStringOrBlock [
 	"preceding-sibling axis"
 	self size > 1
@@ -187,7 +187,7 @@ XPathNodeSet >> <<< aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> >> aNodeTestStringOrBlock [
 	"following axis"
 	self size > 1
@@ -200,7 +200,7 @@ XPathNodeSet >> >> aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> >>> aNodeTestStringOrBlock [
 	"following-sibling axis"
 	self size > 1
@@ -240,7 +240,7 @@ XPathNodeSet >> ?? aFilterBlockOrInteger [
 	^ nodeSet sortOrderFrom: self.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> @ aNodeTestStringOrBlock [
 	"attribute axis"
 	self size > 1
@@ -253,7 +253,7 @@ XPathNodeSet >> @ aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> @@ aNodeTestStringOrBlock [
 	"namespace axis"
 	self size > 1
@@ -567,14 +567,15 @@ XPathNodeSet >> xPathNotEqualsString: aString [
 	^ self anySatisfy: [:each | each asXPathString ~= aString]
 ]
 
-{ #category : #enumerating }
+{ #category : #copying }
 XPathNodeSet >> | aNodeSet [
+	"XPath node set union"
 	^ self copy
 		addAll: aNodeSet;
 		sort
 ]
 
-{ #category : #enumerating }
+{ #category : #'enumerating - axis' }
 XPathNodeSet >> ~ aNodeTestStringOrBlock [
 	"self axis"
 	self size > 1

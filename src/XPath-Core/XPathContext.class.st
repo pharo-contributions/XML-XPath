@@ -1,7 +1,9 @@
 "
 An XPath context is used to evaluate XPath expressions. Each context has a function library and optionally also variable bindings and namespace mappings.
 
-If no namespace mappings are set in the context, then name tests like 'prefix:name', '*:name', and 'prefix:*' will match against the literal name part(s) of nodes directly (where wildcards matching any). This is different from the spec which needs prefixes in tests to be declared in the context. Standard behavior is triggered only if at least one prefix is declared in the context.
+If no namespace mappings are set in the context, then name tests like 'prefix:name', '*:name', and 'prefix:*' will match against the literal name part(s) of nodes directly (where wildcards matching any). This is different from the spec which needs prefixes in tests to be declared in the context.
+
+Standard behavior (where you must declare any prefix used in a node test) is triggered only if at least one prefix is declared in the context.
 "
 Class {
 	#name : #XPathContext,
@@ -192,11 +194,11 @@ XPathContext >> resolvePrefix: aPrefix [
 { #category : #private }
 XPathContext >> testForAttributeWithPrefix: aPrefix [
 	self hasNamespaces
-		ifTrue: [| namespaceUri |
-			namespaceUri := self resolvePrefix: aPrefix.
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
 				node isAttribute
-					and: [node hasPrefixedNamespaceURI: namespaceUri]]]
+					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
 		ifFalse: [
 			^ [:node |
 				node isAttribute
@@ -206,12 +208,12 @@ XPathContext >> testForAttributeWithPrefix: aPrefix [
 { #category : #private }
 XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
-		ifTrue: [| namespaceUri |
-			namespaceUri := self resolvePrefix: aPrefix.
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
 				node isAttribute
 					and: [node localName = aLocalName
-						and: [node hasPrefixedNamespaceURI: namespaceUri]]]]
+						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithPrefix: aPrefix.
 			^ [:node |
@@ -222,11 +224,11 @@ XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
 { #category : #private }
 XPathContext >> testForElementWithPrefix: aPrefix [
 	self hasNamespaces
-		ifTrue: [| namespaceUri |
-			namespaceUri := self resolvePrefix: aPrefix.
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
 				node isElement
-					and: [node hasPrefixedNamespaceURI: namespaceUri]]]
+					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
 		ifFalse: [
 			^ [:node |
 				node isElement
@@ -236,12 +238,12 @@ XPathContext >> testForElementWithPrefix: aPrefix [
 { #category : #private }
 XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
-		ifTrue: [| namespaceUri |
-			namespaceUri := self resolvePrefix: aPrefix.
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
 				node isElement
 					and: [node localName = aLocalName
-						and: [node hasPrefixedNamespaceURI: namespaceUri]]]]
+						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithPrefix: aPrefix.
 			^ [:node |
@@ -252,11 +254,11 @@ XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 { #category : #private }
 XPathContext >> testForPrefix: aPrefix [
 	self hasNamespaces
-		ifTrue: [| namespaceUri |
-			namespaceUri := self resolvePrefix: aPrefix.
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
 				node isPrincipalNode
-					and: [node hasPrefixedNamespaceURI: namespaceUri]]]
+					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
 		ifFalse: [
 			^ [:node |
 				node isPrincipalNode
@@ -266,12 +268,12 @@ XPathContext >> testForPrefix: aPrefix [
 { #category : #private }
 XPathContext >> testForPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
-		ifTrue: [| namespaceUri |
-			namespaceUri := self resolvePrefix: aPrefix.
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
 				node isPrincipalNode
 					and: [node localName = aLocalName
-						and: [node hasPrefixedNamespaceURI: namespaceUri]]]]
+						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithPrefix: aPrefix.
 			^ [:node |

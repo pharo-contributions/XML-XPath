@@ -13,23 +13,23 @@ XPathIDFunction class >> functionPrototype [
 ]
 
 { #category : #private }
-XPathIDFunction >> addElementsWithIDs: anIdSet from: aDocument to: aNodeSet [
-	| doctypeDefinition elementsAndIdAttributes |
+XPathIDFunction >> addElementsWithIDs: anIDSet from: aDocument to: aNodeSet [
+	| doctypeDefinition elementsAndIDAttributes |
 
 	((doctypeDefinition := aDocument doctypeDefinition) notNil
 		and: [doctypeDefinition hasElementIDValidator])
 		ifFalse: [^ self].
-	elementsAndIdAttributes :=
+	elementsAndIDAttributes :=
 		doctypeDefinition elementIDValidator elementsAndIDAttributes.
 
 	aDocument allElementsDo: [:each |
 		each hasAttributes
 			ifTrue: [
-				elementsAndIdAttributes
+				elementsAndIDAttributes
 					at: each name
 					ifPresent: [:idAttribute |
 						((each includesAttribute: idAttribute)
-							and: [anIdSet includes: (each attributeAt: idAttribute)])
+							and: [anIDSet includes: (each attributeAt: idAttribute)])
 							ifTrue: [aNodeSet add: each]]]].
 ]
 
@@ -63,19 +63,21 @@ XPathIDFunction >> function [
 ]
 
 { #category : #private }
-XPathIDFunction >> splitSpaceSeparatedIDs: anIdString into: anIdSet [
+XPathIDFunction >> splitSpaceSeparatedIDs: anIDString into: anIDSet [
 	| startIndex|
 
-	1 to: anIdString size do: [:i | | nextChar |
-		(nextChar := anIdString at: i) isSeparator
+	1 to: anIDString size do: [:i | | nextChar |
+		(nextChar := anIDString at: i) isSeparator
 			ifTrue: [
 				startIndex
 					ifNotNil: [
-						anIdSet add: (anIdString copyFrom: startIndex to: i - 1).
+						anIDSet add: (anIDString copyFrom: startIndex to: i - 1).
 						startIndex := nil]]
 			ifFalse: [
 				startIndex
 					ifNil: [startIndex := i]]].
 	startIndex
-		ifNotNil: [anIdSet add: (anIdString copyFrom: startIndex to: anIdString size)].
+		ifNotNil: [
+			anIDSet add:
+				(anIDString copyFrom: startIndex to: anIDString size)].
 ]

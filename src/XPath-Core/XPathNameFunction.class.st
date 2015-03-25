@@ -21,12 +21,12 @@ XPathNameFunction >> function [
 		ifFalse: [node := self contextNode].
 
 	(node notNil and: [node hasExpandedName])
-		ifTrue: [| namespaceUri |
+		ifTrue: [| namespaceURI |
 			(self context hasNamespaces
-				and: [(namespaceUri := node namespaceURI) notEmpty
+				and: [(namespaceURI := node namespaceURI) notEmpty
 					and: [node hasPrefix]])
 				ifTrue: [
-					((self context prefixesOfNamespaceURI: namespaceUri)
+					((self context prefixesOfNamespaceURI: namespaceURI)
 						ifEmpty: [^ node localName]
 						ifNotEmpty: [:prefixes |
 							^ node localName qualifyWithPrefix: prefixes anyOne])]
