@@ -20,7 +20,7 @@ XPathTest >> setUp [
 			parseDocument.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testAddFunction [
 	| functionSet context |
 
@@ -41,14 +41,14 @@ XPathTest >> testAddFunction [
 		assert: (XPath for: 'ceiling(1.9)' in: nil context: context) = 2.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testAncestorAxis [
 	self assert:
 		(XPath for: '//ancestor::node()' in: document) =
 			(document allNodesSelect: [:each | each hasChildren]) reversed
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testAncestorOrSelfAxis [
 	self assert:
 		(XPath
@@ -60,7 +60,7 @@ XPathTest >> testAncestorOrSelfAxis [
 			in: document) = document allNodes reversed
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testAsXPath [
 	| result src |
 
@@ -72,7 +72,7 @@ XPathTest >> testAsXPath [
 		assert: (src asXPath in: document) = result.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testAttributeAxis [
 	| results |
 
@@ -90,7 +90,7 @@ XPathTest >> testAttributeAxis [
 			#('Los Angeles' 'New York' 'Los Angeles' 'New York').
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testAttributeTypeTest [
 	| results |
 
@@ -107,7 +107,7 @@ XPathTest >> testAttributeTypeTest [
 			(results select: [:each | each isAttribute]).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testCommentTypeTest [
 	| comments |
 
@@ -117,7 +117,7 @@ XPathTest >> testCommentTypeTest [
 		assert: comments = (document allNodesSelect: [:each | each isComment]).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testConcatFunction [
 	self
 		assert: (XPath for: 'concat("one", "two")' in: nil) = 'onetwo';
@@ -127,7 +127,7 @@ XPathTest >> testConcatFunction [
 		raise: XPathArgumentNumberException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testCountFunction [
 	self assert:
 		(XPath for: 'count(addressbook/person)' in: document) =
@@ -143,7 +143,7 @@ XPathTest >> testCountFunction [
 		raise: XPathTypeException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testDescendantAxis [
 	| path results |
 	path := XPath for: '//address/@city'.
@@ -153,7 +153,7 @@ XPathTest >> testDescendantAxis [
 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testDescendantOrSelfAxis [
 	self
 		assert: (XPath for: '//.' in: document) = document allNodes;
@@ -167,7 +167,7 @@ XPathTest >> testDescendantOrSelfAxis [
 				(document allNodesSelect: [:each | each isComment]).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testDot [
 	| path results |
 
@@ -178,7 +178,7 @@ XPathTest >> testDot [
 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testDotDot [
 	| path results |
 	path := XPath for: 'addressbook/person/address/../address/@city'.
@@ -188,7 +188,7 @@ XPathTest >> testDotDot [
 
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testDotDotTooHigh [
 	| path results |
 	path := XPath for: 'person/address/../../../address/@city'.
@@ -196,7 +196,7 @@ XPathTest >> testDotDotTooHigh [
 	self assert: (results size = 0).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testDoubleWildcard [
 	self assert:
 		(XPath for: 'addressbook/*:*' in: document) =
@@ -212,7 +212,7 @@ XPathTest >> testDoubleWildcard [
 				(namespacedDocument allElementsNamed: 'person').
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testElementDoubleWildcard [
 	self assert:
 		(XPath for: 'addressbook/element(*:*)' in: document) =
@@ -228,7 +228,7 @@ XPathTest >> testElementDoubleWildcard [
 				(namespacedDocument allElementsNamed: 'person').
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testElementExpandedNameTest [
 	| persons |
 
@@ -245,7 +245,7 @@ XPathTest >> testElementExpandedNameTest [
 		raise: XPathSyntaxException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testElementLocalNameWildcardTest [
 	| persons mappings |
 
@@ -276,7 +276,7 @@ XPathTest >> testElementLocalNameWildcardTest [
 		raise: XPathUndeclaredPrefixException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testElementPrefixWildcardTest [
 	| persons |
 
@@ -296,7 +296,7 @@ XPathTest >> testElementPrefixWildcardTest [
 			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) isEmpty.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testElementQualfiedNameTest [
 	| persons mappings |
 
@@ -330,12 +330,12 @@ XPathTest >> testElementQualfiedNameTest [
 		raise: XPathUndeclaredPrefixException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testElementTypeTest [
 	self assert: (document // 'element()') = document allElements
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testExpandedNameTest [
 	| persons |
 
@@ -351,7 +351,7 @@ XPathTest >> testExpandedNameTest [
 		raise: XPathSyntaxException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testFalseFunction [
 	self deny: 'false()' asXPath evaluate.
 	self
@@ -359,7 +359,7 @@ XPathTest >> testFalseFunction [
 		raise: XPathArgumentNumberException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testFollowingAxis [
 	| following |
 
@@ -392,7 +392,7 @@ XPathTest >> testFollowingAxis [
 			in: document) = following.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testFollowingSiblingAxis [
 	| siblings |
 
@@ -419,7 +419,7 @@ XPathTest >> testFollowingSiblingAxis [
 			in: document) = siblings.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testFunctions [
 	| functionSet |
 
@@ -431,7 +431,7 @@ XPathTest >> testFunctions [
 		assert: (XPathContext new functions: functionSet) functions == functionSet.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testIDFunction [
 	| xmlWithIds documentWithIds idElements |
 
@@ -474,7 +474,7 @@ XPathTest >> testIDFunction [
 		assert: (documentWithIds xPath: 'id(//*)') = idElements.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testInvalidAbbreviatedLocationPath [
 	self
 		should: ['/ /one' asXPath compile]
@@ -490,7 +490,7 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 		raise: XPathSyntaxException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testLangFunction [
 	| element |
 
@@ -510,7 +510,7 @@ XPathTest >> testLangFunction [
 		deny: ('lang("DE")' asXPath in: element).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testLastFunction [
 	| path |
 
@@ -520,7 +520,7 @@ XPathTest >> testLastFunction [
 			((document allElementsNamed: 'person') allButFirst: 3).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testLocalNameFunction [
 	self assert:
 		(XPath
@@ -540,7 +540,7 @@ XPathTest >> testLocalNameFunction [
 			in: document root) = 'addressbook'.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testLocalNameWildcardTest [
 	| persons mappings |
 
@@ -571,7 +571,7 @@ XPathTest >> testLocalNameWildcardTest [
 		raise: XPathUndeclaredPrefixException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testLogicalOperators [
 	self
 		deny: '0 or 0 or 0' asXPath evaluate;
@@ -580,7 +580,7 @@ XPathTest >> testLogicalOperators [
 		assert: '1 and 1 and 2' asXPath evaluate
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNameFunction [
 	| element |
 
@@ -616,7 +616,7 @@ XPathTest >> testNameFunction [
 	self assert: (XPath for: 'name(//text())' in: element) isEmpty.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNamespaceAxis [
 	| nodes |
 
@@ -642,7 +642,7 @@ XPathTest >> testNamespaceAxis [
 	self assert: (document xPath: '//namespace::*') = nodes.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNamespaceURIFunction [
 	self
 		assert: (document xPath: 'namespace-uri(/*)') isEmpty;
@@ -653,14 +653,14 @@ XPathTest >> testNamespaceURIFunction [
 		assert: (namespacedDocument xPath: 'namespace-uri(/*/*)') = 'personNS'
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNestedFunctionCalls [
 	self
 		assert: 'number(ceiling(3.5) + floor(1.5))' asXPath evaluate = 5;
 		assert: 'contains(concat(concat("one", "two"), string("three")), "two")' asXPath evaluate
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNodeSetAndNonNodeSetEquality [
 	self assert:
 		('<list><a>1</a><a>two</a></list>' parseXML xPath:
@@ -678,7 +678,7 @@ XPathTest >> testNodeSetAndNonNodeSetEquality [
 				and not(true() = list/absent)')
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNodeSetAndNonNodeSetInequality [
 	self assert:
 		('<list><a>1</a><b>two</b></list>' parseXML xPath:
@@ -696,7 +696,7 @@ XPathTest >> testNodeSetAndNonNodeSetInequality [
 				and true() != list/absent')
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNodeSetComparing [
 	self assert:
 		('<list>
@@ -718,7 +718,7 @@ XPathTest >> testNodeSetComparing [
 				and list/c >= list/a')
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNodeSetEquality [
 	self assert:
 		('<list>
@@ -735,7 +735,7 @@ XPathTest >> testNodeSetEquality [
 				and not(list/absent != list/absent)')
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNormalizeSpaceFunction [
 	self assert:
 		'normalize-space("
@@ -746,7 +746,7 @@ XPathTest >> testNormalizeSpaceFunction [
 	self assert: 'normalize-space(" 	")' asXPath evaluate isEmpty.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNotFunction [
 	self	
 		deny: 'not(true())' asXPath evaluate;
@@ -760,18 +760,18 @@ XPathTest >> testNotFunction [
 		raise: XPathArgumentNumberException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testNumberTokenizing [
 	| result |
 
-	result :=  '.1' asXPath evaluate.
+	result := '.1' asXPath evaluate.
 	self assert: (result isNumber and: [result > 0]).
 
 	result := '-.1' asXPath evaluate.
 	self assert: (result isNumber and: [result < 0]).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testOneLevel [
 	| path results |
 	path := XPath for: 'addressbook/person'.
@@ -779,7 +779,7 @@ XPathTest >> testOneLevel [
 	self assert: (results size = 4).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testPosition [
 	self assert:
 		(XPath
@@ -787,21 +787,21 @@ XPathTest >> testPosition [
 			in: (document allElementsNamed: 'person') last) = 4.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testPositionFunction [
 	(document allElementsNamed: 'person')
 		withIndexDo: [:each :i |
 			self assert: (XPath for: ' position() ' in: each) = i]
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testPrecedence [
 	self
 		assert: (XPath for: '1 + 2 * 3 + 4 div 2' in: nil) rounded = 9;
 		assert: (XPath for: '(1 + 2) * (3 + 4) mod 5' in: nil) rounded = 1.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testPrecedingAxis [
 	| preceding |
 
@@ -833,7 +833,7 @@ XPathTest >> testPrecedingAxis [
 			in: document) = preceding.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testPrecedingSiblingAxis [
 	| results |
 
@@ -853,7 +853,7 @@ XPathTest >> testPrecedingSiblingAxis [
 				collect: [:each | each elementAt: 'manager']).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testPrefixWildcardTest [
 	| persons |
 
@@ -873,7 +873,7 @@ XPathTest >> testPrefixWildcardTest [
 			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) isEmpty.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testProcessingInstructionTypeTest [
 	| xml |
 
@@ -889,7 +889,7 @@ XPathTest >> testProcessingInstructionTypeTest [
 			(xml root nodes copyFrom: 2 to: 2).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testQualfiedNameTest [
 	| persons mappings |
 
@@ -920,7 +920,7 @@ XPathTest >> testQualfiedNameTest [
 		raise: XPathUndeclaredPrefixException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testReverseForwardAxisCombination [
 	| nodes |
 
@@ -933,7 +933,7 @@ XPathTest >> testReverseForwardAxisCombination [
 			nodes.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testSorting [
 	| allNodes |
 
@@ -949,7 +949,7 @@ XPathTest >> testSorting [
 				assert: nodeSet reverseSorted reversed reverseSorted = allNodes reversed].
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testStartsWithFunction [
 	self
 		assert: 'starts-with("onetwothree", "one")' asXPath evaluate;
@@ -957,7 +957,7 @@ XPathTest >> testStartsWithFunction [
 		assert: 'starts-with("123", 1)' asXPath evaluate
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testStringLengthFunction [
 	self
 		assert: 'string-length("test")' asXPath evaluate = 4;
@@ -965,7 +965,7 @@ XPathTest >> testStringLengthFunction [
 		assert: ('string-length()' asXPath in: 'string-value' asXMLString) = 12
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testSubstringAfterFunction [
 	self
 		assert: 'substring-after("onetwothree", "one")' asXPath evaluate = 'twothree';
@@ -974,7 +974,7 @@ XPathTest >> testSubstringAfterFunction [
 		assert: 'substring-after("onetwothree", "four")' asXPath evaluate isEmpty
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testSubstringBeforeFunction [
 	self
 		assert: 'substring-before("onetwothree", "one")' asXPath evaluate isEmpty;
@@ -983,7 +983,7 @@ XPathTest >> testSubstringBeforeFunction [
 		assert: 'substring-before("onetwothree", "four")' asXPath evaluate isEmpty
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testSubstringFunction [
 	self
 		assert: 'substring("onetwothree", 4, 3)' asXPath evaluate = 'two';
@@ -994,7 +994,7 @@ XPathTest >> testSubstringFunction [
 		assert: 'substring("", 0)' asXPath evaluate isEmpty
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testSumFunction [
 	self assert:
 		('<nums><one>1</one><two>2</two><three>3</three></nums>' parseXML
@@ -1004,14 +1004,14 @@ XPathTest >> testSumFunction [
 		raise: XPathArgumentNumberException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testTextTypeTest [
 	self assert:
 		(document xPath: ' //text( ) ') =
 			(document allNodesSelect: [:each | each isStringNode])
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testThreeLevel [
 	| path results |
 	path := XPath for: '*/person/contact-info/email'.
@@ -1019,7 +1019,7 @@ XPathTest >> testThreeLevel [
 	self assert: (results size = 2).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testTopLevel [
 	| path results elem |
 	path := XPath for: 'addressbook'.
@@ -1036,7 +1036,7 @@ XPathTest >> testTopLevel [
 	self assert: elem elements last name = 'person'.	
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testTranslateFunction [
 	self
 		assert: 'translate("onetwothree", "oe", "O")' asXPath evaluate = 'OntwOthr';
@@ -1044,7 +1044,7 @@ XPathTest >> testTranslateFunction [
 		assert: 'translate("onetwothree", "z", "x")' asXPath evaluate = 'onetwothree'
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testTrueFunction [
 	self assert: 'true()' asXPath evaluate.
 	self
@@ -1052,7 +1052,7 @@ XPathTest >> testTrueFunction [
 		raise: XPathArgumentNumberException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testTwoLevel [
 	| path results |
 	path := XPath for: '/*/person/address'.
@@ -1060,7 +1060,7 @@ XPathTest >> testTwoLevel [
 	self assert: (results size = 4).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testUndeclaredFunctions [
 	self
 		should: [XPath for: 'undeclared()/addressbook' in: document]
@@ -1070,7 +1070,7 @@ XPathTest >> testUndeclaredFunctions [
 		raise: XPathUndeclaredFunctionException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testUndeclaredVariables [
 	self
 		should: [XPath for: '$undeclared/addressbook' in: document]
@@ -1080,7 +1080,7 @@ XPathTest >> testUndeclaredVariables [
 		raise: XPathUndeclaredVariableException.
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testUnion [
 	self assert:
 		(XPath
@@ -1090,7 +1090,7 @@ XPathTest >> testUnion [
 			in: document) = (document allElementsNamed: 'person')
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testVariables [
 	| path context results |
 
@@ -1107,7 +1107,7 @@ XPathTest >> testVariables [
 					((each elementAt: 'address') attributeAt: 'city') = 'Los Angeles']).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testWildcard [
 	| path results |
 
@@ -1118,7 +1118,7 @@ XPathTest >> testWildcard [
 		assert: results = (document allElementsNamed: 'person')
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testWildcardDescendant [
 	| path results |
 
@@ -1129,7 +1129,7 @@ XPathTest >> testWildcardDescendant [
 		assert: results = document descendentElements
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testWildcardDescendantAttribute [
 	| path results |
 	path := XPath for: '//*/@city'.
@@ -1143,7 +1143,7 @@ XPathTest >> testWildcardDescendantAttribute [
 					collect: [:each | each attributeNodeAt: 'city']).
 ]
 
-{ #category : #testing }
+{ #category : #tests }
 XPathTest >> testWildcardDescendantAttributeValue [
 	| path results |
 	path := XPath for: ' // * [ @ city = "Los Angeles" ] '.
