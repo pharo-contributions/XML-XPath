@@ -1,6 +1,16 @@
 Extension { #name : #XMLNodeTest }
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testAllNodesReverseDo [
+	| node |
+
+	node := self nodeClass new.
+	self
+		should: [:block | node allNodesReverseDo: block]
+		enumerate: (Array with: node).
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testDefaultContextPosition [
 	self assert: self nodeClass new defaultContextPosition = 1
 ]

@@ -50,21 +50,39 @@ XPathTest >> testAddFunction [
 
 { #category : #tests }
 XPathTest >> testAncestorAxis [
+	| ancestors |
+
+	ancestors := (document allNodesSelect: [:each | each hasChildren]) reversed.
+	self assert: (XPath for: '//ancestor::node()' in: document) = ancestors.
+
+	ancestors := ancestors select: [:ancestor |
+		ancestor nodes anySatisfy: [:each | each hasChildren]].
 	self assert:
-		(XPath for: '//ancestor::node()' in: document) =
-			(document allNodesSelect: [:each | each hasChildren]) reversed
+		(XPath for: '//ancestor::node()/ancestor::node()' in: document) = ancestors.
 ]
 
 { #category : #tests }
 XPathTest >> testAncestorOrSelfAxis [
+	| nodes |
+
+	nodes := document allNodesSelect: [:each | each hasChildren not].
 	self assert:
 		(XPath
 			for: '//node() [ count( child::node() ) = 0]'
-			in: document) = (document allNodesSelect: [:each | each hasChildren not]).
+			in: document) = nodes.
+	
+	nodes := document allNodes reversed.
 	self assert:
 		(XPath
 			for: '//node( )[count(child::node( ))=0]/ancestor-or-self::node( )'
-			in: document) = document allNodes reversed
+			in: document) = nodes.
+
+	nodes := (document allElementsNamed: 'person') allButLast reversed.
+	nodes first ancestorNodesDo: [:each | nodes addLast: each].
+	self assert:
+		(XPath
+			for: '//person[last()]/preceding-sibling::person/ancestor-or-self::node()'
+			in: document) = nodes.
 ]
 
 { #category : #tests }
