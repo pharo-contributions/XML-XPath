@@ -244,7 +244,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.2.3'.
+	spec for: #'common' version: '1.2.4'.
 
 ]
 
@@ -512,5 +512,16 @@ ConfigurationOfXPath >> version123: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.30'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.24'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version124: spec [ 
+        <version: '1.2.4' imports: #('1.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.31'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.25'.
                 ].
 ]
