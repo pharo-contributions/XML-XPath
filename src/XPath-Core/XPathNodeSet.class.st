@@ -215,7 +215,7 @@ XPathNodeSet >> >>> aNodeTestStringOrBlock [
 
 { #category : #enumerating }
 XPathNodeSet >> ?? aFilterBlockOrInteger [
-	"filters with filter block or index"
+	"filters with three-argument filter block or index"
 	| nodeSet contextSize |
 
 	nodeSet := self copyEmpty.
@@ -468,6 +468,18 @@ XPathNodeSet >> sortOrder: aSortOrder [
 { #category : #private }
 XPathNodeSet >> sortOrderFrom: aNodeSet [
 	sortOrder := aNodeSet sortOrder copy
+]
+
+{ #category : #accessing }
+XPathNodeSet >> stringValues [
+	"returns XPath string-values of nodes"
+	^ self collect: [:each | each stringValue]
+]
+
+{ #category : #enumerating }
+XPathNodeSet >> stringValuesDo: aBlock [
+	"enumerates XPath string-values of nodes"
+	self do: [:each | aBlock value: each stringValue]
 ]
 
 { #category : #accessing }
