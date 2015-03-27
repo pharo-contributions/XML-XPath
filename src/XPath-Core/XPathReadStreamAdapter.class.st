@@ -1,5 +1,5 @@
 "
-This class is an adapter for positionable read streams that wraps them to be safe to send messages like next and peek when atEnd and supports efficient push back using token objects.
+This class is an adapter for positionable read streams that wraps them to be safe to send messages like next and peek when atEnd and supports efficient push back of token objects to minimize backtracking by parsers.
 "
 Class {
 	#name : #XPathReadStreamAdapter,

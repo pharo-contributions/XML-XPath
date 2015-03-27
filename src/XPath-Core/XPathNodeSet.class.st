@@ -65,6 +65,11 @@ XPathNodeSet >> %%~ aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
+{ #category : #enumerating }
+XPathNodeSet >> & aNodeSet [
+	^ self intersection: aNodeSet
+]
+
 { #category : #'enumerating - axis' }
 XPathNodeSet >> / aNodeTestStringOrBlock [
 	"child axis"
@@ -91,59 +96,59 @@ XPathNodeSet >> // aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //!= anObject [
 	^ anObject xPathNotEqualsNodeSet: self
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //* anObject [
 	^ self asXPathNumber * anObject asXPathNumber
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //+ anObject [
 	^ self asXPathNumber + anObject asXPathNumber
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //- anObject [
 	^ self asXPathNumber - anObject asXPathNumber
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> /// anObject [
 	^ self asXPathNumber / anObject asXPathNumber
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //< anObject [
 	^ anObject xPathGreaterThanNodeSet: self
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //<= anObject [
 	^ (anObject xPathGreaterThanNodeSet: self)
 		or: [anObject xPathEqualsNodeSet: self]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //= anObject [
 	^ anObject xPathEqualsNodeSet: self
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //> anObject [
 	^ anObject xPathLessThanNodeSet: self
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //>= anObject [
 	^ (anObject xPathLessThanNodeSet: self)
 		or: [anObject xPathEqualsNodeSet: self]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
@@ -271,6 +276,11 @@ XPathNodeSet >> @@ aNodeTestStringOrBlock [
 	^ self copyEmpty.
 ]
 
+{ #category : #enumerating }
+XPathNodeSet >> \ aNodeSet [
+	^ self difference: aNodeSet
+]
+
 { #category : #private }
 XPathNodeSet >> afterAdding: aNode at: anIndex [
 	| oldSize |
@@ -373,6 +383,11 @@ XPathNodeSet >> copyWithoutAll: aCollection [
 	^ (super copyWithoutAll: aCollection) sortOrderFrom: self
 ]
 
+{ #category : #enumerating }
+XPathNodeSet >> difference: aNodeSet [
+	^ (self copyWithoutAll: aNodeSet) sort
+]
+
 { #category : #accessing }
 XPathNodeSet >> firstInDocumentOrder [
 	^ self sortOrder firstInDocumentOrderFrom: self
@@ -381,6 +396,11 @@ XPathNodeSet >> firstInDocumentOrder [
 { #category : #testing }
 XPathNodeSet >> includes: aNode [
 	^ self set includes: aNode
+]
+
+{ #category : #enumerating }
+XPathNodeSet >> intersection: aNodeSet [
+	^ (self select: [:each | aNodeSet includes: each]) sort
 ]
 
 { #category : #private }
@@ -491,12 +511,20 @@ XPathNodeSet >> swap: aFirstIndex with: aSecondIndex [
 	sortOrder := nil.
 ]
 
-{ #category : #operators }
+{ #category : #enumerating }
+XPathNodeSet >> union: aNodeSet [
+	"XPath node set union operator"
+	^ self copy
+		addAll: aNodeSet;
+		sort
+]
+
+{ #category : #private }
 XPathNodeSet >> xPathEqualsBoolean: aBoolean [
 	^ self asXPathBoolean = aBoolean
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathEqualsNodeSet: aNodeSet [
 	| stringValues |
 
@@ -505,22 +533,22 @@ XPathNodeSet >> xPathEqualsNodeSet: aNodeSet [
 	^ aNodeSet anySatisfy: [:node | stringValues includes: node stringValue].
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathEqualsNumber: aNumber [
 	^ self anySatisfy: [:each | each stringValue asXPathNumber = aNumber]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathEqualsString: aString [
 	^ self anySatisfy: [:each | each stringValue = aString]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathGreaterThanBoolean: aBoolean [
 	^ self asXPathBoolean asXPathNumber > aBoolean asXPathNumber
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathGreaterThanNodeSet: aNodeSet [
 	| least |
 
@@ -533,12 +561,12 @@ XPathNodeSet >> xPathGreaterThanNodeSet: aNodeSet [
 		and: [self anySatisfy: [:each | each stringValue asXPathNumber > least]].
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathGreaterThanNumber: aNumber [
 	^ self anySatisfy: [:each | each stringValue asXPathNumber > aNumber]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathGreaterThanString: aString [
 	| number |
 
@@ -546,12 +574,12 @@ XPathNodeSet >> xPathGreaterThanString: aString [
 	^ self anySatisfy: [:each | each stringValue asXPathNumber > number]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathLessThanBoolean: aBoolean [
 	^ self asXPathBoolean asXPathNumber < aBoolean asXPathNumber
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathLessThanNodeSet: aNodeSet [
 	| greatest |
 
@@ -564,12 +592,12 @@ XPathNodeSet >> xPathLessThanNodeSet: aNodeSet [
 		and: [self anySatisfy: [:each | each stringValue asXPathNumber < greatest]].
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathLessThanNumber: aNumber [
 	^ self anySatisfy: [:each | each stringValue asXPathNumber < aNumber]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathLessThanString: aString [
 	| number |
 
@@ -577,12 +605,12 @@ XPathNodeSet >> xPathLessThanString: aString [
 	^ self anySatisfy: [:each | each asXPathNumber < number]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathNotEqualsBoolean: aBoolean [
 	^ self asXPathBoolean ~= aBoolean
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathNotEqualsNodeSet: aNodeSet [
 	| stringValues |
 
@@ -597,22 +625,19 @@ XPathNodeSet >> xPathNotEqualsNodeSet: aNodeSet [
 	^ false.
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathNotEqualsNumber: aNumber [
 	^ self anySatisfy: [:each | each stringValue asXPathNumber ~= aNumber]
 ]
 
-{ #category : #operators }
+{ #category : #private }
 XPathNodeSet >> xPathNotEqualsString: aString [
 	^ self anySatisfy: [:each | each stringValue ~= aString]
 ]
 
-{ #category : #copying }
+{ #category : #enumerating }
 XPathNodeSet >> | aNodeSet [
-	"XPath node set union"
-	^ self copy
-		addAll: aNodeSet;
-		sort
+	^ self union: aNodeSet
 ]
 
 { #category : #'enumerating - axis' }
