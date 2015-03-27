@@ -26,9 +26,9 @@ or with one message:
 				variableAt: 'name' put: 'value';
 				yourself).
 
-Compiled XPaths are cached for performance.
-
 The syntax extensions supported are prefix wildcards in name tests like ""*:name"", attribute() and element() type tests that can contain embedded name tests like ""element(prefix:name)"", namespace() type tests, and the ability to match literal prefixes instead of the namespaces bound to them (See XPathContext for more information).
+
+(Compiled XPaths are cached for performance.)
 "
 Class {
 	#name : #XPath,

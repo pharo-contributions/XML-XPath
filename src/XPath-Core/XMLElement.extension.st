@@ -52,10 +52,22 @@ XMLElement >> isPrincipalNode [
 	^ true
 ]
 
+{ #category : #'*XPath-Core-accessing' }
+XMLElement >> namespaceNodes [
+	| namespaceNodes |
+
+	namespaceNodes := self newListForSelect.
+	self namespaceNodesDo: [:each | namespaceNodes addLast: each].
+	^ namespaceNodes.
+]
+
 { #category : #'*XPath-Core-enumerating' }
 XMLElement >> namespaceNodesDo: aBlock [
 	"every element has a node for the default xml namespace.
 	if it isn't explicitly defined, then it's first in order"
+	self usesNamespaces
+		ifFalse: [^ self].
+
 	(self hasNamespaces
 		and: [self namespaceScope includesPrefix: 'xml'])
 		ifFalse: [aBlock value: (XPathNamespaceNode withXMLNamespaceOnElement: self)].

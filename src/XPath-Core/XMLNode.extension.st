@@ -139,6 +139,20 @@ XMLNode >> ancestorOrSelfChildOfParent: aParent [
 ]
 
 { #category : #'*XPath-Core-accessing' }
+XMLNode >> defaultContextPosition [
+	self hasParent
+		ifTrue: [^ self parent nodes indexOf: self]
+		ifFalse: [^ 1]
+]
+
+{ #category : #'*XPath-Core-accessing' }
+XMLNode >> defaultContextSize [
+	self hasParent
+		ifTrue: [^ self parent nodes size]
+		ifFalse: [^ 1]
+]
+
+{ #category : #'*XPath-Core-accessing' }
 XMLNode >> documentRoot [
 	"returns the root of the DOM tree, a document node if there is one or the
 	last ancestor or self otherwise"
@@ -270,20 +284,6 @@ XMLNode >> occursInParentAfterSibling: aNode [
 { #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentBeforeNode: aNode [
 	^ aNode occursInParentAfterSibling: self
-]
-
-{ #category : #'*XPath-Core-accessing' }
-XMLNode >> parentSize [
-	self hasParent
-		ifTrue: [^ self parent nodes size]
-		ifFalse: [^ 1]
-]
-
-{ #category : #'*XPath-Core-accessing' }
-XMLNode >> position [
-	self hasParent
-		ifTrue: [^ self parent nodes indexOf: self]
-		ifFalse: [^ 1]
 ]
 
 { #category : #'*XPath-Core-enumerating' }

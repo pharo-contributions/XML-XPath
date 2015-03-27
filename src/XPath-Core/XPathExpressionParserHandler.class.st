@@ -8,7 +8,8 @@ Class {
 		'outputStream',
 		'variableIndex',
 		'contextNodeVariable',
-		'contextPositionVariable'
+		'contextPositionVariable',
+		'contextSizeVariable'
 	],
 	#classVars : [
 		'AxisSpecifierNamesAndSelectors'
@@ -60,16 +61,6 @@ XPathExpressionParserHandler class >> initializeAxisSpecifierNamesAndSelectors [
 			AxisSpecifierNamesAndSelectors
 				at: axisSpecifier asString
 				put: selector asString].
-]
-
-{ #category : #accessing }
-XPathExpressionParserHandler >> contextNodeVariable [
-	^ contextNodeVariable
-]
-
-{ #category : #accessing }
-XPathExpressionParserHandler >> contextPositionVariable [
-	^ contextPositionVariable
 ]
 
 { #category : #private }
@@ -137,7 +128,9 @@ XPathExpressionParserHandler >> emitStartContextBlock [
 		nextPutAll: contextNodeVariable;
 		nextPutAll: ' :c| |';
 		nextPutAll: contextPositionVariable;
-		nextPut:$|
+		space;
+		nextPutAll: contextSizeVariable;
+		nextPut: $|
 ]
 
 { #category : #private }
@@ -153,6 +146,8 @@ XPathExpressionParserHandler >> emitStartPredicateBlock [
 		nextPutAll: contextNodeVariable;
 		nextPutAll: ' :';
 		nextPutAll: contextPositionVariable;
+		nextPutAll: ' :';
+		nextPutAll: contextSizeVariable;
 		nextPut: $|.
 ]
 
@@ -170,6 +165,7 @@ XPathExpressionParserHandler >> generateVariableNames [
 	indexString := variableIndex printString.
 	contextNodeVariable := indexString copyWithFirst: $n.
 	contextPositionVariable := indexString copyWithFirst: $p.
+	contextSizeVariable := indexString copyWithFirst: $s.
 ]
 
 { #category : #'handling - operators' }
@@ -295,18 +291,20 @@ XPathExpressionParserHandler >> handleGreaterThanOrEqualTo [
 ]
 
 { #category : #'handling - predicates' }
-XPathExpressionParserHandler >> handleIntegerPredicate: anIntegerOrFloatString [
+XPathExpressionParserHandler >> handleIntegerPredicate: anIntegerString [
 	outputStream
 		nextPutAll: '??';
-		nextPutAll: anIntegerOrFloatString
+		nextPutAll: anIntegerString
 ]
 
 { #category : #'handling - functions' }
 XPathExpressionParserHandler >> handleLastFunctionCall [
 	outputStream
 		nextPut: $(;
+		nextPutAll: contextSizeVariable;
+		nextPutAll: ' ifNil:[';
 		nextPutAll: contextNodeVariable;
-		nextPutAll: ' parentSize)'
+		nextPutAll: ' defaultContextSize])'
 ]
 
 { #category : #'handling - operators' }
@@ -353,7 +351,7 @@ XPathExpressionParserHandler >> handlePositionFunctionCall [
 		nextPutAll: contextPositionVariable;
 		nextPutAll: ' ifNil:[';
 		nextPutAll: contextNodeVariable;
-		nextPutAll: ' position])'
+		nextPutAll: ' defaultContextPosition])'
 ]
 
 { #category : #'handling - predicates' }
@@ -679,9 +677,4 @@ XPathExpressionParserHandler >> handleVariableReference: aName [
 XPathExpressionParserHandler >> incrementVariableNames [
 	variableIndex := variableIndex + 1.
 	self generateVariableNames.
-]
-
-{ #category : #accessing }
-XPathExpressionParserHandler >> outputStream [
-	^ outputStream
 ]

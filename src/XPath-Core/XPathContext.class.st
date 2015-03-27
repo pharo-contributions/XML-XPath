@@ -73,12 +73,12 @@ XPathContext >> addFunction: aFunction [
 	functions := self functions + aFunction
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XPathContext >> declareNamespaces: anAssociationCollection [
 	self namespaceScope mapPrefixesAndURIs: anAssociationCollection
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XPathContext >> declarePrefix: aPrefix uri: aURI [
 	self namespaceScope
 		mapPrefix: aPrefix
@@ -92,7 +92,7 @@ XPathContext >> errorUndeclaredFunction: aFunctionName [
 		with: aFunctionName
 ]
 
-{ #category : #namespaces }
+{ #category : #private }
 XPathContext >> errorUndeclaredPrefix: aPrefix [
 	XPathUndeclaredPrefixException
 		formatSignal: 'Prefix "{1}" was not declared in the XPath context'
@@ -169,7 +169,7 @@ XPathContext >> pop [
 	^ functionStack removeLast
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XPathContext >> prefixesOfNamespaceURI: aURI [
 	^ self namespaceScope prefixesOfNamespaceURI: aURI
 ]
@@ -184,7 +184,7 @@ XPathContext >> removeFunction: aFunction [
 	functions := self functions - aFunction
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XPathContext >> resolvePrefix: aPrefix [
 	^ self namespaceScope
 		resolvePrefix: aPrefix
@@ -281,7 +281,7 @@ XPathContext >> testForPrefix: aPrefix localName: aLocalName [
 					and: [node name = name]]]
 ]
 
-{ #category : #namespaces }
+{ #category : #namespacing }
 XPathContext >> undeclarePrefix: aPrefix [
 	self namespaceScope unmapPrefix: aPrefix
 ]

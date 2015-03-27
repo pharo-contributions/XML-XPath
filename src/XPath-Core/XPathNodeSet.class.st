@@ -216,7 +216,7 @@ XPathNodeSet >> >>> aNodeTestStringOrBlock [
 { #category : #enumerating }
 XPathNodeSet >> ?? aFilterBlockOrInteger [
 	"filters with filter block or index"
-	| nodeSet |
+	| nodeSet contextSize |
 
 	nodeSet := self copyEmpty.
 	aFilterBlockOrInteger isNumber
@@ -227,9 +227,14 @@ XPathNodeSet >> ?? aFilterBlockOrInteger [
 				ifNotNil: [:node | nodeSet addLast: node].
 			^ nodeSet].
 
-	1 to: self size do: [:i | | node result |
+	contextSize := self size.
+	1 to: contextSize do: [:i | | node result |
 		node := self at: i.
-		(result := aFilterBlockOrInteger value: node value: i) isNumber
+		(result :=
+			aFilterBlockOrInteger
+				value: node
+				value: i
+				value: contextSize) isNumber
 			ifTrue: [
 				result rounded = i
 					ifTrue: [nodeSet addLast: node]]

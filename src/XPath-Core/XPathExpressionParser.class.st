@@ -47,15 +47,8 @@ XPathExpressionParser >> errorExpectedStep [
 
 { #category : #parsing }
 XPathExpressionParser >> nextAdditionalSteps [
-	currentAxis reset.
-	(self peekForAbbreviatedDescendantStep
-		or: [self peekForStep])
-		ifFalse: [self errorExpectedStep].
-	[self peekForLocationPathSeparator]
-		whileTrue: [
-			(self peekForAbbreviatedDescendantStep
-				or: [self peekForStep])
-				ifFalse: [self errorExpectedStep]].
+	self peekForAdditionalSteps
+		ifFalse: [self errorExpectedStep]
 ]
 
 { #category : #parsing }
@@ -258,9 +251,7 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 	descendant:: followed by the node test"
 	currentAxis axisSpecifier: 'descendant'.
 	nodeTestParser parse
-		ifTrue: [
-			self peekForPredicates.
-			^ true]
+		ifTrue: [self peekForPredicates]
 		ifFalse: [
 			"// followed by an abbreviated step or step with an
 			explicit axis is the same as descendant-or-self::node()/
@@ -269,7 +260,9 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 				axisSpecifier: 'descendant-or-self';
 				handleWith: handler.
 			handler handleTestForAnyNodeType.
-			^ false].
+			self peekForStep
+				ifFalse: [self errorExpectedStep]].
+	^ true.
 ]
 
 { #category : #'parsing - peeking' }
@@ -299,11 +292,29 @@ XPathExpressionParser >> peekForAbbreviatedStep [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbsoluteLocationPath [
 	self peekForLocationPathSeparator
-		ifTrue: [
-			handler handleStartAbsoluteLocationPath.
-			self nextAdditionalSteps.
-			^ true]
-		ifFalse: [^ false]
+		ifFalse: [^ false].
+	handler handleStartAbsoluteLocationPath.
+	self peekForAdditionalSteps
+		ifFalse: [
+			currentAxis
+				axisSpecifier: 'self';
+				handleWith: handler.
+			handler handleTestForAnyNodeType].
+	^ true.
+]
+
+{ #category : #'parsing - peeking' }
+XPathExpressionParser >> peekForAdditionalSteps [
+	currentAxis reset.
+	(self peekForAbbreviatedDescendantStep
+		or: [self peekForStep])
+		ifFalse: [^ false].
+	[self peekForLocationPathSeparator]
+		whileTrue: [
+			(self peekForAbbreviatedDescendantStep
+				or: [self peekForStep])
+				ifFalse: [self errorExpectedStep]].
+	^ true.
 ]
 
 { #category : #'parsing - peeking' }
