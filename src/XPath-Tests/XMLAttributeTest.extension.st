@@ -1,6 +1,28 @@
 Extension { #name : #XMLAttributeTest }
 
 { #category : #'*XPath-Tests' }
+XMLAttributeTest >> testDefaultContextPosition [
+	| element |
+
+	super testDefaultContextPosition.
+
+	element := self newElementWithAttributes.
+	element attributeNodes withIndexDo: [:each :i |
+		self assert: each defaultContextPosition = i].
+]
+
+{ #category : #'*XPath-Tests' }
+XMLAttributeTest >> testDefaultContextSize [
+	| element |
+
+	super testDefaultContextSize.
+
+	element := self newElementWithAttributes.
+	element attributeNodesDo: [:each |
+		self assert: each defaultContextSize = element attributeNodes size].
+]
+
+{ #category : #'*XPath-Tests' }
 XMLAttributeTest >> testHasExpandedName [
 	self assert: self nodeClass new hasExpandedName
 ]
@@ -25,4 +47,14 @@ XMLAttributeTest >> testHasPrefixedNamespaceURI [
 { #category : #'*XPath-Tests' }
 XMLAttributeTest >> testIsPrincipalNode [
 	self assert: self nodeClass new isPrincipalNode
+]
+
+{ #category : #'*XPath-Tests' }
+XMLAttributeTest >> testStringValue [
+	super testStringValue.
+
+	self assert:
+		(self nodeClass
+			name: 'name'
+			value: 'value') stringValue = 'value'
 ]

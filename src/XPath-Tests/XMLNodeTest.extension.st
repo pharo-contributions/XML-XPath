@@ -1,6 +1,24 @@
 Extension { #name : #XMLNodeTest }
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testDefaultContextPosition [
+	self assert: self nodeClass new defaultContextPosition = 1
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testDefaultContextSize [
+	self assert: self nodeClass new defaultContextSize = 1
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testDocumentRoot [
+	| node |
+
+	node := self nodeClass new.
+	self assert: node documentRoot == node.
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testHasExpandedName [
 	self deny: self nodeClass new hasExpandedName
 ]
@@ -13,4 +31,9 @@ XMLNodeTest >> testIsNamespace [
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testIsPrincipalNode [
 	self deny: self nodeClass new isPrincipalNode
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testStringValue [
+	self assert: self nodeClass new stringValue isEmpty
 ]

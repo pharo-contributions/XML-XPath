@@ -50,3 +50,13 @@ XMLPITest >> testNamespaceURI [
 XMLPITest >> testPrefix [
 	self assert: (self nodeClass target: 'target' data: 'data') prefix isEmpty
 ]
+
+{ #category : #'*XPath-Tests' }
+XMLPITest >> testStringValue [
+	super testStringValue.
+
+	self assert:
+		(self nodeClass
+			target: 'target'
+			data: 'data') stringValue = 'data'.
+]

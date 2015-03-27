@@ -21,6 +21,13 @@ XPathTest >> setUp [
 ]
 
 { #category : #tests }
+XPathTest >> testAbsoluteLocationPaths [
+	self
+		assert: (XPath for: '/' in: document) = (XMLNodeList with: document);
+		assert: (XPath for: '/*' in: document) = (XMLNodeList with: document root)
+]
+
+{ #category : #tests }
 XPathTest >> testAddFunction [
 	| functionSet context |
 
@@ -512,12 +519,24 @@ XPathTest >> testLangFunction [
 
 { #category : #tests }
 XPathTest >> testLastFunction [
-	| path |
+	| path elements |
+
+	path := XPath for: 'last()'.
+	self assert: (path in: document) = 1.
+
+	path := XPath for: 'last()'.
+	elements := document allElementsNamed: 'person'.
+	elements do: [:each | self assert: (path in: each) = elements size].
 
 	path := XPath for: 'addressbook/person[last()]'.
 	self assert:
 		(path in: document) =
-			((document allElementsNamed: 'person') allButFirst: 3).
+			(elements allButFirst: elements size - 1).
+			
+	path := XPath for: 'addressbook//node()[last()]'.
+	self assert:
+		(path in: document) =
+			(XMLNodeList with: document allNodes last).
 ]
 
 { #category : #tests }
@@ -780,18 +799,26 @@ XPathTest >> testOneLevel [
 ]
 
 { #category : #tests }
-XPathTest >> testPosition [
+XPathTest >> testPositionFunction [
 	self assert:
 		(XPath
-			for: ' position() '
-			in: (document allElementsNamed: 'person') last) = 4.
-]
+			for: ' position( ) '
+			in: document) = 1.
 
-{ #category : #tests }
-XPathTest >> testPositionFunction [
 	(document allElementsNamed: 'person')
 		withIndexDo: [:each :i |
-			self assert: (XPath for: ' position() ' in: each) = i]
+			self assert: (XPath for: ' position() ' in: each) = i].
+
+	(document allElementsNamed: 'person')
+		withIndexDo: [:each :i |
+			self assert:
+				(XPath
+					for: 'addressbook/person[position() = ', i printString, ']'
+					in: document) = (XMLNodeList with: each).
+			self assert:
+				(XPath
+					for: 'addressbook/person[ ', i printString, ' ]'
+					in: document) = (XMLNodeList with: each)].
 ]
 
 { #category : #tests }
@@ -931,6 +958,19 @@ XPathTest >> testReverseForwardAxisCombination [
 	self assert:
 		(XPath for: '*/person[last()]/preceding::node()/node()' in: document) =
 			nodes.
+]
+
+{ #category : #tests }
+XPathTest >> testSelfAxis [
+	self assert:
+		(XPath
+			for: ' / self::node() '
+			in: document) = (XMLNodeList with: document).
+
+	self assert:
+		(XPath
+			for: ' /*/person/self::*'
+			in: document) = (document allElementsNamed: 'person').
 ]
 
 { #category : #tests }

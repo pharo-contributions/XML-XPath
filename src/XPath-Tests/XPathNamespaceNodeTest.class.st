@@ -5,6 +5,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+XPathNamespaceNodeTest >> newElementWithNamespaceNode [
+	^ self newElementWithAttributes
+		declarePrefix: 'prefix'
+		uri: 'prefixNS'
+]
+
+{ #category : #'instance creation' }
 XPathNamespaceNodeTest >> newNamespaceNode [
 	^ self nodeClass
 		element: self newElementWithAttributes
@@ -15,6 +22,29 @@ XPathNamespaceNodeTest >> newNamespaceNode [
 { #category : #accessing }
 XPathNamespaceNodeTest >> nodeClass [
 	^ XPathNamespaceNode
+]
+
+{ #category : #tests }
+XPathNamespaceNodeTest >> testDefaultContextPosition [
+	| element |
+
+	super testDefaultContextPosition.
+
+	element := self newElementWithNamespaceNode.
+	element namespaceNodes withIndexDo: [:each :i |
+		self assert: each defaultContextPosition = i].
+]
+
+{ #category : #tests }
+XPathNamespaceNodeTest >> testDefaultContextSize [
+	| element size |
+
+	super testDefaultContextSize.
+
+	element := self newElementWithNamespaceNode.
+	size := element namespaceNodes size.
+	element namespaceNodesDo: [:each |
+		self assert: each defaultContextSize = size].
 ]
 
 { #category : #tests }
@@ -108,7 +138,15 @@ XPathNamespaceNodeTest >> testNamespaceURI [
 
 { #category : #tests }
 XPathNamespaceNodeTest >> testPrefix [
+	"namespace nodes model prefixes, but cannot be prefixed themselves"
 	self assert: self newNamespaceNode prefix isEmpty
+]
+
+{ #category : #tests }
+XPathNamespaceNodeTest >> testStringValue [
+	super testStringValue.
+
+	self assert: self newNamespaceNode stringValue = 'prefixNS'.
 ]
 
 { #category : #tests }
