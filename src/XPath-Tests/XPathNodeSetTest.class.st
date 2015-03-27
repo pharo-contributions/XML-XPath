@@ -419,6 +419,23 @@ XPathNodeSetTest >> testDefaultSortOrder [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testDifference [
+	self assert:
+		(self listWithElements \ self listWithElements) =
+			self emptyList.
+	self assert:
+		(self listWithElements reversed \ self emptyList) =
+			self listWithElements.
+	self assert:
+		(self listWithElements \ self listWithSingleElement) =
+			self listWithElements allButFirst.
+	self assert:
+		(self listWithElements reversed \
+			(self listElements select: [:each | each isElement])) =
+				(self listWithElements reject: [:each | each isElement]).
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testFirstFew [
 	| list |
 
@@ -437,6 +454,23 @@ XPathNodeSetTest >> testFirstInDocumentOrder [
 		assert: self listWithSingleElement firstInDocumentOrder = self singleElement;
 		assert: self listWithElements firstInDocumentOrder = self listElements first;
 		assert: self listWithElements reversed firstInDocumentOrder = self listElements first
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testIntersection [
+	self assert:
+		(self listWithElements reversed & self listWithElements) =
+			self listWithElements.
+	self assert:
+		(self listWithElements & self emptyList) =
+			self emptyList.
+	self assert:
+		(self listWithSingleElement & self listWithElements reversed) =
+			self listWithSingleElement.
+	self assert:
+		(self listWithElements &
+			(self listWithElements select: [:each | each isElement])) =
+				(self listWithElements select: [:each | each isElement])
 ]
 
 { #category : #tests }
@@ -652,4 +686,21 @@ XPathNodeSetTest >> testSwapWith [
 		swap: 1
 		with: list size.
 	self assertHasUnknownSortOrder: list.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testUnion [
+	self assert:
+		(self listWithElements | self listWithElements reversed) =
+			self listWithElements.
+	self assert:
+		(self listWithElements | self emptyList) =
+			self listWithElements.
+	self assert:
+		(self listWithSingleElement | self listWithElements reversed) =
+			self listWithElements.
+	self assert:
+		((self listWithElements select: [:each | each isElement]) reversed |
+			(self listWithElements reject: [:each | each isElement])) =
+				self listWithElements.
 ]
