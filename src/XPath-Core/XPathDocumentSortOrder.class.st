@@ -7,11 +7,6 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
-{ #category : #converting }
-XPathDocumentSortOrder >> asDocumentSortOrder [
-	^ self
-]
-
 { #category : #private }
 XPathDocumentSortOrder >> documentOrderOn: aNodeSet do: aBlock [
 	aNodeSet do: aBlock
@@ -23,6 +18,11 @@ XPathDocumentSortOrder >> documentOrderOn: aNodeSet indexOfNextParentAfterIndex:
 		(aNodeSet at: i) hasChildren
 			ifTrue: [^ i]].
 	^ nil.
+]
+
+{ #category : #private }
+XPathDocumentSortOrder >> documentOrderReadStreamOn: aNodeSet [
+	^ aNodeSet readStream
 ]
 
 { #category : #sorting }

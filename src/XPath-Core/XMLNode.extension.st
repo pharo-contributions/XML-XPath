@@ -126,18 +126,6 @@ XMLNode >> allNodesReverseDo: aBlock [
 	aBlock value: self
 ]
 
-{ #category : #'*XPath-Core-private' }
-XMLNode >> ancestorOrSelfChildOfParent: aParent [
-	self parent = aParent
-		ifTrue: [^ self].
-	self parent = aParent parent
-		ifTrue: [^ nil].
-	self ancestorNodesDo: [:each |
-		(each parent = aParent)
-			ifTrue: [^ each]].
-	^ nil.
-]
-
 { #category : #'*XPath-Core-accessing' }
 XMLNode >> defaultContextPosition [
 	self hasParent
@@ -202,6 +190,18 @@ XMLNode >> isNamespace [
 { #category : #'*XPath-Core-testing' }
 XMLNode >> isPrincipalNode [
 	^ false
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> lastAncestorOrSelfInNode: aNode [
+	self parent = aNode
+		ifTrue: [^ self].
+	self parent = aNode parent
+		ifTrue: [^ nil].
+	self ancestorNodesDo: [:each |
+		(each parent = aNode)
+			ifTrue: [^ each]].
+	^ nil.
 ]
 
 { #category : #'*XPath-Core-private' }

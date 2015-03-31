@@ -29,6 +29,13 @@ XPathLevelReverseDocumentSortOrder >> followingSiblingAxisOn: aNodeSet select: a
 ]
 
 { #category : #enumerating }
+XPathLevelReverseDocumentSortOrder >> parentAxisOn: aNodeSet select: aNodeTestBlock [
+	^ self
+		levelOrderParentAxisOn: aNodeSet
+		select: aNodeTestBlock
+]
+
+{ #category : #enumerating }
 XPathLevelReverseDocumentSortOrder >> precedingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
 		levelOrderPrecedingAxisOn: aNodeSet
@@ -39,5 +46,12 @@ XPathLevelReverseDocumentSortOrder >> precedingAxisOn: aNodeSet select: aNodeTes
 XPathLevelReverseDocumentSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
 		levelOrderPrecedingSiblingAxisOn: aNodeSet
+		select: aNodeTestBlock
+]
+
+{ #category : #enumerating }
+XPathLevelReverseDocumentSortOrder >> selfAxisOn: aNodeSet select: aNodeTestBlock [
+	^ self
+		levelOrderSelfAxisOn: aNodeSet
 		select: aNodeTestBlock
 ]

@@ -1,5 +1,5 @@
 "
-A sort order for node in reverse document order.
+A sort order for nodes in reverse document order.
 "
 Class {
 	#name : #XPathReverseDocumentSortOrder,
@@ -24,6 +24,11 @@ XPathReverseDocumentSortOrder >> documentOrderOn: aNodeSet indexOfNextParentAfte
 		(aNodeSet at: i) hasChildren
 			ifTrue: [^ i]].
 	^ nil.
+]
+
+{ #category : #private }
+XPathReverseDocumentSortOrder >> documentOrderReadStreamOn: aNodeSet [
+	^ aNodeSet reverseReadStream
 ]
 
 { #category : #sorting }

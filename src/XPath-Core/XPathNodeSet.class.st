@@ -67,6 +67,7 @@ XPathNodeSet >> %%~ aNodeTestStringOrBlock [
 
 { #category : #enumerating }
 XPathNodeSet >> & aNodeSet [
+	"redefined here for portability"
 	^ self intersection: aNodeSet
 ]
 
@@ -278,6 +279,7 @@ XPathNodeSet >> @@ aNodeTestStringOrBlock [
 
 { #category : #enumerating }
 XPathNodeSet >> \ aNodeSet [
+	"redefined here for portability"
 	^ self difference: aNodeSet
 ]
 
@@ -441,6 +443,19 @@ XPathNodeSet >> reverseInPlaceFrom: aStart to: anEnd [
 			self swap: start with: end.
 			start := start + 1.
 			end := end - 1].
+]
+
+{ #category : #converting }
+XPathNodeSet >> reverseReadStream [
+	| contents contentsSize |
+
+	contentsSize := self size.
+	contents := Array new: contentsSize.
+	1 to: contentsSize do: [:i |
+		contents
+			at: (contentsSize - i) + 1
+			put: (collection at: i)].
+	^ contents readStream.
 ]
 
 { #category : #sorting }
@@ -637,6 +652,7 @@ XPathNodeSet >> xPathNotEqualsString: aString [
 
 { #category : #enumerating }
 XPathNodeSet >> | aNodeSet [
+	"redefined here for portability"
 	^ self union: aNodeSet
 ]
 

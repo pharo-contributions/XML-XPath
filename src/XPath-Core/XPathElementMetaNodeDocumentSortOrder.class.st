@@ -54,3 +54,8 @@ XPathElementMetaNodeDocumentSortOrder >> precedingAxisOn: aNodeSet select: aNode
 XPathElementMetaNodeDocumentSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ aNodeSet copyEmpty
 ]
+
+{ #category : #enumerating }
+XPathElementMetaNodeDocumentSortOrder >> selfAxisOn: aNodeSet select: aNodeTestBlock [
+	^ aNodeSet select: aNodeTestBlock
+]

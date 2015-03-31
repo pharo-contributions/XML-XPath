@@ -7,16 +7,14 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
-{ #category : #enumerating }
-XPathUnknownSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
-	^ self asDocumentSortOrder
-		childAxisOn: aNodeSet sorted
-		select: aNodeTestBlock
-]
-
 { #category : #private }
 XPathUnknownSortOrder >> documentOrderOn: aNodeSet do: aBlock [
 	aNodeSet sorted do: aBlock
+]
+
+{ #category : #private }
+XPathUnknownSortOrder >> documentOrderReadStreamOn: aNodeSet [
+	^ aNodeSet sorted readStream
 ]
 
 { #category : #sorting }
