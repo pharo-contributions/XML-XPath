@@ -133,6 +133,32 @@ XPathTest >> testAttributeTypeTest [
 ]
 
 { #category : #tests }
+XPathTest >> testChildAxis [
+	| nodes |
+
+	nodes := document allElementsNamed: 'person'.
+	self assert:
+		(XPath
+			for: 'child::addressbook/child::person'
+			in: document) = nodes.
+
+	nodes removeAll.
+	document allElementsNamed: 'person' do: [:each | nodes addAll: each nodes].
+	self assert:
+		(XPath
+			for: '/addressbook/person/node()'
+			in: document) = nodes.
+
+	nodes := (document allElementsNamed: 'person') allButLast.
+	nodes last nodesDo: [:each | nodes addAll: each nodes].
+	nodes addLast: (document allElementsNamed: 'person') last.
+	self assert:
+		(XPath
+			for: '(/addressbook | //person[3]/*)/node()'
+			in: document) = nodes.
+]
+
+{ #category : #tests }
 XPathTest >> testCommentTypeTest [
 	| comments |
 
@@ -433,6 +459,14 @@ XPathTest >> testFollowingSiblingAxis [
 	self assert:
 		(XPath
 			for: 'addressbook/person/node()/following-sibling::node()'
+			in: document) = siblings.
+
+	siblings := (document allElementsNamed: 'person') first
+		descendentNodesSelect: [:each | each previousNode notNil].
+	siblings addAll: (document allElementsNamed: 'person') allButFirst.
+	self assert:
+		(XPath
+			for: 'addressbook/person[1]//following-sibling::node()'
 			in: document) = siblings.
 
 	siblings := document allNodesSelect: [:each |
@@ -817,6 +851,29 @@ XPathTest >> testOneLevel [
 ]
 
 { #category : #tests }
+XPathTest >> testParentAxis [
+	self assert:
+		(XPath
+			for: '//parent::*'
+			in: document) = (document allElementsSelect: [:each | each hasChildren]).
+
+	self assert:
+		(XPath
+			for: 'addressbook/person/parent::*'
+			in: document) = (XMLNodeList with: document root).
+
+	self assert:
+		(XPath
+			for: 'addressbook/person/node()/parent::*'
+			in: document) = (document allElementsNamed: 'person').
+
+	self assert:
+		(XPath
+			for: 'addressbook/person/attribute::node()/parent::node()'
+			in: document) = (document allElementsNamed: 'person').
+]
+
+{ #category : #tests }
 XPathTest >> testPositionFunction [
 	self assert:
 		(XPath
@@ -880,7 +937,7 @@ XPathTest >> testPrecedingAxis [
 
 { #category : #tests }
 XPathTest >> testPrecedingSiblingAxis [
-	| results |
+	| results siblings |
 
 	results :=
 		XPath
@@ -896,6 +953,25 @@ XPathTest >> testPrecedingSiblingAxis [
 		results =
 			(document root nodes allButLast
 				collect: [:each | each elementAt: 'manager']).
+
+	siblings := (document allElementsNamed: 'person') allButLast.
+	(document allElementsNamed: 'person') last
+		descendentNodesDo: [:each |
+			each nextNode
+				ifNotNil: [siblings addLast: each]].
+	siblings := siblings reversed.
+	self assert:
+		(XPath
+			for: 'addressbook/person[4]//preceding-sibling::node()'
+			in: document) = siblings.
+
+	siblings := document allNodesSelect: [:each |
+		each hasParent
+			and: [each nextNode notNil]].
+	self assert:
+		(XPath
+			for: '//preceding-sibling::node()'
+			in: document) = siblings reversed.
 ]
 
 { #category : #tests }
@@ -989,6 +1065,18 @@ XPathTest >> testSelfAxis [
 		(XPath
 			for: ' /*/person/self::*'
 			in: document) = (document allElementsNamed: 'person').
+
+	self assert:
+		(XPath
+			for: ' /*/person/node()/self::node()'
+			in: document) =
+				(document allNodesSelect: [:each |
+					each hasParent
+						and: [each parent isElementNamed: 'person']]).
+	self assert: 
+		(XPath
+			for: ' //person[1]/attribute::node()/.'
+			in: document) = (document findElementNamed: 'person') attributeNodes.
 ]
 
 { #category : #tests }

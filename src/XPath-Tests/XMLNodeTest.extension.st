@@ -44,6 +44,11 @@ XMLNodeTest >> testIsPrincipalNode [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testLastAncestorOrSelfInNode [
+	self assert: (self nodeClass new lastAncestorOrSelfInNode: self nodeClass new) isNil
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testStringValue [
 	self assert: self nodeClass new stringValue isEmpty
 ]

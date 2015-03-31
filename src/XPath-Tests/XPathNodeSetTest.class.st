@@ -599,6 +599,14 @@ XPathNodeSetTest >> testReplaceFromToWithStartingAt [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testReverseReadStream [
+	self
+		assert: self emptyList reverseReadStream upToEnd isEmpty;
+		assert: self listWithSingleElement reverseReadStream upToEnd = self listWithSingleElement asArray;
+		assert: self listWithElements reverseReadStream upToEnd = self listWithElements reversed asArray
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testReverseSort [
 	| list |
 

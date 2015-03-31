@@ -21,3 +21,19 @@ XMLNodeWithChildrenTest >> testDocumentRoot [
 	nodeWithNodes allNodesDo: [:each |
 		self assert: each documentRoot == nodeWithNodes].
 ]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeWithChildrenTest >> testLastAncestorOrSelfInNode [
+	| nodeWithNodes |
+
+	super testLastAncestorOrSelfInNode.
+
+	nodeWithNodes := self newNodeWithNodes.
+	nodeWithNodes nodesDo: [:node |
+		self assert: (node lastAncestorOrSelfInNode: nodeWithNodes) = node.
+		node descendentNodesDo: [:each | | ancestors |
+			ancestors := each ancestorNodes.
+			self assert:
+				(each lastAncestorOrSelfInNode: nodeWithNodes) =
+					(ancestors at: ancestors size - 1)]].
+]
