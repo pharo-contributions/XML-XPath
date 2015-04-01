@@ -103,6 +103,7 @@ XMLElementTest >> testOccursInDocumentBeforeNode [
 	before := OrderedCollection with: element.
 
 	element namespaceNodesDo: [:node |
+		self deny: (node occursInDocumentBeforeNode: node).
 		before do: [:each |
 			self
 				assert: (each occursInDocumentBeforeNode: node);
@@ -110,6 +111,7 @@ XMLElementTest >> testOccursInDocumentBeforeNode [
 		before addLast: node].
 
 	element attributeNodesDo: [:node |
+		self deny: (node occursInDocumentBeforeNode: node).
 		before do: [:each |
 			self
 				assert: (each occursInDocumentBeforeNode: node);

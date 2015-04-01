@@ -47,9 +47,30 @@ XMLNodeWithChildrenTest >> testOccursInDocumentBeforeNode [
 	nodeWithNodes := self newNodeWithNodes.
 	before := OrderedCollection new.
 	nodeWithNodes allNodesDo: [:node |
+		self deny: (node occursInDocumentBeforeNode: node).
 		before do: [:each |
 			self
 				assert: (each occursInDocumentBeforeNode: node);
 				deny: (node occursInDocumentBeforeNode: each)].
-		before addLast: node].
+		before addLast: node.
+		node isElement
+			ifTrue: [
+				node hasNamespaceNodes
+					ifTrue: [
+						node namespaceNodesDo: [:namespace |
+							self deny: (namespace occursInDocumentBeforeNode: namespace).
+							before do: [:each |
+								self
+									assert: (each occursInDocumentBeforeNode: namespace);
+									deny: (namespace occursInDocumentBeforeNode: each)].
+							before addLast: namespace]].
+				node hasAttributes
+					ifTrue: [
+						node attributeNodesDo: [:attribute |
+							self deny: (attribute occursInDocumentBeforeNode: attribute).
+							before do: [:each |
+								self
+									assert: (each occursInDocumentBeforeNode: attribute);
+									deny: (attribute occursInDocumentBeforeNode: each)].
+							before addLast: attribute]]]].
 ]
