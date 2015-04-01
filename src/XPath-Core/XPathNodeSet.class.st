@@ -449,6 +449,8 @@ XPathNodeSet >> reverseInPlaceFrom: aStart to: anEnd [
 XPathNodeSet >> reverseReadStream [
 	| contents contentsSize |
 
+	"array is used for performance because using #reversed would use another
+	node set that would needlessly check for duplicates and use more memory"
 	contentsSize := self size.
 	contents := Array new: contentsSize.
 	1 to: contentsSize do: [:i |
@@ -491,7 +493,9 @@ XPathNodeSet >> sortOrder [
 		ifNil: [
 			self size > 1
 				ifTrue: [sortOrder := XPathUnknownSortOrder new]
-				ifFalse: [sortOrder := XPathLevelDocumentSortOrder new]].
+				ifFalse: [
+					"can be used safely for node sets with one node"
+					sortOrder := XPathLevelDocumentSortOrder new]].
 	^ sortOrder.
 ]
 
