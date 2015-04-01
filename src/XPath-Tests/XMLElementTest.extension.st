@@ -93,6 +93,31 @@ XMLElementTest >> testNamespaceNodesDo [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLElementTest >> testOccursInDocumentBeforeNode [
+	| element before |
+
+	super testOccursInDocumentBeforeNode.
+
+	element := self newElementWithAttributes.
+	element declareNamespaces: self namespaces.
+	before := OrderedCollection with: element.
+
+	element namespaceNodesDo: [:node |
+		before do: [:each |
+			self
+				assert: (each occursInDocumentBeforeNode: node);
+				deny: (node occursInDocumentBeforeNode: each)].
+		before addLast: node].
+
+	element attributeNodesDo: [:node |
+		before do: [:each |
+			self
+				assert: (each occursInDocumentBeforeNode: node);
+				deny: (node occursInDocumentBeforeNode: each)].
+		before addLast: node].
+]
+
+{ #category : #'*XPath-Tests' }
 XMLElementTest >> testStringValue [
 	super testStringValue.
 

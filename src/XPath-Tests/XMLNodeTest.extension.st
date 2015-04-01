@@ -49,6 +49,16 @@ XMLNodeTest >> testLastAncestorOrSelfInNode [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testOccursInDocumentBeforeNode [
+	| node |
+
+	node := self nodeClass new.
+	self
+		deny: (node occursInDocumentBeforeNode: node);
+		deny: (self nodeClass new occursInDocumentBeforeNode: self nodeClass new).
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testStringValue [
 	self assert: self nodeClass new stringValue isEmpty
 ]

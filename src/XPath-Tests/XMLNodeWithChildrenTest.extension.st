@@ -37,3 +37,19 @@ XMLNodeWithChildrenTest >> testLastAncestorOrSelfInNode [
 				(each lastAncestorOrSelfInNode: nodeWithNodes) =
 					(ancestors at: ancestors size - 1)]].
 ]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeWithChildrenTest >> testOccursInDocumentBeforeNode [
+	| nodeWithNodes before |
+
+	super testOccursInDocumentBeforeNode.
+
+	nodeWithNodes := self newNodeWithNodes.
+	before := OrderedCollection new.
+	nodeWithNodes allNodesDo: [:node |
+		before do: [:each |
+			self
+				assert: (each occursInDocumentBeforeNode: node);
+				deny: (node occursInDocumentBeforeNode: each)].
+		before addLast: node].
+]
