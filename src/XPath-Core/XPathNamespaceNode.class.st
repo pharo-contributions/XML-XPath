@@ -131,14 +131,20 @@ XPathNamespaceNode >> occursInParentAfterAttribute: anAttribute [
 
 { #category : #private }
 XPathNamespaceNode >> occursInParentAfterNamespace: aNamespaceNode [
-	self hasParent
+	(self hasParent
+		and: [self parent = aNamespaceNode parent])
 		ifTrue: [
 			self parent namespaceNodesDo: [:each |
-				each = aNamespaceNode
-					ifTrue: [^ true].
 				each = self
-					ifTrue: [^ false]]].
+					ifTrue: [^ false].
+				each = aNamespaceNode
+					ifTrue: [^ true]]].
 	^ false.
+]
+
+{ #category : #private }
+XPathNamespaceNode >> occursInParentAfterSibling: aNode [
+	^ false
 ]
 
 { #category : #private }

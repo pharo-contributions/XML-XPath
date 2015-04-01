@@ -261,12 +261,14 @@ XMLNode >> occursInDocumentBeforeNode: aNode [
 
 { #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentAfterAttribute: anAttribute [
-	^ true
+	^ self hasParent
+		and: [self parent = anAttribute parent]
 ]
 
 { #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentAfterNamespace: aNamespaceNode [
-	^ true
+	^ self hasParent
+		and: [self parent = aNamespaceNode parent]
 ]
 
 { #category : #'*XPath-Core-private' }
