@@ -221,13 +221,10 @@ XMLNode >> occursInDocumentBeforeNode: aNode [
 	self = aNode
 		ifTrue: [^ false].
 
-	"handle easy cases where one is a root or one is the parent of the other
-	or they share parents"
-	(self hasParent not
-		or: [aNode parent = self])
+	"handle easy cases if possible"
+	aNode parent = self
 		ifTrue: [^ true].
-	(aNode hasParent not
-		or: [self parent = aNode])
+	self parent = aNode
 		ifTrue: [^ false].
 	self parent = aNode parent
 		ifTrue: [^ self occursInParentBeforeNode: aNode].
@@ -258,6 +255,7 @@ XMLNode >> occursInDocumentBeforeNode: aNode [
 
 			selfLastAncestor := selfAncestor.
 			aNodeLastAncestor := aNodeAncestor].
+
 	^ false.
 ]
 
@@ -273,11 +271,13 @@ XMLNode >> occursInParentAfterNamespace: aNamespaceNode [
 
 { #category : #'*XPath-Core-private' }
 XMLNode >> occursInParentAfterSibling: aNode [
-	self parent nodesDo: [:each |
-		each = aNode
-			ifTrue: [^ true].
-		each = self
-			ifTrue: [^ false]].
+	self hasParent
+		ifTrue: [
+			self parent nodesDo: [:each |
+				each = aNode
+					ifTrue: [^ true].
+				each = self
+					ifTrue: [^ false]]].
 	^ false.
 ]
 

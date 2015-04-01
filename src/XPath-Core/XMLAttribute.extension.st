@@ -32,11 +32,13 @@ XMLAttribute >> isPrincipalNode [
 
 { #category : #'*XPath-Core-private' }
 XMLAttribute >> occursInParentAfterAttribute: anAttribute [
-	self element attributeNodesDo: [:each |
-		each = anAttribute
-			ifTrue: [^ true].
-		each = self
-			ifTrue: [^ false]].
+	self hasParent
+		ifTrue: [
+			self parent attributeNodesDo: [:each |
+				each = anAttribute
+					ifTrue: [^ true].
+				each = self
+					ifTrue: [^ false]]].
 	^ false.
 ]
 
