@@ -1,19 +1,5 @@
 Extension { #name : #XMLAttribute }
 
-{ #category : #'*XPath-Core-accessing' }
-XMLAttribute >> defaultContextPosition [
-	self hasParent
-		ifTrue: [^ self parent attributeNodes indexOf: self]
-		ifFalse: [^ 1]
-]
-
-{ #category : #'*XPath-Core-accessing' }
-XMLAttribute >> defaultContextSize [
-	self hasParent
-		ifTrue: [^ self parent attributeNodes size]
-		ifFalse: [^ 1]
-]
-
 { #category : #'*XPath-Core-testing' }
 XMLAttribute >> hasExpandedName [
 	^ true

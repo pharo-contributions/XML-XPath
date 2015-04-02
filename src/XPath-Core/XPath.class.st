@@ -91,7 +91,6 @@ XPath class >> for: anXPathSourceString in: aNode context: aContext [
 { #category : #'class initialization' }
 XPath class >> initialize [
 	"self initialize"
-
 	self clearCompiledXPathCache
 ]
 

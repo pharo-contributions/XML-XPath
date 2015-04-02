@@ -127,20 +127,6 @@ XMLNode >> allNodesReverseDo: aBlock [
 ]
 
 { #category : #'*XPath-Core-accessing' }
-XMLNode >> defaultContextPosition [
-	self hasParent
-		ifTrue: [^ self parent nodes indexOf: self]
-		ifFalse: [^ 1]
-]
-
-{ #category : #'*XPath-Core-accessing' }
-XMLNode >> defaultContextSize [
-	self hasParent
-		ifTrue: [^ self parent nodes size]
-		ifFalse: [^ 1]
-]
-
-{ #category : #'*XPath-Core-accessing' }
 XMLNode >> documentRoot [
 	"returns the root of the DOM tree, a document node if there is one or the
 	last ancestor or self otherwise"

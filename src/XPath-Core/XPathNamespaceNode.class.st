@@ -47,20 +47,6 @@ XPathNamespaceNode >> = anObject [
 ]
 
 { #category : #accessing }
-XPathNamespaceNode >> defaultContextPosition [
-	self hasParent
-		ifTrue: [^ self parent namespaceNodes indexOf: self]
-		ifFalse: [^ 1]
-]
-
-{ #category : #accessing }
-XPathNamespaceNode >> defaultContextSize [
-	self hasParent
-		ifTrue: [^ self parent namespaceNodes size]
-		ifFalse: [^ 1]
-]
-
-{ #category : #accessing }
 XPathNamespaceNode >> element [
 	^ parent
 ]

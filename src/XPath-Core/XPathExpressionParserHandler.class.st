@@ -302,9 +302,7 @@ XPathExpressionParserHandler >> handleLastFunctionCall [
 	outputStream
 		nextPut: $(;
 		nextPutAll: contextSizeVariable;
-		nextPutAll: ' ifNil:[';
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' defaultContextSize])'
+		nextPutAll: ' ifNil:[1])'
 ]
 
 { #category : #'handling - operators' }
@@ -349,9 +347,7 @@ XPathExpressionParserHandler >> handlePositionFunctionCall [
 	outputStream
 		nextPut: $(;
 		nextPutAll: contextPositionVariable;
-		nextPutAll: ' ifNil:[';
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' defaultContextPosition])'
+		nextPutAll: ' ifNil:[1])'
 ]
 
 { #category : #'handling - predicates' }
