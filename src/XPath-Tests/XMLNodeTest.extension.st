@@ -29,6 +29,26 @@ XMLNodeTest >> testDocumentRoot [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testFollowingNodesDo [
+	| node |
+
+	node := self nodeClass new.
+	self
+		should: [:block | node followingNodesDo: block]
+		enumerate: #().
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testFollowingSiblingNodesDo [
+	| node |
+
+	node := self nodeClass new.
+	self
+		should: [:block | node followingSiblingNodesDo: block]
+		enumerate: #().
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testHasExpandedName [
 	self deny: self nodeClass new hasExpandedName
 ]
@@ -56,6 +76,26 @@ XMLNodeTest >> testOccursInDocumentBeforeNode [
 	self
 		deny: (node occursInDocumentBeforeNode: node);
 		deny: (self nodeClass new occursInDocumentBeforeNode: self nodeClass new).
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testPrecedingNodesDo [
+	| node |
+
+	node := self nodeClass new.
+	self
+		should: [:block | node precedingNodesDo: block]
+		enumerate: #().
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testPrecedingSiblingNodesDo [
+	| node |
+
+	node := self nodeClass new.
+	self
+		should: [:block | node precedingSiblingNodesDo: block]
+		enumerate: #().
 ]
 
 { #category : #'*XPath-Tests' }
