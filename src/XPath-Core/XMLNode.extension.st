@@ -335,7 +335,7 @@ XMLNode >> xPath: anXPathOrXPathString context: aContext [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> ~ aNodeTestStringOrBlock [
 	"self axis"
-	((aNodeTestStringOrBlock asNodeTestBlock value: self)
+	(aNodeTestStringOrBlock asNodeTestBlock value: self)
 		ifTrue: [^ self newNodeSetWith: self]
-		ifFalse: [^ self newNodeSet])
+		ifFalse: [^ self newNodeSet]
 ]

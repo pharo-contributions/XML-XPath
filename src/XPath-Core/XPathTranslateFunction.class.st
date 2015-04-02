@@ -14,7 +14,7 @@ XPathTranslateFunction class >> functionPrototype [
 
 { #category : #invoking }
 XPathTranslateFunction >> function [
-	| replacementTable translatedString replacementString searchString sourceString |
+	| replacementTable replacementString searchString sourceString writeStream |
 
 	replacementTable := IdentityDictionary new.
 	replacementString := self pop.
@@ -25,10 +25,9 @@ XPathTranslateFunction >> function [
 			ifAbsentPut: (replacementString at: i ifAbsent: [nil])].
 
 	sourceString := self pop.
-	translatedString := (String new: sourceString size) writeStream.
+	writeStream  := (String new: sourceString size) writeStream.
 	sourceString do: [:each |	
 		(replacementTable at: each ifAbsent: [each])
-			ifNotNil: [:nextChar |
-				translatedString nextPut: nextChar]].
-	^ translatedString contents.
+			ifNotNil: [:nextChar | writeStream  nextPut: nextChar]].
+	^ writeStream  contents.
 ]
