@@ -578,7 +578,7 @@ XPathTest >> testLastFunction [
 
 	path := XPath for: 'last()'.
 	elements := document allElementsNamed: 'person'.
-	elements do: [:each | self assert: (path in: each) = elements size].
+	elements do: [:each | self assert: (path in: each) = 1].
 
 	path := XPath for: 'addressbook/person[last()]'.
 	self assert:
@@ -924,9 +924,8 @@ XPathTest >> testPositionFunction [
 			for: ' position( ) '
 			in: document) = 1.
 
-	(document allElementsNamed: 'person')
-		withIndexDo: [:each :i |
-			self assert: (XPath for: ' position() ' in: each) = i].
+	(document allElementsNamed: 'person') do: [:each |
+		self assert: (XPath for: ' position() ' in: each) = 1].
 
 	(document allElementsNamed: 'person')
 		withIndexDo: [:each :i |

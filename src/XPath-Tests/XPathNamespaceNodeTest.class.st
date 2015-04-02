@@ -25,29 +25,6 @@ XPathNamespaceNodeTest >> nodeClass [
 ]
 
 { #category : #tests }
-XPathNamespaceNodeTest >> testDefaultContextPosition [
-	| element |
-
-	super testDefaultContextPosition.
-
-	element := self newElementWithNamespaceNode.
-	element namespaceNodes withIndexDo: [:each :i |
-		self assert: each defaultContextPosition = i].
-]
-
-{ #category : #tests }
-XPathNamespaceNodeTest >> testDefaultContextSize [
-	| element size |
-
-	super testDefaultContextSize.
-
-	element := self newElementWithNamespaceNode.
-	size := element namespaceNodes size.
-	element namespaceNodesDo: [:each |
-		self assert: each defaultContextSize = size].
-]
-
-{ #category : #tests }
 XPathNamespaceNodeTest >> testEquals [
 	| firstNamespace secondNamespace |
 

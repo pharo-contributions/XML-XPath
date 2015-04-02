@@ -11,16 +11,6 @@ XMLNodeTest >> testAllNodesReverseDo [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testDefaultContextPosition [
-	self assert: self nodeClass new defaultContextPosition = 1
-]
-
-{ #category : #'*XPath-Tests' }
-XMLNodeTest >> testDefaultContextSize [
-	self assert: self nodeClass new defaultContextSize = 1
-]
-
-{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testDocumentRoot [
 	| node |
 
