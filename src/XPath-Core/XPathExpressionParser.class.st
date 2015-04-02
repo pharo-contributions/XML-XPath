@@ -36,6 +36,11 @@ XPathExpressionParser >> atDigit [
 ]
 
 { #category : #private }
+XPathExpressionParser >> errorExpectedEndPredicate [
+	self errorExpected: '"]" end of predicate'
+]
+
+{ #category : #private }
 XPathExpressionParser >> errorExpectedNodeTest [
 	self errorExpected: 'node test after axis'
 ]
@@ -481,7 +486,7 @@ XPathExpressionParser >> peekForNumber [
 			self nextDigitsOnWriteStream.
 			(inputStream peekFor: $.)
 				ifTrue: [
-					"float literals cannot have trailing '.'"
+					"Smalltalk float literals cannot have trailing '.'"
 					self atDigit
 						ifTrue: [
 							writeStream nextPut: $..
@@ -492,7 +497,7 @@ XPathExpressionParser >> peekForNumber [
 		ifTrue: [
 			self atDigit
 				ifTrue: [
-					"float literals can't have leading '.'"
+					"Smalltalk float literals can't have leading '.'"
 					writeStream nextPutAll: '0.'.
 					self nextDigitsOnWriteStream.
 					handler handleNumberLiteral: writeStream contents.
@@ -520,26 +525,28 @@ XPathExpressionParser >> peekForParenthesizedExpression [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForPredicate [
-	inputStream skipSeparators.
-	(inputStream peekFor: $[)
-			ifFalse: [^ false].
+	self peekForStartPredicate
+		ifFalse: [^ false].
 
 	inputStream skipSeparators.
 	(self peekForIntegerPredicate
 		or: [self peekForAttributePredicate])
-		ifTrue: [^ true].
-
-	handler handleStartPredicate.
-	self nextOrExpression.
-	inputStream skipSeparators.
-	self expectNext: $].
-	handler handleEndPredicate.
+		ifFalse: [
+			handler handleStartPredicate.
+			self nextOrExpression.
+			self peekForEndPredicate
+				ifFalse: [self errorExpectedEndPredicate].
+			handler handleEndPredicate].
 	^ true.
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForPredicates [
-	[self peekForPredicate] whileTrue
+	self peekForPredicate
+		ifTrue: [
+			[self peekForPredicate] whileTrue.
+			^ true]
+		ifFalse: [^ false]
 ]
 
 { #category : #'parsing - peeking' }
@@ -570,6 +577,12 @@ XPathExpressionParser >> peekForRelativeLocationPath [
 	self peekForLocationPathSeparator
 		ifTrue: [self nextAdditionalSteps].
 	^ true.
+]
+
+{ #category : #'parsing - peeking' }
+XPathExpressionParser >> peekForStartPredicate [
+	inputStream skipSeparators.
+	^ inputStream peekFor: $[.
 ]
 
 { #category : #'parsing - peeking' }

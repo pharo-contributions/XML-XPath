@@ -231,13 +231,13 @@ XPathParser >> parseInput [
 { #category : #'parsing - peeking' }
 XPathParser >> peekForArgumentSeparator [
 	inputStream skipSeparators.
-	^ inputStream peekFor: $,
+	^ inputStream peekFor: $,.
 ]
 
 { #category : #'parsing - peeking' }
 XPathParser >> peekForEndArgumentList [
 	inputStream skipSeparators.
-	^ inputStream peekFor: $)
+	^ inputStream peekFor: $).
 ]
 
 { #category : #parsing }
