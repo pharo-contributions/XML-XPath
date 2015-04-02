@@ -732,6 +732,28 @@ XPathTest >> testNestedFunctionCalls [
 ]
 
 { #category : #tests }
+XPathTest >> testNodeSetAndBooleanComparing [
+	self assert:
+		('<list><a>not-empty</a></list>' parseXML xPath:
+			'list/b < true()
+				and list/b <= true()
+				and list/a > false()
+				and list/a >= false()
+				and false() < list/a
+				and true() <= list/a
+				and true() > list/b
+				and false() >= list/b
+				and not(list/b < false())
+				and not(list/a <= false())
+				and not(list/b > true())
+				and not(list/b >= true())
+				and not(true() < list/a)
+				and not(true() <= list/b)
+				and not(true() > list/a)
+				and not(false() >= list/a)')
+]
+
+{ #category : #tests }
 XPathTest >> testNodeSetAndNonNodeSetEquality [
 	self assert:
 		('<list><a>1</a><a>two</a></list>' parseXML xPath:
@@ -765,6 +787,28 @@ XPathTest >> testNodeSetAndNonNodeSetInequality [
 				and false() != list/a
 				and list/absent != true()
 				and true() != list/absent')
+]
+
+{ #category : #tests }
+XPathTest >> testNodeSetAndNumberComparing [
+	self assert:
+		('<list><a>1</a><a>2</a></list>' parseXML xPath:
+			'list/a < 2
+				and list/a <= 1
+				and list/a > 1
+				and list/a >= 2
+				and 1 < list/a
+				and 2 <= list/a
+				and 2 > list/a
+				and 2 >= list/a
+				and not(list/a < 1)
+				and not(list/a <= 0)
+				and not(list/a > 3)
+				and not(list/a >= 3)
+				and not(3 < list/a)
+				and not(3 <= list/a)
+				and not(0 > list/a)
+				and not(0 >= list/a)')
 ]
 
 { #category : #tests }
