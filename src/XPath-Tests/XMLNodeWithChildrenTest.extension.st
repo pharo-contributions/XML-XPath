@@ -5,10 +5,15 @@ XMLNodeWithChildrenTest >> testAllNodesReverseDo [
 	| nodeWithNodes |
 
 	super testAllNodesReverseDo.
+
 	nodeWithNodes := self newNodeWithNodes.
-	self
-		should: [:block | nodeWithNodes allNodesReverseDo: block]
-		enumerate: nodeWithNodes allNodes reversed.
+	nodeWithNodes allNodesDo: [:each |
+		self
+			should: [:block | each allNodesReverseDo: block]
+			enumerate:
+				(each hasChildren
+					ifTrue: [each allNodes reversed]
+					ifFalse: [Array with: each])].
 ]
 
 { #category : #'*XPath-Tests' }

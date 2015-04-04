@@ -130,6 +130,23 @@ XPathFunctionSetTest >> testAsFunctionSet [
 ]
 
 { #category : #tests }
+XPathFunctionSetTest >> testConcatenation [
+	| firstSet secondSet |
+
+	firstSet := self setWithFunctions.
+	self assert: (firstSet, self setWithFunctions) = self setWithFunctions.
+
+	secondSet := self setWithDisjointFunctions.	
+	self
+		assert: (firstSet, secondSet) = (secondSet, firstSet);
+		deny: (firstSet, secondSet) = firstSet;
+		deny: (firstSet, secondSet) = secondSet;
+		assert:
+			(firstSet, secondSet) =
+				(self setClass newFrom: self functions, self disjointFunctions).
+]
+
+{ #category : #tests }
 XPathFunctionSetTest >> testDo [
 	| enumerated |
 
