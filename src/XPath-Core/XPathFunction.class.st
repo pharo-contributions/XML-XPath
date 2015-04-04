@@ -200,6 +200,11 @@ XPathFunction >> functionPrototype [
 	^ self class functionPrototype
 ]
 
+{ #category : #testing }
+XPathFunction >> hasPushedArguments [
+	^ totalPushedArguments > 0
+]
+
 { #category : #invoking }
 XPathFunction >> invoke [
 	totalPushedArguments < self minArguments
@@ -241,7 +246,7 @@ XPathFunction >> push: anArgument [
 				ifTrue: [self errorTooManyArguments]].
 
 	totalPushedArguments := totalPushedArguments + 1.
-	context push:
+	^ context push:
 		((self argumentTypeAt: totalPushedArguments)
 			xPathNewFrom: anArgument).
 ]

@@ -16,7 +16,7 @@ XPathNormalizeSpaceFunction class >> functionPrototype [
 XPathNormalizeSpaceFunction >> function [
 	| string writeStream isInWhitespace |
 
-	self totalPushedArguments > 0
+	self hasPushedArguments
 		ifTrue: [string := self pop]
 		ifFalse: [string := self contextNode].
 

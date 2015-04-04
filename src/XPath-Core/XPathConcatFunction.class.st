@@ -17,7 +17,7 @@ XPathConcatFunction >> function [
 	| concatenation |
 
 	concatenation := self pop.
-	[self totalPushedArguments > 0]
+	[self hasPushedArguments]
 		whileTrue: [concatenation := self pop, concatenation].
 	^ concatenation.
 ]

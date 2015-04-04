@@ -16,7 +16,7 @@ XPathLocalNameFunction class >> functionPrototype [
 XPathLocalNameFunction >> function [
 	| node |
 
-	self totalPushedArguments > 0
+	self hasPushedArguments
 		ifTrue: [node := self pop firstInDocumentOrder]
 		ifFalse: [node := self contextNode].
 
