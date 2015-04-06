@@ -67,7 +67,7 @@ XPathIDFunction >> splitSpaceSeparatedIDs: anIDString into: anIDSet [
 	| startIndex|
 
 	1 to: anIDString size do: [:i | | nextChar |
-		(nextChar := anIDString at: i) isSeparator
+		(nextChar := anIDString at: i) xmlParserIsSeparator
 			ifTrue: [
 				startIndex
 					ifNotNil: [

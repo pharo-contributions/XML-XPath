@@ -132,5 +132,9 @@ XPathReadStreamAdapter >> skipBack [
 
 { #category : #streaming }
 XPathReadStreamAdapter >> skipSeparators [
-	stream skipSeparators
+	"stream may raise exception if atEnd instead of returning nil
+	so is tested before sending xmlParserIsSeparator"
+	[stream atEnd not
+		and: [stream peek xmlParserIsSeparator]]
+		whileTrue: [stream next]
 ]

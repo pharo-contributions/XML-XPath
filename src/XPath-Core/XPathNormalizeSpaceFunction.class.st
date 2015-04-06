@@ -23,7 +23,7 @@ XPathNormalizeSpaceFunction >> function [
 	writeStream := (String new: string size) writeStream.
 	isInWhitespace := false.
 	string do: [:each |
-		each isSeparator
+		each xmlParserIsSeparator
 			ifTrue: [
 				isInWhitespace
 					ifFalse: [isInWhitespace := true]]
