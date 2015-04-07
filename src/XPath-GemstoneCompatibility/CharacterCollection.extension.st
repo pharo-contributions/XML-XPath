@@ -76,9 +76,7 @@ CharacterCollection >> asXPathBoolean [
 
 { #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> asXPathNumber [
-	^ [Float readFrom: self readStream]
-		on: Error
-		do: [:error | Float nan]
+	^ Number xPathReadFrom: self readStream
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
