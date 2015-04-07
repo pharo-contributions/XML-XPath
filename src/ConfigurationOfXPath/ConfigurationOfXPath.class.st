@@ -67,7 +67,9 @@ doc := (XMLDOMParser parseURL: ''http://unicode.org/repos/cldr/trunk/common/supp
 
 { #category : #catalog }
 ConfigurationOfXPath class >> catalogKeywords [
-	^ #(XPath XML DOM HTML web query parsing)
+
+	^ #(XPath XML DOM HTML XHTML parser web markup document query )
+					
 ]
 
 { #category : #private }
@@ -212,6 +214,17 @@ ConfigurationOfXPath >> baseline10: spec [
 			with: [ spec requires: 'XPath-Core' ]. ].
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline134: spec [
+	<version: '1.3.4-baseline' imports: #('1.0-baseline')>
+
+	spec for: #gemstone do: [
+		spec blessing: #baseline.
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.5'. ].
+]
+
 { #category : #accessing }
 ConfigurationOfXPath >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -224,7 +237,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.0.6-baseline'.
+	spec for: #'common' version: '1.3.4-baseline'.
 ]
 
 { #category : #accessing }
@@ -244,7 +257,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.3'.
+	spec for: #'common' version: '1.3.4'.
 
 ]
 
@@ -622,5 +635,16 @@ ConfigurationOfXPath >> version133: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.40'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.32'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version134: spec [ 
+        <version: '1.3.4' imports: #('1.3.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.41'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.33'.
                 ].
 ]
