@@ -12,8 +12,8 @@ Class {
 }
 
 { #category : #'instance creation' }
-XPathReadStreamAdapter class >> on: aStream [
-	^ self new on: aStream
+XPathReadStreamAdapter class >> on: aPositionableStream [
+	^ self new on: aPositionableStream
 ]
 
 { #category : #converting }
@@ -132,9 +132,5 @@ XPathReadStreamAdapter >> skipBack [
 
 { #category : #streaming }
 XPathReadStreamAdapter >> skipSeparators [
-	"stream may raise exception if atEnd instead of returning nil
-	so is tested before sending xmlParserIsSeparator"
-	[stream atEnd not
-		and: [stream peek xmlParserIsSeparator]]
-		whileTrue: [stream next]
+	stream xPathSkipSeparators
 ]

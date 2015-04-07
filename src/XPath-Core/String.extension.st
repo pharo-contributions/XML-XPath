@@ -77,9 +77,7 @@ String >> asXPathBoolean [
 
 { #category : #'*XPath-Core-converting' }
 String >> asXPathNumber [
-	^ [Float readFrom: self readStream]
-		on: Error
-		do: [:error | Float nan]
+	^ Number xPathReadFrom: self readStream
 ]
 
 { #category : #'*XPath-Core-converting' }

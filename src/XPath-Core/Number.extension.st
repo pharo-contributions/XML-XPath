@@ -166,3 +166,19 @@ Number >> xPathNotEqualsNumber: aNumber [
 Number >> xPathNotEqualsString: aString [
 	^ self ~= aString asXPathNumber
 ]
+
+{ #category : #'*XPath-Core' }
+Number class >> xPathReadFrom: aStream [
+	| number |
+
+	aStream xPathSkipSeparators.
+	[number := Float readFrom: aStream]
+		on: Error
+		do: [:error | ^ Float nan].
+	
+	aStream xPathSkipSeparators.
+	aStream atEnd
+		ifFalse: [^ Float nan].
+
+	^ number.
+]
