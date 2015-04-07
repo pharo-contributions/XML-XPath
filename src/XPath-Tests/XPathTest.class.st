@@ -87,14 +87,13 @@ XPathTest >> testAncestorOrSelfAxis [
 
 { #category : #tests }
 XPathTest >> testAsXPath [
-	| result src |
+	| path |
 
-	result := document elements.
-	src := '/addressbook'.
+	path := '/addressbook' asXPath.
 	self
-		assert: (document xPath: src asXPath) = result;
-		assert: (document xPath: (XPath for: src) asXPath) = result;
-		assert: (src asXPath in: document) = result.
+		assert: (path isKindOf: XPath);
+		assert: (document xPath: path) = (XPathNodeSet with: document root);
+		assert: path asXPath == path.
 ]
 
 { #category : #tests }

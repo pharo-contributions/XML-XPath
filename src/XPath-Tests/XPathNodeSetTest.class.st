@@ -240,6 +240,15 @@ XPathNodeSetTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testAsXPathNumber [
+	self
+		assert: self emptyList asXPathNumber isNaN;
+		assert: self listWithElements asXPathNumber isNaN;
+		assert: (XPathNodeSet with: ' 1.0 ' asXMLString) asXPathNumber = 1.0;
+		assert: (XPathNodeSet with: ' 1.0 .' asXMLString) asXPathNumber isNaN
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testAsXPathString [
 	self
 		assert: self emptyList asXPathString isEmpty;
@@ -454,6 +463,32 @@ XPathNodeSetTest >> testFirstInDocumentOrder [
 		assert: self listWithSingleElement firstInDocumentOrder = self singleElement;
 		assert: self listWithElements firstInDocumentOrder = self listElements first;
 		assert: self listWithElements reversed firstInDocumentOrder = self listElements first
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testIncludes [
+	| list element namespaceNode |
+
+	list := self emptyList.
+	self listElements do: [:each |
+		self deny: (list includes: each).
+		list add: each.
+		self assert: (list includes: each)].
+
+	self listElements do: [:each |
+		list remove: each.
+		self deny: (list includes: each)].
+
+	element := XMLElement new.
+	namespaceNode := XPathNamespaceNode withXMLNamespaceOnElement: element.
+	self deny: (list includes: namespaceNode).
+	list add: namespaceNode.
+	self assert: (list includes: namespaceNode).
+
+	"namespace nodes define ="
+	self assert:
+		(list includes:
+			(XPathNamespaceNode withXMLNamespaceOnElement: element)).
 ]
 
 { #category : #tests }

@@ -92,3 +92,25 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 XMLNodeTest >> testStringValue [
 	self assert: self nodeClass new stringValue isEmpty
 ]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testXPath [
+	| node |
+
+	node := self nodeClass new.
+	self
+		assert: (node xPath: '.') = (XPathNodeSet with: node);
+		assert: (node xPath: (XPath for: '.')) = (XPathNodeSet with: node).
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testXPathContext [
+	| node context |
+
+	node := self nodeClass new.
+	(context := XPathContext new)
+		variableAt: 'var' put: 'test'.
+	self
+		assert: (node xPath: '$var' context: context) = 'test';
+		assert: (node xPath: (XPath for: '$var') context: context) = 'test'.
+]
