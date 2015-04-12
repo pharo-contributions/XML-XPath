@@ -38,7 +38,7 @@ XPathNodeSetTest >> assertList: aFirstList hasSameSortOrderAs: aSecondList [
 
 { #category : #assertions }
 XPathNodeSetTest >> assertList: aList hasSortOrder: aSortOrder [
-	self assert: (aList sortOrder isKindOf: aSortOrder)
+	self assert: (aList sortOrder class == aSortOrder)
 ]
 
 { #category : #assertions }

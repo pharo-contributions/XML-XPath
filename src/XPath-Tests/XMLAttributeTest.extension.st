@@ -23,11 +23,6 @@ XMLAttributeTest >> testHasPrefixedNamespaceURI [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLAttributeTest >> testIsPrincipalNode [
-	self assert: self nodeClass new isPrincipalNode
-]
-
-{ #category : #'*XPath-Tests' }
 XMLAttributeTest >> testStringValue [
 	super testStringValue.
 

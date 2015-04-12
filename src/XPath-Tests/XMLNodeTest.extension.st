@@ -1,6 +1,11 @@
 Extension { #name : #XMLNodeTest }
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> assertList: aList hasSortOrder: aSortOrder [
+	self assert: (aList sortOrder class == aSortOrder)
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testAllNodesReverseDo [
 	| node |
 
@@ -8,6 +13,49 @@ XMLNodeTest >> testAllNodesReverseDo [
 	self
 		should: [:block | node allNodesReverseDo: block]
 		enumerate: (Array with: node).
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testAncestorAxis [
+	self
+		assert: (self nodeClass new %% 'node()') isEmpty;
+		assert: (self nodeClass new %% '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testAncestorOrSelfAxis [
+	| node |
+
+	node := self nodeClass new.
+	self assert: (node %%~ 'node()') = (XPathNodeSet with: node).
+	node isElement
+		ifTrue: [self assert: (node %%~ '*') = (XPathNodeSet with: node)]
+		ifFalse: [self assert: (node %%~ '*') isEmpty].
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testChildAxis [
+	self
+		assert: (self nodeClass new / 'node()') isEmpty;
+		assert: (self nodeClass new / '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testDescendantAxis [
+	self
+		assert: (self nodeClass new // 'node()') isEmpty;
+		assert: (self nodeClass new // '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testDescendantOrSelfAxis [
+	| node |
+
+	node := self nodeClass new.
+	self assert: (node //~ 'node()') = (XPathNodeSet with: node).
+	node isElement
+		ifTrue: [self assert: (node //~ '*') = (XPathNodeSet with: node)]
+		ifFalse: [self assert: (node //~ '*') isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -19,6 +67,13 @@ XMLNodeTest >> testDocumentRoot [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testFollowingAxis [
+	self
+		assert: (self nodeClass new >> 'node()') isEmpty;
+		assert: (self nodeClass new >> '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testFollowingNodesDo [
 	| node |
 
@@ -26,6 +81,13 @@ XMLNodeTest >> testFollowingNodesDo [
 	self
 		should: [:block | node followingNodesDo: block]
 		enumerate: #().
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testFollowingSiblingAxis [
+	self
+		assert: (self nodeClass new >>> 'node()') isEmpty;
+		assert: (self nodeClass new >>> '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
@@ -49,11 +111,6 @@ XMLNodeTest >> testIsNamespace [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testIsPrincipalNode [
-	self deny: self nodeClass new isPrincipalNode
-]
-
-{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testLastAncestorOrSelfInNode [
 	self assert: (self nodeClass new lastAncestorOrSelfInNode: self nodeClass new) isNil
 ]
@@ -69,6 +126,20 @@ XMLNodeTest >> testOccursInDocumentBeforeNode [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testParentAxis [
+	self
+		assert: (self nodeClass new % 'node()') isEmpty;
+		assert: (self nodeClass new % '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testPrecedingAxis [
+	self
+		assert: (self nodeClass new << 'node()') isEmpty;
+		assert: (self nodeClass new << '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testPrecedingNodesDo [
 	| node |
 
@@ -79,6 +150,13 @@ XMLNodeTest >> testPrecedingNodesDo [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testPrecedingSiblingAxis [
+	self
+		assert: (self nodeClass new <<< 'node()') isEmpty;
+		assert: (self nodeClass new <<< '*') isEmpty
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testPrecedingSiblingNodesDo [
 	| node |
 
@@ -86,6 +164,17 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 	self
 		should: [:block | node precedingSiblingNodesDo: block]
 		enumerate: #().
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> testSelfAxis [
+	| node |
+
+	node := self nodeClass new.
+	self assert: (node ~ 'node()') = (XPathNodeSet with: node).
+	node isElement
+		ifTrue: [self assert: (node ~ '*') = (XPathNodeSet with: node)]
+		ifFalse: [self assert: (node ~ '*') isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }

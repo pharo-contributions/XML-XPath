@@ -34,11 +34,6 @@ XMLElementTest >> testHasPrefixedNamespaceURI [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLElementTest >> testIsPrincipalNode [
-	self assert: self nodeClass new isPrincipalNode
-]
-
-{ #category : #'*XPath-Tests' }
 XMLElementTest >> testNamespaceNodes [
 	| element nodes |
 

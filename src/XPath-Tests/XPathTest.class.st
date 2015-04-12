@@ -112,6 +112,12 @@ XPathTest >> testAttributeAxis [
 	self assert:
 		(results collect: [:each | each value]) asArray =
 			#('Los Angeles' 'New York' 'Los Angeles' 'New York').
+
+	"attribute nodes don't have attributes"
+	self assert: 
+		(XPath
+			for: 'addressbook/person/address/@city/@city'
+			in: document) isEmpty.
 ]
 
 { #category : #tests }
@@ -703,8 +709,12 @@ XPathTest >> testNamespaceAxis [
 		assert:
 			(namespacedDocument xPath: '//namespace::book') =
 				(nodes select: [:each | each name ='book']);
-		assert: (namespacedDocument xPath: '//namespace::book:*') isEmpty;
 		assert: (namespacedDocument xPath: '//namespace::namespace()') = nodes.
+
+	"namespace nodes can't be prefixed or namespaced themselves:"
+	self
+		assert: (namespacedDocument xPath: '//namespace::book:*') isEmpty;
+		assert: (namespacedDocument xPath: '//namespace::book/namespace::book') isEmpty.
 
 	nodes :=
 		document allElementsCollect: [:each |
@@ -1117,8 +1127,12 @@ XPathTest >> testSelfAxis [
 						and: [each parent isElementNamed: 'person']]).
 	self assert: 
 		(XPath
-			for: ' //person[1]/attribute::node()/.'
+			for: ' //person[1]/attribute::node()/. '
 			in: document) = (document findElementNamed: 'person') attributeNodes.
+	self assert: 
+		(XPath
+			for: ' //person[1]/attribute::node()/self::* '
+			in: document) isEmpty.
 ]
 
 { #category : #tests }

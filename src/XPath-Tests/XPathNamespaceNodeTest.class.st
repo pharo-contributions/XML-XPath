@@ -94,11 +94,6 @@ XPathNamespaceNodeTest >> testIsNamespace [
 ]
 
 { #category : #tests }
-XPathNamespaceNodeTest >> testIsPrincipalNode [
-	self assert: self nodeClass new isPrincipalNode
-]
-
-{ #category : #tests }
 XPathNamespaceNodeTest >> testLocalName [
 	self assert: self newNamespaceNode localName = 'prefix'
 ]
