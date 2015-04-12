@@ -40,7 +40,7 @@ XPathNodeTestParser >> nextAnyNodeTypeTest [
 
 { #category : #parsing }
 XPathNodeTestParser >> nextAttributeTypeTest [
-	context := XPathAttributeTypeNodeTestParserContext new.
+	context := XPathNodeTestParserAttributeTypeTestContext new.
 	self
 		peekForNodeTest;
 		nextEndArgumentList.
@@ -54,7 +54,7 @@ XPathNodeTestParser >> nextCommentTypeTest [
 
 { #category : #parsing }
 XPathNodeTestParser >> nextElementTypeTest [
-	context := XPathElementTypeNodeTestParserContext new.
+	context := XPathNodeTestParserElementTypeTestContext new.
 	self
 		peekForNodeTest;
 		nextEndArgumentList.
@@ -96,7 +96,7 @@ XPathNodeTestParser >> nextTextTypeTest [
 
 { #category : #parsing }
 XPathNodeTestParser >> parseInput [
-	context := XPathInitialNodeTestParserContext new.
+	context := handler defaultNodeTestParserContextClass new.
 	self peekForNodeTest.
 ]
 
@@ -121,7 +121,7 @@ XPathNodeTestParser >> peekForNameTestOrNoteTypeTest: aLocalName [
 	(inputStream peekFor: $:)
 		ifTrue: [^ false]. ": after spaces; axis specifier"
 
-	(context isTypeTestParserContext not
+	(context canHandleTypeTests
 		and: [self peekForStartArgumentList])
 		ifTrue: [^ self peekForNodeTypeTest: aLocalName]
 		ifFalse: [

@@ -11,57 +11,8 @@ Class {
 		'contextPositionVariable',
 		'contextSizeVariable'
 	],
-	#classVars : [
-		'AxisSpecifierNamesAndSelectors'
-	],
 	#category : #'XPath-Core-Parsers'
 }
-
-{ #category : #private }
-XPathExpressionParserHandler class >> axisSpecifierNameAndSelectorPairs [
-	^ #(
-		'ancestor' '%%'
-		'ancestor-or-self' '%%~'
-		'attribute' '@'
-		'child' '/'
-		'descendant' '//'
-		'descendant-or-self' '//~'
-		'following' '>>'
-		'following-sibling' '>>>'
-		'namespace' '@@'
-		'parent' '%'
-		'preceding' '<<'
-		'preceding-sibling' '<<<'
-		'self' '~'
-		'%%' '%%'
-		'%%~' '%%~'
-		'@' '@'
-		'>>' '>>'
-		'>>>' '>>>'
-		'@@' '@@'
-		'%' '%'
-		'<<' '<<'
-		'<<<' '<<<'
-		'~' '~'
-		)
-]
-
-{ #category : #'class initialization' }
-XPathExpressionParserHandler class >> initialize [
-	"self initialize"
-
-	self initializeAxisSpecifierNamesAndSelectors
-]
-
-{ #category : #'class initialization' }
-XPathExpressionParserHandler class >> initializeAxisSpecifierNamesAndSelectors [
-	AxisSpecifierNamesAndSelectors := Dictionary new.
-	self axisSpecifierNameAndSelectorPairs
-		pairsDo: [:axisSpecifier :selector |
-			AxisSpecifierNamesAndSelectors
-				at: axisSpecifier asString
-				put: selector asString].
-]
 
 { #category : #private }
 XPathExpressionParserHandler >> decrementVariableNames [
@@ -152,13 +103,6 @@ XPathExpressionParserHandler >> emitStartPredicateBlock [
 ]
 
 { #category : #private }
-XPathExpressionParserHandler >> errorUnrecognizedAxisSpecifier: anAxisSpecifier [
-	XPathSyntaxException
-		formatSignal: 'Unrecognized axis specifier "{1}"'
-		with: anAxisSpecifier
-]
-
-{ #category : #private }
 XPathExpressionParserHandler >> generateVariableNames [
 	| indexString |
 
@@ -174,11 +118,18 @@ XPathExpressionParserHandler >> handleAddition [
 ]
 
 { #category : #'handling - location paths' }
-XPathExpressionParserHandler >> handleAxisSpecifier: anAxisSpecifier [
-	outputStream nextPutAll:
-		(AxisSpecifierNamesAndSelectors
-			at: anAxisSpecifier
-			ifAbsent: [self errorUnrecognizedAxisSpecifier: anAxisSpecifier])
+XPathExpressionParserHandler >> handleAxis: anAxis [
+	anAxis isStartOfRelativeLocationPath
+		ifTrue: [self handleStartRelativeLocationPath].
+	outputStream nextPutAll: anAxis replacementSelector.
+	anAxis reset.
+]
+
+{ #category : #'handling - location paths' }
+XPathExpressionParserHandler >> handleAxisWithTestForAnyNodeType: anAxis [
+	self
+		handleAxis: anAxis;
+		handleTestForAnyNodeType
 ]
 
 { #category : #'handling - operators' }
@@ -477,11 +428,6 @@ XPathExpressionParserHandler >> handleSubtraction [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForAnyName [
-	outputStream nextPutAll: '[:n|n isPrincipalNode]'
-]
-
-{ #category : #'handling - node tests' }
 XPathExpressionParserHandler >> handleTestForAnyNodeType [
 	outputStream nextPutAll: '[:n|true]'
 ]
@@ -590,30 +536,30 @@ XPathExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix localNam
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForLocalName: aLocalName [
+XPathExpressionParserHandler >> handleTestForNamespaceWithAnyName [
+	outputStream nextPutAll: '[:n|n isNamespace]'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
 	outputStream
-		nextPutAll: '[:n|n isPrincipalNode and:[n localName=''';
+		nextPutAll: '[:n|n isNamespace and:[n localName=''';
 		nextPutAll: aLocalName;
 		nextPutAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForName: aName [
+XPathExpressionParserHandler >> handleTestForNamespaceWithName: aName [
 	outputStream
-		nextPutAll: '[:n|n isPrincipalNode and:[n name=''';
+		nextPutAll: '[:n|n isNamespace and:[n name=''';
 		nextPutAll: aName;
 		nextPutAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForNamespaceType [
-	outputStream nextPutAll: '[:n|n isNamespace]'
-]
-
-{ #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
+XPathExpressionParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI localName: aLocalName [
 	outputStream
-		nextPutAll: '[:n|n isPrincipalNode and:[n localName=''';
+		nextPutAll: '[:n|n isNamespace and:[n localName=''';
 		nextPutAll: aLocalName;
 		nextPutAll: '''and:[n namespaceURI=''';
 		nextPutAll: aURI;
@@ -621,7 +567,25 @@ XPathExpressionParserHandler >> handleTestForNamespaceURI: aURI localName: aLoca
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForPIType [
+XPathExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
+	outputStream
+		nextPutAll: '(c testForNamespaceWithPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: ''')'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
+	outputStream
+		nextPutAll: '(c testForNamespaceWithPrefix:''';
+		nextPutAll: aPrefix;
+		nextPutAll: '''localName:''';
+		nextPutAll: aLocalName;
+		nextPutAll: ''')'
+]
+
+{ #category : #'handling - node tests' }
+XPathExpressionParserHandler >> handleTestForPIWithAnyName [
 	outputStream nextPutAll: '[:n|n isPI]'
 ]
 
@@ -631,24 +595,6 @@ XPathExpressionParserHandler >> handleTestForPIWithName: aName [
 		nextPutAll: '[:n|n isPI and:[n target=''';
 		nextPutAll: aName;
 		nextPutAll: ''']]'
-]
-
-{ #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForPrefix: aPrefix [
-	outputStream
-		nextPutAll: '(c testForPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: ''')'
-]
-
-{ #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTestForPrefix: aPrefix localName: aLocalName [
-	outputStream
-		nextPutAll: '(c testForPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: '''localName:''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''')'
 ]
 
 { #category : #'handling - node tests' }

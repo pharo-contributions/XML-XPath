@@ -29,10 +29,10 @@ XPathNamespaceNode class >> withXMLNamespaceOnElement: anElement [
 
 { #category : #comparing }
 XPathNamespaceNode >> = anObject [
-	"This is needed because namespace nodes are not part of the DOM
-	tree and are created dynamically by XPath, so unless = is defined
-	the union of two node sets could contain duplicate namespace nodes
-	for the same namespace of the same element"
+	"This is needed because namespace nodes aren't part of DOM trees
+	and are created dynamically by XPath, so unless = is defined the union
+	of two node sets could contain duplicate nodes for the same element
+	namespace"
 
 	self == anObject
 		ifTrue: [^ true].
@@ -40,7 +40,8 @@ XPathNamespaceNode >> = anObject [
 	self class == anObject class
 		ifFalse: [^ false].
 
-	"elements don't share namespace nodes according to the spec"
+	"different elements don't share namespace nodes with the same name/uri
+	according to the spec"
 	^ self element = anObject element
 		and: [self name = anObject name
 			and: [self uri = anObject uri]].
@@ -85,11 +86,6 @@ XPathNamespaceNode >> hash [
 
 { #category : #testing }
 XPathNamespaceNode >> isNamespace [
-	^ true
-]
-
-{ #category : #testing }
-XPathNamespaceNode >> isPrincipalNode [
 	^ true
 ]
 

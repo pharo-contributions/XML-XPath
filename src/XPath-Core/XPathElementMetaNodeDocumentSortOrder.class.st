@@ -1,5 +1,5 @@
 "
-A sort order for attribute or namespace nodes in document order.
+A sort order for attribute or namespace nodes (meta nodes) in document order.
 "
 Class {
 	#name : #XPathElementMetaNodeDocumentSortOrder,

@@ -11,11 +11,6 @@ XMLAttribute >> hasPrefixedNamespaceURI: aURI [
 	^ self namespaceURI = aURI
 ]
 
-{ #category : #'*XPath-Core-testing' }
-XMLAttribute >> isPrincipalNode [
-	^ true
-]
-
 { #category : #'*XPath-Core-private' }
 XMLAttribute >> occursInParentAfterAttribute: anAttribute [
 	(self hasParent

@@ -173,11 +173,6 @@ XMLNode >> isNamespace [
 	^ false
 ]
 
-{ #category : #'*XPath-Core-testing' }
-XMLNode >> isPrincipalNode [
-	^ false
-]
-
 { #category : #'*XPath-Core-private' }
 XMLNode >> lastAncestorOrSelfInNode: aNode [
 	self parent = aNode

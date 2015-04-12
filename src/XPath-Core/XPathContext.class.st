@@ -252,32 +252,32 @@ XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #private }
-XPathContext >> testForPrefix: aPrefix [
+XPathContext >> testForNamespaceWithPrefix: aPrefix [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
 			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
-				node isPrincipalNode
+				node isNamespace
 					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
 		ifFalse: [
 			^ [:node |
-				node isPrincipalNode
+				node isNamespace
 					and: [node prefix = aPrefix]]]
 ]
 
 { #category : #private }
-XPathContext >> testForPrefix: aPrefix localName: aLocalName [
+XPathContext >> testForNamespaceWithPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
 			namespaceURI := self resolvePrefix: aPrefix.
 			^ [:node |
-				node isPrincipalNode
+				node isNamespace
 					and: [node localName = aLocalName
 						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithPrefix: aPrefix.
 			^ [:node |
-				node isPrincipalNode
+				node isNamespace
 					and: [node name = name]]]
 ]
 

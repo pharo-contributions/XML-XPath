@@ -7,12 +7,13 @@ Class {
 	#category : #'XPath-Core-Parsers'
 }
 
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleEmptyTest [
+{ #category : #accessing }
+XPathNodeTestParserHandler >> defaultNodeTestParserContextClass [
+	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAnyName [
+XPathNodeTestParserHandler >> handleEmptyTest [
 ]
 
 { #category : #handling }
@@ -72,35 +73,35 @@ XPathNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix localName:
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForLocalName: aLocalName [
+XPathNodeTestParserHandler >> handleTestForNamespaceWithAnyName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForName: aName [
+XPathNodeTestParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceType [
+XPathNodeTestParserHandler >> handleTestForNamespaceWithName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
+XPathNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForPIType [
+XPathNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleTestForPIWithAnyName [
 ]
 
 { #category : #handling }
 XPathNodeTestParserHandler >> handleTestForPIWithName: aName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForPrefix: aPrefix [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #handling }

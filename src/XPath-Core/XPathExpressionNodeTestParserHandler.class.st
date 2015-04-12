@@ -18,6 +18,11 @@ XPathExpressionNodeTestParserHandler class >> currentAxis: anAxis expressionPars
 		expressionParserHandler: anExpressionParserHandler
 ]
 
+{ #category : #accessing }
+XPathExpressionNodeTestParserHandler >> defaultNodeTestParserContextClass [
+	^ currentAxis defaultNodeTestParserContextClass
+]
+
 { #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleEmptyTest [
 	self parsingResult: false
@@ -26,12 +31,6 @@ XPathExpressionNodeTestParserHandler >> handleEmptyTest [
 { #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleStartParsing [
 	self parsingResult: false
-]
-
-{ #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForAnyName [
-	self startNodeTest.
-	expressionParserHandler handleTestForAnyName.
 ]
 
 { #category : #handling }
@@ -127,55 +126,55 @@ XPathExpressionNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix 
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForLocalName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithAnyName [
 	self startNodeTest.
-	expressionParserHandler handleTestForLocalName: aLocalName.
+	expressionParserHandler handleTestForNamespaceWithAnyName.
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForName: aName [
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
 	self startNodeTest.
-	expressionParserHandler handleTestForName: aName.
+	expressionParserHandler handleTestForNamespaceWithLocalName: aLocalName.
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForNamespaceType [
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithName: aName [
 	self startNodeTest.
-	expressionParserHandler handleTestForNamespaceType.
+	expressionParserHandler handleTestForNamespaceWithName: aName.
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleTestForNamespaceURI: aURI
+		handleTestForNamespaceWithNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForPIType [
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
 	self startNodeTest.
-	expressionParserHandler handleTestForPIType.
+	expressionParserHandler handleTestForNamespaceWithPrefix: aPrefix.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
+	self startNodeTest.
+	expressionParserHandler
+		handleTestForNamespaceWithPrefix: aPrefix
+		localName: aLocalName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForPIWithAnyName [
+	self startNodeTest.
+	expressionParserHandler handleTestForPIWithAnyName.
 ]
 
 { #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleTestForPIWithName: aName [
 	self startNodeTest.
 	expressionParserHandler handleTestForPIWithName: aName.
-]
-
-{ #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForPrefix: aPrefix [
-	self startNodeTest.
-	expressionParserHandler handleTestForPrefix: aPrefix.
-]
-
-{ #category : #handling }
-XPathExpressionNodeTestParserHandler >> handleTestForPrefix: aPrefix localName: aLocalName [
-	self startNodeTest.
-	expressionParserHandler
-		handleTestForPrefix: aPrefix
-		localName: aLocalName.
 ]
 
 { #category : #handling }
@@ -198,5 +197,5 @@ XPathExpressionNodeTestParserHandler >> setCurrentAxis: anAxis expressionParserH
 { #category : #private }
 XPathExpressionNodeTestParserHandler >> startNodeTest [
 	self parsingResult: true.
-	currentAxis handleWith: expressionParserHandler.
+	expressionParserHandler handleAxis: currentAxis.
 ]

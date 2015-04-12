@@ -1,5 +1,5 @@
 "
-Abstract class for node sort orders. Instances are immutable and shared.
+Abstract class for node sort orders to keep track of the order of nodes in a node set. Instances are immutable and shared.
 "
 Class {
 	#name : #XPathSortOrder,

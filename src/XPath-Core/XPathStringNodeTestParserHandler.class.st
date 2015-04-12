@@ -4,20 +4,30 @@ A handler for node tests that occur in string arguments to the abbreviated axis 
 Class {
 	#name : #XPathStringNodeTestParserHandler,
 	#superclass : #XPathNodeTestParserHandler,
+	#instVars : [
+		'defaultNodeTestParserContextClass'
+	],
 	#category : #'XPath-Core-Parsers'
 }
 
-{ #category : #handling }
-XPathStringNodeTestParserHandler >> handleEmptyTest [
-	self parsingResult:
-		[:node |
-			node isPrincipalNode
-				and: [node name isEmpty]]
+{ #category : #'instance creation' }
+XPathStringNodeTestParserHandler class >> defaultNodeTestParserContextClass: aClass [
+	^ self new defaultNodeTestParserContextClass: aClass
+]
+
+{ #category : #accessing }
+XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass [
+	^ defaultNodeTestParserContextClass
+]
+
+{ #category : #accessing }
+XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass: aClass [
+	defaultNodeTestParserContextClass := aClass
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForAnyName [
-	self parsingResult: [:node | node isPrincipalNode]
+XPathStringNodeTestParserHandler >> handleEmptyTest [
+	XPathSyntaxException signal: 'string arguments to axis selectors must contain node tests'
 ]
 
 { #category : #handling }
@@ -129,37 +139,56 @@ XPathStringNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix loca
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForLocalName: aLocalName [
-	self parsingResult:
-		[:node |
-			node isPrincipalNode
-				and: [node localName = aLocalName]]
-]
-
-{ #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForName: aName [
-	self parsingResult:
-		[:node |
-			node isPrincipalNode
-				and: [node name = aName]]
-]
-
-{ #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForNamespaceType [
+XPathStringNodeTestParserHandler >> handleTestForNamespaceWithAnyName [
 	self parsingResult: [:node | node isNamespace]
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForNamespaceURI: aURI localName: aLocalName [
+XPathStringNodeTestParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
 	self parsingResult:
 		[:node |
-			node isPrincipalNode
+			node isNamespace
+				and: [node localName = aLocalName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForNamespaceWithName: aName [
+	self parsingResult:
+		[:node |
+			node isNamespace
+				and: [node name = aName]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI localName: aLocalName [
+	self parsingResult:
+		[:node |
+			node isNamespace
 				and: [node localName = aLocalName
 					and: [node namespaceURI = aURI]]]
 ]
 
 { #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForPIType [
+XPathStringNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
+	self parsingResult:
+		[:node |
+			node isNamespace
+				and: [node prefix = aPrefix]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
+	| name |
+
+	name := aLocalName qualifyWithPrefix: aPrefix.	
+	self parsingResult:
+		[:node |
+			node isNamespace
+				and: [node name = name]]
+]
+
+{ #category : #handling }
+XPathStringNodeTestParserHandler >> handleTestForPIWithAnyName [
 	self parsingResult: [:node | node isPI]
 ]
 
@@ -169,25 +198,6 @@ XPathStringNodeTestParserHandler >> handleTestForPIWithName: aName [
 		[:node |
 			node isPI
 				and: [node target = aName]]
-]
-
-{ #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForPrefix: aPrefix [
-	self parsingResult:
-		[:node |
-			node isPrincipalNode
-				and: [node prefix = aPrefix]]
-]
-
-{ #category : #handling }
-XPathStringNodeTestParserHandler >> handleTestForPrefix: aPrefix localName: aLocalName [
-	| name |
-
-	name := aLocalName qualifyWithPrefix: aPrefix.	
-	self parsingResult:
-		[:node |
-			node isPrincipalNode
-				and: [node name = name]]
 ]
 
 { #category : #handling }

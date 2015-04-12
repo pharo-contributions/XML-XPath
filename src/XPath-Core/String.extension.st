@@ -58,11 +58,35 @@ String >> //\\ anObject [
 ]
 
 { #category : #'*XPath-Core-converting' }
+String >> asAttributeNodeTestBlock [
+	"parses string as a node test to produce a node test block where attributes
+	are the principal node type"
+	^ (XPathNodeTestParser
+		on: self
+		for:
+			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
+				XPathNodeTestParserAttributeContext)) parse
+]
+
+{ #category : #'*XPath-Core-converting' }
+String >> asNamespaceNodeTestBlock [
+	"parses string as a node test to produce a node test block where namespaces
+	are the principal node type"
+	^ (XPathNodeTestParser
+		on: self
+		for:
+			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
+				XPathNodeTestParserNamespaceContext)) parse
+]
+
+{ #category : #'*XPath-Core-converting' }
 String >> asNodeTestBlock [
 	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser
 		on: self
-		for: XPathStringNodeTestParserHandler new) parse
+		for:
+			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
+				XPathNodeTestParserElementContext)) parse
 ]
 
 { #category : #'*XPath-Core-converting' }

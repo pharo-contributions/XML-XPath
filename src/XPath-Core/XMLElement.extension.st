@@ -6,7 +6,7 @@ XMLElement >> @ aNodeTestStringOrBlock [
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self newNodeSet.
-	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asAttributeNodeTestBlock.
 	self hasAttributes
 		ifTrue: [
 			self attributeNodesDo: [:each |
@@ -21,7 +21,7 @@ XMLElement >> @@ aNodeTestStringOrBlock [
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self newNodeSet.
-	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asNamespaceNodeTestBlock.
 	self hasNamespaceNodes
 		ifTrue: [
 			self namespaceNodesDo: [:each |
@@ -45,11 +45,6 @@ XMLElement >> hasNamespaceNodes [
 XMLElement >> hasPrefixedNamespaceURI: aURI [
 	^ self hasPrefix
 		and: [self namespaceURI = aURI]
-]
-
-{ #category : #'*XPath-Core-testing' }
-XMLElement >> isPrincipalNode [
-	^ true
 ]
 
 { #category : #'*XPath-Core-accessing' }

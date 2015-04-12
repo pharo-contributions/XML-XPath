@@ -1,5 +1,5 @@
 "
-This is an abstract base class for node tests parser contexts.
+This is an abstract base class for node test parser contexts.
 "
 Class {
 	#name : #XPathNodeTestParserContext,
@@ -16,14 +16,29 @@ XPathNodeTestParserContext class >> new [
 	^ instance ifNil: [instance := self basicNew initialize]
 ]
 
+{ #category : #testing }
+XPathNodeTestParserContext >> canHandleTypeTests [
+	^ true
+]
+
 { #category : #handling }
 XPathNodeTestParserContext >> handleEmptyTestWith: aHandler [
-	self subclassResponsibility
+	aHandler handleEmptyTest
 ]
 
 { #category : #handling }
 XPathNodeTestParserContext >> handleTestForAnyNameWith: aHandler [
 	self subclassResponsibility
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleTestForAnyNodeTypeWith: aHandler [
+	aHandler handleTestForAnyNodeType
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleTestForCommentTypeWith: aHandler [
+	aHandler handleTestForCommentType
 ]
 
 { #category : #handling }
@@ -38,8 +53,23 @@ XPathNodeTestParserContext >> handleTestForName: aName with: aHandler [
 ]
 
 { #category : #handling }
+XPathNodeTestParserContext >> handleTestForNamespaceTypeWith: aHandler [
+	aHandler handleTestForNamespaceWithAnyName
+]
+
+{ #category : #handling }
 XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
 	self subclassResponsibility
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleTestForPITypeWith: aHandler [
+	aHandler handleTestForPIWithAnyName
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleTestForPIWithName: aName with: aHandler [
+	aHandler handleTestForPIWithName: aName
 ]
 
 { #category : #handling }
@@ -52,7 +82,7 @@ XPathNodeTestParserContext >> handleTestForPrefix: aPrefix with: aHandler [
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
-XPathNodeTestParserContext >> isTypeTestParserContext [
-	self subclassResponsibility
+{ #category : #handling }
+XPathNodeTestParserContext >> handleTestForTextTypeWith: aHandler [
+	aHandler handleTestForTextType
 ]

@@ -220,35 +220,35 @@ XPathNodeSet >> >>> aNodeTestStringOrBlock [
 ]
 
 { #category : #enumerating }
-XPathNodeSet >> ?? aFilterBlockOrInteger [
+XPathNodeSet >> ?? aFilterBlockOrIndex [
 	"filters with three-argument filter block or index"
-	| nodeSet contextSize |
+	| copy |
 
-	nodeSet := self copyEmpty.
-	aFilterBlockOrInteger isNumber
+	copy := self copyEmpty.
+	aFilterBlockOrIndex isNumber
 		ifTrue: [
-			(self
-				at: aFilterBlockOrInteger rounded
-				ifAbsent: [nil])
-				ifNotNil: [:node | nodeSet addLast: node].
-			^ nodeSet].
-
-	contextSize := self size.
-	1 to: contextSize do: [:i | | node result |
-		node := self at: i.
-		(result :=
-			aFilterBlockOrInteger
-				value: node
-				value: i
-				value: contextSize) isNumber
-			ifTrue: [
-				result rounded = i
-					ifTrue: [nodeSet addLast: node]]
-			ifFalse: [
-				result asXPathBoolean
-					ifTrue: [nodeSet addLast: node]]].
-
-	^ nodeSet sortOrderFrom: self.
+			copy addLast:
+				(self
+					at: aFilterBlockOrIndex rounded
+					ifAbsent: [^ copy])]
+		ifFalse: [| contextSize |
+			contextSize := self size.
+			1 to: contextSize do: [:i | | node result |
+				node := self at: i.
+				(result :=
+					aFilterBlockOrIndex
+						value: node
+						value: i
+						value: contextSize) isNumber
+					ifTrue: [
+						result rounded = i
+							ifTrue: [copy addLast: node]]
+					ifFalse: [
+						result asXPathBoolean
+							ifTrue: [copy addLast: node]]].
+			"filtering does not change sort order"
+			copy sortOrderFrom: self].
+	^ copy.
 ]
 
 { #category : #'enumerating - axis' }
@@ -258,7 +258,7 @@ XPathNodeSet >> @ aNodeTestStringOrBlock [
 		ifTrue: [
 			^ self sortOrder
 				attributeAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
+				select: aNodeTestStringOrBlock asAttributeNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first @ aNodeTestStringOrBlock].
 	^ self copyEmpty.
@@ -271,7 +271,7 @@ XPathNodeSet >> @@ aNodeTestStringOrBlock [
 		ifTrue: [
 			^ self sortOrder
 				namespaceAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
+				select: aNodeTestStringOrBlock asNamespaceNodeTestBlock].
 	self size = 1
 		ifTrue: [^ self first @@ aNodeTestStringOrBlock].
 	^ self copyEmpty.

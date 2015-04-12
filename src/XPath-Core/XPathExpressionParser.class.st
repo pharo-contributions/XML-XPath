@@ -261,10 +261,8 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 			"// followed by an abbreviated step or step with an
 			explicit axis is the same as descendant-or-self::node()/
 			followed by the step"
-			currentAxis
-				axisSpecifier: 'descendant-or-self';
-				handleWith: handler.
-			handler handleTestForAnyNodeType.
+			currentAxis axisSpecifier: 'descendant-or-self'.
+			handler handleAxisWithTestForAnyNodeType: currentAxis.
 			self peekForStep
 				ifFalse: [self errorExpectedStep]].
 	^ true.
@@ -287,8 +285,7 @@ XPathExpressionParser >> peekForAbbreviatedStep [
 					currentAxis reset.
 					^ true].
 			currentAxis axisSpecifier: 'self'].
-	currentAxis handleWith: handler.
-	handler handleTestForAnyNodeType.
+	handler handleAxisWithTestForAnyNodeType: currentAxis.
 
 	"abbreviated steps cannot have filters"
 	^ true.
@@ -301,10 +298,8 @@ XPathExpressionParser >> peekForAbsoluteLocationPath [
 	handler handleStartAbsoluteLocationPath.
 	self peekForAdditionalSteps
 		ifFalse: [
-			currentAxis
-				axisSpecifier: 'self';
-				handleWith: handler.
-			handler handleTestForAnyNodeType].
+			currentAxis axisSpecifier: 'self'.
+			handler handleAxisWithTestForAnyNodeType: currentAxis].
 	^ true.
 ]
 
@@ -571,7 +566,7 @@ XPathExpressionParser >> peekForRelationalOperator [
 XPathExpressionParser >> peekForRelativeLocationPath [
 	currentAxis
 		reset;
-		isStartOfRelativeLocationPath: true.
+		startRelativeLocationPath.
 	self peekForStep
 		ifFalse: [^ false].
 	self peekForLocationPathSeparator

@@ -51,7 +51,7 @@ XPathFunctionPrototypeParser >> nextModifierForArgument: anArgument [
 				ifFalse: [
 					handler hasOptionalArgument
 						ifTrue: [self errorNonOptionalArgumentAfterOptional].
-					handler handleArgument: anArgument]]
+					handler handleArgument: anArgument]].
 ]
 
 { #category : #parsing }
