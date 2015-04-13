@@ -555,6 +555,22 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 ]
 
 { #category : #tests }
+XPathTest >> testInvalidNumberTokenizing [
+	self
+		should: ['. 1' asXPath evaluate]
+		raise: XPathSyntaxException.
+	self
+		should: ['1 .' asXPath evaluate]
+		raise: XPathSyntaxException.
+	self
+		should: ['.1.2' asXPath evaluate]
+		raise: XPathSyntaxException.
+	self
+		should: ['1.2.' asXPath evaluate]
+		raise: XPathSyntaxException.
+]
+
+{ #category : #tests }
 XPathTest >> testLangFunction [
 	| element |
 
@@ -886,13 +902,19 @@ XPathTest >> testNotFunction [
 
 { #category : #tests }
 XPathTest >> testNumberTokenizing [
-	| result |
-
-	result := '.1' asXPath evaluate.
-	self assert: (result isNumber and: [result > 0]).
-
-	result := '-.1' asXPath evaluate.
-	self assert: (result isNumber and: [result < 0]).
+	self
+		assert: ' 1 ' asXPath evaluate = 1;
+		assert: ' 12 ' asXPath evaluate = 12;
+		assert: ' 1.5 ' asXPath evaluate = 1.5;
+		assert: ' 12.5 ' asXPath evaluate = 12.5;
+		assert: ' -1 ' asXPath evaluate = -1;
+		assert: ' -12 ' asXPath evaluate = -12;
+		assert: ' -1.5 ' asXPath evaluate = -1.5;
+		assert: ' -12.5 ' asXPath evaluate = -12.5;
+		assert: ' .1 ' asXPath evaluate = 0.1;
+		assert: ' .12 ' asXPath evaluate = 0.12;
+		assert: ' -.1 ' asXPath evaluate = -0.1;
+		assert: ' -.12 ' asXPath evaluate = -0.12
 ]
 
 { #category : #tests }
