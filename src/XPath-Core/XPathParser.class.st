@@ -217,9 +217,9 @@ XPathParser >> parse [
 		endParsing]
 		on: XPathException
 		do: [:error |
-			error
-				appendPosition: inputStream position;
-				pass].
+			error hasPosition
+				ifFalse: [error position: inputStream position].
+			error pass].
 	^ handler parsingResult.
 ]
 

@@ -10,17 +10,20 @@ Class {
 	#category : #'XPath-Core-Exceptions'
 }
 
-{ #category : #appending }
-XPathException >> appendPosition: aPosition [
-	self position
-		ifNil: [
-			position := aPosition.
-			self
-				append: aPosition
-				withDescription: 'at pos.']
+{ #category : #testing }
+XPathException >> hasPosition [
+	^ position notNil
 ]
 
 { #category : #accessing }
 XPathException >> position [
 	^ position
+]
+
+{ #category : #accessing }
+XPathException >> position: aPosition [
+	position := aPosition.
+	self
+		append: aPosition
+		withDescription: 'at pos.'.
 ]

@@ -28,6 +28,9 @@ or with one message:
 
 The syntax extensions supported are prefix wildcards in name tests like ""*:name"", attribute() and element() type tests that can contain embedded name tests like ""element(name)"", namespace() type tests, and the ability to match literal prefixes instead of the namespaces bound to them (See XPathContext for more information).
 
+XPath expressions can be encoded directly in Smalltalk using special binary selectors on XMLNodes and  XMLNodeSets:
+	xmlNode //  'entry' / 'link' @ 'href'
+
 (Compiled XPaths are cached for performance.)
 "
 Class {
