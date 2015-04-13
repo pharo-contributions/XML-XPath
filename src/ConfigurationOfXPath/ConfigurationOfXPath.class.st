@@ -61,7 +61,12 @@ The following example retrieves the language types as found in the UNICODE Commo
 [[[ 
 | doc |
 doc := (XMLDOMParser parseURL: ''http://unicode.org/repos/cldr/trunk/common/supplemental/supplementalData.xml'').
+
+"get all language type attribute nodes"
 (XPath for: ''//languageData/language/@type'') in: doc.
+
+"abbreviated form"
+doc // ''languageData'' / ''language'' @ ''type''
 ]]]'
 ]
 
@@ -257,7 +262,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.5'.
+	spec for: #'common' version: '1.3.6'.
 
 ]
 
@@ -657,5 +662,16 @@ ConfigurationOfXPath >> version135: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.42'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.34'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version136: spec [ 
+        <version: '1.3.6' imports: #('1.3.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.43'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.35'.
                 ].
 ]
