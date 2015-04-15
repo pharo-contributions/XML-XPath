@@ -22,9 +22,12 @@ XPathTest >> setUp [
 
 { #category : #tests }
 XPathTest >> testAbsoluteLocationPaths [
-	self
-		assert: (XPath for: '/' in: document) = (XMLNodeList with: document);
-		assert: (XPath for: '/*' in: document) = (XMLNodeList with: document root)
+	document allNodesDo: [:each |
+		self
+			assert: (XPath for: '/' in: each) = (XMLNodeList with: document);
+			assert: (XPath for: '/*' in: each) = (XMLNodeList with: document root);
+			assert: (XPath for: '/self::node()' in: each) = (XMLNodeList with: document);
+			assert: (XPath for: '/addressbook/person' in: each) = (document allElementsNamed: 'person')]
 ]
 
 { #category : #tests }
@@ -118,6 +121,26 @@ XPathTest >> testAttributeAxis [
 		(XPath
 			for: 'addressbook/person/address/@city/@city'
 			in: document) isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testAttributeNameTest [
+	| results |
+
+	results :=
+		document xPath:
+			'addressbook/person/attribute::node()/self::attribute(employee-number)'.
+	self
+		assert: results size = 4;
+		assert:
+			results =
+				((document allElementsNamed: 'person') collect: [:each |
+					each attributeNodeAt: 'employee-number']).
+
+	results :=
+		document xPath:
+			'addressbook/person/attribute::node()/self::attribute(absent)'.
+	self assert: results isEmpty.
 ]
 
 { #category : #tests }
@@ -302,6 +325,23 @@ XPathTest >> testElementExpandedNameTest [
 ]
 
 { #category : #tests }
+XPathTest >> testElementExpandedNameWildcardTest [
+	| persons |
+
+	persons := namespacedDocument allElementsNamed: 'person'.
+	self assert:
+		(namespacedDocument xPath:
+			'element( Q{bookNS}* ) / element( Q{personNS}* )') = persons.
+	self assert: (namespacedDocument xPath: 'element(Q{undeclared}*)') isEmpty.
+	self
+		should: [namespacedDocument xPath: 'element(Q{bookNS} *)']
+		raise: XPathSyntaxException.
+	self
+		should: [namespacedDocument xPath: 'element(Q {bookNS}*)']
+		raise: XPathSyntaxException.
+]
+
+{ #category : #tests }
 XPathTest >> testElementLocalNameWildcardTest [
 	| persons mappings |
 
@@ -330,6 +370,16 @@ XPathTest >> testElementLocalNameWildcardTest [
 				in: namespacedDocument
 				context: (XPathContext namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
+]
+
+{ #category : #tests }
+XPathTest >> testElementNameTest [
+	self assert:
+		(document xPath: 'element(addressbook)/element(person)') =
+			(document allElementsNamed: 'person').
+	self assert:
+		(namespacedDocument xPath:
+			'element(addressbook)/element(person)') isEmpty.
 ]
 
 { #category : #tests }
@@ -388,7 +438,9 @@ XPathTest >> testElementQualfiedNameTest [
 
 { #category : #tests }
 XPathTest >> testElementTypeTest [
-	self assert: (document // 'element()') = document allElements
+	self
+		assert: (document xPath: '//element()') = document allElements;
+		assert: (document xPath: '//node()/self::element()') = document allElements
 ]
 
 { #category : #tests }
@@ -724,8 +776,7 @@ XPathTest >> testNamespaceAxis [
 		assert: (namespacedDocument xPath: '//namespace::*') = nodes;
 		assert:
 			(namespacedDocument xPath: '//namespace::book') =
-				(nodes select: [:each | each name ='book']);
-		assert: (namespacedDocument xPath: '//namespace::namespace()') = nodes.
+				(nodes select: [:each | each name ='book']).
 
 	"namespace nodes can't be prefixed or namespaced themselves:"
 	self
@@ -736,6 +787,32 @@ XPathTest >> testNamespaceAxis [
 		document allElementsCollect: [:each |
 				XPathNamespaceNode withXMLNamespaceOnElement: each].
 	self assert: (document xPath: '//namespace::*') = nodes.
+]
+
+{ #category : #tests }
+XPathTest >> testNamespaceNameTest [
+	self assert:
+		(document xPath: '//namespace::namespace( xml )') =
+			(document allElements collect: [:each | each namespaceNodes first]).
+	self assert: (document xPath: '//namespace::namespace( undeclared )') isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testNamespaceTypeTest [
+	| results |
+
+	results := XMLNodeList new.
+	namespacedDocument allNodesDo: [:each |
+		each isElement
+			ifTrue: [results addAll: each namespaceNodes]
+			ifFalse: [
+				each isStringNode
+					ifTrue: [results addLast: each]]].
+	self assert:
+		(namespacedDocument xPath: '//namespace::node() | //text()') = results.
+	self assert:
+		(namespacedDocument xPath: '(//namespace::node() | //text())/ self :: namespace()') =
+			(results select: [:each | each isNamespace]).
 ]
 
 { #category : #tests }
