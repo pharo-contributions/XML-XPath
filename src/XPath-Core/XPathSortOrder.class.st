@@ -141,12 +141,6 @@ XPathSortOrder >> childrenOfNextFrom: aReadStream select: aNodeTestBlock into: a
 							aReadStream peek lastAncestorOrSelfInNode: node]]].
 ]
 
-{ #category : #copying }
-XPathSortOrder >> copy [
-	"instances are immutable and shared"
-	^ self
-]
-
 { #category : #enumerating }
 XPathSortOrder >> descendantAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |

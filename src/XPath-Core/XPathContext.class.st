@@ -1,9 +1,9 @@
 "
 An XPath context is used to evaluate XPath expressions. Each context has a function library and optionally also variable bindings and namespace mappings.
 
-If no namespace mappings are set in the context, then name tests like 'prefix:name', '*:name', and 'prefix:*' will match against the literal name part(s) of nodes directly (where wildcards matching any). This is different from the spec which requires prefixes in tests to be declared in the context.
+By default, qualified name tests like 'prefix:name' and local name wildcard tests like 'prefix:*' will match against the node name directly. This is different from the standard, where prefixes in node tests must be declared in the context before evaluation and the namespace they're bound to is matched against the non-default namespace of the node.
 
-Standard behavior (where you must declare any prefix used in a node test) is triggered only if at least one prefix is declared in the context.
+To get standard behavior, just declare at least one prefix in the context before evaluation.
 "
 Class {
 	#name : #XPathContext,

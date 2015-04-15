@@ -33,6 +33,10 @@ XPathNodeTestParserHandler >> handleTestForAttributeWithName: aName [
 ]
 
 { #category : #handling }
+XPathNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI [
+]
+
+{ #category : #handling }
 XPathNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
 ]
 
@@ -61,6 +65,10 @@ XPathNodeTestParserHandler >> handleTestForElementWithName: aName [
 ]
 
 { #category : #handling }
+XPathNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI [
+]
+
+{ #category : #handling }
 XPathNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
 ]
 
@@ -82,6 +90,10 @@ XPathNodeTestParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
 
 { #category : #handling }
 XPathNodeTestParserHandler >> handleTestForNamespaceWithName: aName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI [
 ]
 
 { #category : #handling }

@@ -26,7 +26,10 @@ or with one message:
 				variableAt: 'name' put: 'value';
 				yourself).
 
-The syntax extensions supported are prefix wildcards in name tests like ""*:name"", attribute() and element() type tests that can contain embedded name tests like ""element(name)"", namespace() type tests, and the ability to match literal prefixes instead of the namespaces bound to them (See XPathContext for more information).
+The syntax extensions supported are:
+- Prefix wildcards in name tests like ""*:name""
+-Expanded name literals like ""Q{namespaceURI}localName"" that allow namespace testing more easily.
+- The element(), attribute() and namespace() type tests that can contain embedded name tests like ""element(name)""
 
 XPath expressions can be encoded directly in Smalltalk using special binary selectors on XMLNodes and  XMLNodeSets:
 	xmlNode //  'entry' / 'link' @ 'href'
@@ -93,9 +96,11 @@ XPath class >> for: anXPathSourceString in: aNode context: aContext [
 
 { #category : #'class initialization' }
 XPath class >> initialize [
-	"self initialize"
+	"
+	self initialize
+	"
 
-	self clearCompiledXPathCache.
+	self clearCompiledXPathCache
 ]
 
 { #category : #accessing }

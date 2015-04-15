@@ -58,6 +58,12 @@ XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithName: aName [
 ]
 
 { #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI [
+	self startNodeTest.
+	expressionParserHandler handleTestForAttributeWithNamespaceURI: aURI.
+]
+
+{ #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
@@ -104,6 +110,12 @@ XPathExpressionNodeTestParserHandler >> handleTestForElementWithName: aName [
 ]
 
 { #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI [
+	self startNodeTest.
+	expressionParserHandler handleTestForElementWithNamespaceURI: aURI.
+]
+
+{ #category : #handling }
 XPathExpressionNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
@@ -141,6 +153,12 @@ XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithLocalName: aLo
 XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithName: aName [
 	self startNodeTest.
 	expressionParserHandler handleTestForNamespaceWithName: aName.
+]
+
+{ #category : #handling }
+XPathExpressionNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI [
+	self startNodeTest.
+	expressionParserHandler handleTestForNamespaceWithNamespaceURI: aURI.
 ]
 
 { #category : #handling }

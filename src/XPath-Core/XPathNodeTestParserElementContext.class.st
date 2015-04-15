@@ -30,6 +30,11 @@ XPathNodeTestParserElementContext >> handleTestForNamespaceURI: aURI localName: 
 ]
 
 { #category : #handling }
+XPathNodeTestParserElementContext >> handleTestForNamespaceURI: aURI with: aHandler [
+	aHandler handleTestForElementWithNamespaceURI: aURI
+]
+
+{ #category : #handling }
 XPathNodeTestParserElementContext >> handleTestForPrefix: aPrefix localName: aLocalName with: aHandler [
 	aHandler
 		handleTestForElementWithPrefix: aPrefix

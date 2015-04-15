@@ -53,12 +53,12 @@ XPathNodeTestParserContext >> handleTestForName: aName with: aHandler [
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForNamespaceTypeWith: aHandler [
-	aHandler handleTestForNamespaceWithAnyName
+XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
+	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
+XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI with: aHandler [
 	self subclassResponsibility
 ]
 

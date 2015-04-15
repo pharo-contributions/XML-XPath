@@ -67,8 +67,10 @@ XPathNodeTestParser >> nextEmptyTest [
 
 { #category : #parsing }
 XPathNodeTestParser >> nextNamespaceTypeTest [
-	self nextEndArgumentList.
-	context handleTestForNamespaceTypeWith: handler.
+	context := XPathNodeTestParserNamespaceTypeTestContext new.
+	self
+		peekForNodeTest;
+		nextEndArgumentList.
 ]
 
 { #category : #parsing }
@@ -104,13 +106,18 @@ XPathNodeTestParser >> parseInput [
 XPathNodeTestParser >> peekForExpandedNameTest: aName [
 	(aName = 'Q'
 		and: [inputStream peekFor: ${])
-		ifTrue: [| uri localName |
+		ifTrue: [| uri |
 			uri := self expectUpTo: $}.
-			localName := self nextNCName.
-			context
-				handleTestForNamespaceURI: uri
-				localName: localName
-				with: handler.
+			(inputStream peekFor: $*)
+				ifTrue: [
+					context
+						handleTestForNamespaceURI: uri
+						with: handler]
+				ifFalse: [
+					context
+						handleTestForNamespaceURI: uri
+						localName: self nextNCName
+						with: handler].
 			^ true]
 		ifFalse: [^ false]
 ]

@@ -506,7 +506,7 @@ XPathNodeSet >> sortOrder: aSortOrder [
 
 { #category : #private }
 XPathNodeSet >> sortOrderFrom: aNodeSet [
-	sortOrder := aNodeSet sortOrder copy
+	sortOrder := aNodeSet sortOrder
 ]
 
 { #category : #accessing }
