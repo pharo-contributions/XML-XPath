@@ -9,7 +9,8 @@ Class {
 		'replacementSelector',
 		'defaultNodeTestParserContextClass',
 		'isImplicit',
-		'isStartOfRelativeLocationPath'
+		'isStartOfRelativeLocationPath',
+		'isFirstAxis'
 	],
 	#classVars : [
 		'AxisSpecifiers'
@@ -89,10 +90,21 @@ XPathAxis >> axisSpecifier [
 XPathAxis >> axisSpecifier: anAxisSpecifier [
 	anAxisSpecifier = axisSpecifier
 		ifFalse: [
+			axisSpecifier := anAxisSpecifier.
 			replacementSelector := nil.
 			defaultNodeTestParserContextClass := nil].
-	axisSpecifier := anAxisSpecifier.
+	"now explicit"
 	isImplicit := false.
+]
+
+{ #category : #accessing }
+XPathAxis >> beFirstAxis [
+	isFirstAxis := true
+]
+
+{ #category : #accessing }
+XPathAxis >> beStartOfRelativeLocationPath [
+	isStartOfRelativeLocationPath := true
 ]
 
 { #category : #accessing }
@@ -113,11 +125,16 @@ XPathAxis >> errorUnrecognizedAxisSpecifier [
 { #category : #initialization }
 XPathAxis >> initialize [
 	super initialize.
-	self reset.
+	self resetToImplicitAxis.
 ]
 
 { #category : #testing }
-XPathAxis >> isImplicit [
+XPathAxis >> isFirstAxis [
+	^ isFirstAxis
+]
+
+{ #category : #testing }
+XPathAxis >> isImplicitAxis [
 	^ isImplicit
 ]
 
@@ -147,15 +164,11 @@ XPathAxis >> replacementSelector [
 ]
 
 { #category : #initialization }
-XPathAxis >> reset [
+XPathAxis >> resetToImplicitAxis [
 	axisSpecifier := 'child'.
 	replacementSelector := '/'.
 	defaultNodeTestParserContextClass := XPathNodeTestParserElementContext.
 	isImplicit := true.
+	isFirstAxis := false.
 	isStartOfRelativeLocationPath := false.
-]
-
-{ #category : #accessing }
-XPathAxis >> startRelativeLocationPath [
-	isStartOfRelativeLocationPath := true
 ]

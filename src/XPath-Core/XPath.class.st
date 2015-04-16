@@ -100,7 +100,7 @@ XPath class >> initialize [
 	self initialize
 	"
 
-	self clearCompiledXPathCache
+	self clearCompiledXPathCache.
 ]
 
 { #category : #accessing }

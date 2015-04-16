@@ -119,17 +119,7 @@ XPathExpressionParserHandler >> handleAddition [
 
 { #category : #'handling - location paths' }
 XPathExpressionParserHandler >> handleAxis: anAxis [
-	anAxis isStartOfRelativeLocationPath
-		ifTrue: [self handleStartRelativeLocationPath].
-	outputStream nextPutAll: anAxis replacementSelector.
-	anAxis reset.
-]
-
-{ #category : #'handling - location paths' }
-XPathExpressionParserHandler >> handleAxisWithTestForAnyNodeType: anAxis [
-	self
-		handleAxis: anAxis;
-		handleTestForAnyNodeType
+	outputStream nextPutAll: anAxis replacementSelector
 ]
 
 { #category : #'handling - operators' }

@@ -262,7 +262,7 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 			explicit axis is the same as descendant-or-self::node()/
 			followed by the step"
 			currentAxis axisSpecifier: 'descendant-or-self'.
-			handler handleAxisWithTestForAnyNodeType: currentAxis.
+			self startNodeTestForAnyNodeType.
 			self peekForStep
 				ifFalse: [self errorExpectedStep]].
 	^ true.
@@ -272,20 +272,21 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 XPathExpressionParser >> peekForAbbreviatedStep [
 	(inputStream peekFor: $.)
 		ifFalse: [^ false].
-	self atDigit
+	self atDigit "float literal"
 		ifTrue: [
 			inputStream skipBack.
 			^ false].
+
 	(inputStream peekFor: $.)
 		ifTrue: [currentAxis axisSpecifier: 'parent']
 		ifFalse: [
-			currentAxis isStartOfRelativeLocationPath
+			currentAxis isFirstAxis
 				ifFalse: [
 					"can be omitted"
-					currentAxis reset.
+					currentAxis resetToImplicitAxis.
 					^ true].
 			currentAxis axisSpecifier: 'self'].
-	handler handleAxisWithTestForAnyNodeType: currentAxis.
+	self startNodeTestForAnyNodeType.
 
 	"abbreviated steps cannot have filters"
 	^ true.
@@ -295,17 +296,20 @@ XPathExpressionParser >> peekForAbbreviatedStep [
 XPathExpressionParser >> peekForAbsoluteLocationPath [
 	self peekForLocationPathSeparator
 		ifFalse: [^ false].
+
 	handler handleStartAbsoluteLocationPath.
+	currentAxis
+		resetToImplicitAxis;
+		beFirstAxis.
 	self peekForAdditionalSteps
 		ifFalse: [
 			currentAxis axisSpecifier: 'self'.
-			handler handleAxisWithTestForAnyNodeType: currentAxis].
+			self startNodeTestForAnyNodeType].
 	^ true.
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAdditionalSteps [
-	currentAxis reset.
 	(self peekForAbbreviatedDescendantStep
 		or: [self peekForStep])
 		ifFalse: [^ false].
@@ -565,8 +569,9 @@ XPathExpressionParser >> peekForRelationalOperator [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForRelativeLocationPath [
 	currentAxis
-		reset;
-		startRelativeLocationPath.
+		resetToImplicitAxis;
+		beFirstAxis;
+		beStartOfRelativeLocationPath.
 	self peekForStep
 		ifFalse: [^ false].
 	self peekForLocationPathSeparator
@@ -585,17 +590,20 @@ XPathExpressionParser >> peekForStep [
 	inputStream skipSeparators.
 	inputStream atEnd
 		ifTrue: [^ false].
+
 	self peekForAbbreviatedStep
 		ifTrue: [^ true].
+
 	self peekForAxis.
 	nodeTestParser parse
+		ifTrue: [
+			self peekForPredicates.
+			^ true]
 		ifFalse: [
-			currentAxis isImplicit
+			currentAxis isImplicitAxis
 				ifFalse: [self errorExpectedNodeTest].
-			currentAxis reset.
+			currentAxis resetToImplicitAxis.
 			^ false].
-	self peekForPredicates.
-	^ true.
 ]
 
 { #category : #'parsing - peeking' }
@@ -624,4 +632,14 @@ XPathExpressionParser >> peekForVariableReference [
 			handler handleVariableReference: self nextName.
 			^ true]
 		ifFalse: [^ false]
+]
+
+{ #category : #private }
+XPathExpressionParser >> startNodeTestForAnyNodeType [
+	currentAxis isStartOfRelativeLocationPath
+		ifTrue: [handler handleStartRelativeLocationPath].
+	handler
+		handleAxis: currentAxis;
+		handleTestForAnyNodeType.
+	currentAxis resetToImplicitAxis.
 ]

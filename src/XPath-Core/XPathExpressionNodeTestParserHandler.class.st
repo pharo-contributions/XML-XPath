@@ -215,5 +215,8 @@ XPathExpressionNodeTestParserHandler >> setCurrentAxis: anAxis expressionParserH
 { #category : #private }
 XPathExpressionNodeTestParserHandler >> startNodeTest [
 	self parsingResult: true.
+	currentAxis isStartOfRelativeLocationPath
+		ifTrue: [expressionParserHandler handleStartRelativeLocationPath].
 	expressionParserHandler handleAxis: currentAxis.
+	currentAxis resetToImplicitAxis.
 ]

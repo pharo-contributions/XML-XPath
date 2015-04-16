@@ -19,6 +19,11 @@ XPathNodeSet class >> errorCannotConvert: anObject [
 ]
 
 { #category : #'instance creation' }
+XPathNodeSet class >> new [
+	^ self new: 10
+]
+
+{ #category : #'instance creation' }
 XPathNodeSet class >> xPathNewFrom: anObject [
 	"no conversions are specified from other types to node sets"
 	(anObject isKindOf: XPathNodeSet)
@@ -479,7 +484,7 @@ XPathNodeSet >> select: aBlock [
 { #category : #private }
 XPathNodeSet >> set [
 	"IdentitySet is not used because namespace nodes implement ="
-	^ set ifNil: [set := Set new: 5]
+	^ set ifNil: [set := Set new: self capacity]
 ]
 
 { #category : #sorting }
