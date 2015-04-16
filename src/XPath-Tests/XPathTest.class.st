@@ -21,6 +21,37 @@ XPathTest >> setUp [
 ]
 
 { #category : #tests }
+XPathTest >> testAbbreviatedSteps [
+	| result |
+
+	result := XPathNodeSet with: document.
+	self
+		assert: (document xPath: '.') = result;
+		assert: (document xPath: './.') = result;
+		assert: (document xPath: './..') isEmpty;
+		assert: (document xPath: '..') isEmpty;
+		assert: (document xPath: '../..') isEmpty;
+		assert: (document xPath: '/.') = result;
+		assert: (document xPath: '/./.') = result;
+		assert: (document xPath: '/./..') isEmpty;
+		assert: (document xPath: '/..') isEmpty;
+		assert: (document xPath: '/../..') isEmpty.
+
+	result := document allElementsNamed: 'person'.
+	self
+		assert: (document xPath: './addressbook/./person/.') = result;
+		assert: (document xPath: '././addressbook/././person/./.') = result;
+		assert: (document xPath: './addressbook/../addressbook/person/../person') = result;
+		assert: (document xPath: './addressbook/./../addressbook/./person/./../person') = result.
+	self
+		should: [document xPath: '.[true()]']
+		raise: XPathSyntaxException.
+	self
+		should: [document xPath: '..[true()]']
+		raise: XPathSyntaxException.
+]
+
+{ #category : #tests }
 XPathTest >> testAbsoluteLocationPaths [
 	document allNodesDo: [:each |
 		self
@@ -465,6 +496,19 @@ XPathTest >> testFalseFunction [
 	self
 		should: ['false(1)' asXPath evaluate]
 		raise: XPathArgumentNumberException.
+]
+
+{ #category : #tests }
+XPathTest >> testFileterExpressionLocationPath [
+	self assert:
+		(document xPath: '(./addressbook/*)[position() <= 3 and position() > 1]') =
+			((document allElementsNamed: 'person') copyFrom: 2 to: 3).
+	self assert:
+		(document xPath: '(addressbook/*)[true()] / address') =
+			(document allElementsNamed: 'address').
+	self assert:
+		(document xPath: '(addressbook)[true()] // email') =
+			(document allElementsNamed: 'email').
 ]
 
 { #category : #tests }
@@ -1393,17 +1437,30 @@ XPathTest >> testUnion [
 
 { #category : #tests }
 XPathTest >> testVariables [
-	| path context results |
+	| context result |
 
-	path := XPath for: '$doc/addressbook/person[.//address[@city=$city]]'.
 	(context := XPathContext new)
 		variableAt: 'doc' put: document;
-		variableAt: 'city' ifAbsentPut: ['Los Angeles'].
-	results := path in: nil context: context.
+		variableAt: 'pos' ifAbsentPut: [4].
+	result :=
+		(XPath for: '$doc/addressbook/person[position() != $pos]')
+			in: nil
+			context: context.
+	self assert: result = (document allElementsNamed: 'person') allButLast.
+
+	context :=
+		XPathContext variables:
+			(Dictionary
+				with: 'doc' -> document
+				with: 'city' -> 'Los Angeles').
+	result :=
+		(XPath for: '($doc)/addressbook/person[.//address[@city=$city]]')
+			in: nil
+			context: context.
 	self
-		assert: results size = 2;
+		assert: result size = 2;
 		assert:
-			results =
+			result =
 				((document allElementsNamed: 'person') select: [:each |
 					((each elementAt: 'address') attributeAt: 'city') = 'Los Angeles']).
 ]
