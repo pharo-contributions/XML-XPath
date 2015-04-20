@@ -27,7 +27,7 @@ XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass: aClass [
 
 { #category : #handling }
 XPathStringNodeTestParserHandler >> handleEmptyTest [
-	XPathSyntaxException signal: 'string arguments to axis selectors must contain node tests'
+	XPathSyntaxException signal: 'String arguments to axis selectors must contain node tests'
 ]
 
 { #category : #handling }

@@ -15,6 +15,20 @@ XPathLevelDocumentSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
 ]
 
 { #category : #enumerating }
+XPathLevelDocumentSortOrder >> descendantAxisOn: aNodeSet select: aNodeTestBlock [
+	^ self
+		levelOrderDescendantAxisOn: aNodeSet
+		select: aNodeTestBlock
+]
+
+{ #category : #enumerating }
+XPathLevelDocumentSortOrder >> descendantOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
+	^ self
+		levelOrderDescendantOrSelfAxisOn: aNodeSet
+		select: aNodeTestBlock
+]
+
+{ #category : #enumerating }
 XPathLevelDocumentSortOrder >> followingAxisOn: aNodeSet select: aNodeTestBlock [
 	^ self
 		levelOrderFollowingAxisOn: aNodeSet

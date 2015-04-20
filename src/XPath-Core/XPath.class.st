@@ -5,36 +5,25 @@ This is the usage:
 	path := XPath for: anXPathString.
 	result := path in: aNode.
 
-or with one message:
-	result := XPath for: anXPathString in: aNode.
-
-A custom context can be set this way:
+With a custom XPath context:
 	path := XPath for: anXPathString.
-	path
-		in: aNode
-		context:
-			(XPathContext new
-				variableAt: 'name' put: 'value';
-				yourself)
-
-or with one message:
-	XPath
-		for: anXPathString
-		in: aNode
-		context:
-			(XPathContext new
-				variableAt: 'name' put: 'value';
-				yourself).
+	result :=
+		path
+			in: aNode
+			context:
+				(XPathContext new
+					variableAt: 'name' put: 'value';
+					yourself).
 
 The syntax extensions supported are:
 - Prefix wildcards in name tests like ""*:name""
 -Expanded name literals like ""Q{namespaceURI}localName"" that allow namespace testing more easily.
 - The element(), attribute() and namespace() type tests that can contain embedded name tests like ""element(name)""
 
-XPath expressions can be encoded directly in Smalltalk using special binary selectors on XMLNodes and  XMLNodeSets:
-	xmlNode //  'entry' / 'link' @ 'href'
+Unlike standard XPath, by default prefixes in node tests are matched against literal prefixes of nodes. This means you don't have declare prefixes in the context before using them in node tests. Declaring at least one prefix in the context triggers standard behavior. See XPathContext for more.
 
-(Compiled XPaths are cached for performance.)
+XPath expressions can be encoded directly in Smalltalk using special binary selectors on XMLNodes and  XMLNodeSets:
+	xmlNode //  'entry' / 'link' @ 'href'.
 "
 Class {
 	#name : #XPath,
@@ -168,6 +157,14 @@ XPath >> in: aNode context: aContext [
 	^ self compiledXPath
 		value: aNode
 		value: aContext
+]
+
+{ #category : #printing }
+XPath >> printOn: aStream [
+	aStream
+		nextPutAll: 'an XPath(';
+		nextPutAll: self xPathSource;
+		nextPut: $)
 ]
 
 { #category : #accessing }

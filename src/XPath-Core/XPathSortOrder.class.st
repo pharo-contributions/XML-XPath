@@ -266,6 +266,30 @@ XPathSortOrder >> levelOrderChildAxisOn: aNodeSet select: aNodeTestBlock [
 ]
 
 { #category : #private }
+XPathSortOrder >> levelOrderDescendantAxisOn: aNodeSet select: aNodeTestBlock [
+	| copy |
+
+	copy := aNodeSet copyEmpty.
+	self documentOrderOn: aNodeSet do: [:node |
+		node descendentNodesDo: [:each |
+			(aNodeTestBlock value: each)
+				ifTrue: [copy addLast: each]]].
+	^ copy sortOrder: XPathDocumentSortOrder new.
+]
+
+{ #category : #private }
+XPathSortOrder >> levelOrderDescendantOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
+	| copy |
+
+	copy := aNodeSet copyEmpty.
+	self documentOrderOn: aNodeSet do: [:node |
+		node allNodesDo: [:each |
+			(aNodeTestBlock value: each)
+				ifTrue: [copy addLast: each]]].
+	^ copy sortOrder: XPathDocumentSortOrder new.
+]
+
+{ #category : #private }
 XPathSortOrder >> levelOrderFollowingAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 

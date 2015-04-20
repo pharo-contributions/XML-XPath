@@ -1,5 +1,5 @@
 "
-A class for storing the axis of a step while it is being parsed.
+This class holds the current axis while a step is being parsed and maps them to selectors and parser context classes.
 "
 Class {
 	#name : #XPathAxis,
@@ -153,6 +153,14 @@ XPathAxis >> lookupAxisSpecifier [
 			ifAbsent: [self errorUnrecognizedAxisSpecifier].
 	replacementSelector := association key.
 	defaultNodeTestParserContextClass := association value.
+]
+
+{ #category : #printing }
+XPathAxis >> printOn: aStream [
+	aStream
+		nextPutAll: 'an XPathAxis(';
+		nextPutAll: self axisSpecifier;
+		nextPut: $)
 ]
 
 { #category : #accessing }

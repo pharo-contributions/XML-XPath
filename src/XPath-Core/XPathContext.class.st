@@ -1,7 +1,7 @@
 "
-An XPath context is used to evaluate XPath expressions. Each context has a function library and optionally also variable bindings and namespace mappings.
+An XPath context is used to evaluate XPath expressions. Contexts have a function library, variable bindings, and namespace mappings.
 
-By default, qualified name tests like 'prefix:name' and local name wildcard tests like 'prefix:*' will match against the node name directly. This is different from the standard, where prefixes in node tests must be declared in the context before evaluation and the namespace they're bound to is matched against the non-default namespace of the node.
+By default, qualified name tests like 'prefix:name' and wildcard tests like 'prefix:*' will match against the prefix directly. This isn't like the standard, where prefixes in node tests must be declared in the context before evaluation and the namespace they're bound to is matched against the non-default namespace of the node, but is easier to use.
 
 To get standard behavior, just declare at least one prefix in the context before evaluation.
 "
