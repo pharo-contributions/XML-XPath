@@ -157,10 +157,11 @@ XPathAxis >> lookupAxisSpecifier [
 
 { #category : #printing }
 XPathAxis >> printOn: aStream [
+	super printOn: aStream.
 	aStream
-		nextPutAll: 'an XPathAxis(';
+		nextPut: $(;
 		nextPutAll: self axisSpecifier;
-		nextPut: $)
+		nextPut: $).
 ]
 
 { #category : #accessing }

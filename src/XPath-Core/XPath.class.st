@@ -161,10 +161,11 @@ XPath >> in: aNode context: aContext [
 
 { #category : #printing }
 XPath >> printOn: aStream [
+	super printOn: aStream.
 	aStream
-		nextPutAll: 'an XPath(';
+		nextPut: $(;
 		nextPutAll: self xPathSource;
-		nextPut: $)
+		nextPut: $).
 ]
 
 { #category : #accessing }

@@ -233,9 +233,9 @@ XPathFunction >> pop [
 XPathFunction >> printOn: aStream [
 	super printOn: aStream.
 	aStream
-		nextPutAll: '(''';
-		nextPutAll: self functionPrototype;
-		nextPutAll: ''')'.
+		nextPut: $(;
+		print: self functionPrototype; "print: quotes"
+		nextPut: $).
 ]
 
 { #category : #stack }
