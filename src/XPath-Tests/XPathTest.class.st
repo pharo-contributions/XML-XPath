@@ -224,7 +224,9 @@ XPathTest >> testCommentTypeTest [
 	comments := document xPath: '//comment()'.
 	self
 		assert: comments size = 2;
-		assert: comments = (document allNodesSelect: [:each | each isComment]).
+		assert: comments = (document allNodesSelect: [:each | each isComment]);
+		assert: (document xPath: '//comment()/self::comment()') = comments;
+		assert: (document xPath: '//comment()/comment()') isEmpty.
 ]
 
 { #category : #tests }
@@ -1299,12 +1301,10 @@ XPathTest >> testSelfAxis [
 		(XPath
 			for: ' / self::node() '
 			in: document) = (XMLNodeList with: document).
-
 	self assert:
 		(XPath
 			for: ' /*/person/self::*'
 			in: document) = (document allElementsNamed: 'person').
-
 	self assert:
 		(XPath
 			for: ' /*/person/node()/self::node()'
@@ -1397,7 +1397,11 @@ XPathTest >> testSumFunction [
 XPathTest >> testTextTypeTest [
 	self assert:
 		(document xPath: ' //text( ) ') =
-			(document allNodesSelect: [:each | each isStringNode])
+			(document allNodesSelect: [:each | each isStringNode]).
+	self assert:
+		(document xPath: '//text()/self::text()') =
+			(document allNodesSelect: [:each | each isStringNode]).
+	self assert: (document xPath: ' //text()/text()') isEmpty.
 ]
 
 { #category : #tests }
