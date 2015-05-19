@@ -1,5 +1,5 @@
 "
-This is a base class for XPath parsers.
+This is a base class for XPath parsers that parse input using parser handlers.
 "
 Class {
 	#name : #XPathParser,

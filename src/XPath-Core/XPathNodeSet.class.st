@@ -225,23 +225,23 @@ XPathNodeSet >> >>> aNodeTestStringOrBlock [
 ]
 
 { #category : #enumerating }
-XPathNodeSet >> ?? aFilterBlockOrIndex [
-	"filters with three-argument filter block or index"
+XPathNodeSet >> ?? aThreeArgumentBlockOrPosition [
+	"filters with three-argument filter block or position index"
 	| copy |
 
 	copy := self copyEmpty.
-	aFilterBlockOrIndex isNumber
+	aThreeArgumentBlockOrPosition isNumber
 		ifTrue: [
 			copy addLast:
 				(self
-					at: aFilterBlockOrIndex rounded
+					at: aThreeArgumentBlockOrPosition rounded
 					ifAbsent: [^ copy])]
 		ifFalse: [| contextSize |
 			contextSize := self size.
 			1 to: contextSize do: [:i | | node result |
 				node := self at: i.
 				(result :=
-					aFilterBlockOrIndex
+					aThreeArgumentBlockOrPosition
 						value: node
 						value: i
 						value: contextSize) isNumber

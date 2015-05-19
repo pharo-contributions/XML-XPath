@@ -50,4 +50,5 @@ XPathReverseDocumentSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
 
 { #category : #sorting }
 XPathReverseDocumentSortOrder >> reverseDocumentOrderSort: aNodeSet [
+	"already in reverse document order"
 ]
