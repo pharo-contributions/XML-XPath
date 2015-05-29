@@ -159,34 +159,22 @@ ConfigurationOfXPath class >> validate [
 { #category : #baselines }
 ConfigurationOfXPath >> baseline101: spec [
 	<version: '1.0.1-baseline' imports: #('1.0-baseline')>
-
-	spec for: #gemstone do: [
-		spec blessing: #baseline.
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.2'. ].
+	spec for: #common do: [ spec blessing: #baseline ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.2' ]
 ]
 
 { #category : #baselines }
 ConfigurationOfXPath >> baseline105: spec [
 	<version: '1.0.5-baseline' imports: #('1.0-baseline')>
-
-	spec for: #gemstone do: [
-		spec blessing: #baseline.
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.3'. ].
+	spec for: #common do: [ spec blessing: #baseline ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.3' ]
 ]
 
 { #category : #baselines }
 ConfigurationOfXPath >> baseline106: spec [
 	<version: '1.0.6-baseline' imports: #('1.0-baseline')>
-
-	spec for: #gemstone do: [
-		spec blessing: #baseline.
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.4'. ].
+	spec for: #common do: [ spec blessing: #baseline ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.4' ]
 ]
 
 { #category : #baselines }
@@ -222,12 +210,12 @@ ConfigurationOfXPath >> baseline10: spec [
 { #category : #baselines }
 ConfigurationOfXPath >> baseline134: spec [
 	<version: '1.3.4-baseline' imports: #('1.0-baseline')>
-
-	spec for: #gemstone do: [
-		spec blessing: #baseline.
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.5'. ].
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.5' ]
 ]
 
 { #category : #accessing }
@@ -262,7 +250,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.3.9'.
+	spec for: #'common' version: '1.4.0'.
 
 ]
 
@@ -705,6 +693,17 @@ ConfigurationOfXPath >> version139: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.46'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.38'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version140: spec [ 
+        <version: '1.4.0' imports: #('1.3.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.47'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.38'.
                 ].
 ]
