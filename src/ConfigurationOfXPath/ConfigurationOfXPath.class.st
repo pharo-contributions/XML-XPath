@@ -703,7 +703,7 @@ ConfigurationOfXPath >> version140: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XPath-Core' with: 'XPath-Core-monty.47'.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.48'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.38'.
                 ].
 ]
