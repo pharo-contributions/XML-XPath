@@ -559,10 +559,11 @@ XPathTest >> testFileterExpressionLocationPath [
 
 { #category : #tests }
 XPathTest >> testFollowingAxis [
-	| following |
+	| persons following |
 
+	persons := document allElementsNamed: 'person'.
 	following := XMLNodeList new.
-	(document allElementsNamed: 'person') allButFirst do: [:person |
+	persons allButFirst do: [:person |
 		person allNodesDo: [:each | following addLast: each]].
 	self assert:
 		(XPath
@@ -570,7 +571,7 @@ XPathTest >> testFollowingAxis [
 			in: document) = following.
 
 	following removeAll.
-	document allElementsNamed: 'person' do: [:person |
+	persons do: [:person |
 		 person nodes allButFirst do: [:node |
 			node allNodesDo: [:each | following addLast: each]]].
 	self assert:
@@ -579,38 +580,49 @@ XPathTest >> testFollowingAxis [
 			in: document) = following.
 
 	following removeAll.
-	(document allElementsNamed: 'person') first descendentNodesDo: [:each |
+	persons first descendentNodesDo: [:each |
 		each previousNode
 			ifNotNil: [following addLast: each]].
-	(document allElementsNamed: 'person') allButFirst do: [:person |
+	persons allButFirst do: [:person |
 		person allNodesDo: [:each | following addLast: each]].
 	self assert:
 		(XPath
 			for: '//following::node()'
 			in: document) = following.
+
+	following removeAll.
+	persons allButFirst do: [:person |
+		person allNodesDo: [:each | following addLast:each]].
+	self assert:
+		(XPath
+			for: '(//person[1]|//person[3]/node()[1])/following::node()'
+			in: document) = following.
+	self assert:
+		(XPath
+			for: '(//person[1]|//person[last()])/following::node()'
+			in: document) = following.
 ]
 
 { #category : #tests }
 XPathTest >> testFollowingSiblingAxis [
-	| siblings |
+	| persons siblings |
 
-	siblings := (document allElementsNamed: 'person') allButFirst.
+	persons := document allElementsNamed: 'person'.
+	siblings := persons allButFirst.
 	self assert:
 		(XPath
 			for: 'addressbook/person/following-sibling::person'
 			in: document) = siblings.
 
 	siblings := XMLNodeList new.
-	document allElementsNamed: 'person' do: [:each |
-		siblings addAll: each nodes allButFirst].
+	persons do: [:each | siblings addAll: each nodes allButFirst].
 	self assert:
 		(XPath
 			for: 'addressbook/person/node()/following-sibling::node()'
 			in: document) = siblings.
 
-	siblings := (document allElementsNamed: 'person') first
-		descendentNodesSelect: [:each | each previousNode notNil].
-	siblings addAll: (document allElementsNamed: 'person') allButFirst.
+	siblings := persons first descendentNodesSelect: [:each | each previousNode notNil].
+	siblings addAll: persons allButFirst.
 	self assert:
 		(XPath
 			for: 'addressbook/person[1]//following-sibling::node()'
@@ -622,6 +634,15 @@ XPathTest >> testFollowingSiblingAxis [
 	self assert:
 		(XPath
 			for: '//following-sibling::node()'
+			in: document) = siblings.
+
+	siblings := persons copyFrom: 2 to: 3.
+	siblings
+		addAll: persons third nodes allButFirst;
+		addLast: persons last.
+	self assert:
+		(XPath
+			for: '(//person[1]|//person[3]/node()[1])/following-sibling::node()'
 			in: document) = siblings.
 ]
 
@@ -1146,10 +1167,11 @@ XPathTest >> testPrecedence [
 
 { #category : #tests }
 XPathTest >> testPrecedingAxis [
-	| preceding |
+	| persons preceding |
 
+	persons := document allElementsNamed: 'person'.
 	preceding := XMLNodeList new.
-	(document allElementsNamed: 'person') allButLast reverseDo: [:person |
+	persons allButLast reverseDo: [:person |
 		person allNodesReverseDo: [:each | preceding addLast: each]].
 	self assert:
 		(XPath
@@ -1157,7 +1179,7 @@ XPathTest >> testPrecedingAxis [
 			in: document) = preceding.
 
 	preceding removeAll.
-	(document allElementsNamed: 'person') reverseDo: [:person |
+	persons reverseDo: [:person |
 		 person nodes allButLast reverseDo: [:node |
 			node allNodesReverseDo: [:each | preceding addLast: each]]].
 	self assert:
@@ -1166,37 +1188,50 @@ XPathTest >> testPrecedingAxis [
 			in: document) = preceding.
 
 	preceding removeAll.
-	(document allElementsNamed: 'person') last
-		descendentNodes allButLast reverseDo: [:each | preceding addLast: each].
-	(document allElementsNamed: 'person') allButLast reverseDo: [:person |
+	persons last descendentNodes allButLast reverseDo: [:each |
+		preceding addLast: each].
+	persons allButLast reverseDo: [:person |
 		person allNodesReverseDo: [:each | preceding addLast: each]].
 	self assert:
 		(XPath
 			for: '//preceding::node()'
 			in: document) = preceding.
+
+	preceding removeAll.
+	persons allButLast do: [:person |
+		person allNodesDo: [:each | preceding addLast: each]].
+	preceding := preceding reversed.
+	self assert:
+		(XPath
+			for: '(//person[last()]|//person[2]/node()[last()])/preceding::node()'
+			in: document) = preceding.
+	self assert:
+		(XPath
+			for: '(//person[last()]|//person[1])/preceding::node()'
+			in: document) = preceding.
 ]
 
 { #category : #tests }
 XPathTest >> testPrecedingSiblingAxis [
-	| results siblings |
+	| persons siblings |
 
-	results :=
-		XPath
-			for: 'addressbook/person[4]/preceding-sibling::node()'
-			in: document.
-	self assert: results = document root nodes allButLast reversed.
-
-	results :=
-		XPath
-			for: 'addressbook/person[4]/preceding-sibling::node()/manager'
-			in: document.
+	persons := document allElementsNamed: 'person'.
+	siblings := document root nodes allButLast reversed.
 	self assert:
-		results =
-			(document root nodes allButLast
-				collect: [:each | each elementAt: 'manager']).
+		(XPath
+			for: 'addressbook/person[4]/preceding-sibling::node()'
+			in: document) = siblings.
+
+	siblings := 
+		document root nodes allButLast collect: [:each |
+			each elementAt: 'manager'].
+	self assert:
+		(XPath
+			for: 'addressbook/person[4]/preceding-sibling::node()/manager'
+			in: document) = siblings.
 
 	siblings := (document allElementsNamed: 'person') allButLast.
-	(document allElementsNamed: 'person') last
+	persons last
 		descendentNodesDo: [:each |
 			each nextNode
 				ifNotNil: [siblings addLast: each]].
@@ -1206,13 +1241,24 @@ XPathTest >> testPrecedingSiblingAxis [
 			for: 'addressbook/person[4]//preceding-sibling::node()'
 			in: document) = siblings.
 
-	siblings := document allNodesSelect: [:each |
-		each hasParent
-			and: [each nextNode notNil]].
+	siblings :=
+		(document allNodesSelect: [:each |
+			each hasParent
+				and: [each nextNode notNil]]) reversed.
 	self assert:
 		(XPath
 			for: '//preceding-sibling::node()'
-			in: document) = siblings reversed.
+			in: document) = siblings.
+
+	siblings := persons copyFrom: 1 to: 2.
+	siblings
+		addAll: persons second nodes allButLast;
+		addLast: persons third.
+	siblings := siblings reversed.
+	self assert:
+		(XPath
+			for: '(//person[last()]|//person[2]/node()[last()])/preceding-sibling::node()'
+			in: document) = siblings.
 ]
 
 { #category : #tests }

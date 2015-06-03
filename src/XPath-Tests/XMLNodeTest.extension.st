@@ -111,8 +111,8 @@ XMLNodeTest >> testIsNamespace [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testLastAncestorOrSelfInNode [
-	self assert: (self nodeClass new lastAncestorOrSelfInNode: self nodeClass new) isNil
+XMLNodeTest >> testLastAncestorOrSelfIn [
+	self assert: (self nodeClass new lastAncestorOrSelfIn: self nodeClass new) isNil
 ]
 
 { #category : #'*XPath-Tests' }

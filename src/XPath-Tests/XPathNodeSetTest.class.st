@@ -635,10 +635,19 @@ XPathNodeSetTest >> testReplaceFromToWithStartingAt [
 
 { #category : #tests }
 XPathNodeSetTest >> testReverseReadStream [
-	self
-		assert: self emptyList reverseReadStream upToEnd isEmpty;
-		assert: self listWithSingleElement reverseReadStream upToEnd = self listWithSingleElement asArray;
-		assert: self listWithElements reverseReadStream upToEnd = self listWithElements reversed asArray
+	| stream |
+
+	stream := self emptyList reverseReadStream.
+	self assert: stream atEnd.
+
+	stream := self listWithElements reverseReadStream.
+	self listElements reversed withIndexDo: [:each :i |
+		self
+			assert: stream position = (i - 1);
+			assert: stream peek = each;
+			assert: stream next = each;
+			assert: stream position = i].
+	self assert: stream atEnd.
 ]
 
 { #category : #tests }

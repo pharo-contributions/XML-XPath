@@ -64,18 +64,18 @@ XMLNodeWithChildrenTest >> testFollowingSiblingNodesDo [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeWithChildrenTest >> testLastAncestorOrSelfInNode [
+XMLNodeWithChildrenTest >> testLastAncestorOrSelfIn [
 	| nodeWithNodes |
 
-	super testLastAncestorOrSelfInNode.
+	super testLastAncestorOrSelfIn.
 
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes nodesDo: [:node |
-		self assert: (node lastAncestorOrSelfInNode: nodeWithNodes) = node.
+		self assert: (node lastAncestorOrSelfIn: nodeWithNodes) = node.
 		node descendentNodesDo: [:each | | ancestors |
 			ancestors := each ancestorNodes.
 			self assert:
-				(each lastAncestorOrSelfInNode: nodeWithNodes) =
+				(each lastAncestorOrSelfIn: nodeWithNodes) =
 					(ancestors at: ancestors size - 1)]].
 ]
 
