@@ -17,8 +17,8 @@ With a custom XPath context:
 
 The syntax extensions supported are:
 - Prefix wildcards in name tests like ""*:name""
--Expanded name literals like ""Q{namespaceURI}localName"" that allow namespace testing more easily.
-- The element(), attribute() and namespace() type tests that can contain embedded name tests like ""element(name)""
+- Expanded name literals like ""Q{namespaceURI}localName"" that allow namespace testing more easily.
+- The element(), attribute(), and namespace() type tests that can also have embedded name tests like ""element(name)""
 
 Unlike standard XPath, by default prefixes in node tests are matched against literal prefixes of nodes. This means you don't have declare prefixes in the context before using them in node tests. Declaring at least one prefix in the context triggers standard behavior. See XPathContext for more.
 
@@ -148,6 +148,7 @@ XPath >> evaluate [
 
 { #category : #evaluating }
 XPath >> in: aNode [
+	"evaluate in context of aNode"
 	^ self
 		in: aNode
 		context: self contextClass new
@@ -155,6 +156,7 @@ XPath >> in: aNode [
 
 { #category : #evaluating }
 XPath >> in: aNode context: aContext [
+	"evaluate in context of aNode with aContext"
 	^ self compiledXPath
 		value: aNode
 		value: aContext

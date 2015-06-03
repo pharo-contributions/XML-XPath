@@ -34,6 +34,11 @@ XPathUnknownSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
 	aNodeSet reverseSorted do: aBlock
 ]
 
+{ #category : #private }
+XPathUnknownSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
+	^ aNodeSet reverseSorted readStream
+]
+
 { #category : #sorting }
 XPathUnknownSortOrder >> reverseDocumentOrderSort: aNodeSet [
 	aNodeSet

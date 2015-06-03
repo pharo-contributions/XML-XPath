@@ -13,14 +13,6 @@ XPathDocumentSortOrder >> documentOrderOn: aNodeSet do: aBlock [
 ]
 
 { #category : #private }
-XPathDocumentSortOrder >> documentOrderOn: aNodeSet indexOfNextParentAfterIndex: anIndex [
-	anIndex + 1 to: aNodeSet size do: [:i |
-		(aNodeSet at: i) hasChildren
-			ifTrue: [^ i]].
-	^ nil.
-]
-
-{ #category : #private }
 XPathDocumentSortOrder >> documentOrderReadStreamOn: aNodeSet [
 	^ aNodeSet readStream
 ]
@@ -38,6 +30,11 @@ XPathDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 { #category : #private }
 XPathDocumentSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
 	aNodeSet reverseDo: aBlock
+]
+
+{ #category : #private }
+XPathDocumentSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
+	^ aNodeSet reverseReadStream
 ]
 
 { #category : #sorting }

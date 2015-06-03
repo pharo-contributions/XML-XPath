@@ -1,5 +1,5 @@
 "
-Abstract class for node sort orders to keep track of the order of nodes in a node set. Instances are immutable and shared.
+Abstract class for node sort orders to keep track of the order of nodes in a node set. Instances of subclasses are immutable and shared.
 "
 Class {
 	#name : #XPathSortOrder,
@@ -26,7 +26,7 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 	self documentOrderOn: aNodeSet do: [:each | | oldSize |
 		oldSize := copy size.
 		self
-			ancestorsOfNode: each
+			ancestorNodesOf: each
 			select: aNodeTestBlock
 			into: copy.
 
@@ -43,6 +43,15 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aNodeTestBlock [
 		sortOrder: XPathReverseDocumentSortOrder new.
 ]
 
+{ #category : #private }
+XPathSortOrder >> ancestorNodesOf: aNode select: aNodeTestBlock into: aNodeSet [
+	aNode ancestorNodesDo: [:each |
+		(aNodeSet includes: each)
+			ifTrue: [^ self].
+		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each]]
+]
+
 { #category : #enumerating }
 XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
@@ -57,7 +66,7 @@ XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 				(aNodeTestBlock value: each)
 					ifTrue: [copy addLast: each].
 				self
-					ancestorsOfNode: each
+					ancestorNodesOf: each
 					select: aNodeTestBlock
 					into: copy].
 
@@ -72,15 +81,6 @@ XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 	^ copy
 		reverseInPlace;
 		sortOrder: XPathReverseDocumentSortOrder new.
-]
-
-{ #category : #private }
-XPathSortOrder >> ancestorsOfNode: aNode select: aNodeTestBlock into: aNodeSet [
-	aNode ancestorNodesDo: [:each |
-		(aNodeSet includes: each)
-			ifTrue: [^ self].
-		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each]]
 ]
 
 { #category : #enumerating }
@@ -107,77 +107,52 @@ XPathSortOrder >> childAxisOn: aNodeSet select: aNodeTestBlock [
 	[readStream atEnd]
 		whileFalse: [
 			self
-				childrenOfNextFrom: readStream
+				nodesOfNextFrom: readStream
 				select: aNodeTestBlock
 				into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
-{ #category : #private }
-XPathSortOrder >> childrenOfNextFrom: aReadStream select: aNodeTestBlock into: aNodeSet [
-	| node nextNodeOrNodeAncestor |
-
-	(node := aReadStream next) hasChildren
-		ifFalse: [^ self].
-
-	aReadStream atEnd
-		ifFalse: [
-			nextNodeOrNodeAncestor :=
-				aReadStream peek lastAncestorOrSelfInNode: node].
-
-	node nodesDo: [:each |
-		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each].
-		[each = nextNodeOrNodeAncestor]
-			whileTrue: [
-				self
-					childrenOfNextFrom: aReadStream
-					select: aNodeTestBlock
-					into: aNodeSet.
-				aReadStream atEnd
-					ifTrue: [nextNodeOrNodeAncestor := nil]
-					ifFalse: [
-						nextNodeOrNodeAncestor :=
-							aReadStream peek lastAncestorOrSelfInNode: node]]].
-]
-
 { #category : #enumerating }
 XPathSortOrder >> descendantAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy |
+	| copy readStream |
 
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each |
-		self
-			descendantsOfNode: each
-			select: aNodeTestBlock
-			into: copy].
+	readStream := self documentOrderReadStreamOn: aNodeSet.
+	[readStream atEnd]
+		whileFalse: [
+			self
+				descendentNodesOfNextFrom: readStream
+				select: aNodeTestBlock
+				into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> descendantOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy |
+	| copy readStream |
 
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each |
-		(copy includes: each)
-			ifFalse: [
-				(aNodeTestBlock value: each)
-					ifTrue: [copy addLast: each].
-				self
-					descendantsOfNode: each
-					select: aNodeTestBlock
-					into: copy]].
-	^ copy sortOrder: XPathDocumentSortOrder new.
+	readStream := self documentOrderReadStreamOn: aNodeSet.
+	[readStream atEnd]
+		whileFalse: [
+			(aNodeTestBlock value: readStream peek)
+				ifTrue: [copy addLast:  readStream peek].
+			self
+				descendentNodesOfNextFrom: readStream
+				select: aNodeTestBlock
+				into: copy].
+	^ copy sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #private }
-XPathSortOrder >> descendantsOfNode: aNode select: aNodeTestBlock into: aNodeSet [
-	aNode descendentNodesDo: [:each |
-		(aNodeSet includes: each)
-			ifTrue: [^ self].
+XPathSortOrder >> descendentNodesOfNextFrom: aDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
+	aDocumentOrderStream next descendentNodesDo: [:each |
 		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each]]
+			ifTrue: [aNodeSet add: each].
+		[aDocumentOrderStream atEnd not
+			and: [aDocumentOrderStream peek = each]]
+			whileTrue: [aDocumentOrderStream next]]
 ]
 
 { #category : #private }
@@ -202,52 +177,98 @@ XPathSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 
 { #category : #enumerating }
 XPathSortOrder >> followingAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy |
+	| copy readStream |
 
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each |
-		(copy includes: each)
-			ifFalse: [
-				self
-					followingNodesOf: each
-					select: aNodeTestBlock
-					into: copy]].
-	"this result needs sorting"
-	^ copy sort.
+	readStream := self documentOrderReadStreamOn: aNodeSet.
+	[readStream atEnd]
+		whileFalse: [
+			self
+				followingNodesOfNextFrom: readStream
+				select: aNodeTestBlock
+				into: copy].
+	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #private }
-XPathSortOrder >> followingNodesOf: aNode select: aNodeTestBlock into: aNodeSet [
-	aNode followingNodesDo: [:each |
-		(aNodeSet includes: each)
-			ifTrue: [^ self].
+XPathSortOrder >> followingNodesOfNextFrom: aDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
+	| node nextNodeAncestorOrSelf |
+
+	node := aDocumentOrderStream next.
+	"to keep document order, descendants of node with following nodes that need to be
+	enumerated are handled first and then node's following nodes after"
+	[aDocumentOrderStream atEnd or: [
+		(nextNodeAncestorOrSelf :=
+			aDocumentOrderStream peek lastAncestorOrSelfIn: node) isNil]]
+		whileFalse: [
+			self
+				followingNodesOfNextFrom: aDocumentOrderStream
+				select: aNodeTestBlock
+				into: aNodeSet.
+			nextNodeAncestorOrSelf := nil].
+
+	node followingNodesDo: [:each |
 		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each]]
+			ifTrue: [aNodeSet add: each].
+		[aDocumentOrderStream atEnd not
+			and: [aDocumentOrderStream peek = each]]
+			whileTrue: [aDocumentOrderStream next]].
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> followingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy |
+	| copy readStream |
 
 	copy := aNodeSet copyEmpty.
-	self documentOrderOn: aNodeSet do: [:each |
-		(copy includes: each)
-			ifFalse: [
-				self
-					followingSiblingNodesOf: each
-					select: aNodeTestBlock
-					into: copy]].
-	"this result needs sorting"
-	^ copy sort.
+	readStream := self documentOrderReadStreamOn: aNodeSet.
+	[readStream atEnd]
+		whileFalse: [
+			self
+				followingSiblingNodesOfNextFrom: readStream
+				select: aNodeTestBlock
+				into: copy].
+	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #private }
-XPathSortOrder >> followingSiblingNodesOf: aNode select: aNodeTestBlock into: aNodeSet [
-	aNode followingSiblingNodesDo: [:each |
-		(aNodeSet includes: each)
-			ifTrue: [^ self].
+XPathSortOrder >> followingSiblingNodesOfNextFrom: aDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
+	| node nextNodeAncestorOrSelf |
+
+	node := aDocumentOrderStream next.
+	"to keep document order, descendants of node with siblings that need to be
+	enumerated are handled first and then node's siblings after"
+	[aDocumentOrderStream atEnd or: [
+		(nextNodeAncestorOrSelf :=
+			aDocumentOrderStream peek lastAncestorOrSelfIn: node) isNil]]
+		whileFalse: [
+			self
+				followingSiblingNodesOfNextFrom: aDocumentOrderStream
+				select: aNodeTestBlock
+				into: aNodeSet.
+			nextNodeAncestorOrSelf := nil].
+
+	(aDocumentOrderStream atEnd or: [node hasParent not])
+		ifFalse: [
+			nextNodeAncestorOrSelf :=
+				aDocumentOrderStream peek lastAncestorOrSelfIn: node parent].
+	node followingSiblingNodesDo: [:each |
 		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each]]
+			ifTrue: [aNodeSet add: each].
+		[nextNodeAncestorOrSelf = each]
+			whileTrue: [
+				nextNodeAncestorOrSelf = aDocumentOrderStream peek
+					ifTrue: [aDocumentOrderStream next]
+					ifFalse: [
+						self
+							followingSiblingNodesOfNextFrom: aDocumentOrderStream
+							select: aNodeTestBlock
+							into: aNodeSet].
+				(aDocumentOrderStream atEnd or: [node hasParent not])
+					ifTrue: [nextNodeAncestorOrSelf := nil]
+					ifFalse: [
+						nextNodeAncestorOrSelf :=
+							aDocumentOrderStream peek lastAncestorOrSelfIn:
+								node parent]]].
 ]
 
 { #category : #private }
@@ -402,6 +423,34 @@ XPathSortOrder >> namespaceAxisOn: aNodeSet select: aNodeTestBlock [
 	^ copy sortOrder: XPathElementMetaNodeDocumentSortOrder new.
 ]
 
+{ #category : #private }
+XPathSortOrder >> nodesOfNextFrom: aDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
+	| node nextNodeAncestorOrSelf |
+
+	(node := aDocumentOrderStream next) hasChildren
+		ifFalse: [^ self].
+
+	aDocumentOrderStream atEnd
+		ifFalse: [
+			nextNodeAncestorOrSelf :=
+				aDocumentOrderStream peek lastAncestorOrSelfIn: node].
+
+	node nodesDo: [:each |
+		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each].
+		[each = nextNodeAncestorOrSelf]
+			whileTrue: [
+				self
+					nodesOfNextFrom: aDocumentOrderStream
+					select: aNodeTestBlock
+					into: aNodeSet.
+				aDocumentOrderStream atEnd
+					ifTrue: [nextNodeAncestorOrSelf := nil]
+					ifFalse: [
+						nextNodeAncestorOrSelf :=
+							aDocumentOrderStream peek lastAncestorOrSelfIn: node]]].
+]
+
 { #category : #enumerating }
 XPathSortOrder >> parentAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
@@ -418,56 +467,82 @@ XPathSortOrder >> parentAxisOn: aNodeSet select: aNodeTestBlock [
 
 { #category : #enumerating }
 XPathSortOrder >> precedingAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy |
+	| copy readStream |
 
 	copy := aNodeSet copyEmpty.
-	self reverseDocumentOrderOn: aNodeSet do: [:each |
-		(copy includes: each)
-			ifFalse: [
-				self
-					precedingNodesOf: each
-					select: aNodeTestBlock
-					into: copy]].
-	"this result needs reverse sorting"
-	^ copy reverseSort.
+	readStream := self reverseDocumentOrderReadStreamOn: aNodeSet.
+	[readStream atEnd]
+		whileFalse: [
+			self
+				precedingNodesOfNextFrom: readStream
+				select: aNodeTestBlock
+				into: copy].
+	^ copy sortOrder: XPathReverseDocumentSortOrder new.
 ]
 
 { #category : #private }
-XPathSortOrder >> precedingNodesOf: aNode select: aNodeTestBlock into: aNodeSet [
-	aNode precedingNodesDo: [:each |
-		(aNodeSet includes: each)
-			ifTrue: [^ self].
+XPathSortOrder >> precedingNodesOfNextFrom: aReverseDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
+	aReverseDocumentOrderStream next precedingNodesDo: [:each |
+		[aReverseDocumentOrderStream atEnd not
+			and: [aReverseDocumentOrderStream peek = each]]
+			whileTrue: [aReverseDocumentOrderStream next].
 		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each]]
+			ifTrue: [aNodeSet add: each]]
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> precedingSiblingAxisOn: aNodeSet select: aNodeTestBlock [
-	| copy |
+	| copy readStream |
 
 	copy := aNodeSet copyEmpty.
-	self reverseDocumentOrderOn: aNodeSet do: [:each |
-		(copy includes: each)
-			ifFalse: [
-				self
-					precedingSiblingNodesOf: each
-					select: aNodeTestBlock
-					into: copy]].
-	"this result needs reverse sorting"
-	^ copy reverseSort.
+	readStream := self reverseDocumentOrderReadStreamOn: aNodeSet.
+	[readStream atEnd]
+		whileFalse: [
+			self
+				precedingSiblingNodesOfNextFrom: readStream
+				select: aNodeTestBlock
+				into: copy].
+	^ copy sortOrder: XPathReverseDocumentSortOrder new.
 ]
 
 { #category : #private }
-XPathSortOrder >> precedingSiblingNodesOf: aNode select: aNodeTestBlock into: aNodeSet [
-	aNode precedingSiblingNodesDo: [:each |
-		(aNodeSet includes: each)
-			ifTrue: [^ self].
+XPathSortOrder >> precedingSiblingNodesOfNextFrom: aReverseDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
+	| node nextNodeAncestorOrSelf |
+
+	node := aReverseDocumentOrderStream next.
+	(aReverseDocumentOrderStream atEnd or: [node hasParent not])
+		ifFalse: [
+			nextNodeAncestorOrSelf :=
+				aReverseDocumentOrderStream peek lastAncestorOrSelfIn:
+					node parent].
+
+	node precedingSiblingNodesDo: [:each |
+		[nextNodeAncestorOrSelf = each]
+			whileTrue: [
+				nextNodeAncestorOrSelf = aReverseDocumentOrderStream peek
+					ifTrue: [aReverseDocumentOrderStream next]
+					ifFalse: [
+						self
+							precedingSiblingNodesOfNextFrom: aReverseDocumentOrderStream
+							select: aNodeTestBlock
+							into: aNodeSet].
+				(aReverseDocumentOrderStream atEnd or: [node hasParent not])
+					ifTrue: [nextNodeAncestorOrSelf := nil]
+					ifFalse: [
+						nextNodeAncestorOrSelf :=
+							aReverseDocumentOrderStream peek lastAncestorOrSelfIn:
+								node parent]].
 		(aNodeTestBlock value: each)
-			ifTrue: [aNodeSet addLast: each]]
+			ifTrue: [aNodeSet add: each]].
 ]
 
 { #category : #private }
 XPathSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
 	self subclassResponsibility
 ]
 

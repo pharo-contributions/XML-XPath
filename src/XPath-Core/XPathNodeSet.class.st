@@ -452,17 +452,7 @@ XPathNodeSet >> reverseInPlaceFrom: aStart to: anEnd [
 
 { #category : #converting }
 XPathNodeSet >> reverseReadStream [
-	| contents contentsSize |
-
-	"array is used for performance because using #reversed would use another
-	node set that would needlessly check for duplicates and use more memory"
-	contentsSize := self size.
-	contents := Array new: contentsSize.
-	1 to: contentsSize do: [:i |
-		contents
-			at: (contentsSize - i) + 1
-			put: (collection at: i)].
-	^ contents readStream.
+	^ XPathReverseReadStream on: self
 ]
 
 { #category : #sorting }

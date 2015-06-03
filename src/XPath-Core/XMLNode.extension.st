@@ -174,14 +174,15 @@ XMLNode >> isNamespace [
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> lastAncestorOrSelfInNode: aNode [
-	self parent = aNode
-		ifTrue: [^ self].
+XMLNode >> lastAncestorOrSelfIn: aNode [
 	self parent = aNode parent
-		ifTrue: [^ nil].
-	self ancestorNodesDo: [:each |
-		(each parent = aNode)
-			ifTrue: [^ each]].
+		ifFalse: [| lastAncestorOrSelf |
+			lastAncestorOrSelf := self.
+			[lastAncestorOrSelf hasParent]
+				whileTrue: [
+					lastAncestorOrSelf parent = aNode
+						ifTrue: [^ lastAncestorOrSelf].
+					lastAncestorOrSelf := lastAncestorOrSelf parent]].
 	^ nil.
 ]
 
