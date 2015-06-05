@@ -651,30 +651,6 @@ XPathNodeSetTest >> testReverseReadStream [
 ]
 
 { #category : #tests }
-XPathNodeSetTest >> testReverseSort [
-	| list |
-
-	list := self listWithElements.
-	self
-		assert: list reverseSort == list;
-		assert: list = self listWithElements reversed;
-		assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
-]
-
-{ #category : #tests }
-XPathNodeSetTest >> testReverseSorted [
-	| list reverseSorted |
-
-	list := self listWithElements.
-	reverseSorted := self listWithElements reverseSorted.
-	self
-		assertList: reverseSorted
-		copiedFrom: list
-		equals: self listWithElements reversed.
-	self assertList: reverseSorted hasSortOrder: XPathReverseDocumentSortOrder.
-]
-
-{ #category : #tests }
 XPathNodeSetTest >> testSelect [
 	| list |
 

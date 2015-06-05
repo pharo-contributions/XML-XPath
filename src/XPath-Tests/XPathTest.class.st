@@ -1379,9 +1379,7 @@ XPathTest >> testSorting [
 		do: [:nodeSet |
 			self
 				assert: nodeSet sorted = allNodes;
-				assert: nodeSet reverseSorted = allNodes reversed;
-				assert: nodeSet sorted reversed sorted = allNodes;
-				assert: nodeSet reverseSorted reversed reverseSorted = allNodes reversed].
+				assert: nodeSet sorted reversed sorted = allNodes].
 ]
 
 { #category : #tests }
