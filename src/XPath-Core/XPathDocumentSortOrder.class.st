@@ -36,10 +36,3 @@ XPathDocumentSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
 XPathDocumentSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
 	^ aNodeSet reverseReadStream
 ]
-
-{ #category : #sorting }
-XPathDocumentSortOrder >> reverseDocumentOrderSort: aNodeSet [
-	aNodeSet
-		reverseInPlace;
-		sortOrder: XPathReverseDocumentSortOrder new
-]

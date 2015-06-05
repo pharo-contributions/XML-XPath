@@ -546,11 +546,6 @@ XPathSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
 	self subclassResponsibility
 ]
 
-{ #category : #sorting }
-XPathSortOrder >> reverseDocumentOrderSort: aNodeSet [
-	self subclassResponsibility
-]
-
 { #category : #enumerating }
 XPathSortOrder >> selfAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |

@@ -38,8 +38,3 @@ XPathReverseDocumentSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
 XPathReverseDocumentSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
 	^ aNodeSet readStream
 ]
-
-{ #category : #sorting }
-XPathReverseDocumentSortOrder >> reverseDocumentOrderSort: aNodeSet [
-	"already in reverse document order"
-]

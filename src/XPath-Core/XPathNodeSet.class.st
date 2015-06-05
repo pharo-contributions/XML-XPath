@@ -455,16 +455,6 @@ XPathNodeSet >> reverseReadStream [
 	^ XPathReverseReadStream on: self
 ]
 
-{ #category : #sorting }
-XPathNodeSet >> reverseSort [
-	self sortOrder reverseDocumentOrderSort: self
-]
-
-{ #category : #sorting }
-XPathNodeSet >> reverseSorted [
-	^ self copy reverseSort
-]
-
 { #category : #enumerating }
 XPathNodeSet >> select: aBlock [
 	"select doesn't change sort order"
@@ -489,7 +479,7 @@ XPathNodeSet >> sortOrder [
 			self size > 1
 				ifTrue: [sortOrder := XPathUnknownSortOrder new]
 				ifFalse: [
-					"can be used safely for node sets with one node"
+					"safe for node sets with <= 1 node"
 					sortOrder := XPathLevelDocumentSortOrder new]].
 	^ sortOrder.
 ]

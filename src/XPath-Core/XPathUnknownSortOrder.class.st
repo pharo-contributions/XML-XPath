@@ -31,17 +31,10 @@ XPathUnknownSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 
 { #category : #private }
 XPathUnknownSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
-	aNodeSet reverseSorted do: aBlock
+	aNodeSet sorted reverseDo: aBlock
 ]
 
 { #category : #private }
 XPathUnknownSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
-	^ aNodeSet reverseSorted readStream
-]
-
-{ #category : #sorting }
-XPathUnknownSortOrder >> reverseDocumentOrderSort: aNodeSet [
-	aNodeSet
-		sort: [:a :b | b occursInDocumentBeforeNode: a];
-		sortOrder: XPathReverseDocumentSortOrder new
+	^ aNodeSet sorted reverseReadStream
 ]
