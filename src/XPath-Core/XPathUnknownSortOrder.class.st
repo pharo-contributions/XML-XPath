@@ -19,9 +19,7 @@ XPathUnknownSortOrder >> documentOrderReadStreamOn: aNodeSet [
 
 { #category : #sorting }
 XPathUnknownSortOrder >> documentOrderSort: aNodeSet [
-	aNodeSet
-		sort: [:a :b | a = b or: [a occursInDocumentBeforeNode: b]];
-		sortOrder: XPathDocumentSortOrder new
+	aNodeSet documentOrderSort
 ]
 
 { #category : #accessing }

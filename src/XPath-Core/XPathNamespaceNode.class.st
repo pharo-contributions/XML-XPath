@@ -106,34 +106,6 @@ XPathNamespaceNode >> namespaceURI [
 	^ ''
 ]
 
-{ #category : #private }
-XPathNamespaceNode >> occursInParentAfterAttribute: anAttribute [
-	^ false
-]
-
-{ #category : #private }
-XPathNamespaceNode >> occursInParentAfterNamespace: aNamespaceNode [
-	(self hasParent
-		and: [self parent = aNamespaceNode parent])
-		ifTrue: [
-			self parent namespaceNodesDo: [:each |
-				each = self
-					ifTrue: [^ false].
-				each = aNamespaceNode
-					ifTrue: [^ true]]].
-	^ false.
-]
-
-{ #category : #private }
-XPathNamespaceNode >> occursInParentAfterSibling: aNode [
-	^ false
-]
-
-{ #category : #private }
-XPathNamespaceNode >> occursInParentBeforeNode: aNode [
-	^ aNode occursInParentAfterNamespace: self
-]
-
 { #category : #namespaces }
 XPathNamespaceNode >> prefix [
 	"the name of a namespace node cannot be prefixed"

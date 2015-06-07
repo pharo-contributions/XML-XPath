@@ -293,9 +293,9 @@ XPathNodeSet >> afterAdding: aNode at: anIndex [
 	| oldSize |
 
 	oldSize := self set size.
-	((self set
+	(self set
 		add: aNode;
-		size) > oldSize)
+		size) > oldSize
 		ifFalse: [self movedNode: aNode to: anIndex].
 	sortOrder := nil.
 	super
@@ -395,6 +395,54 @@ XPathNodeSet >> difference: aNodeSet [
 	^ (self copyWithoutAll: aNodeSet) sort
 ]
 
+{ #category : #private }
+XPathNodeSet >> documentOrderSort [
+	| size includesNamespaces includesAttributes i |
+
+	(size := collection size) > 1
+		ifFalse: [^ self].
+
+	includesNamespaces := includesAttributes := false.
+	collection
+		detect: [:each |
+			each isNamespace
+				ifTrue: [includesNamespaces := true].
+			each isAttribute
+				ifTrue: [includesAttributes := true].
+			includesNamespaces & includesAttributes]
+		ifNone: [].
+
+	i := 1.
+	collection first documentRoot allNodesDo: [:node |
+		(set includes: node)
+			ifTrue: [
+				collection at: i put: node.
+				i := i + 1].
+		node isElement
+			ifTrue: [
+				(includesNamespaces and: [node hasNamespaceNodes])
+					ifTrue: [
+						node namespaceNodesDo: [:each |
+							(set includes: each)
+								ifTrue: [
+									collection at: i put: each.
+									i := i + 1]]].
+				(includesAttributes and: [node hasAttributes])
+					ifTrue: [
+						node attributeNodesDo: [:each |
+							(set includes: each)
+								ifTrue: [
+									collection at: i put: each.
+									i := i + 1]]]]].
+
+	i > size
+		ifFalse: [
+			size - i + 1 timesRepeat: [collection removeLast].
+			set := Set withAll: collection].
+
+	self sortOrder: XPathDocumentSortOrder new.
+]
+
 { #category : #accessing }
 XPathNodeSet >> firstInDocumentOrder [
 	^ self sortOrder firstInDocumentOrderFrom: self
@@ -472,6 +520,12 @@ XPathNodeSet >> sort [
 	self sortOrder documentOrderSort: self
 ]
 
+{ #category : #sorting }
+XPathNodeSet >> sort: aSortBlock [
+	super sort: aSortBlock.
+	self sortOrder: nil.
+]
+
 { #category : #private }
 XPathNodeSet >> sortOrder [
 	sortOrder
@@ -511,8 +565,7 @@ XPathNodeSet >> swap: aFirstIndex with: aSecondIndex [
 	super
 		swap: aFirstIndex
 		with: aSecondIndex.
-
-	sortOrder := nil.
+	self sortOrder: nil.
 ]
 
 { #category : #enumerating }
