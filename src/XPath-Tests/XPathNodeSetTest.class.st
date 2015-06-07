@@ -76,12 +76,12 @@ XPathNodeSetTest >> listWithSortOrder [
 
 { #category : #accessing }
 XPathNodeSetTest >> reverseSortBlock [
-	^ [:a :b | b occursInDocumentBeforeNode: a]
+	^ [:a :b | (self listElements indexOf: a) >= (self listElements indexOf: b)]
 ]
 
 { #category : #accessing }
-XPathNodeSetTest >> sortBlock [
-	^ [:a :b | a = b or: [a occursInDocumentBeforeNode: b]]
+XPathNodeSetTest >> sortBlock [	
+	^ [:a :b | (self listElements indexOf: a) <= (self listElements indexOf: b)]
 ]
 
 { #category : #tests }
@@ -669,6 +669,11 @@ XPathNodeSetTest >> testSort [
 	self
 		assertList: self listWithElements sort
 		hasSortOrder: XPathDocumentSortOrder.
+
+	self assertHasUnknownSortOrder:
+		(self listWithElements
+			sort;
+			sort: self sortBlock).
 ]
 
 { #category : #tests }
