@@ -19,7 +19,7 @@ XPathUnknownSortOrder >> documentOrderReadStreamOn: aNodeSet [
 
 { #category : #sorting }
 XPathUnknownSortOrder >> documentOrderSort: aNodeSet [
-	aNodeSet documentOrderSort
+	(XPathNodeSetSorter on: aNodeSet) sort
 ]
 
 { #category : #accessing }

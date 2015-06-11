@@ -395,54 +395,6 @@ XPathNodeSet >> difference: aNodeSet [
 	^ (self copyWithoutAll: aNodeSet) sort
 ]
 
-{ #category : #private }
-XPathNodeSet >> documentOrderSort [
-	| size includesNamespaces includesAttributes i |
-
-	(size := collection size) > 1
-		ifFalse: [^ self].
-
-	includesNamespaces := includesAttributes := false.
-	collection
-		detect: [:each |
-			each isNamespace
-				ifTrue: [includesNamespaces := true].
-			each isAttribute
-				ifTrue: [includesAttributes := true].
-			includesNamespaces & includesAttributes]
-		ifNone: [].
-
-	i := 1.
-	collection first documentRoot allNodesDo: [:node |
-		(set includes: node)
-			ifTrue: [
-				collection at: i put: node.
-				i := i + 1].
-		node isElement
-			ifTrue: [
-				(includesNamespaces and: [node hasNamespaceNodes])
-					ifTrue: [
-						node namespaceNodesDo: [:each |
-							(set includes: each)
-								ifTrue: [
-									collection at: i put: each.
-									i := i + 1]]].
-				(includesAttributes and: [node hasAttributes])
-					ifTrue: [
-						node attributeNodesDo: [:each |
-							(set includes: each)
-								ifTrue: [
-									collection at: i put: each.
-									i := i + 1]]]]].
-
-	i > size
-		ifFalse: [
-			size - i + 1 timesRepeat: [collection removeLast].
-			set := Set withAll: collection].
-
-	self sortOrder: XPathDocumentSortOrder new.
-]
-
 { #category : #accessing }
 XPathNodeSet >> firstInDocumentOrder [
 	^ self sortOrder firstInDocumentOrderFrom: self

@@ -23,7 +23,7 @@ The syntax extensions supported are:
 Unlike standard XPath, by default prefixes in node tests are matched against literal prefixes of nodes. This means you don't have declare prefixes in the context before using them in node tests. Declaring at least one prefix in the context triggers standard behavior. See XPathContext for more.
 
 XPath expressions can be encoded directly in Smalltalk using special binary selectors on XMLNodes and  XMLNodeSets:
-	xmlNode //  'entry' / 'link' @ 'href'.
+	xmlNode //  'entry' / '*' /'link' @ 'href'.
 "
 Class {
 	#name : #XPath,
