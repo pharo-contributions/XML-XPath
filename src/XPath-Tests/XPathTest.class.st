@@ -1519,12 +1519,34 @@ XPathTest >> testUndeclaredVariables [
 
 { #category : #tests }
 XPathTest >> testUnion [
+	| union |
+
+	union := document allElementsNamed: 'person'.
 	self assert:
 		(XPath
 			for:
 				'addressbook/person[position() = 1 or position() = 4] |
 				(addressbook/person[4]/ preceding-sibling::* [position() < 4])'
-			in: document) = (document allElementsNamed: 'person')
+			in: document) = union.
+
+	union removeAll.
+	document allElementsNamed: 'person' do: [:each |
+		union
+			addLast: each;
+			addAll: each namespaceNodes;
+			addAll: each attributeNodes].
+	self assert:
+		(XPath
+			for: 'addressbook/person/@* | addressbook/person/@@* | addressbook/person'
+			in: document) = union.
+
+	union := union select: [:each |
+		each = union first
+			or: [each parent = union first]].
+	self assert:
+		(XPath
+			for: 'addressbook/person[1]/@* | addressbook/person[1]/@@* | addressbook/person[1]'
+			in: document) = union.
 ]
 
 { #category : #tests }
