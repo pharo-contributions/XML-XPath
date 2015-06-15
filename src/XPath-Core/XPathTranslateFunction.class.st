@@ -1,5 +1,5 @@
 "
-XPath function to replace or delete all occurances of certain characters in a string.
+XPath function to replace/delete all occurances of certain characters in a string.
 "
 Class {
 	#name : #XPathTranslateFunction,

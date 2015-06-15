@@ -1,5 +1,5 @@
 "
-XPath substring function. First argument is source string, second is one-based position, and third is substring length.
+XPath substring function. First argument is the source string, second is the one-based position, and third is the substring length.
 "
 Class {
 	#name : #XPathSubstringFunction,

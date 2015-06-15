@@ -1,5 +1,5 @@
 "
-Non-standard, but added for completeness with starts-with().
+Non-standard; added for completeness with starts-with().
 "
 Class {
 	#name : #XPathEndsWithFunction,

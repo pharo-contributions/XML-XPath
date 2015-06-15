@@ -1,5 +1,5 @@
 "
-XPath whitespace normalization function to remove leading and trailing whitespace and turn multiple whitespace character sequences into single spaces.
+XPath whitespace normalization function to remove leading and trailing whitespace and turn whitespace sequences into single spaces.
 "
 Class {
 	#name : #XPathNormalizeSpaceFunction,

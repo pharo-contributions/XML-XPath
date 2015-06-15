@@ -1,5 +1,5 @@
 "
-XPath NodeSet count (size) function.
+XPath node set count (size) function.
 "
 Class {
 	#name : #XPathCountFunction,

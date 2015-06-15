@@ -1,5 +1,5 @@
 "
-XPath sum function.
+XPath node set sum function.
 "
 Class {
 	#name : #XPathSumFunction,

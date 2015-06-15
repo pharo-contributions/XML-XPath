@@ -1,5 +1,5 @@
 "
-XPath function to return substring before another substring.
+XPath function to return the substring before another substring.
 "
 Class {
 	#name : #XPathSubstringBeforeFunction,

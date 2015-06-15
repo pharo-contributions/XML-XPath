@@ -1,26 +1,24 @@
 "
-This class evaluates XPath expressions in the context of XMLNodes using optional context objects to control evaluation. It supports all XPath 1.0 syntax with extensions.
+This class evaluates XPath expressions in the context of XMLNodes with optional custom context objects to control evaluation. It supports complete XPath 1.0 syntax with extensions.
 
-This is the usage:
-	path := XPath for: anXPathString.
-	result := path in: aNode.
+Basic usage:
+	| doc path result context |
+	doc := XMLDOMParser parse: '<test>test</test>'.
+	path := XPath for: '/test'.
+	result := path in: doc.
 
-With a custom XPath context:
-	path := XPath for: anXPathString.
-	result :=
-		path
-			in: aNode
-			context:
-				(XPathContext new
-					variableAt: 'name' put: 'value';
-					yourself).
+	""with a custom context""
+	path := XPath for: '/*[name() = $name]'.
+	context :=  XPathContext new.
+	context variableAt: 'name' put: 'test'.
+	result := path in: doc context: context.
 
-The syntax extensions supported are:
+The syntax extensions are:
 - Prefix wildcards in name tests like ""*:name""
-- Expanded name literals like ""Q{namespaceURI}localName"" that allow namespace testing more easily.
+- Expanded name tests like ""Q{namespaceURI}localName"" that allow easier namespace testing 
 - The element(), attribute(), and namespace() type tests that can also have embedded name tests like ""element(name)""
 
-Unlike standard XPath, by default prefixes in node tests are matched against literal prefixes of nodes. This means you don't have declare prefixes in the context before using them in node tests. Declaring at least one prefix in the context triggers standard behavior. See XPathContext for more.
+Unlike standard XPath, by default prefixes in node tests are matched against literal prefixes of nodes, so you don't need to declare prefixes in the context before using them in node tests. Declaring at least one prefix triggers standard behavior. See XPathContext for more.
 
 XPath expressions can be encoded directly in Smalltalk using special binary selectors on XMLNodes and  XMLNodeSets:
 	xmlNode //  'entry' / '*' /'link' @ 'href'.
@@ -48,6 +46,11 @@ XPath class >> clearCompiledXPathCache [
 XPath class >> compiledXPathCache [
 	^ compiledXPathCache
 		ifNil: [compiledXPathCache := XMLKeyValueCache maxSize: 512]
+]
+
+{ #category : #private }
+XPath class >> compiledXPathCacheAt: anXPathSourceString [
+	^ self compiledXPathCache at: anXPathSourceString
 ]
 
 { #category : #private }
