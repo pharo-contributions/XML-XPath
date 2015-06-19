@@ -773,6 +773,10 @@ XPathTest >> testLastFunction [
 	self assert:
 		(path in: document) =
 			(XMLNodeList with: document allNodes last).
+
+	self
+		should: ['last(0)' asXPath evaluate]
+		raise: XPathException.
 ]
 
 { #category : #tests }
@@ -1156,6 +1160,10 @@ XPathTest >> testPositionFunction [
 				(XPath
 					for: 'addressbook/person[ ', i printString, ' ]'
 					in: document) = (XMLNodeList with: each)].
+
+	self
+		should: ['position(0)' asXPath evaluate]
+		raise: XPathException.
 ]
 
 { #category : #tests }
