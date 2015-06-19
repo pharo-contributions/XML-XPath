@@ -137,7 +137,7 @@ XPathSortOrder >> descendantOrSelfAxisOn: aNodeSet select: aNodeTestBlock [
 	[readStream atEnd]
 		whileFalse: [
 			(aNodeTestBlock value: readStream peek)
-				ifTrue: [copy addLast:  readStream peek].
+				ifTrue: [copy addLast: readStream peek].
 			self
 				descendentNodesOfNextFrom: readStream
 				select: aNodeTestBlock
@@ -150,9 +150,9 @@ XPathSortOrder >> descendentNodesOfNextFrom: aDocumentOrderStream select: aNodeT
 	aDocumentOrderStream next descendentNodesDo: [:each |
 		(aNodeTestBlock value: each)
 			ifTrue: [aNodeSet add: each].
-		[aDocumentOrderStream atEnd not
-			and: [aDocumentOrderStream peek = each]]
-			whileTrue: [aDocumentOrderStream next]]
+		(aDocumentOrderStream atEnd not
+			and: [aDocumentOrderStream peek = each])
+			ifTrue: [aDocumentOrderStream next]]
 ]
 
 { #category : #private }
@@ -195,8 +195,8 @@ XPathSortOrder >> followingNodesOfNextFrom: aDocumentOrderStream select: aNodeTe
 	| node nextNodeAncestorOrSelf |
 
 	node := aDocumentOrderStream next.
-	"to keep document order, descendants of node with following nodes that need to be
-	enumerated are handled first and then node's following nodes after"
+	"to preserve document order, descendants of node with following nodes that
+	need to be visited are handled first, then node's following nodes after"
 	[aDocumentOrderStream atEnd or: [
 		(nextNodeAncestorOrSelf :=
 			aDocumentOrderStream peek lastAncestorOrSelfIn: node) isNil]]
@@ -210,9 +210,9 @@ XPathSortOrder >> followingNodesOfNextFrom: aDocumentOrderStream select: aNodeTe
 	node followingNodesDo: [:each |
 		(aNodeTestBlock value: each)
 			ifTrue: [aNodeSet add: each].
-		[aDocumentOrderStream atEnd not
-			and: [aDocumentOrderStream peek = each]]
-			whileTrue: [aDocumentOrderStream next]].
+		(aDocumentOrderStream atEnd not
+			and: [aDocumentOrderStream peek = each])
+			ifTrue: [aDocumentOrderStream next]].
 ]
 
 { #category : #enumerating }
@@ -483,9 +483,9 @@ XPathSortOrder >> precedingAxisOn: aNodeSet select: aNodeTestBlock [
 { #category : #private }
 XPathSortOrder >> precedingNodesOfNextFrom: aReverseDocumentOrderStream select: aNodeTestBlock into: aNodeSet [
 	aReverseDocumentOrderStream next precedingNodesDo: [:each |
-		[aReverseDocumentOrderStream atEnd not
-			and: [aReverseDocumentOrderStream peek = each]]
-			whileTrue: [aReverseDocumentOrderStream next].
+		(aReverseDocumentOrderStream atEnd not
+			and: [aReverseDocumentOrderStream peek = each])
+			ifTrue: [aReverseDocumentOrderStream next].
 		(aNodeTestBlock value: each)
 			ifTrue: [aNodeSet add: each]]
 ]

@@ -29,10 +29,9 @@ XPathExpressionParser class >> initializeAbbreviatedAxisSpecifierCharacters [
 
 { #category : #testing }
 XPathExpressionParser >> atDigit [
-	| nextChar |
-
-	^ (nextChar := inputStream peek) notNil
-		and: [nextChar isDigit]
+	inputStream peek
+		ifNil: [^ false]
+		ifNotNil: [:nextChar | ^ nextChar isDigit]
 ]
 
 { #category : #private }
@@ -485,7 +484,7 @@ XPathExpressionParser >> peekForNumber [
 			self nextDigitsOnWriteStream.
 			(inputStream peekFor: $.)
 				ifTrue: [
-					"Smalltalk float literals cannot have trailing '.'"
+					"Smalltalk float literals can't have a trailing '.'"
 					self atDigit
 						ifTrue: [
 							writeStream nextPut: $..
@@ -496,7 +495,7 @@ XPathExpressionParser >> peekForNumber [
 		ifTrue: [
 			self atDigit
 				ifTrue: [
-					"Smalltalk float literals can't have leading '.'"
+					"Smalltalk float literals can't have a trailing '.'"
 					writeStream nextPutAll: '0.'.
 					self nextDigitsOnWriteStream.
 					handler handleNumberLiteral: writeStream contents.
