@@ -93,6 +93,11 @@ XPathTest >> testAncestorAxis [
 		ancestor nodes anySatisfy: [:each | each hasChildren]].
 	self assert:
 		(XPath for: '//ancestor::node()/ancestor::node()' in: document) = ancestors.
+
+	ancestors := (document allElementsNamed: 'person') reversed.
+	ancestors addAll: ancestors last ancestorNodes.
+	self assert:
+		(XPath for: '*/person/node()/ancestor::node()' in: document) = ancestors.
 ]
 
 { #category : #tests }
@@ -117,6 +122,15 @@ XPathTest >> testAncestorOrSelfAxis [
 		(XPath
 			for: '//person[last()]/preceding-sibling::person/ancestor-or-self::node()'
 			in: document) = nodes.
+
+	nodes removeAll.
+	(document allElementsNamed: 'person') reverseDo: [:each |
+		nodes
+			addAll: each nodes reversed;
+			add: each].
+	nodes addAll: nodes last ancestorNodes.
+	self assert:
+		(XPath for: '*/person/node()/ancestor-or-self::node()' in: document) = nodes.
 ]
 
 { #category : #tests }

@@ -24,13 +24,21 @@ XMLNodeTest >> testAncestorAxis [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testAncestorOrSelfAxis [
-	| node |
+	| node list |
 
 	node := self nodeClass new.
-	self assert: (node %%~ 'node()') = (XPathNodeSet with: node).
+	list := node %%~ 'node()'.
+	self
+		assert: list = (XPathNodeSet with: node);
+		assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
+
+	list := node %%~ '*'.
 	node isElement
-		ifTrue: [self assert: (node %%~ '*') = (XPathNodeSet with: node)]
-		ifFalse: [self assert: (node %%~ '*') isEmpty].
+		ifTrue: [
+			self
+				assert: list = (XPathNodeSet with: node);
+				assertList: list hasSortOrder: XPathReverseDocumentSortOrder]
+		ifFalse: [self assert: list isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -49,13 +57,21 @@ XMLNodeTest >> testDescendantAxis [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testDescendantOrSelfAxis [
-	| node |
+	| node list |
 
 	node := self nodeClass new.
-	self assert: (node //~ 'node()') = (XPathNodeSet with: node).
+	list := node //~ 'node()'.
+	self
+		assert: list = (XPathNodeSet with: node);
+		assertList: list hasSortOrder: XPathLevelDocumentSortOrder.
+
+	list := node //~ '*'.
 	node isElement
-		ifTrue: [self assert: (node //~ '*') = (XPathNodeSet with: node)]
-		ifFalse: [self assert: (node //~ '*') isEmpty].
+		ifTrue: [
+			self
+				assert: list = (XPathNodeSet with: node);
+				assertList: list hasSortOrder: XPathLevelDocumentSortOrder]
+		ifFalse: [self assert: list isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -158,13 +174,21 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testSelfAxis [
-	| node |
+	| node list |
 
 	node := self nodeClass new.
-	self assert: (node ~ 'node()') = (XPathNodeSet with: node).
+	list := node ~ 'node()'.
+	self
+		assert: list = (XPathNodeSet with: node);
+		assertList: list hasSortOrder: XPathLevelDocumentSortOrder.
+
+	list := node ~ '*'.
 	node isElement
-		ifTrue: [self assert: (node ~ '*') = (XPathNodeSet with: node)]
-		ifFalse: [self assert: (node ~ '*') isEmpty].
+		ifTrue: [
+			self
+				assert: list = (XPathNodeSet with: node);
+				assertList: list hasSortOrder: XPathLevelDocumentSortOrder]
+		ifFalse: [self assert: list isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
