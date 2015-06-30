@@ -195,8 +195,8 @@ XPathSortOrder >> followingNodesOfNextFrom: aDocumentOrderStream select: aNodeTe
 	| node nextNodeAncestorOrSelf |
 
 	node := aDocumentOrderStream next.
-	"to preserve document order, descendants of node with following nodes that
-	need to be visited are handled first, then node's following nodes after"
+	"to keep document order, descendants of node with following nodes to be
+	enumerated are handled first, then node's following nodes after"
 	[aDocumentOrderStream atEnd or: [
 		(nextNodeAncestorOrSelf :=
 			aDocumentOrderStream peek lastAncestorOrSelfIn: node) isNil]]
@@ -235,8 +235,8 @@ XPathSortOrder >> followingSiblingNodesOfNextFrom: aDocumentOrderStream select: 
 	| node nextNodeAncestorOrSelf |
 
 	node := aDocumentOrderStream next.
-	"to keep document order, descendants of node with siblings that need to be
-	enumerated are handled first and then node's siblings after"
+	"to keep document order, descendants of node with siblings to be
+	enumerated are handled first, then node's siblings after"
 	[aDocumentOrderStream atEnd or: [
 		(nextNodeAncestorOrSelf :=
 			aDocumentOrderStream peek lastAncestorOrSelfIn: node) isNil]]
@@ -456,7 +456,7 @@ XPathSortOrder >> parentAxisOn: aNodeSet select: aNodeTestBlock [
 	| copy |
 
 	copy := aNodeSet copyEmpty.
-	"parent axis is a forward axis, according to spec"
+	"parent axis is a forward axis unlike ancestor or ancestor-or-self"
 	self documentOrderOn: aNodeSet do: [:each | | parent |
 		(each hasParent
 			and: [(copy includes: (parent := each parent)) not

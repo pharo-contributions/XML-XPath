@@ -5,8 +5,11 @@ XMLNode >> % aNodeTestStringOrBlock [
 	"parent axis"
 	(self hasParent
 		and: [aNodeTestStringOrBlock asNodeTestBlock value: self parent])
-		ifTrue: [^ self newNodeSetWith: self parent]
-		ifFalse: [^ self newNodeSet]
+		ifTrue: [
+			"parent axis is a forward axis unlike ancestor or ancestor-or-self"
+			^ (self nodeSetClass with: self parent)
+				sortOrder: XPathLevelDocumentSortOrder new]
+		ifFalse: [^ self nodeSetClass new]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
@@ -14,7 +17,7 @@ XMLNode >> %% aNodeTestStringOrBlock [
 	"ancestor axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self ancestorNodesDo: [:each |
 		(nodeTestBlock value: each)
@@ -27,7 +30,7 @@ XMLNode >> %%~ aNodeTestStringOrBlock [
 	"ancestor-or-self axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	(nodeTestBlock value: self)
 		ifTrue: [nodeSet addLast: self].
@@ -40,21 +43,19 @@ XMLNode >> %%~ aNodeTestStringOrBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> / aNodeTestStringOrBlock [
 	"child axis"
-	^ self newNodeSet
+	^ self nodeSetClass new
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> // aNodeTestStringOrBlock [
 	"descendant axis"
-	^ self newNodeSet
+	^ self nodeSetClass new
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> //~ aNodeTestStringOrBlock [
 	"descendant-or-self axis"
-	(aNodeTestStringOrBlock asNodeTestBlock value: self)
-		ifTrue: [^ self newNodeSetWith: self]
-		ifFalse: [^ self newNodeSet]
+	^ self ~ aNodeTestStringOrBlock
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
@@ -62,7 +63,7 @@ XMLNode >> << aNodeTestStringOrBlock [
 	"preceding axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self precedingNodesDo: [:each |
 		(nodeTestBlock value: each)
@@ -75,7 +76,7 @@ XMLNode >> <<< aNodeTestStringOrBlock [
 	"preceding-sibling axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self precedingSiblingNodesDo: [:each |
 		(nodeTestBlock value: each)
@@ -88,7 +89,7 @@ XMLNode >> >> aNodeTestStringOrBlock [
 	"following axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self followingNodesDo: [:each |
 		(nodeTestBlock value: each)
@@ -101,7 +102,7 @@ XMLNode >> >>> aNodeTestStringOrBlock [
 	"following-sibling axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self followingSiblingNodesDo: [:each |
 		(nodeTestBlock value: each)
@@ -112,13 +113,13 @@ XMLNode >> >>> aNodeTestStringOrBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> @ aNodeTestStringOrBlock [
 	"attribute axis"
-	^ self newNodeSet
+	^ self nodeSetClass new
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> @@ aNodeTestStringOrBlock [
 	"namespace axis"
-	^ self newNodeSet
+	^ self nodeSetClass new
 ]
 
 { #category : #'*XPath-Core-enumerating' }
@@ -187,13 +188,8 @@ XMLNode >> lastAncestorOrSelfIn: aNode [
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> newNodeSet [
-	^ XPathNodeSet new
-]
-
-{ #category : #'*XPath-Core-private' }
-XMLNode >> newNodeSetWith: aNode [
-	^ XPathNodeSet with: aNode
+XMLNode >> nodeSetClass [
+	^ XPathNodeSet
 ]
 
 { #category : #'*XPath-Core-enumerating' }
@@ -244,6 +240,8 @@ XMLNode >> xPath: anXPathOrXPathString context: aContext [
 XMLNode >> ~ aNodeTestStringOrBlock [
 	"self axis"
 	(aNodeTestStringOrBlock asNodeTestBlock value: self)
-		ifTrue: [^ self newNodeSetWith: self]
-		ifFalse: [^ self newNodeSet]
+		ifTrue: [
+			^ (self nodeSetClass with: self)
+				sortOrder: XPathLevelDocumentSortOrder new]
+		ifFalse: [^ self nodeSetClass new]
 ]

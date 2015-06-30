@@ -5,7 +5,7 @@ XMLElement >> @ aNodeTestStringOrBlock [
 	"attribute axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asAttributeNodeTestBlock.
 	self hasAttributes
 		ifTrue: [
@@ -20,7 +20,7 @@ XMLElement >> @@ aNodeTestStringOrBlock [
 	"namespace axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNamespaceNodeTestBlock.
 	self hasNamespaceNodes
 		ifTrue: [

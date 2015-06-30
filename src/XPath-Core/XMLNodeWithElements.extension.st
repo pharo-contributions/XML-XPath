@@ -5,7 +5,7 @@ XMLNodeWithElements >> / aNodeTestStringOrBlock [
 	"child axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self hasChildren
 		ifTrue: [
@@ -20,7 +20,7 @@ XMLNodeWithElements >> // aNodeTestStringOrBlock [
 	"descendant axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self descendentNodesDo: [:each |
 		(nodeTestBlock value: each)
@@ -33,7 +33,7 @@ XMLNodeWithElements >> //~ aNodeTestStringOrBlock [
 	"descendant-or-self axis"
 	| nodeSet nodeTestBlock |
 
-	nodeSet := self newNodeSet.
+	nodeSet := self nodeSetClass new.
 	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
 	self allNodesDo: [:each |
 		(nodeTestBlock value: each)
