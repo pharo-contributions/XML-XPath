@@ -6,10 +6,12 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'nodeSet',
-		'sharedParentNode',
-		'mustVisitAllNodes',
+		'nodeSetSize',
+		'nodeSetCollection',
+		'nodeSetSet',
 		'mustVisitNamespaces',
-		'mustVisitAttributes'
+		'mustVisitAttributes',
+		'totalSorted'
 	],
 	#category : #'XPath-Core-DOM'
 }
@@ -26,105 +28,80 @@ XPathNodeSetSorter >> errorNodesLackSharedDocumentRoot [
 
 { #category : #initialization }
 XPathNodeSetSorter >> on: aNodeSet [
-	nodeSet := aNodeSet
+	nodeSet := aNodeSet.
+	nodeSetSize := aNodeSet size.
+	nodeSetCollection := aNodeSet collection.
+	nodeSetSet := aNodeSet set.
+	totalSorted := 0.
 ]
 
 { #category : #private }
-XPathNodeSetSorter >> prescanNodeSet [
-	sharedParentNode := nodeSet first parent.
-	mustVisitAllNodes := sharedParentNode isNil.
+XPathNodeSetSorter >> prescanNodesForSharedParent [
+	| sharedParent |
+
+	sharedParent := nodeSetCollection first parent.
 	mustVisitNamespaces := false.
 	mustVisitAttributes := false.
-	nodeSet do: [:each |
-		mustVisitNamespaces
-			ifFalse: [mustVisitNamespaces := each isNamespace].
-		mustVisitAttributes
-			ifFalse: [mustVisitAttributes := each isAttribute].
-		mustVisitAllNodes
-			ifFalse: [mustVisitAllNodes := each parent ~= sharedParentNode].
-
-		mustVisitNamespaces & mustVisitAttributes & mustVisitAllNodes
-			ifTrue: [^ self]]. "can stop scanning"
+	nodeSetCollection do: [:each |
+		each isNamespace
+			ifTrue: [mustVisitNamespaces := true].
+		each isAttribute
+			ifTrue: [mustVisitAttributes := true].
+		sharedParent
+			ifNotNil: [
+				each parent == sharedParent
+					ifFalse: [sharedParent := nil]]].
+	^ sharedParent.
 ]
 
 { #category : #sorting }
 XPathNodeSetSorter >> sort [
-	nodeSet size > 1
+	nodeSetSize > 1
 		ifTrue: [
-			self prescanNodeSet.
-			mustVisitAllNodes
-				ifTrue: [self sortVisitingAllNodes]
-				ifFalse: [self sortVisitingNodesWithSharedParent]]
+			self prescanNodesForSharedParent
+				ifNil: [self sortVisitingAllNodes]
+				ifNotNil: [:sharedParent | self sortVisitingNodesOfSharedParent: sharedParent]]
+]
+
+{ #category : #private }
+XPathNodeSetSorter >> sortNode: aNode [
+	(nodeSetSet includes: aNode)
+		ifTrue: [
+			nodeSetCollection
+				at: (totalSorted := totalSorted + 1)
+				put: aNode]
 ]
 
 { #category : #private }
 XPathNodeSetSorter >> sortVisitingAllNodes [
-	| collection set i |
-
-	collection := nodeSet collection.
-	set := nodeSet set.
-	i := 1.
-	collection first documentRoot allNodesDo: [:node |
-		(set includes: node)
-			ifTrue: [
-				collection at: i put: node.
-				i := i + 1].
+	nodeSetCollection first documentRoot allNodesDo: [:node |
+		self sortNode: node.
 		node isElement
 			ifTrue: [
 				(mustVisitNamespaces
 					and: [node hasNamespaceNodes])
-					ifTrue: [
-						node namespaceNodesDo: [:each |
-							(set includes: each)
-								ifTrue: [
-									collection at: i put: each.
-									i := i + 1]]].
+					ifTrue: [node namespaceNodesDo: [:each | self sortNode: each]].
 				(mustVisitAttributes
 					and: [node hasAttributes])
-					ifTrue: [
-						node attributeNodesDo: [:each |
-							(set includes: each)
-								ifTrue: [
-									collection at: i put: each.
-									i := i + 1]]]]].
+					ifTrue: [node attributeNodesDo: [:each |self sortNode: each]]].
+		totalSorted = nodeSetSize
+			ifTrue: [
+				nodeSet sortOrder: XPathDocumentSortOrder new.
+				^ self]].
 
-	i > nodeSet size
-		ifFalse: [self errorNodesLackSharedDocumentRoot].
-
-	nodeSet sortOrder: XPathDocumentSortOrder new.
+	self errorNodesLackSharedDocumentRoot.
 ]
 
 { #category : #private }
-XPathNodeSetSorter >> sortVisitingNodesWithSharedParent [
-	| collection set i |
-
-	collection := nodeSet collection.
-	set := nodeSet set.
-	i := 1.
-	sharedParentNode isElement
-		ifTrue: [
-			(mustVisitNamespaces
-				and: [sharedParentNode hasNamespaceNodes])
-				ifTrue: [
-					sharedParentNode namespaceNodesDo: [:each |
-						(set includes: each)
-							ifTrue: [
-								collection at: i put: each.
-								i := i + 1]]].
-			(mustVisitAttributes
-				and: [sharedParentNode hasAttributes])
-				ifTrue: [
-					sharedParentNode attributeNodesDo: [:each |
-						(set includes: each)
-							ifTrue: [
-								collection at: i put: each.
-								i := i + 1]]]].
-
-	sharedParentNode nodesDo: [:node |
-		(set includes: node)
-			ifTrue: [
-				collection at: i put: node.
-				i := i + 1]].
+XPathNodeSetSorter >> sortVisitingNodesOfSharedParent: aSharedParent [
+	(mustVisitNamespaces
+		and: [aSharedParent hasNamespaceNodes])
+		ifTrue: [aSharedParent namespaceNodesDo: [:each | self sortNode: each]].
+	(mustVisitAttributes
+		and: [aSharedParent hasAttributes])
+		ifTrue: [aSharedParent attributeNodesDo: [:each | self sortNode: each]].
+	aSharedParent hasChildren
+		ifTrue: [aSharedParent nodesDo: [:each | self sortNode: each]].
 
 	nodeSet sortOrder:
 		(mustVisitNamespaces | mustVisitAttributes
