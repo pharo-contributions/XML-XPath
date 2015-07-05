@@ -1,6 +1,19 @@
 Extension { #name : #XMLElementTest }
 
 { #category : #'*XPath-Tests' }
+XMLElementTest >> testAttributeAxis [
+	| element list |
+
+	super testAttributeAxis.
+
+	element := self newElementWithAttributes.
+	list := element @ '*'.
+	self
+		assert: list = (XPathNodeSet newFrom: element attributeNodes);
+		assertList: list hasSortOrder: XPathElementMetaNodeDocumentSortOrder.
+]
+
+{ #category : #'*XPath-Tests' }
 XMLElementTest >> testHasExpandedName [
 	self assert: self nodeClass new hasExpandedName
 ]
@@ -31,6 +44,22 @@ XMLElementTest >> testHasPrefixedNamespaceURI [
 
 	element name: 'prefix:test'.
 	self assert: (element hasPrefixedNamespaceURI: 'prefixNS').
+]
+
+{ #category : #'*XPath-Tests' }
+XMLElementTest >> testNamespaceAxis [
+	| element list |
+
+	element := self nodeClass new.
+	element declareNamespaces: self namespaces.
+	list := element @@ '*'.
+	self
+		assert: list = (XPathNodeSet newFrom: element namespaceNodes);
+		assertList: list hasSortOrder: XPathElementMetaNodeDocumentSortOrder.
+
+	element := self nodeClass new.
+	element configuration usesNamespaces: false.
+	self assert: (element @@ 'node()') isEmpty.
 ]
 
 { #category : #'*XPath-Tests' }

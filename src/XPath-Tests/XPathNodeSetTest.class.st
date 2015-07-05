@@ -664,18 +664,17 @@ XPathNodeSetTest >> testSelect [
 
 { #category : #tests }
 XPathNodeSetTest >> testSort [
-	| sorted |
-
 	super testSort.
 
 	self
 		assertList: self listWithElements sort
 		hasSortOrder: XPathLevelDocumentSortOrder.
-
-	sorted := self listWithElements copyWith: self newElement.
 	self
-		should: [sorted sort]
+		should: [(self listWithElements copyWith: self newElement) sort]
 		raise: XPathDOMException.
+	self
+		shouldnt: [self emptyList sort]
+		raise: Error.
 
 	self assertHasUnknownSortOrder:
 		(self listWithElements
@@ -690,6 +689,12 @@ XPathNodeSetTest >> testSorted [
 	self
 		assertList: self listWithElements sorted
 		hasSortOrder: XPathLevelDocumentSortOrder.
+	self
+		should: [(self listWithElements copyWith: self newElement) sorted]
+		raise: XPathDOMException.
+	self
+		shouldnt: [self emptyList sorted]
+		raise: Error.
 ]
 
 { #category : #tests }

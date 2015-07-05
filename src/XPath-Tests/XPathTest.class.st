@@ -1556,18 +1556,21 @@ XPathTest >> testUnion [
 		union
 			addLast: each;
 			addAll: each namespaceNodes;
-			addAll: each attributeNodes].
+			addAll: each attributeNodes;
+			addAll: each elements].
 	self assert:
 		(XPath
-			for: 'addressbook/person/@* | addressbook/person/@@* | addressbook/person'
+			for: 'addressbook/person/@* | */person/@@* | addressbook/person | */person/*'
 			in: document) = union.
 
-	union := union select: [:each |
-		each = union first
-			or: [each parent = union first]].
+	union removeAll.
+	(document allElementsNamed: 'person') first
+		namespaceNodesDo: [:each | union addLast: each];
+		attributeNodesDo: [:each | union addLast: each];
+		nodesDo: [:each | union addLast: each].
 	self assert:
 		(XPath
-			for: 'addressbook/person[1]/@* | addressbook/person[1]/@@* | addressbook/person[1]'
+			for: 'addressbook/person[1]/node() | */person[1]/@* | addressbook/person[1]/@@*'
 			in: document) = union.
 ]
 
