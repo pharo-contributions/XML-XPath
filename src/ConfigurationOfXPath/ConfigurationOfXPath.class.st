@@ -204,8 +204,7 @@ ConfigurationOfXPath >> baseline10: spec [
 			with: [ spec includes: 'XPath-GemstoneCompatibility' ].
 		spec
 			package: 'XPath-GemstoneCompatibility'
-			with: [ spec requires: 'XPath-Core' ].
-		spec preLoadDoIt: #preLoadForGemstone. ].
+			with: [ spec requires: 'XPath-Core' ]. ].
 ]
 
 { #category : #baselines }
@@ -232,14 +231,6 @@ ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
 	spec for: #'common' version: '1.3.4-baseline'.
-]
-
-{ #category : #preloading }
-ConfigurationOfXPath >> preLoadForGemstone [
-	"the GS package overrides methods, so it must be loaded whenever the project
-	is loaded, and removing it first forces Metacello to load it again"
-	
-	(MCPackage named: 'XML-XPath-GemstoneCompatibility') unload
 ]
 
 { #category : #accessing }
