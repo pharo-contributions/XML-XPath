@@ -204,7 +204,8 @@ ConfigurationOfXPath >> baseline10: spec [
 			with: [ spec includes: 'XPath-GemstoneCompatibility' ].
 		spec
 			package: 'XPath-GemstoneCompatibility'
-			with: [ spec requires: 'XPath-Core' ]. ].
+			with: [ spec requires: 'XPath-Core' ].
+		spec postLoadDoIt: #'postLoadForGemstone:spec:'. ].
 ]
 
 { #category : #baselines }
@@ -214,7 +215,7 @@ ConfigurationOfXPath >> baseline134: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2' ].
+			spec project: 'XMLParser' with: #'release-2.4' ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.5' ]
 ]
 
@@ -231,6 +232,24 @@ ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
 	spec for: #'common' version: '1.3.4-baseline'.
+]
+
+{ #category : #'post loading' }
+ConfigurationOfXPath >> postLoadForGemstone: aLoader spec: aSpec [
+	"this forces the GS package to always be loaded after, even if it hasn't
+	changed between versions, because it needs to override methods in the base"
+
+	| packageName fileName |
+
+	packageName := 'XPath-GemstoneCompatibility'.
+	fileName :=
+		(aSpec
+			packageNamed: packageName
+			ifAbsent: [^ self]) file.
+	Gofer it
+		url: aSpec repositories list first name;
+		package: packageName constraint: [:version | version name = fileName];
+		load.
 ]
 
 { #category : #accessing }
