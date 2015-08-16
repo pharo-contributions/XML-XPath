@@ -342,25 +342,25 @@ XPathNodeSet >> asXPathString [
 
 { #category : #copying }
 XPathNodeSet >> copy [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ super copy sortOrderFrom: self
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyAfter: anObject [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super copyAfter: anObject) sortOrderFrom: self
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyAfterLast: anObject [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super copyAfterLast: anObject) sortOrderFrom: self
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyFrom: aStartIndex to: anEndIndex [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super
 		copyFrom: aStartIndex
 		to: anEndIndex) sortOrderFrom: self
@@ -368,25 +368,25 @@ XPathNodeSet >> copyFrom: aStartIndex to: anEndIndex [
 
 { #category : #copying }
 XPathNodeSet >> copyUpTo: anObject [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super copyUpTo: anObject) sortOrderFrom: self
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyUpToLast: anObject [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super copyUpToLast: anObject) sortOrderFrom: self
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyWithout: anObject [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super copyWithout: anObject) sortOrderFrom: self
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyWithoutAll: aCollection [
-	"copies that don't add or replace have same sort order"
+	"copies that don't add or replace keep sort order"
 	^ (super copyWithoutAll: aCollection) sortOrderFrom: self
 ]
 
@@ -498,6 +498,12 @@ XPathNodeSet >> sortOrder: aSortOrder [
 { #category : #private }
 XPathNodeSet >> sortOrderFrom: aNodeSet [
 	sortOrder := aNodeSet sortOrder
+]
+
+{ #category : #accessing }
+XPathNodeSet >> stringValue [
+	"returns XPath string-value for the first node in document order"
+	^ self asXPathString
 ]
 
 { #category : #accessing }
