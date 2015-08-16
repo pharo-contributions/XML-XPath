@@ -236,8 +236,10 @@ ConfigurationOfXPath >> development: spec [
 
 { #category : #'post loading' }
 ConfigurationOfXPath >> postLoadForGemstone: aLoader spec: aSpec [
-	"this forces the GS package to always be loaded after, even if it hasn't
-	changed between versions, because it needs to override methods in the base"
+	"This forces the GS package to always be loaded after, even if it hasn't
+	changed between versions, because it needs to override methods in the base.
+	
+	Can be removed, but may break upgrading on GS."
 
 	| packageName fileName |
 
@@ -269,7 +271,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.4.7'.
+	spec for: #'common' version: '1.4.8'.
 
 ]
 
@@ -801,5 +803,16 @@ ConfigurationOfXPath >> version147: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.56'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.47'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version148: spec [ 
+        <version: '1.4.8' imports: #('1.3.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.57'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.48'.
                 ].
 ]
