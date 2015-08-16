@@ -698,6 +698,18 @@ XPathNodeSetTest >> testSorted [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testStringValue [
+	| firstStringValue |
+
+	self assert: self emptyList stringValue = ''.
+
+	firstStringValue := self listWithElements stringValues first.
+	self
+		assert: self listWithElements stringValue = firstStringValue;
+		assert: (self listWithElements last <<< 'node()') stringValue = firstStringValue.
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testStringValues [
 	self
 		assert: self emptyList stringValues isEmpty;
