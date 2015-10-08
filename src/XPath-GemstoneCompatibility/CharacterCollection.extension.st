@@ -53,8 +53,40 @@ CharacterCollection >> //>= anObject [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> //? aThreeArgumentBlockOrNumber [
+	XPathTypeException signal: 'Cannot filter strings'
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asAttributeNodeTestBlock [
+	"parses string as a node test to produce a node test block where attributes
+	are the principal node type"
+	^ (XPathNodeTestParser
+		on: self
+		for:
+			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
+				XPathNodeTestParserAttributeContext)) parse
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asNamespaceNodeTestBlock [
+	"parses string as a node test to produce a node test block where namespaces
+	are the principal node type"
+	^ (XPathNodeTestParser
+		on: self
+		for:
+			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
+				XPathNodeTestParserNamespaceContext)) parse
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asNodeSetFilters [
+	^ #()
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
