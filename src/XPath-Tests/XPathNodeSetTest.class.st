@@ -422,8 +422,8 @@ XPathNodeSetTest >> testCopyWithoutAll [
 { #category : #tests }
 XPathNodeSetTest >> testDefaultSortOrder [
 	self
-		assertList: self emptyList hasSortOrder: XPathLevelDocumentSortOrder;
-		assertList: self listWithSingleElement hasSortOrder: XPathLevelDocumentSortOrder;
+		assertList: self emptyList hasSortOrder: XPathDocumentSortOrder;
+		assertList: self listWithSingleElement hasSortOrder: XPathDocumentSortOrder;
 		assertHasUnknownSortOrder: self listWithElements
 ]
 
@@ -634,23 +634,6 @@ XPathNodeSetTest >> testReplaceFromToWithStartingAt [
 ]
 
 { #category : #tests }
-XPathNodeSetTest >> testReverseReadStream [
-	| stream |
-
-	stream := self emptyList reverseReadStream.
-	self assert: stream atEnd.
-
-	stream := self listWithElements reverseReadStream.
-	self listElements reversed withIndexDo: [:each :i |
-		self
-			assert: stream position = (i - 1);
-			assert: stream peek = each;
-			assert: stream next = each;
-			assert: stream position = i].
-	self assert: stream atEnd.
-]
-
-{ #category : #tests }
 XPathNodeSetTest >> testSelect [
 	| list |
 
@@ -668,7 +651,7 @@ XPathNodeSetTest >> testSort [
 
 	self
 		assertList: self listWithElements sort
-		hasSortOrder: XPathLevelDocumentSortOrder.
+		hasSortOrder: XPathDocumentSortOrder.
 	self
 		should: [(self listWithElements copyWith: self newElement) sort]
 		raise: XPathDOMException.
@@ -688,7 +671,7 @@ XPathNodeSetTest >> testSorted [
 
 	self
 		assertList: self listWithElements sorted
-		hasSortOrder: XPathLevelDocumentSortOrder.
+		hasSortOrder: XPathDocumentSortOrder.
 	self
 		should: [(self listWithElements copyWith: self newElement) sorted]
 		raise: XPathDOMException.

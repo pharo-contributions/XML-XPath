@@ -52,12 +52,12 @@ XMLNodeWithElementsTest >> testChildAxis [
 				list := each / 'node()'.
 				self
 					assert: list = each nodes;
-					assertList: list hasSortOrder: XPathLevelDocumentSortOrder.
+					assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 				list := each / '*'.
 				self
 					assert: list = each elements;
-					assertList: list hasSortOrder: XPathLevelDocumentSortOrder.]
+					assertList: list hasSortOrder: XPathDocumentSortOrder.]
 			ifFalse: [
 				self
 					assert: (each / 'node()') isEmpty;
@@ -93,7 +93,7 @@ XMLNodeWithElementsTest >> testDescendantAxis [
 XMLNodeWithElementsTest >> testDescendantOrSelfAxis [
 	| nodeWithElements |
 
-	super testDescendantAxis.
+	super testDescendantOrSelfAxis.
 
 	nodeWithElements := self newNodeWithElements.
 	nodeWithElements allNodesDo: [:each |
@@ -158,12 +158,12 @@ XMLNodeWithElementsTest >> testFollowingSiblingAxis [
 				ifFalse: [XPathNodeSet new].
 		self
 			assert: list = followingSiblings;
-			assertList: list hasSortOrder: XPathLevelDocumentSortOrder.
+			assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 		list := each >>> '*'.
 		self
 			assert: list = followingSiblings elements;
-			assertList: list hasSortOrder: XPathLevelDocumentSortOrder].
+			assertList: list hasSortOrder: XPathDocumentSortOrder].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -204,10 +204,10 @@ XMLNodeWithElementsTest >> testPrecedingSiblingAxis [
 				ifFalse: [XPathNodeSet new].
 		self
 			assert: list = precedingSiblings;
-			assertList: list hasSortOrder: XPathLevelReverseDocumentSortOrder.
+			assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
 
 		list := each <<< '*'.
 		self
 			assert: list = precedingSiblings elements;
-			assertList: list hasSortOrder: XPathLevelReverseDocumentSortOrder].
+			assertList: list hasSortOrder: XPathReverseDocumentSortOrder].
 ]

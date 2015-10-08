@@ -70,14 +70,14 @@ XMLNodeTest >> testDescendantOrSelfAxis [
 	list := node //~ 'node()'.
 	self
 		assert: list = (XPathNodeSet with: node);
-		assertList: list hasSortOrder: XPathLevelDocumentSortOrder.
+		assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 	list := node //~ '*'.
 	node isElement
 		ifTrue: [
 			self
 				assert: list = (XPathNodeSet with: node);
-				assertList: list hasSortOrder: XPathLevelDocumentSortOrder]
+				assertList: list hasSortOrder: XPathDocumentSortOrder]
 		ifFalse: [self assert: list isEmpty].
 ]
 
@@ -194,14 +194,14 @@ XMLNodeTest >> testSelfAxis [
 	list := node ~ 'node()'.
 	self
 		assert: list = (XPathNodeSet with: node);
-		assertList: list hasSortOrder: XPathLevelDocumentSortOrder.
+		assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 	list := node ~ '*'.
 	node isElement
 		ifTrue: [
 			self
 				assert: list = (XPathNodeSet with: node);
-				assertList: list hasSortOrder: XPathLevelDocumentSortOrder]
+				assertList: list hasSortOrder: XPathDocumentSortOrder]
 		ifFalse: [self assert: list isEmpty].
 ]
 
