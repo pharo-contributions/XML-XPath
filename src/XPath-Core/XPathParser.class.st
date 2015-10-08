@@ -55,11 +55,6 @@ XPathParser >> errorExpectedName [
 ]
 
 { #category : #private }
-XPathParser >> errorExpectedRelativeLocationPath [
-	self errorExpected: 'relative location path'
-]
-
-{ #category : #private }
 XPathParser >> errorExpectedStringLiteral [
 	self errorExpected: 'single or double quoted string literal'
 ]

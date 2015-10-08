@@ -53,6 +53,11 @@ String >> //>= anObject [
 ]
 
 { #category : #'*XPath-Core-private' }
+String >> //? aThreeArgumentBlockOrNumber [
+	XPathTypeException signal: 'Cannot filter strings'
+]
+
+{ #category : #'*XPath-Core-private' }
 String >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
@@ -77,6 +82,11 @@ String >> asNamespaceNodeTestBlock [
 		for:
 			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
 				XPathNodeTestParserNamespaceContext)) parse
+]
+
+{ #category : #'*XPath-Core-converting' }
+String >> asNodeSetFilters [
+	^ #()
 ]
 
 { #category : #'*XPath-Core-converting' }

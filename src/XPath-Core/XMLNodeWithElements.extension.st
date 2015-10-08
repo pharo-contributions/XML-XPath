@@ -1,44 +1,50 @@
 Extension { #name : #XMLNodeWithElements }
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNodeWithElements >> / aNodeTestStringOrBlock [
+XMLNodeWithElements >> / aStringOrBlockOrNodeTestWithFilters [
 	"child axis"
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
 	self hasChildren
 		ifTrue: [
 			self nodesDo: [:each |
 				(nodeTestBlock value: each)
 					ifTrue: [nodeSet addLast: each]]].
-	^ nodeSet sortOrder: XPathLevelDocumentSortOrder new.
+	^ nodeSet
+		sortOrder: XPathDocumentSortOrder new;
+		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNodeWithElements >> // aNodeTestStringOrBlock [
+XMLNodeWithElements >> // aStringOrBlockOrNodeTestWithFilters [
 	"descendant axis"
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
 	self descendentNodesDo: [:each |
 		(nodeTestBlock value: each)
 			ifTrue: [nodeSet addLast: each]].
-	^ nodeSet sortOrder: XPathDocumentSortOrder new.
+	^ nodeSet
+		sortOrder: XPathDocumentSortOrder new;
+		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNodeWithElements >> //~ aNodeTestStringOrBlock [
+XMLNodeWithElements >> //~ aStringOrBlockOrNodeTestWithFilters [
 	"descendant-or-self axis"
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aNodeTestStringOrBlock asNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
 	self allNodesDo: [:each |
 		(nodeTestBlock value: each)
 			ifTrue: [nodeSet addLast: each]].
-	^ nodeSet sortOrder: XPathDocumentSortOrder new.
+	^ nodeSet
+		sortOrder: XPathDocumentSortOrder new;
+		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
 ]
 
 { #category : #'*XPath-Core-accessing' }

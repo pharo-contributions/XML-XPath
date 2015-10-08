@@ -1,33 +1,37 @@
 Extension { #name : #XMLElement }
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLElement >> @ aNodeTestStringOrBlock [
+XMLElement >> @ aStringOrBlockOrNodeTestWithFilters [
 	"attribute axis"
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aNodeTestStringOrBlock asAttributeNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asAttributeNodeTestBlock.
 	self hasAttributes
 		ifTrue: [
 			self attributeNodesDo: [:each |
 				(nodeTestBlock value: each)
 					ifTrue: [nodeSet addLast: each]]].
-	^ nodeSet sortOrder: XPathElementMetaNodeDocumentSortOrder new.
+	^ nodeSet
+		sortOrder: XPathDocumentSortOrder new;
+		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLElement >> @@ aNodeTestStringOrBlock [
+XMLElement >> @@ aStringOrBlockOrNodeTestWithFilters [
 	"namespace axis"
 	| nodeSet nodeTestBlock |
 
 	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aNodeTestStringOrBlock asNamespaceNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNamespaceNodeTestBlock.
 	self hasNamespaceNodes
 		ifTrue: [
 			self namespaceNodesDo: [:each |
 				(nodeTestBlock value: each)
 					ifTrue: [nodeSet addLast: each]]].
-	^ nodeSet sortOrder: XPathElementMetaNodeDocumentSortOrder new.
+	^ nodeSet
+		sortOrder: XPathDocumentSortOrder new;
+		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
 ]
 
 { #category : #'*XPath-Core-testing' }

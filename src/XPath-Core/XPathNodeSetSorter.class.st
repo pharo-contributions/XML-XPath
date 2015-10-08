@@ -1,5 +1,5 @@
 "
-Sorts an unsorted node set into document order.
+This class sorts an unsorted node set into document order in linear time by visiting every node in the document or visiting every node of a shared parent.
 "
 Class {
 	#name : #XPathNodeSetSorter,
@@ -103,8 +103,5 @@ XPathNodeSetSorter >> sortVisitingNodesOfSharedParent: aSharedParent [
 	aSharedParent hasChildren
 		ifTrue: [aSharedParent nodesDo: [:each | self sortNode: each]].
 
-	nodeSet sortOrder:
-		(mustVisitNamespaces | mustVisitAttributes
-			ifTrue: [XPathDocumentSortOrder new]
-			ifFalse: [XPathLevelDocumentSortOrder new]).
+	nodeSet sortOrder: XPathDocumentSortOrder new.
 ]

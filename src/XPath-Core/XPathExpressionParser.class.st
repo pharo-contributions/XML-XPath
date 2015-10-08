@@ -251,19 +251,10 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 	(inputStream peekFor: $/)
 		ifFalse: [^ false].
 
-	"// followed by a node test is the same as
-	descendant:: followed by the node test"
-	currentAxis axisSpecifier: 'descendant'.
-	nodeTestParser parse
-		ifTrue: [self peekForPredicates]
-		ifFalse: [
-			"// followed by an abbreviated step or step with an
-			explicit axis is the same as descendant-or-self::node()/
-			followed by the step"
-			currentAxis axisSpecifier: 'descendant-or-self'.
-			self startNodeTestForAnyNodeType.
-			self peekForStep
-				ifFalse: [self errorExpectedStep]].
+	currentAxis axisSpecifier: 'descendant-or-self'.
+	self startNodeTestForAnyNodeType.
+	self peekForStep
+		ifFalse: [self errorExpectedStep].
 	^ true.
 ]
 
@@ -285,9 +276,8 @@ XPathExpressionParser >> peekForAbbreviatedStep [
 					currentAxis resetToImplicitAxis.
 					^ true].
 			currentAxis axisSpecifier: 'self'].
-	self startNodeTestForAnyNodeType.
-
 	"abbreviated steps cannot have filters"
+	self startNodeTestForAnyNodeType.
 	^ true.
 ]
 
@@ -597,6 +587,7 @@ XPathExpressionParser >> peekForStep [
 	nodeTestParser parse
 		ifTrue: [
 			self peekForPredicates.
+			handler handleEndStep.
 			^ true]
 		ifFalse: [
 			currentAxis isImplicitAxis
@@ -638,7 +629,9 @@ XPathExpressionParser >> startNodeTestForAnyNodeType [
 	currentAxis isStartOfRelativeLocationPath
 		ifTrue: [handler handleStartRelativeLocationPath].
 	handler
+		handleStartStep;
 		handleAxis: currentAxis;
-		handleTestForAnyNodeType.
+		handleTestForAnyNodeType;
+		handleEndStep.
 	currentAxis resetToImplicitAxis.
 ]

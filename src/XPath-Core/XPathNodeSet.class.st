@@ -1,5 +1,5 @@
 "
-An XPath node set is an ordered node list that has no duplicates. Node sets produced by XPath expression evaluation will be sorted in either document order or reverse document order.
+This class is an ordered node list that has no duplicates.
 "
 Class {
 	#name : #XPathNodeSet,
@@ -32,42 +32,27 @@ XPathNodeSet class >> xPathNewFrom: anObject [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> % aNodeTestStringOrBlock [
+XPathNodeSet >> % aStringOrBlockOrNodeTestWithFilters [
 	"parent axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				parentAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first % aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		parentAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> %% aNodeTestStringOrBlock [
+XPathNodeSet >> %% aStringOrBlockOrNodeTestWithFilters [
 	"ancestor axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				ancestorAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first %% aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		ancestorAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> %%~ aNodeTestStringOrBlock [
+XPathNodeSet >> %%~ aStringOrBlockOrNodeTestWithFilters [
 	"ancestor-or-self axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				ancestorOrSelfAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first %%~ aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		ancestorOrSelfAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #enumerating }
@@ -77,29 +62,19 @@ XPathNodeSet >> & aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> / aNodeTestStringOrBlock [
+XPathNodeSet >> / aStringOrBlockOrNodeTestWithFilters [
 	"child axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				childAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first / aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		childAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> // aNodeTestStringOrBlock [
+XPathNodeSet >> // aStringOrBlockOrNodeTestWithFilters [
 	"descendant axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				descendantAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first // aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		descendantAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #private }
@@ -155,137 +130,84 @@ XPathNodeSet >> //>= anObject [
 ]
 
 { #category : #private }
+XPathNodeSet >> //? aThreeArgumentBlockOrNumber [
+	^ self sort filterWith: aThreeArgumentBlockOrNumber
+]
+
+{ #category : #private }
 XPathNodeSet >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> //~ aNodeTestStringOrBlock [
+XPathNodeSet >> //~ aStringOrBlockOrNodeTestWithFilters [
 	"descendant-or-self axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				descendantOrSelfAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first //~ aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		descendantOrSelfAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> << aNodeTestStringOrBlock [
+XPathNodeSet >> << aStringOrBlockOrNodeTestWithFilters [
 	"preceding axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				precedingAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first << aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		precedingAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> <<< aNodeTestStringOrBlock [
+XPathNodeSet >> <<< aStringOrBlockOrNodeTestWithFilters [
 	"preceding-sibling axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				precedingSiblingAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first <<< aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		precedingSiblingAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> >> aNodeTestStringOrBlock [
+XPathNodeSet >> >> aStringOrBlockOrNodeTestWithFilters [
 	"following axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				followingAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first >> aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		followingAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> >>> aNodeTestStringOrBlock [
+XPathNodeSet >> >>> aStringOrBlockOrNodeTestWithFilters [
 	"following-sibling axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				followingSiblingAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first >>> aNodeTestStringOrBlock].
-	^ self copyEmpty.
-]
-
-{ #category : #enumerating }
-XPathNodeSet >> ?? aThreeArgumentBlockOrPosition [
-	"filters with three-argument filter block or position index"
-	| copy |
-
-	copy := self copyEmpty.
-	aThreeArgumentBlockOrPosition isNumber
-		ifTrue: [
-			copy addLast:
-				(self
-					at: aThreeArgumentBlockOrPosition rounded
-					ifAbsent: [^ copy])]
-		ifFalse: [| contextSize |
-			contextSize := self size.
-			1 to: contextSize do: [:i | | node result |
-				node := self at: i.
-				(result :=
-					aThreeArgumentBlockOrPosition
-						value: node
-						value: i
-						value: contextSize) isNumber
-					ifTrue: [
-						result rounded = i
-							ifTrue: [copy addLast: node]]
-					ifFalse: [
-						result asXPathBoolean
-							ifTrue: [copy addLast: node]]].
-			"filtering does not change sort order"
-			copy sortOrderFrom: self].
-	^ copy.
+	^ self sortOrder
+		followingSiblingAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> @ aNodeTestStringOrBlock [
+XPathNodeSet >> @ aStringOrBlockOrNodeTestWithFilters [
 	"attribute axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				attributeAxisOn: self
-				select: aNodeTestStringOrBlock asAttributeNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first @ aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		attributeAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> @@ aNodeTestStringOrBlock [
+XPathNodeSet >> @@ aStringOrBlockOrNodeTestWithFilters [
 	"namespace axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				namespaceAxisOn: self
-				select: aNodeTestStringOrBlock asNamespaceNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first @@ aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		namespaceAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #enumerating }
 XPathNodeSet >> \ aNodeSet [
 	"redefined here for portability"
 	^ self difference: aNodeSet
+]
+
+{ #category : #adding }
+XPathNodeSet >> addAllIfNotPresent: aNodeCollection [
+	1 to: aNodeCollection size do: [:i | | node |
+		node := aNodeCollection at: i.
+		(self includes: node)
+			ifFalse: [self addLast: node]].
+	^ aNodeCollection.
 ]
 
 { #category : #private }
@@ -395,6 +317,97 @@ XPathNodeSet >> difference: aNodeSet [
 	^ (self copyWithoutAll: aNodeSet) sort
 ]
 
+{ #category : #private }
+XPathNodeSet >> filterEachInSeparateContextWith: aThreeArgumentBlockOrNumber [
+	| copy |
+
+	aThreeArgumentBlockOrNumber isNumber
+		ifTrue: [
+			aThreeArgumentBlockOrNumber rounded = 1
+				ifTrue: [copy := self]
+				ifFalse: [copy := self copyEmpty]]
+		ifFalse: [
+			copy := self copyEmpty.
+			1 to: self size do: [:i | | node result |
+				node := self at: i.
+				(result :=
+					aThreeArgumentBlockOrNumber
+						value: node
+						value: 1
+						value: 1) isNumber
+						ifTrue: [
+							result rounded = 1
+								ifTrue: [copy addLast: node]]
+						ifFalse: [
+							result asXPathBoolean
+								ifTrue: [copy addLast: node]]]].
+	"filtering cannot change the sort order"
+	^ copy sortOrderFrom: self.
+]
+
+{ #category : #private }
+XPathNodeSet >> filterEachInSeparateContextWithAll: aFilterCollection [
+	| filteredNodeSet |
+
+	filteredNodeSet := self.
+	aFilterCollection size > 0
+		ifTrue: [
+			"to:do: for speed"
+			1 to: aFilterCollection size do: [:i |
+				filteredNodeSet size > 0
+					ifFalse: [^ filteredNodeSet].
+				filteredNodeSet :=
+					filteredNodeSet filterEachInSeparateContextWith:
+						(aFilterCollection at: i)]].
+	^ filteredNodeSet.
+]
+
+{ #category : #private }
+XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
+	| copy |
+
+	copy := self copyEmpty.
+	aThreeArgumentBlockOrNumber isNumber
+		ifTrue: [
+			copy addLast:
+				(self
+					at: aThreeArgumentBlockOrNumber rounded
+					ifAbsent: [^ copy])]
+		ifFalse: [| contextSize |
+			contextSize := self size.
+			1 to: contextSize do: [:i | | node result |
+				node := self at: i.
+				(result :=
+					aThreeArgumentBlockOrNumber
+						value: node
+						value: i
+						value: contextSize) isNumber
+					ifTrue: [
+						result rounded = i
+							ifTrue: [copy addLast: node]]
+					ifFalse: [
+						result asXPathBoolean
+							ifTrue: [copy addLast: node]]]].
+	"filtering cannot change the sort order"
+	^ copy sortOrderFrom: self.
+]
+
+{ #category : #private }
+XPathNodeSet >> filterWithAll: aFilterCollection [
+	| filteredNodeSet |
+
+	filteredNodeSet := self.
+	aFilterCollection size > 0
+		ifTrue: [
+			"to:do: for speed"
+			1 to: aFilterCollection size do: [:i |
+				filteredNodeSet size > 0
+					ifFalse: [^ filteredNodeSet].
+				filteredNodeSet :=
+					filteredNodeSet filterWith: (aFilterCollection at: i)]].
+	^ filteredNodeSet.
+]
+
 { #category : #accessing }
 XPathNodeSet >> firstInDocumentOrder [
 	^ self sortOrder firstInDocumentOrderFrom: self
@@ -450,11 +463,6 @@ XPathNodeSet >> reverseInPlaceFrom: aStart to: anEnd [
 			end := end - 1].
 ]
 
-{ #category : #converting }
-XPathNodeSet >> reverseReadStream [
-	^ XPathReverseReadStream on: self
-]
-
 { #category : #enumerating }
 XPathNodeSet >> select: aBlock [
 	"select doesn't change sort order"
@@ -486,7 +494,7 @@ XPathNodeSet >> sortOrder [
 				ifTrue: [sortOrder := XPathUnknownSortOrder new]
 				ifFalse: [
 					"safe for node sets with <= 1 node"
-					sortOrder := XPathLevelDocumentSortOrder new]].
+					sortOrder := XPathDocumentSortOrder new]].
 	^ sortOrder.
 ]
 
@@ -657,14 +665,9 @@ XPathNodeSet >> | aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> ~ aNodeTestStringOrBlock [
+XPathNodeSet >> ~ aStringOrBlockOrNodeTestWithFilters [
 	"self axis"
-	self size > 1
-		ifTrue: [
-			^ self sortOrder
-				selfAxisOn: self
-				select: aNodeTestStringOrBlock asNodeTestBlock].
-	self size = 1
-		ifTrue: [^ self first ~ aNodeTestStringOrBlock].
-	^ self copyEmpty.
+	^ self sortOrder
+		selfAxisOn: self
+		select: aStringOrBlockOrNodeTestWithFilters
 ]

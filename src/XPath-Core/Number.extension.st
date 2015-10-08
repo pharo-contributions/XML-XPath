@@ -53,6 +53,11 @@ Number >> //>= anObject [
 ]
 
 { #category : #'*XPath-Core-private' }
+Number >> //? aThreeArgumentBlockOrNumber [
+	XPathTypeException signal: 'Cannot filter numbers'
+]
+
+{ #category : #'*XPath-Core-private' }
 Number >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]

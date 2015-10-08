@@ -7,14 +7,11 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
-{ #category : #private }
-XPathDocumentSortOrder >> documentOrderOn: aNodeSet do: aBlock [
-	aNodeSet do: aBlock
-]
-
-{ #category : #private }
-XPathDocumentSortOrder >> documentOrderReadStreamOn: aNodeSet [
-	^ aNodeSet readStream
+{ #category : #enumerating }
+XPathDocumentSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+	^ (super
+		attributeAxisOn: aNodeSet
+		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
 ]
 
 { #category : #sorting }
@@ -27,12 +24,24 @@ XPathDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 	^ aNodeSet first
 ]
 
-{ #category : #private }
-XPathDocumentSortOrder >> reverseDocumentOrderOn: aNodeSet do: aBlock [
-	aNodeSet reverseDo: aBlock
+{ #category : #enumerating }
+XPathDocumentSortOrder >> namespaceAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+	^ (super
+		namespaceAxisOn: aNodeSet
+		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
 ]
 
-{ #category : #private }
-XPathDocumentSortOrder >> reverseDocumentOrderReadStreamOn: aNodeSet [
-	^ aNodeSet reverseReadStream
+{ #category : #enumerating }
+XPathDocumentSortOrder >> parentAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+	"this is a document order axis according to the spec"
+	^ (super
+		parentAxisOn: aNodeSet
+		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+]
+
+{ #category : #enumerating }
+XPathDocumentSortOrder >> selfAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+	^ (super
+		selfAxisOn: aNodeSet
+		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
 ]

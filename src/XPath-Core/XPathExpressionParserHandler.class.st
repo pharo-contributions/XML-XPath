@@ -93,7 +93,7 @@ XPathExpressionParserHandler >> emitStartGrouping [
 XPathExpressionParserHandler >> emitStartPredicateBlock [
 	self incrementVariableNames.
 	outputStream
-		nextPutAll: '??[:';
+		nextPutAll: '//?[:';
 		nextPutAll: contextNodeVariable;
 		nextPutAll: ' :';
 		nextPutAll: contextPositionVariable;
@@ -119,7 +119,8 @@ XPathExpressionParserHandler >> handleAddition [
 
 { #category : #'handling - location paths' }
 XPathExpressionParserHandler >> handleAxis: anAxis [
-	outputStream nextPutAll: anAxis replacementSelector
+	outputStream nextPutAll: anAxis replacementSelector.
+	self emitStartGrouping.
 ]
 
 { #category : #'handling - operators' }
@@ -206,6 +207,11 @@ XPathExpressionParserHandler >> handleEndShortCircuited: anInteger [
 			anInteger timesRepeat: [self emitEndBlock]]
 ]
 
+{ #category : #'handling - location paths' }
+XPathExpressionParserHandler >> handleEndStep [
+	self emitEndGrouping
+]
+
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleEndUnaryExpression [
 	self emitEndGrouping
@@ -234,7 +240,7 @@ XPathExpressionParserHandler >> handleGreaterThanOrEqualTo [
 { #category : #'handling - predicates' }
 XPathExpressionParserHandler >> handleIntegerPredicate: anIntegerString [
 	outputStream
-		nextPutAll: '??';
+		nextPutAll: '//?';
 		nextPutAll: anIntegerString
 ]
 
@@ -395,6 +401,10 @@ XPathExpressionParserHandler >> handleStartShortCircuitAnd [
 XPathExpressionParserHandler >> handleStartShortCircuitOr [
 	self emitBooleanConversion.
 	outputStream nextPutAll: ' or:['.
+]
+
+{ #category : #'handling - location paths' }
+XPathExpressionParserHandler >> handleStartStep [
 ]
 
 { #category : #'handling - operators' }

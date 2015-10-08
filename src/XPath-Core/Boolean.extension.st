@@ -53,6 +53,11 @@ Boolean >> //>= anObject [
 ]
 
 { #category : #'*XPath-Core-private' }
+Boolean >> //? aThreeArgumentBlockOrNumber [
+	XPathTypeException signal: 'Cannot filter booleans'
+]
+
+{ #category : #'*XPath-Core-private' }
 Boolean >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
