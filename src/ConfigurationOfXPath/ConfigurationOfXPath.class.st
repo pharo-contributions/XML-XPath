@@ -42,11 +42,6 @@ ConfigurationOfXPath class >> catalogChangeLog [
 ]
 
 { #category : #catalog }
-ConfigurationOfXPath class >> catalogContactInfo [
-	^ 'hernan.morales@gmail.com'
-]
-
-{ #category : #catalog }
 ConfigurationOfXPath class >> catalogDescription [
 
 	^ 'An XPath library for Pharo, Squeak, and Gemstone leveraging the XML parsing capabilities of XMLParser. Supports XPath 1.0 syntax with extensions.'
@@ -217,6 +212,17 @@ ConfigurationOfXPath >> baseline134: spec [
 			spec blessing: #baseline.
 			spec project: 'XMLParser' with: #'release-2.4' ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.5' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline149: spec [
+	<version: '1.4.9-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.6' ]
 ]
 
 { #category : #accessing }
@@ -814,5 +820,16 @@ ConfigurationOfXPath >> version148: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.57'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.48'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version149: spec [ 
+        <version: '1.4.9' imports: #('1.4.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.58'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.49'.
                 ].
 ]
