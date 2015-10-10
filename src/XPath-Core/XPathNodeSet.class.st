@@ -350,15 +350,13 @@ XPathNodeSet >> filterEachInSeparateContextWithAll: aFilterCollection [
 	| filteredNodeSet |
 
 	filteredNodeSet := self.
-	aFilterCollection size > 0
-		ifTrue: [
-			"to:do: for speed"
-			1 to: aFilterCollection size do: [:i |
-				filteredNodeSet size > 0
-					ifFalse: [^ filteredNodeSet].
-				filteredNodeSet :=
-					filteredNodeSet filterEachInSeparateContextWith:
-						(aFilterCollection at: i)]].
+	"to:do: for speed"
+	1 to: aFilterCollection size do: [:i |
+		filteredNodeSet size > 0
+			ifFalse: [^ filteredNodeSet].
+		filteredNodeSet :=
+			filteredNodeSet filterEachInSeparateContextWith:
+				(aFilterCollection at: i)].
 	^ filteredNodeSet.
 ]
 
@@ -397,14 +395,12 @@ XPathNodeSet >> filterWithAll: aFilterCollection [
 	| filteredNodeSet |
 
 	filteredNodeSet := self.
-	aFilterCollection size > 0
-		ifTrue: [
-			"to:do: for speed"
-			1 to: aFilterCollection size do: [:i |
-				filteredNodeSet size > 0
-					ifFalse: [^ filteredNodeSet].
-				filteredNodeSet :=
-					filteredNodeSet filterWith: (aFilterCollection at: i)]].
+	"to:do: for speed"
+	1 to: aFilterCollection size do: [:i |
+		filteredNodeSet size > 0
+			ifFalse: [^ filteredNodeSet].
+		filteredNodeSet :=
+			filteredNodeSet filterWith: (aFilterCollection at: i)].
 	^ filteredNodeSet.
 ]
 

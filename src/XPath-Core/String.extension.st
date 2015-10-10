@@ -62,7 +62,7 @@ String >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core-converting' }
+{ #category : #'*XPath-Core-private' }
 String >> asAttributeNodeTestBlock [
 	"parses string as a node test to produce a node test block where attributes
 	are the principal node type"
@@ -73,7 +73,7 @@ String >> asAttributeNodeTestBlock [
 				XPathNodeTestParserAttributeContext)) parse
 ]
 
-{ #category : #'*XPath-Core-converting' }
+{ #category : #'*XPath-Core-private' }
 String >> asNamespaceNodeTestBlock [
 	"parses string as a node test to produce a node test block where namespaces
 	are the principal node type"
@@ -84,12 +84,12 @@ String >> asNamespaceNodeTestBlock [
 				XPathNodeTestParserNamespaceContext)) parse
 ]
 
-{ #category : #'*XPath-Core-converting' }
+{ #category : #'*XPath-Core-private' }
 String >> asNodeSetFilters [
 	^ #()
 ]
 
-{ #category : #'*XPath-Core-converting' }
+{ #category : #'*XPath-Core-private' }
 String >> asNodeTestBlock [
 	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser

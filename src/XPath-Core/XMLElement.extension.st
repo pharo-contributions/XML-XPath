@@ -1,37 +1,13 @@
 Extension { #name : #XMLElement }
 
-{ #category : #'*XPath-Core-enumerating - axis' }
-XMLElement >> @ aStringOrBlockOrNodeTestWithFilters [
-	"attribute axis"
-	| nodeSet nodeTestBlock |
-
-	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asAttributeNodeTestBlock.
+{ #category : #'*XPath-Core-private' }
+XMLElement >> attributeAxisSelect: anAttributeNodeTestBlock into: aNodeSet [
 	self hasAttributes
 		ifTrue: [
 			self attributeNodesDo: [:each |
-				(nodeTestBlock value: each)
-					ifTrue: [nodeSet addLast: each]]].
-	^ nodeSet
-		sortOrder: XPathDocumentSortOrder new;
-		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
-]
-
-{ #category : #'*XPath-Core-enumerating - axis' }
-XMLElement >> @@ aStringOrBlockOrNodeTestWithFilters [
-	"namespace axis"
-	| nodeSet nodeTestBlock |
-
-	nodeSet := self nodeSetClass new.
-	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNamespaceNodeTestBlock.
-	self hasNamespaceNodes
-		ifTrue: [
-			self namespaceNodesDo: [:each |
-				(nodeTestBlock value: each)
-					ifTrue: [nodeSet addLast: each]]].
-	^ nodeSet
-		sortOrder: XPathDocumentSortOrder new;
-		filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
+				(anAttributeNodeTestBlock value: each)
+					ifTrue: [aNodeSet addLast: each]]].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-testing' }
@@ -49,6 +25,16 @@ XMLElement >> hasNamespaceNodes [
 XMLElement >> hasPrefixedNamespaceURI: aURI [
 	^ self hasPrefix
 		and: [self namespaceURI = aURI]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLElement >> namespaceAxisSelect: aNamespaceNodeTestBlock into: aNodeSet [
+	self hasNamespaceNodes
+		ifTrue: [
+			self namespaceNodesDo: [:each |
+				(aNamespaceNodeTestBlock value: each)
+					ifTrue: [aNodeSet addLast: each]]].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-accessing' }
