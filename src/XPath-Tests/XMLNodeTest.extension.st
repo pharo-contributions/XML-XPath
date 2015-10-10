@@ -134,11 +134,6 @@ XMLNodeTest >> testIsNamespace [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testLastAncestorOrSelfIn [
-	self assert: (self nodeClass new lastAncestorOrSelfIn: self nodeClass new) isNil
-]
-
-{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testNamespaceAxis [
 	self
 		assert: (self nodeClass new @@ 'node()') isEmpty;

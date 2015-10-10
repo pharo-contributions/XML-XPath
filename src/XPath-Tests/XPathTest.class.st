@@ -1612,7 +1612,18 @@ XPathTest >> testSelfAxis [
 	self
 		assertNodeSet: (XPath for: ' /*/person/self::node()[1]' in: document)
 		hasNodes: (document allElementsNamed: 'person').
-	self assert: (XPath for: ' /*/person/self::node()[2]' in: document) isEmpty.
+	self
+		assertNodeSet: (XPath for: ' /*/person/self::node()[position() = 1]' in: document)
+		hasNodes: (document allElementsNamed: 'person').
+	self
+		assertNodeSet: (XPath for: ' /*/person/self::node()[position() - 0]' in: document)
+		hasNodes: (document allElementsNamed: 'person').
+	self
+		assert: (XPath for: ' /*/person/self::node()[2]' in: document) isEmpty;
+		assert: (XPath for: ' /*/person/self::node()[position() + 1]' in: document) isEmpty.
+	self
+		assertNodeSet: (XPath for: ' /*/person/self::node()[last() = 1]' in: document)
+		hasNodes: (document allElementsNamed: 'person').
 	self
 		assertNodeSet: (XPath for: ' //person[1]/attribute::node()/. ' in: document)
 		hasNodes: (document findElementNamed: 'person') attributeNodes.
