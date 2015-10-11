@@ -117,6 +117,11 @@ CharacterCollection >> asXPathString [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> hasNodeSetFilters [
+	^ false
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> xPathEqualsBoolean: aBoolean [
 	^ self asXPathBoolean = aBoolean
 ]
