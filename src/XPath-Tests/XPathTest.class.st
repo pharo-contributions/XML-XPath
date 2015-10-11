@@ -16,7 +16,7 @@ XPathTest >> assertNodeSet: aNodeSet hasNodes: aNodeCollection [
 ]
 
 { #category : #asserting }
-XPathTest >> assertNodeSet: aNodeSet hasSortOrder: aSortOrder. [
+XPathTest >> assertNodeSet: aNodeSet hasSortOrder: aSortOrder [
 	self assert: (aNodeSet sortOrder class == aSortOrder)
 ]
 
@@ -169,19 +169,19 @@ XPathTest >> testAsXPath [
 
 { #category : #tests }
 XPathTest >> testAttributeAxis [
-	| results |
+	| result expected |
 
-	results :=
+	result :=
 		XPath
 			for: 'addressbook/person/address/@city'
 			in: document.
-	self assert: results size = 4.
-	results do: [:each |
+	self assert: result size = 4.
+	result do: [:each |
 		self
 			assert: each class == XMLAttribute;
 			assert: each name = 'city'].
 	self assert:
-		(results collect: [:each | each value]) asArray =
+		(result collect: [:each | each value]) asArray =
 			#('Los Angeles' 'New York' 'Los Angeles' 'New York').
 
 	"attribute nodes don't have attributes"
@@ -190,14 +190,15 @@ XPathTest >> testAttributeAxis [
 			for: 'addressbook/person/address/@city/@city'
 			in: document) isEmpty.
 
-	results removeAll.
+	expected := XMLNodeList new.
 	(document allElementsNamed: 'person') allButLast do: [:each |
-		results addAll: each attributeNodes].
+		expected addAll: each attributeNodes].
+	result :=
+		(document allElementsNamed: 'person') last xPath:
+			'preceding-sibling::node()/attribute::node()'.
 	self
-		assertNodeSet:
-			((document allElementsNamed: 'person') last xPath:
-				'preceding-sibling::node()/attribute::node()')
-		hasNodes: results.
+		assert: result = expected;
+		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 ]
 
 { #category : #tests }
@@ -403,30 +404,30 @@ XPathTest >> testDescendantOrSelfAxis [
 
 { #category : #tests }
 XPathTest >> testDocumentOrderPreserving [
-	| result expected |
+	| expected result |
 
-	result := document xPath: '/descendant::node()/parent::node()[true()]'.
 	expected := (document allNodesSelect: [:each | each hasChildren]).
+	result := document xPath: '/descendant::node()/parent::node()[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	result := document xPath: '/descendant::node()/self::node()[true()]'.
 	expected := document allNodes allButFirst.
+	result := document xPath: '/descendant::node()/self::node()[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	result := document xPath: '/descendant::*/@*[true()]'.
-	expected := XMLNodeList new.
+	expected removeAll.
 	document allElementsDo: [:each | expected addAll: each attributeNodes].
+	result := document xPath: '/descendant::*/@*[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	result := namespacedDocument xPath: '/descendant::*/@@*[true()]'.
-	expected := XMLNodeList new.
+	expected removeAll.
 	namespacedDocument allElementsDo: [:each | expected addAll: each namespaceNodes].
+	result := namespacedDocument xPath: '/descendant::*/@@*[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
@@ -674,21 +675,34 @@ XPathTest >> testFileterExpressionLocationPath [
 	self
 		assertNodeSet: (document xPath: '(addressbook/*)[true()] / address')
 		hasNodes: (document allElementsNamed: 'address').
+
 	self
-		assertNodeSet: (document xPath: '/descendant::home-phone[1]')
+		assertNodeSet:
+			(document xPath: '/descendant::home-phone[1][2 - 1][position() = 1]')
 		hasNodes:
 			(XMLNodeList with: (document allElementsNamed: 'home-phone') first).
+	self assert:
+		(document xPath: '/descendant::home-phone[1][position() + 1]') isEmpty.
+
 	self
-		assertNodeSet: (document xPath: '//home-phone[1]')
-		hasNodes: (document allElementsNamed: 'home-phone') allButLast.
-	self
-		assertNodeSet: (document xPath: '/descendant::home-phone[2]')
+		assertNodeSet:
+			(document xPath: '//home-phone[1][1 + 0][position() = 1]')
 		hasNodes:
-			(XMLNodeList with: (document allElementsNamed: 'home-phone') second).
+			(document allElementsNamed: 'home-phone') allButLast.
 	self
-		assertNodeSet: (document xPath: '//home-phone[2]')
+		assertNodeSet:
+			(document xPath: '//home-phone[1 + 1][1][position() = 1]')
 		hasNodes:
 			(XMLNodeList with: (document allElementsNamed: 'home-phone') third).
+	self assert:
+		(document xPath: '//home-phone[position() = 1][1 + 1]') isEmpty.
+
+	self
+		assertNodeSet:
+			(document xPath: '/descendant::home-phone[2][1 + 0][position() = 1]')
+		hasNodes:
+			(XMLNodeList with: (document allElementsNamed: 'home-phone') second).
+
 	self
 		assertNodeSet:
 			(document xPath: '(addressbook)[true()] // email')
@@ -870,6 +884,16 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 ]
 
 { #category : #tests }
+XPathTest >> testInvalidFilterExpressionType [
+	#('1[true()]' '"string"[true()]' 'true()[true()]'
+		'(1)[true()]' '("string")[true()]' '(true())[true()]'
+	) do: [:each |
+		self
+			should: [each asXPath evaluate]
+			raise: XPathTypeException]
+]
+
+{ #category : #tests }
 XPathTest >> testInvalidNumberTokenizing [
 	self
 		should: ['. 1' asXPath evaluate]
@@ -883,16 +907,6 @@ XPathTest >> testInvalidNumberTokenizing [
 	self
 		should: ['1.2.' asXPath evaluate]
 		raise: XPathSyntaxException.
-]
-
-{ #category : #tests }
-XPathTest >> testInvalidTypeFilter [
-	#('1[true()]' '"string"[true()]' 'true()[true()]'
-		'(1)[true()]' '("string")[true()]' '(true())[true()]'
-	) do: [:each |
-		self
-			should: [each asXPath evaluate]
-			raise: XPathTypeException]
 ]
 
 { #category : #tests }
@@ -1321,6 +1335,36 @@ XPathTest >> testParentAxis [
 	self
 		assertNodeSet:
 			(XPath
+				for: 'addressbook/person/node()/parent::*[1][position()=1][last()=1]'
+				in: document)
+		hasNodes: (document allElementsNamed: 'person').
+	self assert:
+		(XPath
+			for: 'addressbook/person/node()/parent::*[2]'
+			in: document) isEmpty.
+	self assert:
+		(XPath
+			for: 'addressbook/person/node()/parent::*[position()+1]'
+			in: document) isEmpty.
+
+	self
+		assertNodeSet:
+			(XPath
+				for: 'parent::*[1][position()=1][last()=1]'
+				in: (document findElementNamed: 'person'))
+		hasNodes: (XMLNodeList with: document root).
+	self assert:
+		(XPath
+			for: 'parent::*[2]'
+			in: (document findElementNamed: 'person')) isEmpty.
+	self assert:
+		(XPath
+			for: 'parent::*[position() + 1]'
+			in: (document findElementNamed: 'person')) isEmpty.
+
+	self
+		assertNodeSet:
+			(XPath
 				for: 'addressbook/person/attribute::node()/parent::node()'
 				in: document)
 		hasNodes: (document allElementsNamed: 'person').
@@ -1533,36 +1577,36 @@ XPathTest >> testQualfiedNameTest [
 
 { #category : #tests }
 XPathTest >> testReverseDocumentOrderPreserving [
-	| result expected |
+	| expected result |
 
+	expected := document allNodes last ancestorNodes reversed.
 	result :=
 		document allNodes last xPath:
 			'ancestor-or-self::node()/parent::node()[true()]'.
-	expected := document allNodes last ancestorNodes reversed.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
+	expected := document allNodes last ancestorNodes reversed.
 	result :=
 		document allNodes last xPath:
 			'ancestor::node()/self::node()[true()]'.
-	expected := document allNodes last ancestorNodes reversed.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	result := document allNodes last xPath: 'ancestor::*/@*[true()]'.
-	expected := XMLNodeList new.
+	expected removeAll.
 	document allNodes last ancestorElements reverseDo: [:each |
 		expected addAll: each attributeNodes].
+	result := document allNodes last xPath: 'ancestor::*/@*[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	result := document allNodes last xPath: 'ancestor::*/@@*[true()]'.
-	expected := XMLNodeList new.
+	expected removeAll.
 	document allNodes last ancestorElements reverseDo: [:each |
 		expected addAll: each namespaceNodes].
+	result := document allNodes last xPath: 'ancestor::*/@@*[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
@@ -1601,29 +1645,35 @@ XPathTest >> testSelfAxis [
 		assertNodeSet: (XPath for: ' / self::node() ' in: document)
 		hasNodes: (XMLNodeList with: document).
 	self
-		assertNodeSet: (XPath for: ' /*/person/self::*' in: document)
+		assertNodeSet: (XPath for: ' /*/person/self::* ' in: document)
 		hasNodes: (document allElementsNamed: 'person').
 	self
-		assertNodeSet: (XPath for: ' /*/person/node()/self::node()' in: document)
+		assertNodeSet: (XPath for: ' /*/person/node()/self::node() ' in: document)
 		hasNodes:
 			(document allNodesSelect: [:each |
 				each hasParent
 					and: [each parent isElementNamed: 'person']]).
+
 	self
-		assertNodeSet: (XPath for: ' /*/person/self::node()[1]' in: document)
+		assertNodeSet:
+			(XPath
+				for: ' /*/person/self::node()[1][position() = 1][last() = 1] '
+				in: document)
 		hasNodes: (document allElementsNamed: 'person').
 	self
-		assertNodeSet: (XPath for: ' /*/person/self::node()[position() = 1]' in: document)
-		hasNodes: (document allElementsNamed: 'person').
+		assert: (XPath for: ' /*/person/self::node()[2] ' in: document) isEmpty;
+		assert: (XPath for: ' /*/person/self::node()[position() + 1] ' in: document) isEmpty.
+
 	self
-		assertNodeSet: (XPath for: ' /*/person/self::node()[position() - 0]' in: document)
-		hasNodes: (document allElementsNamed: 'person').
+		assertNodeSet:
+			(XPath
+				for: 'self::node()[1][position() = 1][last() = 1]'
+				in: document)
+		hasNodes: (XMLNodeList with: document).
 	self
-		assert: (XPath for: ' /*/person/self::node()[2]' in: document) isEmpty;
-		assert: (XPath for: ' /*/person/self::node()[position() + 1]' in: document) isEmpty.
-	self
-		assertNodeSet: (XPath for: ' /*/person/self::node()[last() = 1]' in: document)
-		hasNodes: (document allElementsNamed: 'person').
+		assert: (XPath for: 'self::node()[2]' in: document) isEmpty;
+		assert: (XPath for: 'self::node()[position() + 1]' in: document) isEmpty.
+
 	self
 		assertNodeSet: (XPath for: ' //person[1]/attribute::node()/. ' in: document)
 		hasNodes: (document findElementNamed: 'person') attributeNodes.
@@ -1788,43 +1838,46 @@ XPathTest >> testUndeclaredVariables [
 
 { #category : #tests }
 XPathTest >> testUnion [
-	| union |
+	| expected result |
 
-	union := document allElementsNamed: 'person'.
+	expected := document allElementsNamed: 'person'.
+	result := 
+		XPath
+			for:
+				'addressbook/person[position() = 1 or position() = 4] |
+				(addressbook/person[4]/ preceding-sibling::* [position() < 4])'
+			in: document.
 	self
-		assertNodeSet:
-			(XPath
-				for:
-					'addressbook/person[position() = 1 or position() = 4] |
-					(addressbook/person[4]/ preceding-sibling::* [position() < 4])'
-				in: document)
-		hasNodes: union.
+		assert: result = expected;
+		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	union removeAll.
+	expected removeAll.
 	document allElementsNamed: 'person' do: [:each |
-		union
+		expected
 			addLast: each;
 			addAll: each namespaceNodes;
 			addAll: each attributeNodes;
 			addAll: each elements].
+	result :=
+		XPath
+			for: 'addressbook/person/@* | */person/@@* | addressbook/person | */person/*'
+			in: document.
 	self
-		assertNodeSet:
-			(XPath
-				for: 'addressbook/person/@* | */person/@@* | addressbook/person | */person/*'
-				in: document)
-		hasNodes: union.
+		assert: result = expected;
+		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 
-	union removeAll.
+	expected removeAll.
 	(document allElementsNamed: 'person') first
-		namespaceNodesDo: [:each | union addLast: each];
-		attributeNodesDo: [:each | union addLast: each];
-		nodesDo: [:each | union addLast: each].
+		namespaceNodesDo: [:each | expected addLast: each];
+		attributeNodesDo: [:each | expected addLast: each];
+		nodesDo: [:each | expected addLast: each].
+	result :=
+		XPath
+			for: 'addressbook/person[1]/node() | */person[1]/@* | addressbook/person[1]/@@*'
+			in: document.
 	self
-		assertNodeSet:
-			(XPath
-				for: 'addressbook/person[1]/node() | */person[1]/@* | addressbook/person[1]/@@*'
-				in: document)
-		hasNodes: union.
+		assert: result = expected;
+		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
 ]
 
 { #category : #tests }
