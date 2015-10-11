@@ -21,9 +21,27 @@ XMLNodeWithChildren >> childAxisSelect: aNodeTestBlock into: aNodeSet [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self descendentNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock into: aNodeSet [
 	self descendentNodesDo: [:each |
 		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> descendantOrSelfAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self allNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]

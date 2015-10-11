@@ -26,3 +26,8 @@ BlockClosure >> asNodeSetFilters [
 BlockClosure >> asNodeTestBlock [
 	^ self
 ]
+
+{ #category : #'*XPath-Core-private' }
+BlockClosure >> hasNodeSetFilters [
+	^ false
+]

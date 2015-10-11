@@ -9,7 +9,7 @@ XMLNode >> % aStringOrBlockOrNodeTestWithFilters [
 			"this is a document order axis according to spec"
 			sortOrder: XPathDocumentSortOrder new;
 			filterEachInSeparateContextWithAll:
-					aStringOrBlockOrNodeTestWithFilters asNodeSetFilters
+				aStringOrBlockOrNodeTestWithFilters asNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
@@ -130,9 +130,30 @@ XMLNode >> allNodesReverseDo: aBlock [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> ancestorAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self ancestorNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> ancestorAxisSelect: aNodeTestBlock into: aNodeSet [
 	self ancestorNodesDo: [:each |
 		(aNodeTestBlock value: each)
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> ancestorOrSelfAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	((aNodeSet includes: self) not
+		and: [aNodeTestBlock value: self])
+		ifTrue: [aNodeSet addLast: self].
+	self ancestorNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -158,15 +179,28 @@ XMLNode >> childAxisSelect: aNodeTestBlock into: aNodeSet [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	^ aNodeSet
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> descendantAxisSelect: aNodeTestBlock into: aNodeSet [
 	^ aNodeSet
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> descendantOrSelfAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	((aNodeSet includes: self) not
+		and: [aNodeTestBlock value: self])
+		ifTrue: [aNodeSet addLast: self].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> descendantOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
-	^ self
-		selfAxisSelect: aNodeTestBlock
-		into: aNodeSet
+	(aNodeTestBlock value: self)
+		ifTrue: [aNodeSet addLast: self].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-accessing' }
@@ -178,6 +212,15 @@ XMLNode >> documentRoot [
 	documentRoot := self.
 	self ancestorNodesDo: [:each | documentRoot := each].
 	^ documentRoot.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> followingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self followingNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -199,6 +242,15 @@ XMLNode >> followingNodesDo: aBlock [
 					ifFalse: [
 						each = self
 							ifTrue: [visitedSelf := true]]]]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> followingSiblingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self followingSiblingNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -243,10 +295,28 @@ XMLNode >> nodeSetClass [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> parentAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	(self hasParent
+		and: [(aNodeSet includes: self parent) not
+			and: [aNodeTestBlock value: self parent]])
+		ifTrue: [aNodeSet addLast: self parent].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> parentAxisSelect: aNodeTestBlock into: aNodeSet [
 	(self hasParent
 		and: [aNodeTestBlock value: self parent])
 		ifTrue: [aNodeSet addLast: self parent].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> precedingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self precedingNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
+			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
@@ -269,6 +339,15 @@ XMLNode >> precedingNodesDo: aBlock [
 					ifFalse: [
 						each = self
 							ifTrue: [visitedSelf := true]]]]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> precedingSiblingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+	self precedingSiblingNodesDo: [:each |
+		((aNodeSet includes: each) not
+			and: [aNodeTestBlock value: each])
+			ifTrue: [aNodeSet addLast: each]].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }

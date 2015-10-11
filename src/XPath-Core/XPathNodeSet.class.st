@@ -201,13 +201,24 @@ XPathNodeSet >> \ aNodeSet [
 	^ self difference: aNodeSet
 ]
 
-{ #category : #adding }
-XPathNodeSet >> addAllIfNotPresent: aNodeCollection [
-	1 to: aNodeCollection size do: [:i | | node |
-		node := aNodeCollection at: i.
-		(self includes: node)
-			ifFalse: [self addLast: node]].
-	^ aNodeCollection.
+{ #category : #private }
+XPathNodeSet >> addAllIfNotPresentTo: aCollection [
+	"this inverts addAll: because addAll: uses do: and to:do: is needed for speed
+	and an includes: test avoids adding an already present element to the end of
+	a node set which requires left shifting everything after it by one"
+	1 to: self size do: [:i | | node |
+		node := self at: i.
+		(aCollection includes: node)
+			ifFalse: [aCollection addLast: node]]
+]
+
+{ #category : #private }
+XPathNodeSet >> addAllTo: aCollection [
+	"this inverts addAll: because addAll: uses do: and to:do: is needed for speed"
+	1 to: self size do: [:i | | node |
+		node := self at: i.
+		(aCollection includes: node)
+			ifFalse: [aCollection addLast: node]]
 ]
 
 { #category : #private }
@@ -352,8 +363,8 @@ XPathNodeSet >> filterEachInSeparateContextWithAll: aFilterCollection [
 	filteredNodeSet := self.
 	"to:do: for speed"
 	1 to: aFilterCollection size do: [:i |
-		filteredNodeSet size > 0
-			ifFalse: [^ filteredNodeSet].
+		filteredNodeSet isEmpty
+			ifTrue: [^ filteredNodeSet].
 		filteredNodeSet :=
 			filteredNodeSet filterEachInSeparateContextWith:
 				(aFilterCollection at: i)].
@@ -397,8 +408,8 @@ XPathNodeSet >> filterWithAll: aFilterCollection [
 	filteredNodeSet := self.
 	"to:do: for speed"
 	1 to: aFilterCollection size do: [:i |
-		filteredNodeSet size > 0
-			ifFalse: [^ filteredNodeSet].
+		filteredNodeSet isEmpty
+			ifTrue: [^ filteredNodeSet].
 		filteredNodeSet :=
 			filteredNodeSet filterWith: (aFilterCollection at: i)].
 	^ filteredNodeSet.

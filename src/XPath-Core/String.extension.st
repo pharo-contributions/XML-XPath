@@ -120,6 +120,11 @@ String >> asXPathString [
 ]
 
 { #category : #'*XPath-Core-private' }
+String >> hasNodeSetFilters [
+	^ false
+]
+
+{ #category : #'*XPath-Core-private' }
 String >> xPathEqualsBoolean: aBoolean [
 	^ self asXPathBoolean = aBoolean
 ]

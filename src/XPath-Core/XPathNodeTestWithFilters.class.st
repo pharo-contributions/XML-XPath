@@ -51,6 +51,11 @@ XPathNodeTestWithFilters >> filters [
 	^ filters
 ]
 
+{ #category : #testing }
+XPathNodeTestWithFilters >> hasNodeSetFilters [
+	^ self filters notEmpty
+]
+
 { #category : #accessing }
 XPathNodeTestWithFilters >> nodeTest [
 	^ nodeTest
