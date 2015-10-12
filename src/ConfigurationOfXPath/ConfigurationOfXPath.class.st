@@ -248,7 +248,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.3.4-baseline'.
+	spec for: #'common' version: '1.5.1-baseline'.
 ]
 
 { #category : #'post loading' }
