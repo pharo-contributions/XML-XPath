@@ -452,17 +452,10 @@ XPathNodeSet >> reject: aBlock [
 
 { #category : #private }
 XPathNodeSet >> reverseInPlace [
-	self
-		reverseInPlaceFrom: 1
-		to: collection size
-]
-
-{ #category : #private }
-XPathNodeSet >> reverseInPlaceFrom: aStart to: anEnd [
 	| start end |
 
-	start := aStart.
-	end := anEnd.
+	start := 1.
+	end := collection size.
 	[start < end]
 		whileTrue: [
 			self swap: start with: end.
