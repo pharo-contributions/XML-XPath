@@ -634,6 +634,26 @@ XPathNodeSetTest >> testReplaceFromToWithStartingAt [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testReverseInPlace [
+	| list |
+
+	list := self emptyList.
+	self
+		assert: list reverseInPlace == list;
+		assert: list = self emptyList.
+
+	list := self listWithSingleElement.
+	self
+		assert: list reverseInPlace == list;
+		assert: list = self listWithSingleElement.
+
+	list := self listWithElements.
+	self
+		assert: list reverseInPlace == list;
+		assert: list = (self listClass newFrom: self listElements reversed).
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testSelect [
 	| list |
 
