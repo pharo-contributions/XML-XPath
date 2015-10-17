@@ -135,6 +135,25 @@ XPathNodeSetTest >> testAddAllFirst [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testAddAllIfNotPresentTo [
+	| list listToAdd |
+
+	list := OrderedCollection new.
+	listToAdd := self emptyList.
+	self
+		assert: (listToAdd addAllIfNotPresentTo: list) == listToAdd;
+		assert: list isEmpty.
+
+	listToAdd := self listWithElements.
+	self
+		assert: (listToAdd addAllIfNotPresentTo: list) == listToAdd;
+		assert: list = self listElements asOrderedCollection;
+		assert: (listToAdd addAllIfNotPresentTo: list) == listToAdd;
+		assert: list = self listElements asOrderedCollection.
+
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testAddAllLast [
 	super testAddAllLast.
 
@@ -142,6 +161,25 @@ XPathNodeSetTest >> testAddAllLast [
 		(self listWithSortOrder
 			addAllLast: (Array with: self newElement);
 			yourself).
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAddAllTo [
+	| list listToAdd |
+
+	list := OrderedCollection new.
+	listToAdd := self emptyList.
+	self
+		assert: (listToAdd addAllTo: list) == listToAdd;
+		assert: list isEmpty.
+
+	listToAdd := self listWithElements.
+	self
+		assert: (listToAdd addAllTo: list) == listToAdd;
+		assert: list = self listElements asOrderedCollection;
+		assert: (listToAdd addAllTo: list) == listToAdd;
+		assert: list = (self listElements, self listElements) asOrderedCollection.
+
 ]
 
 { #category : #tests }
