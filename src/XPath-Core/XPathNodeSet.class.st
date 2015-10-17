@@ -215,10 +215,7 @@ XPathNodeSet >> addAllIfNotPresentTo: aCollection [
 { #category : #private }
 XPathNodeSet >> addAllTo: aCollection [
 	"this inverts addAll: because addAll: uses do: and to:do: is needed for speed"
-	1 to: self size do: [:i | | node |
-		node := self at: i.
-		(aCollection includes: node)
-			ifFalse: [aCollection addLast: node]]
+	1 to: self size do: [:i | aCollection addLast: (self at: i)]
 ]
 
 { #category : #private }
@@ -455,7 +452,7 @@ XPathNodeSet >> reverseInPlace [
 	| start end |
 
 	start := 1.
-	end := collection size.
+	end := self size.
 	[start < end]
 		whileTrue: [
 			self swap: start with: end.
