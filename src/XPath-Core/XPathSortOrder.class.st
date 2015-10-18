@@ -60,6 +60,11 @@ XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aStringOrBlockOrNodeTes
 	^ copy.
 ]
 
+{ #category : #converting }
+XPathSortOrder >> asReversedSortOrder [
+	self subclassResponsibility
+]
+
 { #category : #enumerating }
 XPathSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
 	| copy |

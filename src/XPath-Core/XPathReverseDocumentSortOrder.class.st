@@ -7,6 +7,11 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
+{ #category : #converting }
+XPathReverseDocumentSortOrder >> asReversedSortOrder [
+	^ XPathDocumentSortOrder new
+]
+
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
 	| copy |
@@ -31,9 +36,7 @@ XPathReverseDocumentSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBloc
 
 { #category : #sorting }
 XPathReverseDocumentSortOrder >> documentOrderSort: aNodeSet [
-	aNodeSet
-		reverseInPlace;
-		sortOrder: XPathDocumentSortOrder new
+	aNodeSet reverseInPlace
 ]
 
 { #category : #accessing }

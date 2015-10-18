@@ -60,7 +60,8 @@ XPathNodeSetSorter >> sort [
 		ifTrue: [
 			self prescanNodesForSharedParent
 				ifNil: [self sortVisitingAllNodes]
-				ifNotNil: [:sharedParent | self sortVisitingNodesOfSharedParent: sharedParent]]
+				ifNotNil: [:sharedParent | self sortVisitingNodesOfSharedParent: sharedParent]].
+	nodeSet sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #private }
@@ -85,9 +86,7 @@ XPathNodeSetSorter >> sortVisitingAllNodes [
 					and: [node hasAttributes])
 					ifTrue: [node attributeNodesDo: [:each |self sortNode: each]]].
 		totalSorted = nodeSetSize
-			ifTrue: [
-				nodeSet sortOrder: XPathDocumentSortOrder new.
-				^ self]].
+			ifTrue: [^ self]].
 
 	self errorNodesLackSharedDocumentRoot.
 ]
@@ -102,6 +101,4 @@ XPathNodeSetSorter >> sortVisitingNodesOfSharedParent: aSharedParent [
 		ifTrue: [aSharedParent attributeNodesDo: [:each | self sortNode: each]].
 	aSharedParent hasChildren
 		ifTrue: [aSharedParent nodesDo: [:each | self sortNode: each]].
-
-	nodeSet sortOrder: XPathDocumentSortOrder new.
 ]

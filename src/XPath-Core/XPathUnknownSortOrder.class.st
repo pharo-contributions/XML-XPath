@@ -7,6 +7,11 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
+{ #category : #converting }
+XPathUnknownSortOrder >> asReversedSortOrder [
+	^ self
+]
+
 { #category : #sorting }
 XPathUnknownSortOrder >> documentOrderSort: aNodeSet [
 	(XPathNodeSetSorter on: aNodeSet) sort
