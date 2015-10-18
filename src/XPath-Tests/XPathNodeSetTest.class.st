@@ -13,13 +13,6 @@ XPathNodeSetTest >> allowsDuplicates [
 ]
 
 { #category : #assertions }
-XPathNodeSetTest >> assertHasUnknownSortOrder: aList [
-	self
-		assertList: aList
-		hasSortOrder: XPathUnknownSortOrder
-]
-
-{ #category : #assertions }
 XPathNodeSetTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList [
 	super
 		assertList: aList
@@ -28,7 +21,7 @@ XPathNodeSetTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList
 	self
 		assert: aList set size = aList size;
 		assert: aList set = aThirdList set;
-		deny: aList set == aSecondList set.
+		deny: aList set == aSecondList set. "internal set must be copied"
 ]
 
 { #category : #assertions }
@@ -48,6 +41,13 @@ XPathNodeSetTest >> assertList: aList isCopyOf: aSecondList [
 		assert: aList set size = aList size;
 		assert: aList set = aSecondList set;
 		deny: aList set == aSecondList set.
+]
+
+{ #category : #assertions }
+XPathNodeSetTest >> assertListHasUnknownSortOrder: aList [
+	self
+		assertList: aList
+		hasSortOrder: XPathUnknownSortOrder
 ]
 
 { #category : #accessing }
@@ -88,7 +88,7 @@ XPathNodeSetTest >> sortBlock [
 XPathNodeSetTest >> testAdd [
 	super testAdd.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			add: self newElement;
 			yourself).
@@ -98,7 +98,7 @@ XPathNodeSetTest >> testAdd [
 XPathNodeSetTest >> testAddAfter [
 	super testAddAfter.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			add: self newElement after: self singleElement;
 			yourself).
@@ -108,7 +108,7 @@ XPathNodeSetTest >> testAddAfter [
 XPathNodeSetTest >> testAddAfterIndex [
 	super testAddAfterIndex.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			add: self newElement afterIndex: 1;
 			yourself).
@@ -118,7 +118,7 @@ XPathNodeSetTest >> testAddAfterIndex [
 XPathNodeSetTest >> testAddAll [
 	super testAddAll.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			addAll: (Array with: self newElement);
 			yourself).
@@ -128,7 +128,7 @@ XPathNodeSetTest >> testAddAll [
 XPathNodeSetTest >> testAddAllFirst [
 	super testAddAllFirst.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			addAllFirst: (Array with: self newElement);
 			yourself).
@@ -157,7 +157,7 @@ XPathNodeSetTest >> testAddAllIfNotPresentTo [
 XPathNodeSetTest >> testAddAllLast [
 	super testAddAllLast.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			addAllLast: (Array with: self newElement);
 			yourself).
@@ -186,7 +186,7 @@ XPathNodeSetTest >> testAddAllTo [
 XPathNodeSetTest >> testAddBefore [
 	super testAddBefore.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			add: self newElement before: self singleElement;
 			yourself).
@@ -196,7 +196,7 @@ XPathNodeSetTest >> testAddBefore [
 XPathNodeSetTest >> testAddBeforeIndex [
 	super testAddBeforeIndex.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			add: self newElement beforeIndex: 1;
 			yourself).
@@ -206,7 +206,7 @@ XPathNodeSetTest >> testAddBeforeIndex [
 XPathNodeSetTest >> testAddFirst [
 	super testAddFirst.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			addFirst: self newElement;
 			yourself).
@@ -216,7 +216,7 @@ XPathNodeSetTest >> testAddFirst [
 XPathNodeSetTest >> testAddLast [
 	super testAddLast.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			addLast: self newElement;
 			yourself).
@@ -298,7 +298,7 @@ XPathNodeSetTest >> testAsXPathString [
 XPathNodeSetTest >> testAtPut [
 	super testAtPut.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithSortOrder
 			at: 1 put: self newElement;
 			yourself).
@@ -369,7 +369,7 @@ XPathNodeSetTest >> testCopyReplaceAllWith [
 	super testCopyReplaceAllWith.
 
 	list := self listWithSortOrder.
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(list
 			copyReplaceAll: self listElements
 			with: self listElements).
@@ -382,7 +382,7 @@ XPathNodeSetTest >> testCopyReplaceFromToWith [
 	super testCopyReplaceFromToWith.
 
 	list := self listWithSortOrder.
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(list
 			copyReplaceFrom: 1
 			to: list size
@@ -420,7 +420,7 @@ XPathNodeSetTest >> testCopyWith [
 	super testCopyWith.
 
 	list := self listWithSortOrder.
-	self assertHasUnknownSortOrder: (list copyWith: self newElement).
+	self assertListHasUnknownSortOrder: (list copyWith: self newElement).
 ]
 
 { #category : #tests }
@@ -430,7 +430,7 @@ XPathNodeSetTest >> testCopyWithFirst [
 	super testCopyWithFirst.
 
 	list := self listWithSortOrder.
-	self assertHasUnknownSortOrder: (list copyWithFirst: self newElement).
+	self assertListHasUnknownSortOrder: (list copyWithFirst: self newElement).
 ]
 
 { #category : #tests }
@@ -462,7 +462,7 @@ XPathNodeSetTest >> testDefaultSortOrder [
 	self
 		assertList: self emptyList hasSortOrder: XPathDocumentSortOrder;
 		assertList: self listWithSingleElement hasSortOrder: XPathDocumentSortOrder;
-		assertHasUnknownSortOrder: self listWithElements
+		assertListHasUnknownSortOrder: self listWithElements
 ]
 
 { #category : #tests }
@@ -654,7 +654,7 @@ XPathNodeSetTest >> testReplaceFromToWith [
 		replaceFrom: 1
 		to: list size
 		with: self listElements.
-	self assertHasUnknownSortOrder: list.
+	self assertListHasUnknownSortOrder: list.
 ]
 
 { #category : #tests }
@@ -668,7 +668,38 @@ XPathNodeSetTest >> testReplaceFromToWithStartingAt [
 		to: list size
 		with: self listElements
 		startingAt: 1.
-	self assertHasUnknownSortOrder: list.
+	self assertListHasUnknownSortOrder: list.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testReverse [
+	| list copy |
+
+	super testReverse.
+
+	list := self listWithElements.
+	copy := list reverse.
+	self
+		assertListHasUnknownSortOrder: copy;
+		assertList: copy
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements reverse).
+
+	list := self listWithSortOrder.
+	copy := list reverse.
+	self
+		assertList: copy hasSortOrder: XPathReverseDocumentSortOrder;
+		assertList: copy
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements reverse).
+
+	list := copy.
+	copy := list reverse.
+	self
+		assertList: copy hasSortOrder: XPathDocumentSortOrder;
+		assertList: copy
+		copiedFrom: list
+		equals: self listWithElements.
 ]
 
 { #category : #tests }
@@ -678,17 +709,59 @@ XPathNodeSetTest >> testReverseInPlace [
 	list := self emptyList.
 	self
 		assert: list reverseInPlace == list;
-		assert: list = self emptyList.
+		assert: list isEmpty.
 
 	list := self listWithSingleElement.
 	self
 		assert: list reverseInPlace == list;
-		assert: list = self listWithSingleElement.
+		assert: list = self listWithSingleElement;
+		assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
 
 	list := self listWithElements.
 	self
 		assert: list reverseInPlace == list;
-		assert: list = (self listClass newFrom: self listElements reversed).
+		assert: list = (self listClass newFrom: self listElements reversed);
+		assertListHasUnknownSortOrder: list.
+
+	list := self listWithSortOrder.
+	self
+		assert: list reverseInPlace == list;
+		assert: list = (self listClass newFrom: self listElements reversed);
+		assertList: list hasSortOrder: XPathReverseDocumentSortOrder;
+		assert: list reverseInPlace == list;
+		assert: list = (self listClass newFrom: self listElements);
+		assertList: list hasSortOrder: XPathDocumentSortOrder.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testReversed [
+	| list copy |
+
+	super testReversed.
+
+	list := self listWithElements.
+	copy := list reversed.
+	self
+		assertListHasUnknownSortOrder: copy;
+		assertList: copy
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements reversed).
+
+	list := self listWithSortOrder.
+	copy := list reversed.
+	self
+		assertList: copy hasSortOrder: XPathReverseDocumentSortOrder;
+		assertList: copy
+		copiedFrom: list
+		equals: (self listClass newFrom: self listElements reversed).
+
+	list := copy.
+	copy := list reversed.
+	self
+		assertList: copy hasSortOrder: XPathDocumentSortOrder;
+		assertList: copy
+		copiedFrom: list
+		equals: self listWithElements.
 ]
 
 { #category : #tests }
@@ -717,7 +790,7 @@ XPathNodeSetTest >> testSort [
 		shouldnt: [self emptyList sort]
 		raise: Error.
 
-	self assertHasUnknownSortOrder:
+	self assertListHasUnknownSortOrder:
 		(self listWithElements
 			sort;
 			sort: self sortBlock).
@@ -783,7 +856,7 @@ XPathNodeSetTest >> testSwapWith [
 	(list := self listWithSortOrder)
 		swap: 1
 		with: list size.
-	self assertHasUnknownSortOrder: list.
+	self assertListHasUnknownSortOrder: list.
 ]
 
 { #category : #tests }
