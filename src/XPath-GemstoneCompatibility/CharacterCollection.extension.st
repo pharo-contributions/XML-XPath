@@ -58,12 +58,22 @@ CharacterCollection >> //? aThreeArgumentBlockOrNumber [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> //\/ anObject [
+	XPathTypeException signal: 'Cannot union strings'
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asAttributeNodeTestBlock [
+CharacterCollection >> asXPath [
+	^ XPath for: self
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asXPathAttributeNodeTestBlock [
 	"parses string as a node test to produce a node test block where attributes
 	are the principal node type"
 	^ (XPathNodeTestParser
@@ -74,7 +84,17 @@ CharacterCollection >> asAttributeNodeTestBlock [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asNamespaceNodeTestBlock [
+CharacterCollection >> asXPathBoolean [
+	^ self notEmpty
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asXPathLocationPathRoot [
+	XPathTypeException signal: 'Cannot use boolean as location path root'
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asXPathNamespaceNodeTestBlock [
 	"parses string as a node test to produce a node test block where namespaces
 	are the principal node type"
 	^ (XPathNodeTestParser
@@ -85,25 +105,20 @@ CharacterCollection >> asNamespaceNodeTestBlock [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asNodeSetFilters [
+CharacterCollection >> asXPathNodeSet [
+	XPathTypeException signal: 'Cannot convert string to node set'
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> asXPathNodeSetFilters [
 	^ #()
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asNodeTestBlock [
+CharacterCollection >> asXPathNodeTestBlock [
 	^ (XPathNodeTestParser
 		on: self
 		for: XPathStringNodeTestParserHandler new) parse
-]
-
-{ #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asXPath [
-	^ XPath for: self
-]
-
-{ #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asXPathBoolean [
-	^ self notEmpty
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
@@ -117,7 +132,7 @@ CharacterCollection >> asXPathString [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> hasNodeSetFilters [
+CharacterCollection >> hasXPathNodeSetFilters [
 	^ false
 ]
 
