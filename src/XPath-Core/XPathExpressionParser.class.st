@@ -107,9 +107,11 @@ XPathExpressionParser >> nextEqualityExpression [
 
 { #category : #parsing }
 XPathExpressionParser >> nextFilterExpression [
+	handler handleStartFilterExpression.
 	self
 		nextPrimaryExpression;
-		peekForPredicates
+		peekForPredicates.
+	handler handleEndFilterExpression.
 ]
 
 { #category : #parsing }
@@ -164,7 +166,9 @@ XPathExpressionParser >> nextPathExpression [
 		ifFalse: [
 			self nextFilterExpression.
 			self peekForLocationPathSeparator
-				ifTrue: [self nextAdditionalSteps]].
+				ifTrue: [
+					handler handleStartFilterExpressionLocationPath.
+					self nextAdditionalSteps]].
 	handler handleEndPathExpression.
 ]
 

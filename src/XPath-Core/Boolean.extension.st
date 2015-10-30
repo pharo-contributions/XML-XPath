@@ -58,6 +58,11 @@ Boolean >> //? aThreeArgumentBlockOrNumber [
 ]
 
 { #category : #'*XPath-Core-private' }
+Boolean >> //\/ anObject [
+	XPathTypeException signal: 'Cannot union booleans'
+]
+
+{ #category : #'*XPath-Core-private' }
 Boolean >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
@@ -65,6 +70,16 @@ Boolean >> //\\ anObject [
 { #category : #'*XPath-Core-converting' }
 Boolean >> asXPathBoolean [
 	^ self
+]
+
+{ #category : #'*XPath-Core-converting' }
+Boolean >> asXPathLocationPathRoot [
+	XPathTypeException signal: 'Cannot use boolean as location path root'
+]
+
+{ #category : #'*XPath-Core-converting' }
+Boolean >> asXPathNodeSet [
+	XPathTypeException signal: 'Cannot convert boolean to node set'
 ]
 
 { #category : #'*XPath-Core-converting' }

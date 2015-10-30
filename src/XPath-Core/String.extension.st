@@ -58,12 +58,22 @@ String >> //? aThreeArgumentBlockOrNumber [
 ]
 
 { #category : #'*XPath-Core-private' }
+String >> //\/ anObject [
+	XPathTypeException signal: 'Cannot union strings'
+]
+
+{ #category : #'*XPath-Core-private' }
 String >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
 
-{ #category : #'*XPath-Core-private' }
-String >> asAttributeNodeTestBlock [
+{ #category : #'*XPath-Core-converting' }
+String >> asXPath [
+	^ XPath for: self
+]
+
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathAttributeNodeTestBlock [
 	"parses string as a node test to produce a node test block where attributes
 	are the principal node type"
 	^ (XPathNodeTestParser
@@ -73,8 +83,18 @@ String >> asAttributeNodeTestBlock [
 				XPathNodeTestParserAttributeContext)) parse
 ]
 
-{ #category : #'*XPath-Core-private' }
-String >> asNamespaceNodeTestBlock [
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathBoolean [
+	^ self notEmpty
+]
+
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathLocationPathRoot [
+	XPathTypeException signal: 'Cannot use string as location path root'
+]
+
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathNamespaceNodeTestBlock [
 	"parses string as a node test to produce a node test block where namespaces
 	are the principal node type"
 	^ (XPathNodeTestParser
@@ -84,29 +104,24 @@ String >> asNamespaceNodeTestBlock [
 				XPathNodeTestParserNamespaceContext)) parse
 ]
 
-{ #category : #'*XPath-Core-private' }
-String >> asNodeSetFilters [
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathNodeSet [
+	XPathTypeException signal: 'Cannot convert string to node set'
+]
+
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathNodeSetFilters [
 	^ #()
 ]
 
-{ #category : #'*XPath-Core-private' }
-String >> asNodeTestBlock [
+{ #category : #'*XPath-Core-converting' }
+String >> asXPathNodeTestBlock [
 	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser
 		on: self
 		for:
 			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
 				XPathNodeTestParserElementContext)) parse
-]
-
-{ #category : #'*XPath-Core-converting' }
-String >> asXPath [
-	^ XPath for: self
-]
-
-{ #category : #'*XPath-Core-converting' }
-String >> asXPathBoolean [
-	^ self notEmpty
 ]
 
 { #category : #'*XPath-Core-converting' }
@@ -119,8 +134,8 @@ String >> asXPathString [
 	^ self
 ]
 
-{ #category : #'*XPath-Core-private' }
-String >> hasNodeSetFilters [
+{ #category : #'*XPath-Core-testing' }
+String >> hasXPathNodeSetFilters [
 	^ false
 ]
 

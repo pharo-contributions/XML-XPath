@@ -58,6 +58,11 @@ Number >> //? aThreeArgumentBlockOrNumber [
 ]
 
 { #category : #'*XPath-Core-private' }
+Number >> //\/ anObject [
+	XPathTypeException signal: 'Cannot union numbers'
+]
+
+{ #category : #'*XPath-Core-private' }
 Number >> //\\ anObject [
 	^ self asXPathNumber \\ anObject asXPathNumber
 ]
@@ -65,6 +70,16 @@ Number >> //\\ anObject [
 { #category : #'*XPath-Core-converting' }
 Number >> asXPathBoolean [
 	^ (self isZero or: [self isNaN]) not
+]
+
+{ #category : #'*XPath-Core-converting' }
+Number >> asXPathLocationPathRoot [
+	XPathTypeException signal: 'Cannot use number as location path root'
+]
+
+{ #category : #'*XPath-Core-converting' }
+Number >> asXPathNodeSet [
+	XPathTypeException signal: 'Cannot convert number to node set'
 ]
 
 { #category : #'*XPath-Core-converting' }

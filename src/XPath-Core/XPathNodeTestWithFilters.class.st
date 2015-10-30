@@ -21,28 +21,28 @@ XPathNodeTestWithFilters class >> nodeTest: aNodeTestBlock filter: aThreeArgumen
 		filter: aThreeArgumentBlockOrNumber
 ]
 
-{ #category : #enumerating }
+{ #category : #private }
 XPathNodeTestWithFilters >> //? aThreeArgumentBlockOrNumber [
 	self filters addLast: aThreeArgumentBlockOrNumber
 ]
 
 { #category : #converting }
-XPathNodeTestWithFilters >> asAttributeNodeTestBlock [
+XPathNodeTestWithFilters >> asXPathAttributeNodeTestBlock [
 	^ self nodeTest
 ]
 
 { #category : #converting }
-XPathNodeTestWithFilters >> asNamespaceNodeTestBlock [
+XPathNodeTestWithFilters >> asXPathNamespaceNodeTestBlock [
 	^ self nodeTest
 ]
 
 { #category : #converting }
-XPathNodeTestWithFilters >> asNodeSetFilters [
+XPathNodeTestWithFilters >> asXPathNodeSetFilters [
 	^ self filters
 ]
 
 { #category : #converting }
-XPathNodeTestWithFilters >> asNodeTestBlock [
+XPathNodeTestWithFilters >> asXPathNodeTestBlock [
 	^ self nodeTest
 ]
 
@@ -52,7 +52,7 @@ XPathNodeTestWithFilters >> filters [
 ]
 
 { #category : #testing }
-XPathNodeTestWithFilters >> hasNodeSetFilters [
+XPathNodeTestWithFilters >> hasXPathNodeSetFilters [
 	^ self filters notEmpty
 ]
 

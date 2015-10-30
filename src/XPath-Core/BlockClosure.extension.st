@@ -7,27 +7,27 @@ BlockClosure >> //? aThreeArgumentBlockOrNumber [
 		filter: aThreeArgumentBlockOrNumber
 ]
 
-{ #category : #'*XPath-Core-private' }
-BlockClosure >> asAttributeNodeTestBlock [
+{ #category : #'*XPath-Core-converting' }
+BlockClosure >> asXPathAttributeNodeTestBlock [
 	^ self
 ]
 
-{ #category : #'*XPath-Core-private' }
-BlockClosure >> asNamespaceNodeTestBlock [
+{ #category : #'*XPath-Core-converting' }
+BlockClosure >> asXPathNamespaceNodeTestBlock [
 	^ self
 ]
 
-{ #category : #'*XPath-Core-private' }
-BlockClosure >> asNodeSetFilters [
+{ #category : #'*XPath-Core-converting' }
+BlockClosure >> asXPathNodeSetFilters [
 	^ #()
 ]
 
-{ #category : #'*XPath-Core-private' }
-BlockClosure >> asNodeTestBlock [
+{ #category : #'*XPath-Core-converting' }
+BlockClosure >> asXPathNodeTestBlock [
 	^ self
 ]
 
-{ #category : #'*XPath-Core-private' }
-BlockClosure >> hasNodeSetFilters [
+{ #category : #'*XPath-Core-testing' }
+BlockClosure >> hasXPathNodeSetFilters [
 	^ false
 ]

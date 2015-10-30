@@ -143,6 +143,11 @@ XPathExpressionParserHandler >> handleEndEqualityExpression [
 	self emitEndGrouping
 ]
 
+{ #category : #'handling - location paths' }
+XPathExpressionParserHandler >> handleEndFilterExpression [
+	self emitEndGrouping
+]
+
 { #category : #'handling - functions' }
 XPathExpressionParserHandler >> handleEndFunctionArgument [
 	outputStream nextPutAll: ');'
@@ -319,7 +324,7 @@ XPathExpressionParserHandler >> handlePredicateAttribute: aName notEqualsStringL
 XPathExpressionParserHandler >> handleStartAbsoluteLocationPath [
 	outputStream
 		nextPutAll: contextNodeVariable;
-		nextPutAll: ' documentRoot'
+		nextPutAll: ' asXPathLocationPathRoot documentRoot'
 ]
 
 { #category : #'handling - operators' }
@@ -335,6 +340,16 @@ XPathExpressionParserHandler >> handleStartAndExpression [
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleStartEqualityExpression [
 	self emitStartGrouping
+]
+
+{ #category : #'handling - location paths' }
+XPathExpressionParserHandler >> handleStartFilterExpression [
+	self emitStartGrouping
+]
+
+{ #category : #'handling - location paths' }
+XPathExpressionParserHandler >> handleStartFilterExpressionLocationPath [
+	outputStream nextPutAll: ' asXPathLocationPathRoot'
 ]
 
 { #category : #'handling - functions' }
@@ -388,7 +403,9 @@ XPathExpressionParserHandler >> handleStartRelationalExpression [
 
 { #category : #'handling - location paths' }
 XPathExpressionParserHandler >> handleStartRelativeLocationPath [
-	outputStream nextPutAll: contextNodeVariable
+	outputStream
+		nextPutAll: contextNodeVariable;
+		nextPutAll: ' asXPathLocationPathRoot'
 ]
 
 { #category : #'handling - operators' }
@@ -628,7 +645,7 @@ XPathExpressionParserHandler >> handleTestForTextType [
 
 { #category : #private }
 XPathExpressionParserHandler >> handleUnion [
-	outputStream nextPut: $|
+	outputStream nextPutAll: '//\/'
 ]
 
 { #category : #handling }

@@ -24,13 +24,13 @@ XPathSortOrder >> ancestorAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithF
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first %% aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) %% aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					ancestorAxisSelect: nodeTestBlock
@@ -46,13 +46,13 @@ XPathSortOrder >> ancestorOrSelfAxisOn: aNodeSet select: aStringOrBlockOrNodeTes
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first %%~ aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) %%~ aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					ancestorOrSelfAxisSelect: nodeTestBlock
@@ -73,13 +73,13 @@ XPathSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWith
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first @ aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) @ aStringOrBlockOrNodeTestWithFilters)
 					addAllTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					attributeAxisSelect: nodeTestBlock
@@ -95,13 +95,13 @@ XPathSortOrder >> childAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilt
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first / aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) / aStringOrBlockOrNodeTestWithFilters)
 					addAllTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					childAxisSelect: nodeTestBlock
@@ -117,13 +117,13 @@ XPathSortOrder >> descendantAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWit
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first // aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) // aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					descendantAxisSelect: nodeTestBlock
@@ -139,13 +139,13 @@ XPathSortOrder >> descendantOrSelfAxisOn: aNodeSet select: aStringOrBlockOrNodeT
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first //~ aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) //~ aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					descendantOrSelfAxisSelect: nodeTestBlock
@@ -171,13 +171,13 @@ XPathSortOrder >> followingAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWith
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first >> aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) >> aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					followingAxisSelect: nodeTestBlock
@@ -193,13 +193,13 @@ XPathSortOrder >> followingSiblingAxisOn: aNodeSet select: aStringOrBlockOrNodeT
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first >>> aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) >>> aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					followingSiblingAxisSelect: nodeTestBlock
@@ -215,13 +215,13 @@ XPathSortOrder >> namespaceAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWith
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first @@ aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) @@ aStringOrBlockOrNodeTestWithFilters)
 					addAllTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					namespaceAxisSelect: nodeTestBlock
@@ -237,13 +237,13 @@ XPathSortOrder >> parentAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFil
 	aNodeSet isEmpty
 		ifTrue: [^ copy].
 
-	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 	1 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
 			parentAxisSelect: nodeTestBlock
 			ifNotPresentInto: copy].
 	^ copy filterEachInSeparateContextWithAll:
-		aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
+		aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters.
 ]
 
 { #category : #enumerating }
@@ -254,13 +254,13 @@ XPathSortOrder >> precedingAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWith
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first << aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) << aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					precedingAxisSelect: nodeTestBlock
@@ -276,13 +276,13 @@ XPathSortOrder >> precedingSiblingAxisOn: aNodeSet select: aStringOrBlockOrNodeT
 		ifTrue: [^ aNodeSet copyEmpty].
 
 	copy := aNodeSet first <<< aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasNodeSetFilters
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			2 to: aNodeSet size do: [:i |
 				((aNodeSet at: i) <<< aStringOrBlockOrNodeTestWithFilters)
 					addAllIfNotPresentTo: copy]]
 		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 			2 to: aNodeSet size do: [:i |
 				(aNodeSet at: i)
 					precedingSiblingAxisSelect: nodeTestBlock
@@ -298,11 +298,11 @@ XPathSortOrder >> selfAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilte
 	aNodeSet isEmpty
 		ifTrue: [^ copy].
 
-	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asNodeTestBlock.
+	nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
 	1 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
 			selfAxisSelect: nodeTestBlock
 			into: copy].
 	^ copy filterEachInSeparateContextWithAll:
-		aStringOrBlockOrNodeTestWithFilters asNodeSetFilters.
+		aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters.
 ]

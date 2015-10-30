@@ -36,31 +36,39 @@ Class {
 	#category : #'XPath-Core'
 }
 
-{ #category : #accessing }
+{ #category : #clearing }
 XPath class >> clearCompiledXPathCache [
 	"self clearCompiledXPathCache"
-	compiledXPathCache ifNotNil: [compiledXPathCache clear]
+	compiledXPathCache
+		ifNotNil: [compiledXPathCache clear]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XPath class >> compiledXPathCache [
 	^ compiledXPathCache
 		ifNil: [compiledXPathCache := XMLKeyValueCache maxSize: 512]
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XPath class >> compiledXPathCacheAt: anXPathSourceString [
 	^ self compiledXPathCache at: anXPathSourceString
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 XPath class >> compiledXPathCacheAt: anXPathSourceString ifAbsent: aBlock [
 	^ self compiledXPathCache
 		at: anXPathSourceString
 		ifAbsent: aBlock
 ]
 
-{ #category : #private }
+{ #category : #accessing }
+XPath class >> compiledXPathCacheAt: anXPathSourceString ifAbsentPut: aBlock [
+	^ self compiledXPathCache
+		at: anXPathSourceString
+		ifAbsentPut: aBlock
+]
+
+{ #category : #accessing }
 XPath class >> compiledXPathCacheAt: anXPathSourceString put: aCompiledXPath [
 	^ self compiledXPathCache
 		at: anXPathSourceString
@@ -88,11 +96,9 @@ XPath class >> for: anXPathSourceString in: aNode context: aContext [
 
 { #category : #'class initialization' }
 XPath class >> initialize [
-	"
-	self initialize
-	"
+	"self initialize"
 
-	self clearCompiledXPathCache
+	self clearCompiledXPathCache.
 ]
 
 { #category : #accessing }

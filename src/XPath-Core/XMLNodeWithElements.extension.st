@@ -7,10 +7,10 @@ XMLNodeWithElements >> / aStringOrBlockOrNodeTestWithFilters [
 	redefined here to prevent a conflicting Pastell method from shadowing
 	the inherited implementation"
 	^ (self
-		childAxisSelect: aStringOrBlockOrNodeTestWithFilters asNodeTestBlock
+		childAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
@@ -20,10 +20,10 @@ XMLNodeWithElements >> // aStringOrBlockOrNodeTestWithFilters [
 	redefined here to prevent a conflicting Pastell method from shadowing
 	the inherited implementation"
 	^ (self
-		descendantAxisSelect: aStringOrBlockOrNodeTestWithFilters asNodeTestBlock
+		descendantAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asNodeSetFilters
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-accessing' }

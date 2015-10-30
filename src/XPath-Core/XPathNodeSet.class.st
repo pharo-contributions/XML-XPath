@@ -11,13 +11,6 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
-{ #category : #private }
-XPathNodeSet class >> errorCannotConvert: anObject [
-	XPathTypeException
-		formatSignal: 'Cannot convert object of class {1} to node set'
-		with: anObject class name
-]
-
 { #category : #'instance creation' }
 XPathNodeSet class >> new [
 	^ self new: 10
@@ -25,10 +18,7 @@ XPathNodeSet class >> new [
 
 { #category : #'instance creation' }
 XPathNodeSet class >> xPathNewFrom: anObject [
-	"no conversions are specified from other types to node sets"
-	(anObject isKindOf: XPathNodeSet)
-		ifFalse: [self errorCannotConvert: anObject].
-	^ anObject.
+	^ anObject asXPathNodeSet
 ]
 
 { #category : #'enumerating - axis' }
@@ -132,6 +122,13 @@ XPathNodeSet >> //>= anObject [
 { #category : #private }
 XPathNodeSet >> //? aThreeArgumentBlockOrNumber [
 	^ self sort filterWith: aThreeArgumentBlockOrNumber
+]
+
+{ #category : #private }
+XPathNodeSet >> //\/ anObject [
+	"the OldCompiler doesn't allow binary selectors with | in them
+	so //\/ is used instead of //|"
+	^ self | anObject asXPathNodeSet
 ]
 
 { #category : #private }
@@ -256,6 +253,16 @@ XPathNodeSet >> afterRemoving: aNode [
 { #category : #converting }
 XPathNodeSet >> asXPathBoolean [
 	^ self notEmpty
+]
+
+{ #category : #converting }
+XPathNodeSet >> asXPathLocationPathRoot [
+	^ self
+]
+
+{ #category : #converting }
+XPathNodeSet >> asXPathNodeSet [
+	^ self
 ]
 
 { #category : #converting }
