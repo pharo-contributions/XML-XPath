@@ -278,6 +278,22 @@ XPathNodeSetTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testAsXPathLocationPathRoot [
+	| list |
+
+	list := self emptyList.
+	self assert: list asXPathLocationPathRoot == list.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAsXPathNodeSet [
+	| list |
+
+	list := self emptyList.
+	self assert: list asXPathNodeSet == list.
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testAsXPathNumber [
 	self
 		assert: self emptyList asXPathNumber isNaN;

@@ -743,7 +743,7 @@ XPathTest >> testFalseFunction [
 ]
 
 { #category : #tests }
-XPathTest >> testFileterExpressionLocationPath [
+XPathTest >> testFileterExpressionPredicates [
 	self
 		assertNodeSet:
 			(document xPath: '(./addressbook/*)[position() <= 3 and position() > 1]')
@@ -751,38 +751,13 @@ XPathTest >> testFileterExpressionLocationPath [
 	self
 		assertNodeSet: (document xPath: '(addressbook/*)[true()] / address')
 		hasNodes: (document allElementsNamed: 'address').
-
-	self
-		assertNodeSet:
-			(document xPath: '/descendant::home-phone[1][2 - 1][position() = 1]')
-		hasNodes:
-			(XMLNodeList with: (document allElementsNamed: 'home-phone') first).
-	self assert:
-		(document xPath: '/descendant::home-phone[1][position() + 1]') isEmpty.
-
-	self
-		assertNodeSet:
-			(document xPath: '//home-phone[1][1 + 0][position() = 1]')
-		hasNodes:
-			(document allElementsNamed: 'home-phone') allButLast.
-	self
-		assertNodeSet:
-			(document xPath: '//home-phone[1 + 1][1][position() = 1]')
-		hasNodes:
-			(XMLNodeList with: (document allElementsNamed: 'home-phone') third).
-	self assert:
-		(document xPath: '//home-phone[position() = 1][1 + 1]') isEmpty.
-
-	self
-		assertNodeSet:
-			(document xPath: '/descendant::home-phone[2][1 + 0][position() = 1]')
-		hasNodes:
-			(XMLNodeList with: (document allElementsNamed: 'home-phone') second).
-
 	self
 		assertNodeSet:
 			(document xPath: '(addressbook)[true()] // email')
 		hasNodes: (document allElementsNamed: 'email').
+	self
+		assertNodeSet: (document xPath: '(//person[position()>1])[position()<=2]')
+		hasNodes: ((document allElementsNamed: 'person') copyFrom: 2 to: 3).
 ]
 
 { #category : #tests }
@@ -963,9 +938,11 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 XPathTest >> testInvalidFilterExpressionType [
 	#('1[true()]' '"string"[true()]' 'true()[true()]'
 		'(1)[true()]' '("string")[true()]' '(true())[true()]'
+		'1/addressbook' '"string"/addressbook' 'true()/addressbook'
+		'(1)/addressbook' '("string")/addressbook' '(true())/addressbook'
 	) do: [:each |
 		self
-			should: [each asXPath evaluate]
+			should: [document xPath: each]
 			raise: XPathTypeException]
 ]
 
@@ -983,6 +960,16 @@ XPathTest >> testInvalidNumberTokenizing [
 	self
 		should: ['1.2.' asXPath evaluate]
 		raise: XPathSyntaxException.
+]
+
+{ #category : #tests }
+XPathTest >> testInvalidUnionExpressionType [
+	#('//person | 1' '1 | //person'
+		'//person | true()' 'true() | //person'
+		'//person | "string"' '"string" | //person') do: [:each |
+		self
+			should: [document xPath: each]
+			raise: XPathTypeException].
 ]
 
 { #category : #tests }
@@ -1089,6 +1076,36 @@ XPathTest >> testLocalNameWildcardTest [
 				in: namespacedDocument
 				context: (XPathContext namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
+]
+
+{ #category : #tests }
+XPathTest >> testLocationPathPredicates [
+	self
+		assertNodeSet:
+			(document xPath: '/descendant::home-phone[1][2 - 1][position() = 1]')
+		hasNodes:
+			(XMLNodeList with: (document allElementsNamed: 'home-phone') first).
+	self assert:
+		(document xPath: '/descendant::home-phone[1][position() + 1]') isEmpty.
+
+	self
+		assertNodeSet:
+			(document xPath: '//home-phone[1][1 + 0][position() = 1]')
+		hasNodes:
+			(document allElementsNamed: 'home-phone') allButLast.
+	self
+		assertNodeSet:
+			(document xPath: '//home-phone[1 + 1][1][position() = 1]')
+		hasNodes:
+			(XMLNodeList with: (document allElementsNamed: 'home-phone') third).
+	self assert:
+		(document xPath: '//home-phone[position() = 1][1 + 1]') isEmpty.
+
+	self
+		assertNodeSet:
+			(document xPath: '/descendant::home-phone[2][1 + 0][position() = 1]')
+		hasNodes:
+			(XMLNodeList with: (document allElementsNamed: 'home-phone') second).
 ]
 
 { #category : #tests }
