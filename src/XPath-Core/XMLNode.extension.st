@@ -169,28 +169,8 @@ XMLNode >> ancestorOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
 ]
 
 { #category : #'*XPath-Core-converting' }
-XMLNode >> asXPathBoolean [
-	XPathTypeException signal: 'Cannot convert node to boolean'
-]
-
-{ #category : #'*XPath-Core-converting' }
 XMLNode >> asXPathLocationPathRoot [
 	^ self
-]
-
-{ #category : #'*XPath-Core-converting' }
-XMLNode >> asXPathNodeSet [
-	XPathTypeException signal: 'Cannot convert node to node set'
-]
-
-{ #category : #'*XPath-Core-converting' }
-XMLNode >> asXPathNumber [
-	XPathTypeException signal: 'Cannot convert node to number'
-]
-
-{ #category : #'*XPath-Core-converting' }
-XMLNode >> asXPathString [
-	XPathTypeException signal: 'Cannot convert node to string'
 ]
 
 { #category : #'*XPath-Core-private' }
