@@ -42,39 +42,11 @@ XMLNodeTest >> testAncestorOrSelfAxis [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testAsXPathBoolean [
-	self
-		should: [self nodeClass new asXPathBoolean]
-		raise: XPathTypeException
-]
-
-{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testAsXPathLocationPathRoot [
 	| node |
 
 	node := self nodeClass new.
 	self assert: node asXPathLocationPathRoot == node.
-]
-
-{ #category : #'*XPath-Tests' }
-XMLNodeTest >> testAsXPathNodeSet [
-	self
-		should: [self nodeClass new asXPathNodeSet]
-		raise: XPathTypeException
-]
-
-{ #category : #'*XPath-Tests' }
-XMLNodeTest >> testAsXPathNumber [
-	self
-		should: [self nodeClass new asXPathNumber]
-		raise: XPathTypeException
-]
-
-{ #category : #'*XPath-Tests' }
-XMLNodeTest >> testAsXPathString [
-	self
-		should: [self nodeClass new asXPathString]
-		raise: XPathTypeException
 ]
 
 { #category : #'*XPath-Tests' }
