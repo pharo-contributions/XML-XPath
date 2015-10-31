@@ -917,7 +917,7 @@ ConfigurationOfXPath >> version155: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XPath-Core' with: 'XPath-Core-monty.64'.
-			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.55'.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.65'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.56'.
                 ].
 ]
