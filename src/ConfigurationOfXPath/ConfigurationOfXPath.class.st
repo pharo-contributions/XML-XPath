@@ -913,7 +913,7 @@ ConfigurationOfXPath >> version154: spec [
 
 { #category : #versions }
 ConfigurationOfXPath >> version155: spec [ 
-        <version: '1.5.5' imports: #('1.5.1-baseline')>
+        <version: '1.5.5' imports: #('1.5.5-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
