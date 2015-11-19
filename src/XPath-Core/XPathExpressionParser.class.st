@@ -227,7 +227,7 @@ XPathExpressionParser >> parseInput [
 	self nextOrExpression.
 ]
 
-{ #category : #'parsing - peeking' }
+{ #category : #private }
 XPathExpressionParser >> peekFailedAt: aPosition [
 	inputStream position: aPosition.
 	^ false.
@@ -478,22 +478,21 @@ XPathExpressionParser >> peekForNumber [
 			self nextDigitsOnWriteStream.
 			(inputStream peekFor: $.)
 				ifTrue: [
-					"Smalltalk float literals can't have a trailing '.'"
+					"Smalltalk float literals can't have a trailing '.' like in '1. + 1'"
 					self atDigit
 						ifTrue: [
 							writeStream nextPut: $..
 							self nextDigitsOnWriteStream]].
 			handler handleNumberLiteral: writeStream contents.
 			^ true].
-	(inputStream peekFor: $.)
+	((inputStream peekFor: $.)
+		and: [self atDigit])
 		ifTrue: [
-			self atDigit
-				ifTrue: [
-					"Smalltalk float literals can't have a trailing '.'"
-					writeStream nextPutAll: '0.'.
-					self nextDigitsOnWriteStream.
-					handler handleNumberLiteral: writeStream contents.
-					^ true]].
+			"Smalltalk float literals can't have a leading '.' like in '1 + .1'"
+			writeStream nextPutAll: '0.'.
+			self nextDigitsOnWriteStream.
+			handler handleNumberLiteral: writeStream contents.
+			^ true].
 	^ self peekFailedAt: startPosition.
 ]
 

@@ -235,6 +235,17 @@ XPathParser >> peekForEndArgumentList [
 	^ inputStream peekFor: $).
 ]
 
+{ #category : #printing }
+XPathParser >> printOn: aStream [
+	super printOn: aStream.
+	handler
+		ifNotNil: [
+			aStream
+				nextPut: $(;
+				print: handler;
+				nextPut: $)].
+]
+
 { #category : #parsing }
 XPathParser >> startParsing [
 	handler handleStartParsing

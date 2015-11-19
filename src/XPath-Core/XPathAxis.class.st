@@ -56,12 +56,13 @@ XPathAxis class >> axisSpecifiersTemplate [
 XPathAxis class >> initialize [
 	"self initialize"
 
-	self initializeAxisSpecifiers.
+	self initializeAxisSpecifiers
 ]
 
 { #category : #'class initialization' }
 XPathAxis class >> initializeAxisSpecifiers [
 	AxisSpecifiers := Dictionary new.
+
 	self axisSpecifiersTemplate do: [:threeElementArray |
 		| axisSpecifier replacementSelector principalNodeType defaultNodeTestParserContextClass |
 

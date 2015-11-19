@@ -98,7 +98,7 @@ XPath class >> for: anXPathSourceString in: aNode context: aContext [
 XPath class >> initialize [
 	"self initialize"
 
-	self clearCompiledXPathCache.
+	self clearCompiledXPathCache
 ]
 
 { #category : #accessing }
@@ -176,7 +176,7 @@ XPath >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		nextPutAll: self xPathSource;
+		print: self xPathSource;
 		nextPut: $).
 ]
 
