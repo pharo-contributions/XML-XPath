@@ -237,6 +237,104 @@ XPathTest >> testAttributeNameTest [
 ]
 
 { #category : #tests }
+XPathTest >> testAttributePredicates [
+	| persons |
+
+	persons := (document allElementsNamed: 'person') copyFrom: 2 to: 3.
+	self
+		assertNodeSet: (document xPath: 'addressbook/person[ @ middle-initial ]')
+		hasNodes: persons;
+		assertNodeSet: (document xPath: 'addressbook/person[ @ middle-initial and position() > 1 ]')
+		hasNodes: persons;
+		assertNodeSet: (document xPath: 'addressbook/person[ @ * [ local-name() = "middle-initial" ] ]')
+		hasNodes: persons;
+		assertNodeSet:
+			(document xPath:
+				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() < 4 ]')
+		hasNodes: persons.
+
+	self
+		assert: (document xPath: 'addressbook/person[ @ middle-initial and position() < 2 ]') isEmpty;
+		assert:
+			(document xPath:
+				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() > 3 ]') isEmpty;
+		assert: (document xPath: 'addressbook/person[ @ absent ]') isEmpty;
+		assert: (document xPath: 'addressbook/person[ @ * [ local-name() = "absent" ] ]') isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testAttributePredicatesComparison [
+	| addresses |
+
+	addresses := document allElementsNamed: 'address'.
+	self
+		assertNodeSet: (document xPath: '//address[ @ number >= 344 ]')
+		hasNodes: addresses.
+
+	addresses := addresses copyReplaceFrom: 2 to: 2 with: #().
+	self
+		assertNodeSet: (document xPath: '//address[ @ number > 344 ]')
+		hasNodes: addresses.
+
+	addresses := (document allElementsNamed: 'address') copyFrom: 2 to: 2.
+	self
+		assertNodeSet: (document xPath: '//address[ @ number <= 344 ]')
+		hasNodes: addresses.
+	self assert: (document xPath: '//address[ @ number < 344 ]') isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testAttributePredicatesEquals [
+	| persons addresses |
+
+	persons := (document allElementsNamed: 'person') copyFrom: 1 to: 1.
+	self
+		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number = "A0000" ]')
+		hasNodes: persons;
+		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number = ''A0000'' ]')
+		hasNodes: persons;
+		assertNodeSet:
+			(document xPath: 'addressbook/person[ @ employee-number = "A0000" and position() = 1]')
+		hasNodes: persons.
+	self assert:
+		(document xPath: 'addressbook/person[ @ employee-number = ''A0000'' and position() > 1]') isEmpty.
+
+	addresses := (document allElementsNamed: 'address') copyFrom: 2 to: 2.
+	self
+		assertNodeSet: (document xPath: '//address[ @ number = 344 ]')
+		hasNodes: addresses.
+	self assert:
+		(document xPath: '//address[ @ number = 1 ]') isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testAttributePredicatesNotEquals [
+	| persons addresses |
+
+	persons := (document allElementsNamed: 'person') allButFirst.
+	self
+		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number != "A0000" ]')
+		hasNodes: persons;
+		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number != ''A0000'' ]')
+		hasNodes: persons;
+		assertNodeSet:
+			(document xPath: 'addressbook/person[ @ employee-number != "A0000"  and position() > 1]')
+		hasNodes: persons.
+	self assert:
+		(document xPath:
+			'addressbook/person[ @ employee-number != ''A0000'' and position() = 1]') isEmpty.
+
+	addresses := document allElementsNamed: 'address'.
+	self
+		assertNodeSet: (document xPath: '//address[ @ number != 1 ]')
+		hasNodes: addresses.
+	addresses := addresses copyReplaceFrom: 2 to: 2 with: #().
+	self
+		assertNodeSet: (document xPath: '//address[ @ number != 344 ]')
+		hasNodes: addresses.
+]
+
+{ #category : #tests }
 XPathTest >> testAttributeTypeTest [
 	| results |
 
