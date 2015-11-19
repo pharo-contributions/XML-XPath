@@ -1,5 +1,5 @@
 "
-This class stores a node test block and one or more filter blocks or numbers.
+This class stores a node test block and one or more filter blocks or positions.
 "
 Class {
 	#name : #XPathNodeTestWithFilters,

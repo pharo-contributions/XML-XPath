@@ -97,12 +97,22 @@ XPathAxis >> axisSpecifier: anAxisSpecifier [
 	isImplicit := false.
 ]
 
-{ #category : #accessing }
+{ #category : #changing }
+XPathAxis >> beDefaultImplicitAxis [
+	axisSpecifier := 'child'.
+	replacementSelector := '/'.
+	defaultNodeTestParserContextClass := XPathNodeTestParserElementContext.
+	isImplicit := true.
+	isFirstAxis := false.
+	isStartOfRelativeLocationPath := false.
+]
+
+{ #category : #changing }
 XPathAxis >> beFirstAxis [
 	isFirstAxis := true
 ]
 
-{ #category : #accessing }
+{ #category : #changing }
 XPathAxis >> beStartOfRelativeLocationPath [
 	isStartOfRelativeLocationPath := true
 ]
@@ -125,7 +135,7 @@ XPathAxis >> errorUnrecognizedAxisSpecifier [
 { #category : #initialization }
 XPathAxis >> initialize [
 	super initialize.
-	self resetToImplicitAxis.
+	self beDefaultImplicitAxis.
 ]
 
 { #category : #testing }
@@ -170,14 +180,4 @@ XPathAxis >> replacementSelector [
 		ifNil: [
 			self lookupAxisSpecifier.
 			replacementSelector]
-]
-
-{ #category : #initialization }
-XPathAxis >> resetToImplicitAxis [
-	axisSpecifier := 'child'.
-	replacementSelector := '/'.
-	defaultNodeTestParserContextClass := XPathNodeTestParserElementContext.
-	isImplicit := true.
-	isFirstAxis := false.
-	isStartOfRelativeLocationPath := false.
 ]

@@ -220,5 +220,5 @@ XPathExpressionNodeTestParserHandler >> startNodeTest [
 	expressionParserHandler
 		handleStartStep;
 		handleAxis: currentAxis.
-	currentAxis resetToImplicitAxis.
+	currentAxis beDefaultImplicitAxis.
 ]

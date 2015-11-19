@@ -191,20 +191,6 @@ XPathExpressionParserHandler >> handleEndRelationalExpression [
 ]
 
 { #category : #'handling - operators' }
-XPathExpressionParserHandler >> handleEndShortCircuitAnd [
-	self
-		emitBooleanConversion;
-		emitEndBlock
-]
-
-{ #category : #'handling - operators' }
-XPathExpressionParserHandler >> handleEndShortCircuitOr [
-	self
-		emitBooleanConversion;
-		emitEndBlock
-]
-
-{ #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleEndShortCircuited: anInteger [
 	anInteger > 0
 		ifTrue: [

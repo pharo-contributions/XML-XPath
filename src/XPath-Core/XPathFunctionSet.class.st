@@ -80,7 +80,7 @@ XPathFunctionSet >> = aFunctionSet [
 	self == aFunctionSet
 		ifTrue: [^ true].
 
-	(self class == aFunctionSet class
+	(self species == aFunctionSet species
 		and: [self size = aFunctionSet size])
 		ifFalse: [^ false].
 
@@ -126,12 +126,14 @@ XPathFunctionSet >> do: aBlock [
 
 { #category : #accessing }
 XPathFunctionSet >> functionNamed: aFunctionName [
-	^  functionsByName at: aFunctionName
+	^ self
+		functionNamed: aFunctionName
+		ifAbsent: [nil]
 ]
 
 { #category : #accessing }
 XPathFunctionSet >> functionNamed: aFunctionName ifAbsent: aBlock [
-	^  functionsByName
+	^ functionsByName
 		at: aFunctionName
 		ifAbsent: aBlock
 ]
