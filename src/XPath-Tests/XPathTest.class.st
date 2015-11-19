@@ -83,23 +83,30 @@ XPathTest >> testAbsoluteLocationPaths [
 
 { #category : #tests }
 XPathTest >> testAddFunction [
-	| functionSet context |
+	| path functionsWithoutCeiling context |
 
-	functionSet := XPathFunctionSet default copyWithout: XPathCeilingFunction.
+	path := XPath for: 'ceiling(1.9)'.
+
+	functionsWithoutCeiling :=
+		XPathFunctionSet default copyWithout: XPathCeilingFunction.
+	context := XPathContext functions: functionsWithoutCeiling.
+	self deny: (context includesFunction: XPathCeilingFunction).
 	self
 		should: [
-			XPath
-				for: 'ceiling()'
+			path
 				in: nil
-				context: (XPathContext functions: functionSet)]
+				context: context]
 		raise: XPathUndeclaredFunctionException.
 
-	(context := XPathContext functions: functionSet)
+	(context := XPathContext functions: functionsWithoutCeiling)
 		addFunction: XPathCeilingFunction.
-	self
-		assert: (context includesFunction: XPathCeilingFunction);
-		deny: (functionSet includes: XPathCeilingFunction);
-		assert: (XPath for: 'ceiling(1.9)' in: nil context: context) = 2.
+	self assert: (context includesFunction: XPathCeilingFunction).
+	"adding should modify an internal copy, not the original"
+	self deny: (functionsWithoutCeiling includes: XPathCeilingFunction).
+	self assert:
+		(path
+			in: nil
+			context: context) = 2.
 ]
 
 { #category : #tests }
@@ -1915,6 +1922,9 @@ XPathTest >> testUndeclaredFunctions [
 		should: [XPath for: 'undeclared()/addressbook' in: document]
 		raise: XPathUndeclaredFunctionException.
 	self
+		should: [XPath for: '(undeclared())/addressbook' in: document]
+		raise: XPathUndeclaredFunctionException.
+	self
 		should: [XPath for: 'addressbook[undeclared()]' in: document]
 		raise: XPathUndeclaredFunctionException.
 ]
@@ -1923,6 +1933,9 @@ XPathTest >> testUndeclaredFunctions [
 XPathTest >> testUndeclaredVariables [
 	self
 		should: [XPath for: '$undeclared/addressbook' in: document]
+		raise: XPathUndeclaredVariableException.
+	self
+		should: [XPath for: '($undeclared)/addressbook' in: document]
 		raise: XPathUndeclaredVariableException.
 	self
 		should: [XPath for: 'addressbook[$undeclared]' in: document]

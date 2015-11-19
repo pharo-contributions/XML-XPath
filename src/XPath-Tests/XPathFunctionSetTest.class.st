@@ -186,9 +186,11 @@ XPathFunctionSetTest >> testFunctionNamed [
 	set := self setWithFunctions.
 	self functions do: [:each |
 		self assert: (set functionNamed: each functionName) == each].
+
 	self
-		should: [set functionNamed: self absentFunction functionName]
+		shouldnt: [set functionNamed: self absentFunction functionName]
 		raise: Error.
+	self assert: (set functionNamed: self absentFunction functionName) isNil.
 ]
 
 { #category : #tests }
@@ -383,4 +385,17 @@ XPathFunctionSetTest >> testRemoveIfAbsent [
 			should: [set remove: each]
 			raise: Error].
 	self assert: set isEmpty.
+]
+
+{ #category : #tests }
+XPathFunctionSetTest >> testSize [
+	| set size |
+
+	set := self emptySet.
+	size := 0.
+	self assert: set size = size.
+	self functions do: [:each |.
+		set add: each.
+		size := size + 1.
+		self assert: set size = size].
 ]
