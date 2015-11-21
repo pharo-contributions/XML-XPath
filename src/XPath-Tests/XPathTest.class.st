@@ -124,11 +124,31 @@ XPathTest >> testAncestorAxis [
 		assertNodeSet: (XPath for: '//ancestor::node()/ancestor::node()' in: document)
 		hasNodes: ancestors.
 
-	ancestors := document allElementsNamed: 'person'.
-	ancestors addAll: ancestors last ancestorNodes.
+	ancestors
+		removeAll;
+		addAll: (document allElementsNamed: 'person');
+		addAll: ancestors last ancestorNodes.
 	self
 		assertNodeSet: (XPath for: '*/person/node()/ancestor::node()' in: document)
 		hasNodes: ancestors.
+
+	ancestors
+		removeAll;
+		addLast: document.
+	self
+		assertNodeSet: (XPath for: 'addressbook/ancestor::node()' in: document)
+		hasNodes: ancestors.
+
+	ancestors
+		removeAll;
+		addLast: document root.
+	self
+		assertNodeSet: (XPath for: 'addressbook/person/ancestor::*' in: document)
+		hasNodes: ancestors.
+
+	self
+		assert: (XPath for: 'addressbook/ancestor::*' in: document) isEmpty;
+		assert: (XPath for: 'ancestor::node()' in: document) isEmpty.
 ]
 
 { #category : #tests }
@@ -168,6 +188,28 @@ XPathTest >> testAncestorOrSelfAxis [
 	nodes addAll: nodes first ancestorNodes.
 	self
 		assertNodeSet: (XPath for: '*/person/node()/ancestor-or-self::node()' in: document)
+		hasNodes: nodes.
+
+	nodes
+		removeAll;
+		addLast: document root;
+		addAll: (document allElementsNamed: 'person').
+	self
+		assertNodeSet: (XPath for: 'addressbook/person/ancestor-or-self::*' in: document)
+		hasNodes: nodes.
+
+	nodes
+		removeAll;
+		addLast: document root.
+	self
+		assertNodeSet: (XPath for: 'addressbook/ancestor-or-self::*' in: document)
+		hasNodes: nodes.
+
+	nodes
+		removeAll;
+		addLast: document.
+	self
+		assertNodeSet: (XPath for: 'ancestor-or-self::node()' in: document)
 		hasNodes: nodes.
 ]
 
@@ -248,6 +290,8 @@ XPathTest >> testAttributePredicates [
 		hasNodes: persons;
 		assertNodeSet: (document xPath: 'addressbook/person[ @ * [ local-name() = "middle-initial" ] ]')
 		hasNodes: persons;
+		assertNodeSet: (document xPath: 'addressbook/person[ @ * [ self::attribute(middle-initial) ] ]')
+		hasNodes: persons;
 		assertNodeSet:
 			(document xPath:
 				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() < 4 ]')
@@ -259,6 +303,7 @@ XPathTest >> testAttributePredicates [
 			(document xPath:
 				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() > 3 ]') isEmpty;
 		assert: (document xPath: 'addressbook/person[ @ absent ]') isEmpty;
+		assert: (document xPath: 'addressbook/person[ @ * [ self::attribute(absent) ] ]') isEmpty;
 		assert: (document xPath: 'addressbook/person[ @ * [ local-name() = "absent" ] ]') isEmpty.
 ]
 
@@ -1566,6 +1611,21 @@ XPathTest >> testParentAxis [
 				for: 'addressbook/person/attribute::node()/parent::node()'
 				in: document)
 		hasNodes: (document allElementsNamed: 'person').
+
+	self assert:
+		(XPath
+			for: 'parent::node()'
+			in: document) isEmpty.
+	self assert:
+		(XPath
+			for: 'addressbook/parent::*'
+			in: document) isEmpty.
+	self
+		assertNodeSet:
+			(XPath
+				for: 'addressbook/parent::node()'
+				in: document)
+		hasNodes: (XMLNodeList with: document)
 ]
 
 { #category : #tests }
