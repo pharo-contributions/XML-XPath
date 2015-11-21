@@ -78,9 +78,7 @@ CharacterCollection >> asXPathAttributeNodeTestBlock [
 	are the principal node type"
 	^ (XPathNodeTestParser
 		on: self
-		for:
-			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
-				XPathNodeTestParserAttributeContext)) parse
+		for: XPathStringNodeTestParserHandler withAttributePrincipalNodeType) parse
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
@@ -99,9 +97,7 @@ CharacterCollection >> asXPathNamespaceNodeTestBlock [
 	are the principal node type"
 	^ (XPathNodeTestParser
 		on: self
-		for:
-			(XPathStringNodeTestParserHandler defaultNodeTestParserContextClass:
-				XPathNodeTestParserNamespaceContext)) parse
+		for: XPathStringNodeTestParserHandler withNamespacePrincipalNodeType) parse
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
@@ -116,9 +112,10 @@ CharacterCollection >> asXPathNodeSetFilters [
 
 { #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> asXPathNodeTestBlock [
+	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser
 		on: self
-		for: XPathStringNodeTestParserHandler new) parse
+		for: XPathStringNodeTestParserHandler withElementPrincipalNodeType) parse
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
