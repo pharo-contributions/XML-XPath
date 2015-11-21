@@ -165,7 +165,7 @@ XPath >> in: aNode [
 
 { #category : #evaluating }
 XPath >> in: aNode context: aContext [
-	"evaluate in context of aNode with aContext"
+	"evaluate in context of aNode with aContext controlling evaluation"
 	^ self compiledXPath
 		value: aNode
 		value: aContext

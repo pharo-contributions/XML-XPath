@@ -1,5 +1,5 @@
 "
-An abstract handler for node test parsers.
+An abstract class for node test parser handlers. Parsing is controlled by XPathNodeTestParserContext classes.
 "
 Class {
 	#name : #XPathNodeTestParserHandler,

@@ -1,5 +1,5 @@
 "
-A handler for node tests that occur in string arguments to the abbreviated axis selectors. It converts them to node test blocks.
+A handler for node tests that occur in string arguments to the axis selectors defined in the ""enumerating - axis"" category of XMLNode and subclasses. It converts them to node test blocks.
 "
 Class {
 	#name : #XPathStringNodeTestParserHandler,
@@ -11,8 +11,18 @@ Class {
 }
 
 { #category : #'instance creation' }
-XPathStringNodeTestParserHandler class >> defaultNodeTestParserContextClass: aClass [
-	^ self new defaultNodeTestParserContextClass: aClass
+XPathStringNodeTestParserHandler class >> withAttributePrincipalNodeType [
+	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserAttributeContext
+]
+
+{ #category : #'instance creation' }
+XPathStringNodeTestParserHandler class >> withElementPrincipalNodeType [
+	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserElementContext
+]
+
+{ #category : #'instance creation' }
+XPathStringNodeTestParserHandler class >> withNamespacePrincipalNodeType [
+	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserNamespaceContext
 ]
 
 { #category : #accessing }
