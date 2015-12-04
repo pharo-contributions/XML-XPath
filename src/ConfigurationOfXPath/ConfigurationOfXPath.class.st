@@ -254,7 +254,7 @@ ConfigurationOfXPath >> baseline158: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.5' ].
+			spec project: 'XMLParser' with: #'release-2.5.3' ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.9' ]
 ]
 
