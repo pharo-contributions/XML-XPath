@@ -394,7 +394,7 @@ XPathFunctionSetTest >> testSize [
 	set := self emptySet.
 	size := 0.
 	self assert: set size = size.
-	self functions do: [:each |.
+	self functions do: [:each |
 		set add: each.
 		size := size + 1.
 		self assert: set size = size].
