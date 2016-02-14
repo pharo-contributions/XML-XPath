@@ -267,7 +267,7 @@ ConfigurationOfXPath >> baseline158: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.5.5' ].
+			spec project: 'XMLParser' with: #'release-2.6' ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.9' ]
 ]
 
@@ -323,7 +323,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.5.9'.
+	spec for: #'common' version: '1.5.8'.
 
 ]
 
@@ -976,16 +976,5 @@ ConfigurationOfXPath >> version158: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.68'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.59'.
-                ].
-]
-
-{ #category : #versions }
-ConfigurationOfXPath >> version159: spec [ 
-        <version: '1.5.9' imports: #('1.5.8-baseline')>
-
-        spec for: #common do: [
-                spec blessing: #release.
-			spec package: 'XPath-Core' with: 'XPath-Core-monty.68'.
-			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.60'.
                 ].
 ]
