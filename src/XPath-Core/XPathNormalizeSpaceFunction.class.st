@@ -20,6 +20,8 @@ XPathNormalizeSpaceFunction >> function [
 		ifTrue: [string := self pop]
 		ifFalse: [string := self contextNode].
 
+	"must use #writeStream instead of WriteStream on: to get a 0-based stream
+	on Gemstone"
 	writeStream := (String new: string size) writeStream.
 	isInWhitespace := false.
 	string do: [:each |
@@ -30,8 +32,8 @@ XPathNormalizeSpaceFunction >> function [
 			ifFalse: [
 				isInWhitespace
 					ifTrue: [
-						writeStream xmlParserAtBeginning
-							ifFalse: [writeStream nextPut: $ ].
+						writeStream position > 0
+							ifTrue: [writeStream nextPut: $ ].
 						isInWhitespace := false].
 				writeStream nextPut: each]].
 	^ writeStream contents.
