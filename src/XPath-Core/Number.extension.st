@@ -98,8 +98,22 @@ Number >> asXPathString [
 			self < 0
 				ifTrue: [^ '-Infinity']
 				ifFalse: [^ 'Infinity']].
-	"overridden in gemstone version to use greaseString"
-	^ self printString.
+
+	"printOn:base: is needed for correct printing of BinaryFloats in
+	decimal notation on GS, but printOn:base: can't be used with integers
+	because it shows the 10r radix, and printOn:base:showRadix: can't be
+	used either because floats don't understand it, so integers and floats
+	are handled separately"
+	self isInteger
+		ifTrue: [^ self asString]
+		ifFalse: [| writeStream |
+			writeStream := (String new: 10) writeStream.
+			"use asFloat to convert types like GS's DecimalFloat that don't
+			have printOn:base:"
+			self asFloat
+				printOn: writeStream
+				base: 10.
+			^ writeStream contents].
 ]
 
 { #category : #'*XPath-Core-private' }

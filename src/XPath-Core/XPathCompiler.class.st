@@ -17,8 +17,12 @@ XPathCompiler >> compile: aStringOrStream [
 
 { #category : #private }
 XPathCompiler >> compileSource: aString [
-	"overridden in Gemstone version"
-	^ Compiler evaluate: aString
+	"On Pharo/Squeak, Compiler class>>evaluate: can be used to compile source code.
+	On GS, there is no Compiler class, but String>>evaluate does the same"
+	^ (Smalltalk
+		at: #Compiler
+		ifAbsent: [^ aString evaluate])
+			evaluate: aString
 ]
 
 { #category : #compiling }
