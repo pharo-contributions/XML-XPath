@@ -212,8 +212,7 @@ ConfigurationOfXPath >> baseline10: spec [
 			with: [ spec includes: 'XPath-GemstoneCompatibility' ].
 		spec
 			package: 'XPath-GemstoneCompatibility'
-			with: [ spec requires: 'XPath-Core' ].
-		spec postLoadDoIt: #'postLoadForGemstone:spec:'. ].
+			with: [ spec requires: 'XPath-Core' ]. ].
 ]
 
 { #category : #baselines }
@@ -271,6 +270,17 @@ ConfigurationOfXPath >> baseline158: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.9' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline160: spec [
+	<version: '1.6.0-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.3' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.10' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXPath >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -283,27 +293,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.5.8-baseline'.
-]
-
-{ #category : #'post loading' }
-ConfigurationOfXPath >> postLoadForGemstone: aLoader spec: aSpec [
-	"This forces the GS package to always be loaded after, even if it hasn't
-	changed between versions, because it needs to override methods in the base.
-	
-	Can be removed, but may break upgrading on GS."
-
-	| packageName fileName |
-
-	packageName := 'XPath-GemstoneCompatibility'.
-	fileName :=
-		(aSpec
-			packageNamed: packageName
-			ifAbsent: [^ self]) file.
-	Gofer it
-		url: aSpec repositories list first name;
-		package: packageName constraint: [:version | version name = fileName];
-		load.
+	spec for: #'common' version: '1.6.0-baseline'.
 ]
 
 { #category : #accessing }
@@ -323,7 +313,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.5.8'.
+	spec for: #'common' version: '1.6.0'.
 
 ]
 
@@ -976,5 +966,27 @@ ConfigurationOfXPath >> version158: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.68'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.59'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version159: spec [ 
+        <version: '1.5.9' imports: #('1.5.8-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.68'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.60'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version160: spec [ 
+        <version: '1.6.0' imports: #('1.6.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.70'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.60'.
                 ].
 ]
