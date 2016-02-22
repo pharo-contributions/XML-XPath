@@ -25,6 +25,11 @@ XPathAxis class >> axisSpecifiers [
 
 { #category : #private }
 XPathAxis class >> axisSpecifiersTemplate [
+	"Returns an array of arrays where each subarray has an axis name,
+	a selector to map it to, and the principal node type for that axis.
+
+	The / and // are handled implicitly and so are not defined here."
+
 	^ #(
 		#('ancestor'           '%%'  element)
 		#('ancestor-or-self'   '%%~' element)

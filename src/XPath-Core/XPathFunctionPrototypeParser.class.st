@@ -4,6 +4,10 @@ This class parses XPath function prototypes to extract the name, return type, an
 Class {
 	#name : #XPathFunctionPrototypeParser,
 	#superclass : #XPathParser,
+	#instVars : [
+		'hasOptionalArgument',
+		'hasUnboundedArgument'
+	],
 	#category : #'XPath-Core-Parsers'
 }
 
@@ -24,7 +28,7 @@ XPathFunctionPrototypeParser >> errorUnboundedArgumentAfterOptional [
 
 { #category : #parsing }
 XPathFunctionPrototypeParser >> nextArgument [
-	handler hasUnboundedArgument
+	hasUnboundedArgument
 		ifTrue: [self errorArgumentAfterUnboundedArgument].
 
 	inputStream skipSeparators.
@@ -42,14 +46,17 @@ XPathFunctionPrototypeParser >> nextModifierForArgument: anArgument [
 	inputStream skipSeparators.
 	(inputStream peekFor: $*)
 		ifTrue: [
-			handler hasOptionalArgument
+			hasOptionalArgument
 				ifTrue: [self errorUnboundedArgumentAfterOptional].
+			hasUnboundedArgument := true.
 			handler handleUnboundedArgument: anArgument]
 		ifFalse: [
 			(inputStream peekFor: $?)
-				ifTrue: [handler handleOptionalArgument: anArgument]
+				ifTrue: [
+					hasOptionalArgument := true.
+					handler handleOptionalArgument: anArgument]
 				ifFalse: [
-					handler hasOptionalArgument
+					hasOptionalArgument
 						ifTrue: [self errorNonOptionalArgumentAfterOptional].
 					handler handleArgument: anArgument]].
 ]
@@ -62,6 +69,8 @@ XPathFunctionPrototypeParser >> nextReturnType [
 
 { #category : #parsing }
 XPathFunctionPrototypeParser >> parseInput [
+	hasOptionalArgument := false.
+	hasUnboundedArgument := false.
 	self
 		nextReturnType;
 		nextFunctionName;

@@ -16,7 +16,7 @@ XPathCompiler >> compile: aStringOrStream [
 ]
 
 { #category : #private }
-XPathCompiler >> compileSource: aString [
+XPathCompiler >> compileGeneratedSourceCode: aString [
 	"On Pharo/Squeak, Compiler class>>evaluate: can be used to compile source code.
 	On GS, there is no Compiler class, but String>>evaluate does the same"
 	^ (Smalltalk
@@ -27,7 +27,7 @@ XPathCompiler >> compileSource: aString [
 
 { #category : #compiling }
 XPathCompiler >> compileWithParser: aParser [
-	^ self compileSource: aParser parse
+	^ self compileGeneratedSourceCode: aParser parse
 ]
 
 { #category : #accessing }
@@ -37,5 +37,5 @@ XPathCompiler >> parserClass [
 
 { #category : #accessing }
 XPathCompiler >> parserHandlerClass [
-	^ XPathExpressionParserHandler
+	^ XPathCompilingExpressionParserHandler
 ]

@@ -12,13 +12,6 @@ XPathDocumentSortOrder >> asReversedSortOrder [
 	^ XPathReverseDocumentSortOrder new
 ]
 
-{ #category : #enumerating }
-XPathDocumentSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
-	^ (super
-		attributeAxisOn: aNodeSet
-		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
-]
-
 { #category : #sorting }
 XPathDocumentSortOrder >> documentOrderSort: aNodeSet [
 	"already in document order"
@@ -30,23 +23,30 @@ XPathDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> namespaceAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet attributeAxis: aStringOrBlockOrNodeTestWithFilters [
 	^ (super
-		namespaceAxisOn: aNodeSet
-		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		on: aNodeSet
+		attributeAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> parentAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet namespaceAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (super
+		on: aNodeSet
+		namespaceAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+]
+
+{ #category : #enumerating }
+XPathDocumentSortOrder >> on: aNodeSet parentAxis: aStringOrBlockOrNodeTestWithFilters [
 	"this is a document order axis according to the spec"
 	^ (super
-		parentAxisOn: aNodeSet
-		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		on: aNodeSet
+		parentAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> selfAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet selfAxis: aStringOrBlockOrNodeTestWithFilters [
 	^ (super
-		selfAxisOn: aNodeSet
-		select: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		on: aNodeSet
+		selfAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
 ]

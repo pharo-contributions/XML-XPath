@@ -126,7 +126,7 @@ XPathFunction class >> parseFunctionPrototype [
 
 	(XPathFunctionPrototypeParser
 		on: self functionPrototype
-		for: (XPathFunctionPrototypeParserHandler function: self))
+		for: (XPathInitializingFunctionPrototypeParserHandler function: self))
 		parse
 ]
 

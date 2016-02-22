@@ -23,26 +23,17 @@ XPathNodeSet class >> xPathNewFrom: anObject [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> % aStringOrBlockOrNodeTestWithFilters [
-	"parent axis"
-	^ self sortOrder
-		parentAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self parentAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> %% aStringOrBlockOrNodeTestWithFilters [
-	"ancestor axis"
-	^ self sortOrder
-		ancestorAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self ancestorAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> %%~ aStringOrBlockOrNodeTestWithFilters [
-	"ancestor-or-self axis"
-	^ self sortOrder
-		ancestorOrSelfAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #enumerating }
@@ -53,18 +44,12 @@ XPathNodeSet >> & aNodeSet [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> / aStringOrBlockOrNodeTestWithFilters [
-	"child axis"
-	^ self sortOrder
-		childAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self childAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> // aStringOrBlockOrNodeTestWithFilters [
-	"descendant axis"
-	^ self sortOrder
-		descendantAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self descendantAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #private }
@@ -138,58 +123,37 @@ XPathNodeSet >> //\\ anObject [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> //~ aStringOrBlockOrNodeTestWithFilters [
-	"descendant-or-self axis"
-	^ self sortOrder
-		descendantOrSelfAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> << aStringOrBlockOrNodeTestWithFilters [
-	"preceding axis"
-	^ self sortOrder
-		precedingAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self precedingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> <<< aStringOrBlockOrNodeTestWithFilters [
-	"preceding-sibling axis"
-	^ self sortOrder
-		precedingSiblingAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> >> aStringOrBlockOrNodeTestWithFilters [
-	"following axis"
-	^ self sortOrder
-		followingAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self followingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> >>> aStringOrBlockOrNodeTestWithFilters [
-	"following-sibling axis"
-	^ self sortOrder
-		followingSiblingAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> @ aStringOrBlockOrNodeTestWithFilters [
-	"attribute axis"
-	^ self sortOrder
-		attributeAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self attributeAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> @@ aStringOrBlockOrNodeTestWithFilters [
-	"namespace axis"
-	^ self sortOrder
-		namespaceAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self namespaceAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #enumerating }
@@ -250,6 +214,20 @@ XPathNodeSet >> afterRemoving: aNode [
 	super afterRemoving: aNode.
 ]
 
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> ancestorAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		ancestorAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
 { #category : #converting }
 XPathNodeSet >> asXPathBoolean [
 	^ self notEmpty
@@ -275,6 +253,20 @@ XPathNodeSet >> asXPathString [
 	^ self firstInDocumentOrder
 		ifNil: ['']
 		ifNotNil: [:node | node stringValue]
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> attributeAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		attributeAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> childAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		childAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #copying }
@@ -325,6 +317,20 @@ XPathNodeSet >> copyWithout: anObject [
 XPathNodeSet >> copyWithoutAll: aCollection [
 	"copies that don't add or replace keep sort order"
 	^ (super copyWithoutAll: aCollection) sortOrderFrom: self
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> descendantAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		descendantAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #enumerating }
@@ -424,6 +430,20 @@ XPathNodeSet >> firstInDocumentOrder [
 	^ self sortOrder firstInDocumentOrderFrom: self
 ]
 
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> followingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		followingAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
 { #category : #testing }
 XPathNodeSet >> includes: aNode [
 	^ self set includes: aNode
@@ -446,6 +466,34 @@ XPathNodeSet >> movedNode: aNode to: anIndex [
 			"since a node is just being moved, the collection
 			is changed directly without notifying observers"
 			collection removeAt: i]
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> namespaceAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		namespaceAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> parentAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		parentAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> precedingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		precedingAxis: aStringOrBlockOrNodeTestWithFilters
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #enumerating }
@@ -479,6 +527,13 @@ XPathNodeSet >> reversed [
 XPathNodeSet >> select: aBlock [
 	"select doesn't change sort order"
 	^ (super select: aBlock) sortOrderFrom: self
+]
+
+{ #category : #'enumerating - axis' }
+XPathNodeSet >> selfAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ self sortOrder
+		on: self
+		selfAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #private }
@@ -678,8 +733,5 @@ XPathNodeSet >> | aNodeSet [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> ~ aStringOrBlockOrNodeTestWithFilters [
-	"self axis"
-	^ self sortOrder
-		selfAxisOn: self
-		select: aStringOrBlockOrNodeTestWithFilters
+	^ self selfAxis: aStringOrBlockOrNodeTestWithFilters
 ]

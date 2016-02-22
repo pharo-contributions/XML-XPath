@@ -2,131 +2,76 @@ Extension { #name : #XMLNode }
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> % aStringOrBlockOrNodeTestWithFilters [
-	"parent axis"
-	^ (self
-		parentAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			"this is a document order axis according to spec"
-			sortOrder: XPathDocumentSortOrder new;
-			filterEachInSeparateContextWithAll:
-				aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self parentAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> %% aStringOrBlockOrNodeTestWithFilters [
-	"ancestor axis"
-	^ (self
-		ancestorAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathReverseDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self ancestorAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> %%~ aStringOrBlockOrNodeTestWithFilters [
-	"ancestor-or-self axis"
-	^ (self
-		ancestorOrSelfAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathReverseDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> / aStringOrBlockOrNodeTestWithFilters [
-	"child axis"
-	^ (self
-		childAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self childAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> // aStringOrBlockOrNodeTestWithFilters [
-	"descendant axis"
-	^ (self
-		descendantAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self descendantAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> //~ aStringOrBlockOrNodeTestWithFilters [
-	"descendant-or-self axis"
-	^ (self
-		descendantOrSelfAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> << aStringOrBlockOrNodeTestWithFilters [
-	"preceding axis"
-	^ (self
-		precedingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathReverseDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self precedingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> <<< aStringOrBlockOrNodeTestWithFilters [
-	"preceding-sibling axis"
-	^ (self
-		precedingSiblingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathReverseDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> >> aStringOrBlockOrNodeTestWithFilters [
-	"following axis"
-	^ (self
-		followingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self followingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> >>> aStringOrBlockOrNodeTestWithFilters [
-	"following-sibling axis"
-	^ (self
-		followingSiblingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> @ aStringOrBlockOrNodeTestWithFilters [
-	"attribute axis"
-	^ (self
-		attributeAxisSelect:
-			aStringOrBlockOrNodeTestWithFilters asXPathAttributeNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self attributeAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> @@ aStringOrBlockOrNodeTestWithFilters [
-	"namespace axis"
-	^ (self
-		namespaceAxisSelect:
-			aStringOrBlockOrNodeTestWithFilters asXPathNamespaceNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self namespaceAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating' }
 XMLNode >> allNodesReverseDo: aBlock [
 	aBlock value: self
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> ancestorAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		ancestorAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathReverseDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -144,6 +89,15 @@ XMLNode >> ancestorAxisSelect: aNodeTestBlock into: aNodeSet [
 		(aNodeTestBlock value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		ancestorOrSelfAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathReverseDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -173,14 +127,42 @@ XMLNode >> asXPathLocationPathRoot [
 	^ self
 ]
 
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> attributeAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		attributeAxisSelect:
+			aStringOrBlockOrNodeTestWithFilters asXPathAttributeNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+]
+
 { #category : #'*XPath-Core-private' }
 XMLNode >> attributeAxisSelect: anAttributeNodeTestBlock into: aNodeSet [
 	^ aNodeSet
 ]
 
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> childAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		childAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+]
+
 { #category : #'*XPath-Core-private' }
 XMLNode >> childAxisSelect: aNodeTestBlock into: aNodeSet [
 	^ aNodeSet
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> descendantAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		descendantAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -191,6 +173,15 @@ XMLNode >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
 { #category : #'*XPath-Core-private' }
 XMLNode >> descendantAxisSelect: aNodeTestBlock into: aNodeSet [
 	^ aNodeSet
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		descendantOrSelfAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -217,6 +208,15 @@ XMLNode >> documentRoot [
 	documentRoot := self.
 	self ancestorNodesDo: [:each | documentRoot := each].
 	^ documentRoot.
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> followingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		followingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -247,6 +247,15 @@ XMLNode >> followingNodesDo: aBlock [
 					ifFalse: [
 						each = self
 							ifTrue: [visitedSelf := true]]]]
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		followingSiblingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -289,6 +298,16 @@ XMLNode >> isNamespace [
 	^ false
 ]
 
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> namespaceAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		namespaceAxisSelect:
+			aStringOrBlockOrNodeTestWithFilters asXPathNamespaceNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+]
+
 { #category : #'*XPath-Core-private' }
 XMLNode >> namespaceAxisSelect: aNamespaceNodeTestBlock into: aNodeSet [
 	^ aNodeSet
@@ -297,6 +316,17 @@ XMLNode >> namespaceAxisSelect: aNamespaceNodeTestBlock into: aNodeSet [
 { #category : #'*XPath-Core-private' }
 XMLNode >> nodeSetClass [
 	^ XPathNodeSet
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> parentAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		parentAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			"this is a document order axis according to spec"
+			sortOrder: XPathDocumentSortOrder new;
+			filterEachInSeparateContextWithAll:
+				aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -314,6 +344,15 @@ XMLNode >> parentAxisSelect: aNodeTestBlock into: aNodeSet [
 		and: [aNodeTestBlock value: self parent])
 		ifTrue: [aNodeSet addLast: self parent].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> precedingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		precedingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathReverseDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -346,6 +385,15 @@ XMLNode >> precedingNodesDo: aBlock [
 							ifTrue: [visitedSelf := true]]]]
 ]
 
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		precedingSiblingAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathReverseDocumentSortOrder new;
+			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+]
+
 { #category : #'*XPath-Core-private' }
 XMLNode >> precedingSiblingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
 	self precedingSiblingNodesDo: [:each |
@@ -376,6 +424,16 @@ XMLNode >> precedingSiblingNodesDo: aBlock [
 							ifTrue: [visitedSelf := true]]]]
 ]
 
+{ #category : #'*XPath-Core-enumerating - axis' }
+XMLNode >> selfAxis: aStringOrBlockOrNodeTestWithFilters [
+	^ (self
+		selfAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
+		into: self nodeSetClass new)
+			sortOrder: XPathDocumentSortOrder new;
+			filterEachInSeparateContextWithAll:
+				aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+]
+
 { #category : #'*XPath-Core-private' }
 XMLNode >> selfAxisSelect: aNodeTestBlock into: aNodeSet [
 	(aNodeTestBlock value: self)
@@ -403,11 +461,5 @@ XMLNode >> xPath: anXPathOrXPathString context: aContext [
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> ~ aStringOrBlockOrNodeTestWithFilters [
-	"self axis"
-	^ (self
-		selfAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterEachInSeparateContextWithAll:
-				aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	^ self selfAxis: aStringOrBlockOrNodeTestWithFilters
 ]

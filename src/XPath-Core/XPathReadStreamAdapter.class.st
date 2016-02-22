@@ -124,13 +124,13 @@ XPathReadStreamAdapter >> pushedBackToken [
 	^ pushedBackToken
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
 XPathReadStreamAdapter >> skipBack [
 	"does not peek like #back"
 	stream position: stream position - 1
 ]
 
-{ #category : #streaming }
+{ #category : #positioning }
 XPathReadStreamAdapter >> skipSeparators [
 	stream xPathSkipSeparators
 ]

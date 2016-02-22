@@ -12,28 +12,6 @@ XPathReverseDocumentSortOrder >> asReversedSortOrder [
 	^ XPathDocumentSortOrder new
 ]
 
-{ #category : #enumerating }
-XPathReverseDocumentSortOrder >> attributeAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
-	| copy |
-
-	aNodeSet isEmpty
-		ifTrue: [^ aNodeSet copyEmpty].
-
-	copy := aNodeSet last @ aStringOrBlockOrNodeTestWithFilters.
-	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
-		ifTrue: [
-			aNodeSet size - 1 to: 1 by: -1 do: [:i |
-				((aNodeSet at: i) @ aStringOrBlockOrNodeTestWithFilters)
-					addAllTo: copy]]
-		ifFalse: [| nodeTestBlock |
-			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
-			aNodeSet size - 1 to: 1 by: -1 do: [:i |
-				(aNodeSet at: i)
-					attributeAxisSelect: nodeTestBlock
-					into: copy]].
-	^ copy sortOrder: XPathDocumentSortOrder new.
-]
-
 { #category : #sorting }
 XPathReverseDocumentSortOrder >> documentOrderSort: aNodeSet [
 	aNodeSet reverseInPlace
@@ -45,17 +23,39 @@ XPathReverseDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 ]
 
 { #category : #enumerating }
-XPathReverseDocumentSortOrder >> namespaceAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+XPathReverseDocumentSortOrder >> on: aNodeSet attributeAxis: aStringOrBlockOrNodeTestWithFilters [
 	| copy |
 
 	aNodeSet isEmpty
 		ifTrue: [^ aNodeSet copyEmpty].
 
-	copy := aNodeSet last @@ aStringOrBlockOrNodeTestWithFilters.
+	copy := aNodeSet last attributeAxis: aStringOrBlockOrNodeTestWithFilters.
 	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
 		ifTrue: [
 			aNodeSet size - 1 to: 1 by: -1 do: [:i |
-				((aNodeSet at: i) @@ aStringOrBlockOrNodeTestWithFilters)
+				((aNodeSet at: i) attributeAxis: aStringOrBlockOrNodeTestWithFilters)
+					addAllTo: copy]]
+		ifFalse: [| nodeTestBlock |
+			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
+			aNodeSet size - 1 to: 1 by: -1 do: [:i |
+				(aNodeSet at: i)
+					attributeAxisSelect: nodeTestBlock
+					into: copy]].
+	^ copy sortOrder: XPathDocumentSortOrder new.
+]
+
+{ #category : #enumerating }
+XPathReverseDocumentSortOrder >> on: aNodeSet namespaceAxis: aStringOrBlockOrNodeTestWithFilters [
+	| copy |
+
+	aNodeSet isEmpty
+		ifTrue: [^ aNodeSet copyEmpty].
+
+	copy := aNodeSet last namespaceAxis: aStringOrBlockOrNodeTestWithFilters.
+	aStringOrBlockOrNodeTestWithFilters hasXPathNodeSetFilters
+		ifTrue: [
+			aNodeSet size - 1 to: 1 by: -1 do: [:i |
+				((aNodeSet at: i) namespaceAxis: aStringOrBlockOrNodeTestWithFilters)
 					addAllTo: copy]]
 		ifFalse: [| nodeTestBlock |
 			nodeTestBlock := aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock.
@@ -67,7 +67,7 @@ XPathReverseDocumentSortOrder >> namespaceAxisOn: aNodeSet select: aStringOrBloc
 ]
 
 { #category : #enumerating }
-XPathReverseDocumentSortOrder >> parentAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+XPathReverseDocumentSortOrder >> on: aNodeSet parentAxis: aStringOrBlockOrNodeTestWithFilters [
 	| copy nodeTestBlock |
 
 	copy := aNodeSet copyEmpty.
@@ -86,7 +86,7 @@ XPathReverseDocumentSortOrder >> parentAxisOn: aNodeSet select: aStringOrBlockOr
 ]
 
 { #category : #enumerating }
-XPathReverseDocumentSortOrder >> selfAxisOn: aNodeSet select: aStringOrBlockOrNodeTestWithFilters [
+XPathReverseDocumentSortOrder >> on: aNodeSet selfAxis: aStringOrBlockOrNodeTestWithFilters [
 	| copy nodeTestBlock |
 
 	copy := aNodeSet copyEmpty.

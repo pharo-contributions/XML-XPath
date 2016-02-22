@@ -221,7 +221,7 @@ XPathExpressionParser >> parseInput [
 		XPathNodeTestParser
 			on: inputStream
 			for:
-				(XPathExpressionNodeTestParserHandler
+				(XPathCompilingNodeTestParserHandler
 					currentAxis: currentAxis
 					expressionParserHandler: handler).
 	self nextOrExpression.

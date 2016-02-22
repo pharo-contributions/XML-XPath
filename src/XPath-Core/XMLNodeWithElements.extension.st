@@ -2,28 +2,16 @@ Extension { #name : #XMLNodeWithElements }
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNodeWithElements >> / aStringOrBlockOrNodeTestWithFilters [
-	"child axis
-	
-	redefined here to prevent a conflicting Pastell method from shadowing
-	the inherited implementation"
-	^ (self
-		childAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	"redefined here to prevent a conflicting method from the Pastell project
+	from shadowing the inherited implementation if Pastell was installed"
+	^ self childAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNodeWithElements >> // aStringOrBlockOrNodeTestWithFilters [
-	"descendant axis
-	
-	redefined here to prevent a conflicting Pastell method from shadowing
-	the inherited implementation"
-	^ (self
-		descendantAxisSelect: aStringOrBlockOrNodeTestWithFilters asXPathNodeTestBlock
-		into: self nodeSetClass new)
-			sortOrder: XPathDocumentSortOrder new;
-			filterWithAll: aStringOrBlockOrNodeTestWithFilters asXPathNodeSetFilters
+	"redefined here to prevent a conflicting method from the Pastell project
+	from shadowing the inherited implementation if Pastell was installed"
+	^ self descendantAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
 { #category : #'*XPath-Core-accessing' }
