@@ -1,85 +1,28 @@
 Extension { #name : #Number }
 
-{ #category : #'*XPath-Core-private' }
-Number >> //!= anObject [
-	^ anObject xPathNotEqualsNumber: self
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //* anObject [
-	^ self asXPathNumber * anObject asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //+ anObject [
-	^ self asXPathNumber + anObject asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //- anObject [
-	^ self asXPathNumber - anObject asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> /// anObject [
-	^ self asXPathNumber / anObject asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //< anObject [
-	^ anObject xPathGreaterThanNumber: self
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //<= anObject [
-	^ (anObject xPathGreaterThanNumber: self)
-		or: [anObject xPathEqualsNumber: self]
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //= anObject [
-	^ anObject xPathEqualsNumber: self
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //> anObject [
-	^ anObject xPathLessThanNumber: self
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //>= anObject [
-	^ (anObject xPathLessThanNumber: self)
-		or: [anObject xPathEqualsNumber: self]
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //? aThreeArgumentBlockOrNumber [
-	XPathTypeException signal: 'Cannot filter numbers'
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //\/ anObject [
-	XPathTypeException signal: 'Cannot union numbers'
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> //\\ anObject [
-	^ self asXPathNumber \\ anObject asXPathNumber
-]
-
 { #category : #'*XPath-Core-converting' }
 Number >> asXPathBoolean [
 	^ (self isZero or: [self isNaN]) not
 ]
 
 { #category : #'*XPath-Core-converting' }
+Number >> asXPathComparable [
+	^ XPathNumberComparable value: self
+]
+
+{ #category : #'*XPath-Core-converting' }
+Number >> asXPathFilterable [
+	XPathTypeException signal: 'Cannot filter numbers'
+]
+
+{ #category : #'*XPath-Core-converting' }
 Number >> asXPathLocationPathRoot [
-	XPathTypeException signal: 'Cannot use number as location path root'
+	XPathTypeException signal: 'Cannot use numbers as location path roots'
 ]
 
 { #category : #'*XPath-Core-converting' }
 Number >> asXPathNodeSet [
-	XPathTypeException signal: 'Cannot convert number to node set'
+	XPathTypeException signal: 'Cannot convert numbers to node sets'
 ]
 
 { #category : #'*XPath-Core-converting' }
@@ -116,89 +59,14 @@ Number >> asXPathString [
 			^ writeStream contents].
 ]
 
-{ #category : #'*XPath-Core-private' }
-Number >> xPathEqualsBoolean: aBoolean [
-	^ self asXPathBoolean = aBoolean
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathEqualsNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self = each stringValue asXPathNumber]
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathEqualsNumber: aNumber [
-	^ self = aNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathEqualsString: aString [
-	^ self = aString asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathGreaterThanBoolean: aBoolean [
-	^ self > aBoolean asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathGreaterThanNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self > each stringValue asXPathNumber]
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathGreaterThanNumber: aNumber [
-	^ self > aNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathGreaterThanString: aString [
-	^ self > aString asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathLessThanBoolean: aBoolean [
-	^ self < aBoolean asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathLessThanNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self < each stringValue asXPathNumber]
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathLessThanNumber: aNumber [
-	^ self < aNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathLessThanString: aString [
-	^ self < aString asXPathNumber
+{ #category : #'*XPath-Core-converting' }
+Number >> asXPathUnionable [
+	XPathTypeException signal: 'Cannot union numbers'
 ]
 
 { #category : #'*XPath-Core' }
 Number class >> xPathNewFrom: anObject [
 	^ anObject asXPathNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathNotEqualsBoolean: aBoolean [
-	^ self asXPathBoolean ~= aBoolean
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathNotEqualsNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | self ~= each stringValue asXPathNumber]
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathNotEqualsNumber: aNumber [
-	^ self ~= aNumber
-]
-
-{ #category : #'*XPath-Core-private' }
-Number >> xPathNotEqualsString: aString [
-	^ self ~= aString asXPathNumber
 ]
 
 { #category : #'*XPath-Core' }

@@ -12,35 +12,27 @@ Class {
 		'maxArguments',
 		'argumentTypes'
 	],
-	#classInstVars : [
-		'classesByTypeName'
+	#classVars : [
+		'ClassesByTypeName'
 	],
 	#category : #'XPath-Core-Parsers'
 }
 
-{ #category : #private }
-XPathInitializingFunctionPrototypeParserHandler class >> classesByTypeName [
-	^ classesByTypeName
-		ifNil: [
-			(classesByTypeName := Dictionary new)
-				at: 'object' put: Object;
-				at: 'boolean' put: Boolean;
-				at: 'string' put: String;
-				at: 'number' put: Number;
-				at: 'node-set' put: XPathNodeSet;
-				yourself]
-]
-
-{ #category : #private }
-XPathInitializingFunctionPrototypeParserHandler class >> classesByTypeNameAt: aTypeName ifAbsent: aBlock [
-	^ self classesByTypeName
-		at: aTypeName
-		ifAbsent: aBlock
-]
-
 { #category : #'instance creation' }
 XPathInitializingFunctionPrototypeParserHandler class >> function: aFunction [
 	^ self new setFunction: aFunction
+]
+
+{ #category : #'class initialization' }
+XPathInitializingFunctionPrototypeParserHandler class >> initialize [
+	"self initialize"
+
+	(ClassesByTypeName := Dictionary new)
+		at: 'object' put: Object;
+		at: 'boolean' put: Boolean;
+		at: 'string' put: String;
+		at: 'number' put: Number;
+		at: 'node-set' put: XPathNodeSet
 ]
 
 { #category : #private }
@@ -50,8 +42,8 @@ XPathInitializingFunctionPrototypeParserHandler >> addArgumentTypeFor: aTypeName
 
 { #category : #private }
 XPathInitializingFunctionPrototypeParserHandler >> classForTypeName: aTypeName [
-	^ self class
-		classesByTypeNameAt: aTypeName
+	^ ClassesByTypeName
+		at: aTypeName
 		ifAbsent: [self errorUnrecognizedTypeName: aTypeName]
 ]
 

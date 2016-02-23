@@ -123,8 +123,43 @@ XMLNode >> ancestorOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
 ]
 
 { #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathBoolean [
+	XPathTypeException signal: 'Cannot convert nodes to booleans'
+]
+
+{ #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathComparable [
+	XPathTypeException signal: 'Cannot compare nodes'
+]
+
+{ #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathFilterable [
+	XPathTypeException signal: 'Cannot filter nodes'
+]
+
+{ #category : #'*XPath-Core-converting' }
 XMLNode >> asXPathLocationPathRoot [
 	^ self
+]
+
+{ #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathNodeSet [
+	XPathTypeException signal: 'Cannot convert nodes to node sets'
+]
+
+{ #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathNumber [
+	XPathTypeException signal: 'Cannot convert nodes to numbers'
+]
+
+{ #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathString [
+	XPathTypeException signal: 'Cannot convert nodes to strings'
+]
+
+{ #category : #'*XPath-Core-converting' }
+XMLNode >> asXPathUnionable [
+	XPathTypeException signal: 'Cannot union nodes'
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }

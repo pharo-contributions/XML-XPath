@@ -1,15 +1,13 @@
 Extension { #name : #BlockClosure }
 
-{ #category : #'*XPath-Core-private' }
-BlockClosure >> //? aThreeArgumentBlockOrNumber [
-	^ XPathNodeTestWithFilters
-		nodeTest: self
-		filter: aThreeArgumentBlockOrNumber
-]
-
 { #category : #'*XPath-Core-converting' }
 BlockClosure >> asXPathAttributeNodeTestBlock [
 	^ self
+]
+
+{ #category : #'*XPath-Core-converting' }
+BlockClosure >> asXPathFilterable [
+	^ XPathNodeTestWithFilters nodeTest: self
 ]
 
 { #category : #'*XPath-Core-converting' }

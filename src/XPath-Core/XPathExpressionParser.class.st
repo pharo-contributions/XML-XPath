@@ -66,19 +66,13 @@ XPathExpressionParser >> nextAdditiveExpression [
 
 { #category : #parsing }
 XPathExpressionParser >> nextAndExpression [
-	| totalShortCircuited |
-
 	handler handleStartAndExpression.
 	self nextEqualityExpression.
-	totalShortCircuited := 0.
 	[self peekForAndOperator]
 		whileTrue: [
-			handler handleStartShortCircuitAnd.
-			totalShortCircuited := totalShortCircuited + 1.
+			handler handleAnd.
 			self nextEqualityExpression].
-	handler
-		handleEndShortCircuited: totalShortCircuited;
-		handleEndAndExpression.
+	handler handleEndAndExpression.
 ]
 
 { #category : #parsing }
@@ -144,19 +138,13 @@ XPathExpressionParser >> nextMultiplicativeExpression [
 
 { #category : #parsing }
 XPathExpressionParser >> nextOrExpression [
-	| totalShortCircuited |
-
 	handler handleStartOrExpression.
 	self nextAndExpression.
-	totalShortCircuited := 0.
 	[self peekForOrOperator]
 		whileTrue: [
-			handler handleStartShortCircuitOr.
-			totalShortCircuited := totalShortCircuited + 1.
+			handler handleOr.
 			self nextAndExpression].
-	handler
-		handleEndShortCircuited: totalShortCircuited;
-		handleEndOrExpression.
+	handler handleEndOrExpression.
 ]
 
 { #category : #parsing }
@@ -170,6 +158,19 @@ XPathExpressionParser >> nextPathExpression [
 					handler handleStartFilterExpressionLocationPath.
 					self nextAdditionalSteps]].
 	handler handleEndPathExpression.
+]
+
+{ #category : #parsing }
+XPathExpressionParser >> nextPredicateBody [
+	inputStream skipSeparators.
+	(self peekForIntegerPredicate
+		or: [self peekForAttributePredicate])
+		ifFalse: [
+			handler handleStartPredicate.
+			self nextOrExpression.
+			self peekForEndPredicate
+				ifFalse: [self errorExpectedEndPredicate].
+			handler handleEndPredicate].
 ]
 
 { #category : #parsing }
@@ -517,25 +518,20 @@ XPathExpressionParser >> peekForParenthesizedExpression [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForPredicate [
 	self peekForStartPredicate
-		ifFalse: [^ false].
-
-	inputStream skipSeparators.
-	(self peekForIntegerPredicate
-		or: [self peekForAttributePredicate])
-		ifFalse: [
-			handler handleStartPredicate.
-			self nextOrExpression.
-			self peekForEndPredicate
-				ifFalse: [self errorExpectedEndPredicate].
-			handler handleEndPredicate].
-	^ true.
+		ifTrue: [
+			self nextPredicateBody.
+			^ true]
+		ifFalse: [^ false]
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForPredicates [
-	self peekForPredicate
+	self peekForStartPredicate
 		ifTrue: [
+			handler handleStartPredicates.
+			self nextPredicateBody.
 			[self peekForPredicate] whileTrue.
+			handler handleEndPredicates.
 			^ true]
 		ifFalse: [^ false]
 ]

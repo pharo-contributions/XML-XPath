@@ -6,375 +6,518 @@ Class {
 	#superclass : #XPathExpressionParserHandler,
 	#instVars : [
 		'outputStream',
-		'variableIndex',
-		'contextNodeVariable',
-		'contextPositionVariable',
-		'contextSizeVariable'
+		'variableStack',
+		'operatorStack'
 	],
 	#category : #'XPath-Core-Parsers'
 }
 
 { #category : #private }
-XPathCompilingExpressionParserHandler >> decrementVariableNames [
-	variableIndex := variableIndex - 1.
-	self generateVariableNames.
+XPathCompilingExpressionParserHandler >> contextNodeVariable [
+	^ self currentVariablesAt: 1
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> contextPositionVariable [
+	^ self currentVariablesAt: 2
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> contextSizeVariable [
+	^ self currentVariablesAt: 3
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> currentOperator [
+	^ operatorStack lastOrNil
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> currentOperator: anOperator [
+	operatorStack
+		at: operatorStack size
+		put: anOperator.
+	anOperator isString
+		ifTrue: [self emitAll: anOperator]
+		ifFalse: [self emit: anOperator].
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> currentShortCurcuitOperator: anOperator [
+	| association |
+
+	"count the number of short curcuited operators"
+	association :=
+		operatorStack
+			at: operatorStack size
+			ifAbsentPut: [anOperator -> 0].
+	"increment it"
+	association value: (association value + 1).
+	self
+		emitAll: ' ';
+		emitAll: association key;
+		emitAll: ':['.
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> currentVariablesAt: anIndex [
+	^ variableStack last at: anIndex
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emit: aCharacter [
+	outputStream nextPut: aCharacter
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emitAll: aString [
+	outputStream nextPutAll: aString
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitBooleanConversion [
-	outputStream nextPutAll: ' asXPathBoolean'
+	self emitAll: ' asXPathBoolean'
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emitComparableConversion [
+	self emitAll: ' asXPathComparable'
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitEndAttributePredicate [
-	outputStream nextPutAll: ']]'.
-	self emitEndPredicateBlock.
-]
-
-{ #category : #private }
-XPathCompilingExpressionParserHandler >> emitEndBlock [
-	outputStream nextPut: $]
-]
-
-{ #category : #private }
-XPathCompilingExpressionParserHandler >> emitEndGrouping [
-	outputStream nextPut: $)
+	self
+		emitAll: ']]';
+		emitEndPredicateBlock
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitEndPredicateBlock [
-	self decrementVariableNames.
-	outputStream nextPut: $].
+	self
+		popVariables;
+		emit: $]
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emitEndShortCurcuitOperators [
+	self emitBooleanConversion.
+	self currentOperator value
+		timesRepeat: [self emit: $]].
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emitNumberConversion [
+	self emitAll: ' asXPathNumber'
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emitNumberLiteral: anIntegerOrFloatString [
+	self
+		emit: $(;
+		emitAll: anIntegerOrFloatString;
+		emit: $)
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> emitPredicateSeparator [
+	self emit: $.
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitQuotedString: aString [
-	outputStream nextPut: $'.
+	self emit: $'.
 	"escape ' by outputting another ' before it"
 	1 to: aString size do: [:i | | nextChar |
 		(nextChar := aString at: i) == $'
-			ifTrue: [outputStream nextPut: $'].
-		outputStream nextPut: nextChar].
-	outputStream nextPut: $'.
+			ifTrue: [self emit: $'].
+		self emit: nextChar].
+	self emit: $'.
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitStartAttributePredicate: aName [
-	self emitStartPredicateBlock.
-	outputStream
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' isElement and:[';
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' hasAttributes and:[(';
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' attributeAt:'.
-	self emitQuotedString: aName.
-	outputStream nextPut: $).
+	self
+		emitStartPredicateBlock;
+		emitAll: self contextNodeVariable;
+		emitAll: ' isElement and:[';
+		emitAll: self contextNodeVariable;
+		emitAll: ' hasAttributes and:[(';
+		emitAll: self contextNodeVariable;
+		emitAll: ' attributeAt:';
+		emitQuotedString: aName;
+		emit: $)
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitStartContextBlock [
-	outputStream
-		nextPutAll: '[:';
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' :c| |';
-		nextPutAll: contextPositionVariable;
-		space;
-		nextPutAll: contextSizeVariable;
-		nextPut: $|
-]
-
-{ #category : #private }
-XPathCompilingExpressionParserHandler >> emitStartGrouping [
-	outputStream nextPut: $(
+	self
+		emitAll: '[:';
+		emitAll: self contextNodeVariable;
+		emitAll: ' :c| |';
+		emitAll: self contextPositionVariable;
+		emitAll: ' ';
+		emitAll: self contextSizeVariable;
+		emit: $|
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitStartPredicateBlock [
-	self incrementVariableNames.
-	outputStream
-		nextPutAll: '//?[:';
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' :';
-		nextPutAll: contextPositionVariable;
-		nextPutAll: ' :';
-		nextPutAll: contextSizeVariable;
-		nextPut: $|.
+	self
+		pushVariables;
+		emitAll: '[:';
+		emitAll: self contextNodeVariable;
+		emitAll: ' :';
+		emitAll: self contextPositionVariable;
+		emitAll: ' :';
+		emitAll: self contextSizeVariable;
+		emit: $|
 ]
 
 { #category : #private }
-XPathCompilingExpressionParserHandler >> generateVariableNames [
-	| indexString |
-
-	indexString := variableIndex printString.
-	contextNodeVariable := indexString copyWithFirst: $n.
-	contextPositionVariable := indexString copyWithFirst: $p.
-	contextSizeVariable := indexString copyWithFirst: $s.
+XPathCompilingExpressionParserHandler >> emitUnionableConversion [
+	self emitAll: ' asXPathUnionable'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleAddition [
-	outputStream nextPutAll: '//+'
+	self
+		emitNumberConversion;
+		currentOperator: $+
+]
+
+{ #category : #'handling - operators' }
+XPathCompilingExpressionParserHandler >> handleAnd [
+	self
+		emitBooleanConversion;
+		currentShortCurcuitOperator: 'and'
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleAxis: anAxis [
-	outputStream nextPutAll: anAxis replacementSelector.
-	self emitStartGrouping.
+	self
+		emitAll: anAxis replacementSelector;
+		emit: $(
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleDivision [
-	outputStream nextPutAll: '///'
+	self
+		emitNumberConversion;
+		currentOperator: $/
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndAdditiveExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitNumberConversion].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndAndExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitEndShortCurcuitOperators].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndEqualityExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitComparableConversion].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleEndFilterExpression [
-	self emitEndGrouping
+	self emit: $)
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleEndFunctionArgument [
-	outputStream nextPutAll: ');'
+	self emitAll: ');'
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleEndFunctionCall [
-	outputStream nextPutAll: 'invoke)'
+	self emitAll: 'invoke)'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndMultiplicativeExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitNumberConversion].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndOrExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitEndShortCurcuitOperators].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleEndParsing [
 	self
-		emitEndBlock;
+		emit: $];
 		parsingResult: outputStream contents
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleEndPathExpression [
-	self emitEndGrouping
+	self emit: $)
 ]
 
 { #category : #'handling - predicates' }
 XPathCompilingExpressionParserHandler >> handleEndPredicate [
-	self emitEndPredicateBlock
+	self
+		emitEndPredicateBlock;
+		emitPredicateSeparator
+]
+
+{ #category : #'handling - predicates' }
+XPathCompilingExpressionParserHandler >> handleEndPredicates [
+	self emit: $}
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndRelationalExpression [
-	self emitEndGrouping
-]
-
-{ #category : #'handling - operators' }
-XPathCompilingExpressionParserHandler >> handleEndShortCircuited: anInteger [
-	anInteger > 0
-		ifTrue: [
-			self emitBooleanConversion.
-			anInteger timesRepeat: [self emitEndBlock]]
+	self hasCurrentOperator
+		ifTrue: [self emitComparableConversion].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleEndStep [
-	self emitEndGrouping
+	self emit: $)
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndUnaryExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitNumberConversion].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEndUnionExpression [
-	self emitEndGrouping
+	self hasCurrentOperator
+		ifTrue: [self emitUnionableConversion].
+	self
+		popOperator;
+		emit: $).
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleEquals [
-	outputStream nextPutAll: '//='
+	self
+		emitComparableConversion;
+		currentOperator: $=
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleGreaterThan [
-	outputStream nextPutAll: '//>'
+	self
+		emitComparableConversion;
+		currentOperator: $>
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleGreaterThanOrEqualTo [
-	outputStream nextPutAll: '//>='
+	self
+		emitComparableConversion;
+		currentOperator: '>='
 ]
 
 { #category : #'handling - predicates' }
 XPathCompilingExpressionParserHandler >> handleIntegerPredicate: anIntegerString [
-	outputStream
-		nextPutAll: '//?';
-		nextPutAll: anIntegerString
+	self
+		emitNumberLiteral: anIntegerString;
+		emitPredicateSeparator
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleLastFunctionCall [
-	outputStream
-		nextPut: $(;
-		nextPutAll: contextSizeVariable;
-		nextPutAll: ' ifNil:[1])'
+	self
+		emit: $(;
+		emitAll: self contextSizeVariable;
+		emitAll: ' ifNil:[1])'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleLessThan [
-	outputStream nextPutAll: '//<'
+	self
+		emitComparableConversion;
+		currentOperator: $<
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleLessThanOrEqualTo [
-	outputStream nextPutAll: '//<='
+	self
+		emitComparableConversion;
+		currentOperator: '<='
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleModulus [
-	outputStream nextPutAll: '//\\'
+	self
+		emitNumberConversion;
+		currentOperator: '\\'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleMultiplication [
-	outputStream nextPutAll: '//*'
+	self
+		emitNumberConversion;
+		currentOperator: $*
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleNegation [
-	outputStream nextPutAll: '-1//*'
+	self
+		emitNumberLiteral: '-1';
+		handleMultiplication
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleNotEquals [
-	outputStream nextPutAll: '//!='
+	self
+		emitComparableConversion;
+		currentOperator: '!='
 ]
 
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleNumberLiteral: anIntegerOrFloatString [
-	outputStream
-		space;
-		nextPutAll: anIntegerOrFloatString
+	self emitNumberLiteral: anIntegerOrFloatString
+]
+
+{ #category : #'handling - operators' }
+XPathCompilingExpressionParserHandler >> handleOr [
+	self
+		emitBooleanConversion;
+		currentShortCurcuitOperator: 'or'
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handlePositionFunctionCall [
-	outputStream
-		nextPut: $(;
-		nextPutAll: contextPositionVariable;
-		nextPutAll: ' ifNil:[1])'
+	self
+		emit: $(;
+		emitAll: self contextPositionVariable;
+		emitAll: ' ifNil:[1])'
 ]
 
 { #category : #'handling - predicates' }
 XPathCompilingExpressionParserHandler >> handlePredicateAttribute: aName equalsStringLiteral: aStringLiteral [
-	self emitStartAttributePredicate: aName.
-	outputStream nextPut: $=.
 	self
+		emitStartAttributePredicate: aName;
+		emit: $=;
 		emitQuotedString: aStringLiteral;
-		emitEndAttributePredicate.
+		emitEndAttributePredicate
 ]
 
 { #category : #'handling - predicates' }
 XPathCompilingExpressionParserHandler >> handlePredicateAttribute: aName notEqualsStringLiteral: aStringLiteral [
-	self emitStartAttributePredicate: aName.
-	outputStream nextPutAll: '~='.
 	self
+		emitStartAttributePredicate: aName;
+		emitAll: '~=';
 		emitQuotedString: aStringLiteral;
-		emitEndAttributePredicate.
+		emitEndAttributePredicate
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleStartAbsoluteLocationPath [
-	outputStream
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' asXPathLocationPathRoot documentRoot'
+	self
+		emitAll: self contextNodeVariable;
+		emitAll: ' asXPathLocationPathRoot documentRoot'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartAdditiveExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartAndExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartEqualityExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleStartFilterExpression [
-	self emitStartGrouping
+	self emit: $(
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleStartFilterExpressionLocationPath [
-	outputStream nextPutAll: ' asXPathLocationPathRoot'
+	self emitAll: ' asXPathLocationPathRoot'
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleStartFunctionArgument [
-	outputStream nextPutAll: 'push: ('
+	self emitAll: 'push: ('
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleStartFunctionCall: aFunctionName [
-	outputStream
-		nextPutAll: '((c function: ''';
-		nextPutAll: aFunctionName;
-		nextPutAll: ''' contextNode: ';
-		nextPutAll: contextNodeVariable;
-		nextPut: $)
+	self
+		emitAll: '((c function: ''';
+		emitAll: aFunctionName;
+		emitAll: ''' contextNode: ';
+		emitAll: self contextNodeVariable;
+		emit: $)
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartMultiplicativeExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartOrExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleStartParsing [
 	outputStream := (String new: 128) writeStream.
-	variableIndex := 1.
+	variableStack := OrderedCollection new.
+	operatorStack := OrderedCollection new.
 	self
-		generateVariableNames;
+		pushVariables;
 		emitStartContextBlock.
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleStartPathExpression [
-	self emitStartGrouping
+	self emit: $(
 ]
 
 { #category : #'handling - predicates' }
@@ -382,42 +525,37 @@ XPathCompilingExpressionParserHandler >> handleStartPredicate [
 	self emitStartPredicateBlock
 ]
 
+{ #category : #'handling - predicates' }
+XPathCompilingExpressionParserHandler >> handleStartPredicates [
+	self emitAll: ' asXPathFilterable filterWithAll: {'
+]
+
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartRelationalExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #'handling - location paths' }
 XPathCompilingExpressionParserHandler >> handleStartRelativeLocationPath [
-	outputStream
-		nextPutAll: contextNodeVariable;
-		nextPutAll: ' asXPathLocationPathRoot'
-]
-
-{ #category : #'handling - operators' }
-XPathCompilingExpressionParserHandler >> handleStartShortCircuitAnd [
-	self emitBooleanConversion.
-	outputStream nextPutAll: ' and:['.
-]
-
-{ #category : #'handling - operators' }
-XPathCompilingExpressionParserHandler >> handleStartShortCircuitOr [
-	self emitBooleanConversion.
-	outputStream nextPutAll: ' or:['.
-]
-
-{ #category : #'handling - location paths' }
-XPathCompilingExpressionParserHandler >> handleStartStep [
+	self
+		emitAll: self contextNodeVariable;
+		emitAll: ' asXPathLocationPathRoot'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartUnaryExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleStartUnionExpression [
-	self emitStartGrouping
+	self
+		emit: $(;
+		pushOperator
 ]
 
 { #category : #handling }
@@ -427,223 +565,253 @@ XPathCompilingExpressionParserHandler >> handleStringLiteral: aString [
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleSubtraction [
-	outputStream nextPutAll: '//-'
+	self
+		emitNumberConversion;
+		currentOperator: $-
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAnyNodeType [
-	outputStream nextPutAll: '[:n|true]'
+	self emitAll: '[:n|true]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithAnyName [
-	outputStream nextPutAll: '[:n|n isAttribute]'
+	self emitAll: '[:n|n isAttribute]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithLocalName: aLocalName [
-	outputStream
-		nextPutAll: '[:n|n isAttribute and:[n localName=''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isAttribute and:[n localName=''';
+		emitAll: aLocalName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithName: aName [
-	outputStream
-		nextPutAll: '[:n|n isAttribute and:[n name=''';
-		nextPutAll: aName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isAttribute and:[n name=''';
+		emitAll: aName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithNamespaceURI: aURI [
-	outputStream
-		nextPutAll: '[:n|n isAttribute and:[n namespaceURI=''';
-		nextPutAll: aURI;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isAttribute and:[n namespaceURI=''';
+		emitAll: aURI;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
-	outputStream
-		nextPutAll: '[:n|n isAttribute and:[n localName=''';
-		nextPutAll: aLocalName;
-		nextPutAll: '''and:[n namespaceURI=''';
-		nextPutAll: aURI;
-		nextPutAll: ''']]]'
+	self
+		emitAll: '[:n|n isAttribute and:[n localName=''';
+		emitAll: aLocalName;
+		emitAll: '''and:[n namespaceURI=''';
+		emitAll: aURI;
+		emitAll: ''']]]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
-	outputStream
-		nextPutAll: '(c testForAttributeWithPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c testForAttributeWithPrefix:''';
+		emitAll: aPrefix;
+		emitAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
-	outputStream
-		nextPutAll: '(c testForAttributeWithPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: '''localName:''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c testForAttributeWithPrefix:''';
+		emitAll: aPrefix;
+		emitAll: '''localName:''';
+		emitAll: aLocalName;
+		emitAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForCommentType [
-	outputStream nextPutAll: '[:n|n isComment]'
+	self emitAll: '[:n|n isComment]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithAnyName [
-	outputStream nextPutAll: '[:n|n isElement]'
+	self emitAll: '[:n|n isElement]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithLocalName: aLocalName [
-	outputStream
-		nextPutAll: '[:n|n isElement and:[n localName=''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isElement and:[n localName=''';
+		emitAll: aLocalName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithName: aName [
-	outputStream
-		nextPutAll: '[:n|n isElement and:[n name=''';
-		nextPutAll: aName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isElement and:[n name=''';
+		emitAll: aName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithNamespaceURI: aURI [
-	outputStream
-		nextPutAll: '[:n|n isElement and:[n namespaceURI=''';
-		nextPutAll: aURI;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isElement and:[n namespaceURI=''';
+		emitAll: aURI;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
-	outputStream
-		nextPutAll: '[:n|n isElement and:[n localName=''';
-		nextPutAll: aLocalName;
-		nextPutAll: '''and:[n namespaceURI=''';
-		nextPutAll: aURI;
-		nextPutAll: ''']]]'
+	self
+		emitAll: '[:n|n isElement and:[n localName=''';
+		emitAll: aLocalName;
+		emitAll: '''and:[n namespaceURI=''';
+		emitAll: aURI;
+		emitAll: ''']]]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix [
-	outputStream
-		nextPutAll: '(c testForElementWithPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c testForElementWithPrefix:''';
+		emitAll: aPrefix;
+		emitAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
-	outputStream
-		nextPutAll: '(c testForElementWithPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: '''localName:''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c testForElementWithPrefix:''';
+		emitAll: aPrefix;
+		emitAll: '''localName:''';
+		emitAll: aLocalName;
+		emitAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithAnyName [
-	outputStream nextPutAll: '[:n|n isNamespace]'
+	self emitAll: '[:n|n isNamespace]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
-	outputStream
-		nextPutAll: '[:n|n isNamespace and:[n localName=''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isNamespace and:[n localName=''';
+		emitAll: aLocalName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithName: aName [
-	outputStream
-		nextPutAll: '[:n|n isNamespace and:[n name=''';
-		nextPutAll: aName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isNamespace and:[n name=''';
+		emitAll: aName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI [
-	outputStream
-		nextPutAll: '[:n|n isNamespace and:[n namespaceURI=''';
-		nextPutAll: aURI;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isNamespace and:[n namespaceURI=''';
+		emitAll: aURI;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI localName: aLocalName [
-	outputStream
-		nextPutAll: '[:n|n isNamespace and:[n localName=''';
-		nextPutAll: aLocalName;
-		nextPutAll: '''and:[n namespaceURI=''';
-		nextPutAll: aURI;
-		nextPutAll: ''']]]'
+	self
+		emitAll: '[:n|n isNamespace and:[n localName=''';
+		emitAll: aLocalName;
+		emitAll: '''and:[n namespaceURI=''';
+		emitAll: aURI;
+		emitAll: ''']]]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
-	outputStream
-		nextPutAll: '(c testForNamespaceWithPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c testForNamespaceWithPrefix:''';
+		emitAll: aPrefix;
+		emitAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
-	outputStream
-		nextPutAll: '(c testForNamespaceWithPrefix:''';
-		nextPutAll: aPrefix;
-		nextPutAll: '''localName:''';
-		nextPutAll: aLocalName;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c testForNamespaceWithPrefix:''';
+		emitAll: aPrefix;
+		emitAll: '''localName:''';
+		emitAll: aLocalName;
+		emitAll: ''')'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForPIWithAnyName [
-	outputStream nextPutAll: '[:n|n isPI]'
+	self emitAll: '[:n|n isPI]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForPIWithName: aName [
-	outputStream
-		nextPutAll: '[:n|n isPI and:[n target=''';
-		nextPutAll: aName;
-		nextPutAll: ''']]'
+	self
+		emitAll: '[:n|n isPI and:[n target=''';
+		emitAll: aName;
+		emitAll: ''']]'
 ]
 
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForTextType [
-	outputStream nextPutAll: '[:n|n isStringNode]'
+	self emitAll: '[:n|n isStringNode]'
 ]
 
 { #category : #'handling - operators' }
 XPathCompilingExpressionParserHandler >> handleUnion [
-	outputStream nextPutAll: '//\/'
+	self
+		emitUnionableConversion;
+		currentOperator: $|
 ]
 
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleVariableReference: aName [
-	outputStream
-		nextPutAll: '(c variableAt: ''';
-		nextPutAll: aName;
-		nextPutAll: ''')'
+	self
+		emitAll: '(c variableAt: ''';
+		emitAll: aName;
+		emitAll: ''')'
 ]
 
 { #category : #private }
-XPathCompilingExpressionParserHandler >> incrementVariableNames [
-	variableIndex := variableIndex + 1.
-	self generateVariableNames.
+XPathCompilingExpressionParserHandler >> hasCurrentOperator [
+	^ self currentOperator notNil
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> popOperator [
+	operatorStack removeLast
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> popVariables [
+	variableStack removeLast
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> pushOperator [
+	operatorStack addLast: nil
+]
+
+{ #category : #private }
+XPathCompilingExpressionParserHandler >> pushVariables [
+	| indexString |
+
+	indexString := (variableStack size + 1) printString.
+	variableStack addLast:
+		(Array
+			with: (indexString copyWithFirst: $n) "node variable"
+			with: (indexString copyWithFirst: $p) "position variable"
+			with: (indexString copyWithFirst: $s)). "size variable"
 ]

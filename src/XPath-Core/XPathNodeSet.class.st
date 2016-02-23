@@ -52,75 +52,6 @@ XPathNodeSet >> // aStringOrBlockOrNodeTestWithFilters [
 	^ self descendantAxis: aStringOrBlockOrNodeTestWithFilters
 ]
 
-{ #category : #private }
-XPathNodeSet >> //!= anObject [
-	^ anObject xPathNotEqualsNodeSet: self
-]
-
-{ #category : #private }
-XPathNodeSet >> //* anObject [
-	^ self asXPathNumber * anObject asXPathNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> //+ anObject [
-	^ self asXPathNumber + anObject asXPathNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> //- anObject [
-	^ self asXPathNumber - anObject asXPathNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> /// anObject [
-	^ self asXPathNumber / anObject asXPathNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> //< anObject [
-	^ anObject xPathGreaterThanNodeSet: self
-]
-
-{ #category : #private }
-XPathNodeSet >> //<= anObject [
-	^ (anObject xPathGreaterThanNodeSet: self)
-		or: [anObject xPathEqualsNodeSet: self]
-]
-
-{ #category : #private }
-XPathNodeSet >> //= anObject [
-	^ anObject xPathEqualsNodeSet: self
-]
-
-{ #category : #private }
-XPathNodeSet >> //> anObject [
-	^ anObject xPathLessThanNodeSet: self
-]
-
-{ #category : #private }
-XPathNodeSet >> //>= anObject [
-	^ (anObject xPathLessThanNodeSet: self)
-		or: [anObject xPathEqualsNodeSet: self]
-]
-
-{ #category : #private }
-XPathNodeSet >> //? aThreeArgumentBlockOrNumber [
-	^ self sort filterWith: aThreeArgumentBlockOrNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> //\/ anObject [
-	"the OldCompiler doesn't allow binary selectors with | in them
-	so //\/ is used instead of //|"
-	^ self | anObject asXPathNodeSet
-]
-
-{ #category : #private }
-XPathNodeSet >> //\\ anObject [
-	^ self asXPathNumber \\ anObject asXPathNumber
-]
-
 { #category : #'enumerating - axis' }
 XPathNodeSet >> //~ aStringOrBlockOrNodeTestWithFilters [
 	^ self descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
@@ -234,6 +165,16 @@ XPathNodeSet >> asXPathBoolean [
 ]
 
 { #category : #converting }
+XPathNodeSet >> asXPathComparable [
+	^ XPathNodeSetComparable value: self
+]
+
+{ #category : #converting }
+XPathNodeSet >> asXPathFilterable [
+	^ self sorted
+]
+
+{ #category : #converting }
 XPathNodeSet >> asXPathLocationPathRoot [
 	^ self
 ]
@@ -253,6 +194,11 @@ XPathNodeSet >> asXPathString [
 	^ self firstInDocumentOrder
 		ifNil: ['']
 		ifNotNil: [:node | node stringValue]
+]
+
+{ #category : #converting }
+XPathNodeSet >> asXPathUnionable [
+	^ self
 ]
 
 { #category : #'enumerating - axis' }
@@ -607,122 +553,6 @@ XPathNodeSet >> union: aNodeSet [
 	^ self copy
 		addAll: aNodeSet;
 		sort
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathEqualsBoolean: aBoolean [
-	^ self asXPathBoolean = aBoolean
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathEqualsNodeSet: aNodeSet [
-	| stringValues |
-
-	stringValues := Set new: self size.
-	self do: [:each | stringValues add: each stringValue].
-	^ aNodeSet anySatisfy: [:node | stringValues includes: node stringValue].
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathEqualsNumber: aNumber [
-	^ self anySatisfy: [:each | each stringValue asXPathNumber = aNumber]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathEqualsString: aString [
-	^ self anySatisfy: [:each | each stringValue = aString]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathGreaterThanBoolean: aBoolean [
-	^ self asXPathBoolean asXPathNumber > aBoolean asXPathNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathGreaterThanNodeSet: aNodeSet [
-	| least |
-
-	aNodeSet do: [:each | | number |
-		number := each stringValue asXPathNumber.
-		(least isNil
-			or: [number < least])
-			ifTrue: [least := number]].
-	^ least notNil
-		and: [self anySatisfy: [:each | each stringValue asXPathNumber > least]].
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathGreaterThanNumber: aNumber [
-	^ self anySatisfy: [:each | each stringValue asXPathNumber > aNumber]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathGreaterThanString: aString [
-	| number |
-
-	number := aString asXPathNumber.
-	^ self anySatisfy: [:each | each stringValue asXPathNumber > number]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathLessThanBoolean: aBoolean [
-	^ self asXPathBoolean asXPathNumber < aBoolean asXPathNumber
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathLessThanNodeSet: aNodeSet [
-	| greatest |
-
-	aNodeSet do: [:each | | number |
-		number := each stringValue asXPathNumber.
-		(greatest isNil
-			or: [number > greatest])
-			ifTrue: [greatest := number]].
-	^ greatest notNil
-		and: [self anySatisfy: [:each | each stringValue asXPathNumber < greatest]].
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathLessThanNumber: aNumber [
-	^ self anySatisfy: [:each | each stringValue asXPathNumber < aNumber]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathLessThanString: aString [
-	| number |
-
-	number := aString asXPathNumber.
-	^ self anySatisfy: [:each | each asXPathNumber < number]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathNotEqualsBoolean: aBoolean [
-	^ self asXPathBoolean ~= aBoolean
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathNotEqualsNodeSet: aNodeSet [
-	| stringValues |
-
-	"should return true according to spec when aNodeSet and self each have at least
-	one node that don't have the same string-values"
-	stringValues := self collect: [:each | each stringValue].
-	aNodeSet do: [:node | | stringValue |
-		stringValue := node stringValue.
-		stringValues do: [:each |
-			each = stringValue
-				ifFalse: [^ true]]].
-	^ false.
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathNotEqualsNumber: aNumber [
-	^ self anySatisfy: [:each | each stringValue asXPathNumber ~= aNumber]
-]
-
-{ #category : #private }
-XPathNodeSet >> xPathNotEqualsString: aString [
-	^ self anySatisfy: [:each | each stringValue ~= aString]
 ]
 
 { #category : #enumerating }

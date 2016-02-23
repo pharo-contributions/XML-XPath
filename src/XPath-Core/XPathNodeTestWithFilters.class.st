@@ -8,22 +8,12 @@ Class {
 		'filters',
 		'nodeTest'
 	],
-	#classInstVars : [
-		'filters'
-	],
-	#category : #'XPath-Core-Parsers'
+	#category : #'XPath-Core-Evaluation'
 }
 
 { #category : #'instance creation' }
-XPathNodeTestWithFilters class >> nodeTest: aNodeTestBlock filter: aThreeArgumentBlockOrNumber [
-	^ self new
-		setNodeTest: aNodeTestBlock
-		filter: aThreeArgumentBlockOrNumber
-]
-
-{ #category : #private }
-XPathNodeTestWithFilters >> //? aThreeArgumentBlockOrNumber [
-	self filters addLast: aThreeArgumentBlockOrNumber
+XPathNodeTestWithFilters class >> nodeTest: aNodeTestBlock [
+	^ self new nodeTest: aNodeTestBlock
 ]
 
 { #category : #converting }
@@ -46,6 +36,11 @@ XPathNodeTestWithFilters >> asXPathNodeTestBlock [
 	^ self nodeTest
 ]
 
+{ #category : #private }
+XPathNodeTestWithFilters >> filterWithAll: aFilterCollection [
+	filters := aFilterCollection
+]
+
 { #category : #accessing }
 XPathNodeTestWithFilters >> filters [
 	^ filters
@@ -62,7 +57,6 @@ XPathNodeTestWithFilters >> nodeTest [
 ]
 
 { #category : #initialization }
-XPathNodeTestWithFilters >> setNodeTest: aNodeTestBlock filter: aThreeArgumentBlockOrNumber [
-	nodeTest := aNodeTestBlock.
-	filters := OrderedCollection with: aThreeArgumentBlockOrNumber.
+XPathNodeTestWithFilters >> nodeTest: aNodeTestBlock [
+	nodeTest := aNodeTestBlock
 ]

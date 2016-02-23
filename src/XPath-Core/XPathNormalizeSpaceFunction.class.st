@@ -14,7 +14,7 @@ XPathNormalizeSpaceFunction class >> functionPrototype [
 
 { #category : #invoking }
 XPathNormalizeSpaceFunction >> function [
-	| string writeStream isInWhitespace |
+	| string writeStream isInWhitespace normalizedSpace |
 
 	self hasPushedArguments
 		ifTrue: [string := self pop]
@@ -24,6 +24,7 @@ XPathNormalizeSpaceFunction >> function [
 	on Gemstone"
 	writeStream := (String new: string size) writeStream.
 	isInWhitespace := false.
+	normalizedSpace := Character space.
 	string do: [:each |
 		each xmlParserIsSeparator
 			ifTrue: [
@@ -33,7 +34,7 @@ XPathNormalizeSpaceFunction >> function [
 				isInWhitespace
 					ifTrue: [
 						writeStream position > 0
-							ifTrue: [writeStream nextPut: $ ].
+							ifTrue: [writeStream nextPut: normalizedSpace].
 						isInWhitespace := false].
 				writeStream nextPut: each]].
 	^ writeStream contents.

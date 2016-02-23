@@ -11,6 +11,10 @@ Class {
 XPathExpressionParserHandler >> handleAddition [
 ]
 
+{ #category : #'handling - operators' }
+XPathExpressionParserHandler >> handleAnd [
+]
+
 { #category : #'handling - location paths' }
 XPathExpressionParserHandler >> handleAxis: anAxis [
 ]
@@ -59,12 +63,12 @@ XPathExpressionParserHandler >> handleEndPathExpression [
 XPathExpressionParserHandler >> handleEndPredicate [
 ]
 
-{ #category : #'handling - operators' }
-XPathExpressionParserHandler >> handleEndRelationalExpression [
+{ #category : #'handling - predicates' }
+XPathExpressionParserHandler >> handleEndPredicates [
 ]
 
 { #category : #'handling - operators' }
-XPathExpressionParserHandler >> handleEndShortCircuited: anInteger [
+XPathExpressionParserHandler >> handleEndRelationalExpression [
 ]
 
 { #category : #'handling - location paths' }
@@ -127,6 +131,10 @@ XPathExpressionParserHandler >> handleNotEquals [
 XPathExpressionParserHandler >> handleNumberLiteral: anIntegerOrFloatString [
 ]
 
+{ #category : #'handling - operators' }
+XPathExpressionParserHandler >> handleOr [
+]
+
 { #category : #'handling - functions' }
 XPathExpressionParserHandler >> handlePositionFunctionCall [
 ]
@@ -187,20 +195,16 @@ XPathExpressionParserHandler >> handleStartPathExpression [
 XPathExpressionParserHandler >> handleStartPredicate [
 ]
 
+{ #category : #'handling - predicates' }
+XPathExpressionParserHandler >> handleStartPredicates [
+]
+
 { #category : #'handling - operators' }
 XPathExpressionParserHandler >> handleStartRelationalExpression [
 ]
 
 { #category : #'handling - location paths' }
 XPathExpressionParserHandler >> handleStartRelativeLocationPath [
-]
-
-{ #category : #'handling - operators' }
-XPathExpressionParserHandler >> handleStartShortCircuitAnd [
-]
-
-{ #category : #'handling - operators' }
-XPathExpressionParserHandler >> handleStartShortCircuitOr [
 ]
 
 { #category : #'handling - location paths' }
