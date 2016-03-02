@@ -40,9 +40,9 @@ XMLNodeWithChildrenTest >> testFollowingNodesDo [
 			enumerate:
 				(each hasParent
 					ifTrue: [
-						each parent descendentNodes copyAfter:
+						each parent descendantNodes copyAfter:
 							(each hasChildren
-								ifTrue: [each descendentNodes last]
+								ifTrue: [each descendantNodes last]
 								ifFalse: [each])]
 					ifFalse: [#()])].
 ]
@@ -75,7 +75,7 @@ XMLNodeWithChildrenTest >> testPrecedingNodesDo [
 			should: [:block | each precedingNodesDo: block]
 			enumerate:
 				(each hasParent
-					ifTrue: [(each parent descendentNodes copyUpTo: each) reversed]
+					ifTrue: [(each parent descendantNodes copyUpTo: each) reversed]
 					ifFalse: [#()])].
 ]
 

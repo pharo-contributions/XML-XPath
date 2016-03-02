@@ -76,12 +76,12 @@ XMLNodeWithElementsTest >> testDescendantAxis [
 			ifTrue: [| list |
 				list := each // 'node()'.
 				self
-					assert: list = each descendentNodes;
+					assert: list = each descendantNodes;
 					assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 				list := each // '*'.
 				self
-					assert: list = each descendentElements;
+					assert: list = each descendantElements;
 					assertList: list hasSortOrder: XPathDocumentSortOrder]
 			ifFalse: [
 				self
@@ -101,13 +101,13 @@ XMLNodeWithElementsTest >> testDescendantOrSelfAxis [
 			ifTrue: [| list |
 				list := each //~ 'node()'.
 				self
-					assert: list = (each descendentNodes copyWithFirst: each);
+					assert: list = (each descendantNodes copyWithFirst: each);
 					assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 				list := each //~ '*'.
 				each isElement
-					ifTrue: [self assert: list = (each descendentElements copyWithFirst: each)]
-					ifFalse: [self assert: list = each descendentElements].
+					ifTrue: [self assert: list = (each descendantElements copyWithFirst: each)]
+					ifFalse: [self assert: list = each descendantElements].
 				self assertList: list hasSortOrder: XPathDocumentSortOrder]
 			ifFalse: [
 				self assert: (each //~ 'node()') = (XPathNodeSet with: each).
@@ -128,9 +128,9 @@ XMLNodeWithElementsTest >> testFollowingAxis [
 		followingNodes := 
 			each hasParent
 				ifTrue: [
-					each parent descendentNodes copyAfter:
+					each parent descendantNodes copyAfter:
 						(each hasChildren
-							ifTrue: [each descendentNodes last]
+							ifTrue: [each descendantNodes last]
 							ifFalse: [each])]
 				ifFalse: [XPathNodeSet new].
 		self
@@ -177,7 +177,7 @@ XMLNodeWithElementsTest >> testPrecedingAxis [
 		list := each << 'node()'.
 		precedingNodes :=
 			each hasParent
-				ifTrue: [(each parent descendentNodes copyUpTo: each) reversed]
+				ifTrue: [(each parent descendantNodes copyUpTo: each) reversed]
 				ifFalse: [XPathNodeSet new].
 		self
 			assert: list = precedingNodes;
