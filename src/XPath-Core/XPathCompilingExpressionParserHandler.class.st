@@ -28,6 +28,11 @@ XPathCompilingExpressionParserHandler >> contextSizeVariable [
 ]
 
 { #category : #private }
+XPathCompilingExpressionParserHandler >> contextVariable [
+	^ 'c'
+]
+
+{ #category : #private }
 XPathCompilingExpressionParserHandler >> currentOperator [
 	^ operatorStack lastOrNil
 ]
@@ -88,21 +93,21 @@ XPathCompilingExpressionParserHandler >> emitComparableConversion [
 XPathCompilingExpressionParserHandler >> emitEndAttributePredicate [
 	self
 		emitAll: ']]';
-		emitEndPredicateBlock
+		emitEndBlock
 ]
 
 { #category : #private }
-XPathCompilingExpressionParserHandler >> emitEndPredicateBlock [
+XPathCompilingExpressionParserHandler >> emitEndBlock [
 	self
-		popVariables;
-		emit: $]
+		emit: $];
+		popVariables
 ]
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitEndShortCurcuitOperators [
 	self emitBooleanConversion.
-	self currentOperator value
-		timesRepeat: [self emit: $]].
+	self currentOperator value timesRepeat: [
+		self emit: $]].
 ]
 
 { #category : #private }
@@ -151,9 +156,12 @@ XPathCompilingExpressionParserHandler >> emitStartAttributePredicate: aName [
 { #category : #private }
 XPathCompilingExpressionParserHandler >> emitStartContextBlock [
 	self
+		pushVariables;
 		emitAll: '[:';
 		emitAll: self contextNodeVariable;
-		emitAll: ' :c| |';
+		emitAll: ' :';
+		emitAll: self contextVariable;
+		emitAll: '| |';
 		emitAll: self contextPositionVariable;
 		emitAll: ' ';
 		emitAll: self contextSizeVariable;
@@ -269,7 +277,7 @@ XPathCompilingExpressionParserHandler >> handleEndOrExpression [
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleEndParsing [
 	self
-		emit: $];
+		emitEndBlock;
 		parsingResult: outputStream contents
 ]
 
@@ -281,7 +289,7 @@ XPathCompilingExpressionParserHandler >> handleEndPathExpression [
 { #category : #'handling - predicates' }
 XPathCompilingExpressionParserHandler >> handleEndPredicate [
 	self
-		emitEndPredicateBlock;
+		emitEndBlock;
 		emitPredicateSeparator
 ]
 
@@ -484,7 +492,9 @@ XPathCompilingExpressionParserHandler >> handleStartFunctionArgument [
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleStartFunctionCall: aFunctionName [
 	self
-		emitAll: '((c function: ''';
+		emitAll: '((';
+		emitAll: self contextVariable;
+		emitAll: ' resolveFunctionReference: ''';
 		emitAll: aFunctionName;
 		emitAll: ''' contextNode: ';
 		emitAll: self contextNodeVariable;
@@ -510,9 +520,8 @@ XPathCompilingExpressionParserHandler >> handleStartParsing [
 	outputStream := (String new: 128) writeStream.
 	variableStack := OrderedCollection new.
 	operatorStack := OrderedCollection new.
-	self
-		pushVariables;
-		emitStartContextBlock.
+
+	self emitStartContextBlock.
 ]
 
 { #category : #'handling - location paths' }
@@ -617,7 +626,9 @@ XPathCompilingExpressionParserHandler >> handleTestForAttributeWithNamespaceURI:
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
 	self
-		emitAll: '(c testForAttributeWithPrefix:''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' testForAttributeWithPrefix:''';
 		emitAll: aPrefix;
 		emitAll: ''')'
 ]
@@ -625,7 +636,9 @@ XPathCompilingExpressionParserHandler >> handleTestForAttributeWithPrefix: aPref
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
 	self
-		emitAll: '(c testForAttributeWithPrefix:''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' testForAttributeWithPrefix:''';
 		emitAll: aPrefix;
 		emitAll: '''localName:''';
 		emitAll: aLocalName;
@@ -679,7 +692,9 @@ XPathCompilingExpressionParserHandler >> handleTestForElementWithNamespaceURI: a
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix [
 	self
-		emitAll: '(c testForElementWithPrefix:''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' testForElementWithPrefix:''';
 		emitAll: aPrefix;
 		emitAll: ''')'
 ]
@@ -687,7 +702,9 @@ XPathCompilingExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
 	self
-		emitAll: '(c testForElementWithPrefix:''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' testForElementWithPrefix:''';
 		emitAll: aPrefix;
 		emitAll: '''localName:''';
 		emitAll: aLocalName;
@@ -736,7 +753,9 @@ XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithNamespaceURI:
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
 	self
-		emitAll: '(c testForNamespaceWithPrefix:''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' testForNamespaceWithPrefix:''';
 		emitAll: aPrefix;
 		emitAll: ''')'
 ]
@@ -744,7 +763,9 @@ XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPref
 { #category : #'handling - node tests' }
 XPathCompilingExpressionParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
 	self
-		emitAll: '(c testForNamespaceWithPrefix:''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' testForNamespaceWithPrefix:''';
 		emitAll: aPrefix;
 		emitAll: '''localName:''';
 		emitAll: aLocalName;
@@ -779,7 +800,9 @@ XPathCompilingExpressionParserHandler >> handleUnion [
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleVariableReference: aName [
 	self
-		emitAll: '(c variableAt: ''';
+		emit: $(;
+		emitAll: self contextVariable;
+		emitAll: ' resolveVariableReference: ''';
 		emitAll: aName;
 		emitAll: ''')'
 ]

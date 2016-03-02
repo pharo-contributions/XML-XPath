@@ -26,7 +26,7 @@ XPathNameFunction >> function [
 				and: [(namespaceURI := node namespaceURI) notEmpty
 					and: [node hasPrefix]])
 				ifTrue: [
-					((self context prefixesOfNamespaceURI: namespaceURI)
+					((self context resolvePrefixesOfNamespaceURI: namespaceURI)
 						ifEmpty: [^ node localName]
 						ifNotEmpty: [:prefixes |
 							^ node localName qualifyWithPrefix: prefixes anyOne])]

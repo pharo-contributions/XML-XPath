@@ -22,7 +22,7 @@ XMLNodeWithChildren >> childAxisSelect: aNodeTestBlock into: aNodeSet [
 
 { #category : #'*XPath-Core-private' }
 XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
-	self descendentNodesDo: [:each |
+	self descendantNodesDo: [:each |
 		((aNodeSet includes: each) not
 			and: [aNodeTestBlock value: each])
 			ifTrue: [aNodeSet addLast: each]].
@@ -31,7 +31,7 @@ XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aN
 
 { #category : #'*XPath-Core-private' }
 XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock into: aNodeSet [
-	self descendentNodesDo: [:each |
+	self descendantNodesDo: [:each |
 		(aNodeTestBlock value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.

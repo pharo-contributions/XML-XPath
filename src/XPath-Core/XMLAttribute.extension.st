@@ -7,7 +7,8 @@ XMLAttribute >> hasExpandedName [
 
 { #category : #'*XPath-Core-testing' }
 XMLAttribute >> hasPrefixedNamespaceURI: aURI [
-	"unprefixed attributes cannot be namespaced"
+	"unprefixed attributes have no namespace (not even the default), so any
+	namespace URI is a prefixed URI"
 	^ self namespaceURI = aURI
 ]
 

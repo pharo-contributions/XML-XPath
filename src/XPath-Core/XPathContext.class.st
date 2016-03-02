@@ -68,9 +68,16 @@ XPathContext class >> variables: aVariableAssociationCollection namespaces: aNam
 		functions: aFunctionSet
 ]
 
-{ #category : #accessing }
+{ #category : #adding }
 XPathContext >> addFunction: aFunction [
-	functions := self functions + aFunction
+	"use copy-on-write so the default function set isn't modified"
+	^ self copiedFunctions add: aFunction
+]
+
+{ #category : #private }
+XPathContext >> copiedFunctions [
+	"used to implement copy-on-write for functions"
+	^ functions := functions copy
 ]
 
 { #category : #namespacing }
@@ -106,22 +113,28 @@ XPathContext >> errorUndeclaredVariable: aVariableName [
 		with: aVariableName
 ]
 
-{ #category : #private }
-XPathContext >> function: aFunctionName contextNode: aContextNode [
-	^ (self functions
+{ #category : #accessing }
+XPathContext >> functionNamed: aFunctionName [
+	^ self functions functionNamed: aFunctionName
+]
+
+{ #category : #accessing }
+XPathContext >> functionNamed: aFunctionName ifAbsent: aBlock [
+	^ self functions 
 		functionNamed: aFunctionName
-		ifAbsent: [self errorUndeclaredFunction: aFunctionName])
-		context: self
-		contextNode: aContextNode
+		ifAbsent: aBlock
 ]
 
 { #category : #private }
 XPathContext >> functions [
+	"the default function set won't be directly modified because the add/remove
+	methods use copy-on-write semantics"
 	^ functions ifNil: [functions := self class defaultFunctions]
 ]
 
 { #category : #accessing }
 XPathContext >> functions: aFunctionSet [
+	"will only be modified by copy-on-write"
 	functions := aFunctionSet
 ]
 
@@ -144,6 +157,7 @@ XPathContext >> includesVariable: aVariableName [
 { #category : #initialization }
 XPathContext >> initialize [
 	super initialize.
+
 	functionStack := OrderedCollection new.
 ]
 
@@ -169,33 +183,82 @@ XPathContext >> pop [
 	^ functionStack removeLast
 ]
 
-{ #category : #namespacing }
-XPathContext >> prefixesOfNamespaceURI: aURI [
-	^ self namespaceScope prefixesOfNamespaceURI: aURI
-]
-
 { #category : #private }
 XPathContext >> push: anObject [
 	^ functionStack addLast: anObject
 ]
 
-{ #category : #accessing }
+{ #category : #removing }
 XPathContext >> removeFunction: aFunction [
-	functions := self functions - aFunction
+	"use copy-on-write so the default function set isn't modified"
+	^ self copiedFunctions remove: aFunction
+]
+
+{ #category : #removing }
+XPathContext >> removeFunction: aFunction ifAbsent: aBlock [
+	"use copy-on-write so the default function set isn't modified"
+	^ self copiedFunctions
+		remove: aFunction
+		ifAbsent: aBlock
+]
+
+{ #category : #removing }
+XPathContext >> removeVariable: aVariable [
+	^ self variables removeKey: aVariable
+]
+
+{ #category : #removing }
+XPathContext >> removeVariable: aVariable ifAbsent: aBlock [
+	^ self variables
+		removeKey: aVariable
+		ifAbsent: aBlock
+]
+
+{ #category : #private }
+XPathContext >> resolveFunctionReference: aFunctionName contextNode: aContextNode [
+	^ (self
+		functionNamed: aFunctionName
+		ifAbsent: [self errorUndeclaredFunction: aFunctionName])
+		context: self
+		contextNode: aContextNode
 ]
 
 { #category : #namespacing }
 XPathContext >> resolvePrefix: aPrefix [
+	^ self namespaceScope resolvePrefix: aPrefix
+]
+
+{ #category : #namespacing }
+XPathContext >> resolvePrefix: aPrefix ifUnresolvable: aBlock [
 	^ self namespaceScope
 		resolvePrefix: aPrefix
+		ifUnresolvable: aBlock
+]
+
+{ #category : #private }
+XPathContext >> resolvePrefixReference: aPrefix [
+	^ self
+		resolvePrefix: aPrefix
 		ifUnresolvable: [self errorUndeclaredPrefix: aPrefix]
+]
+
+{ #category : #namespacing }
+XPathContext >> resolvePrefixesOfNamespaceURI: aURI [
+	^ self namespaceScope resolvePrefixesOfNamespaceURI: aURI
+]
+
+{ #category : #private }
+XPathContext >> resolveVariableReference: aVariableName [
+	^ self
+		variableAt: aVariableName
+		ifAbsent: [self errorUndeclaredVariable: aVariableName]
 ]
 
 { #category : #private }
 XPathContext >> testForAttributeWithPrefix: aPrefix [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefix: aPrefix.
+			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isAttribute
 					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
@@ -209,7 +272,7 @@ XPathContext >> testForAttributeWithPrefix: aPrefix [
 XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefix: aPrefix.
+			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isAttribute
 					and: [node localName = aLocalName
@@ -225,7 +288,7 @@ XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
 XPathContext >> testForElementWithPrefix: aPrefix [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefix: aPrefix.
+			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isElement
 					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
@@ -239,7 +302,7 @@ XPathContext >> testForElementWithPrefix: aPrefix [
 XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefix: aPrefix.
+			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isElement
 					and: [node localName = aLocalName
@@ -255,7 +318,7 @@ XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 XPathContext >> testForNamespaceWithPrefix: aPrefix [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefix: aPrefix.
+			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isNamespace
 					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
@@ -269,7 +332,7 @@ XPathContext >> testForNamespaceWithPrefix: aPrefix [
 XPathContext >> testForNamespaceWithPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
 		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefix: aPrefix.
+			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isNamespace
 					and: [node localName = aLocalName
@@ -283,14 +346,21 @@ XPathContext >> testForNamespaceWithPrefix: aPrefix localName: aLocalName [
 
 { #category : #namespacing }
 XPathContext >> undeclarePrefix: aPrefix [
-	self namespaceScope unmapPrefix: aPrefix
+	self namespaceScope
+		unmapPrefix: aPrefix
+		ifAbsent: [nil]
+]
+
+{ #category : #namespacing }
+XPathContext >> undeclarePrefixes [
+	self namespaceScope unmapPrefixes
 ]
 
 { #category : #accessing }
 XPathContext >> variableAt: aVariableName [
 	^ self variables
 		at: aVariableName
-		ifAbsent: [self errorUndeclaredVariable: aVariableName]
+		ifAbsent: ['']
 ]
 
 { #category : #accessing }
