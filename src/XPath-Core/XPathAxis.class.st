@@ -1,5 +1,5 @@
 "
-This class holds the current axis while a step is being parsed and maps them to selectors and parser context classes.
+This class holds the current axis while a step is being parsed and maps them to selectors that implement the axis and parser context classes to parse the node test after.
 "
 Class {
 	#name : #XPathAxis,
@@ -26,9 +26,11 @@ XPathAxis class >> axisSpecifiers [
 { #category : #private }
 XPathAxis class >> axisSpecifiersTemplate [
 	"Returns an array of arrays where each subarray has an axis name,
-	a selector to map it to, and the principal node type for that axis.
+	a selector to map it to, and the principal node type for that axis,
+	which is used to determine the parser context class when parsing
+	the node test after.
 
-	The / and // are handled implicitly and so are not defined here."
+	The / and // axis are handled implicitly and so are not defined here."
 
 	^ #(
 		#('ancestor'           '%%'  element)

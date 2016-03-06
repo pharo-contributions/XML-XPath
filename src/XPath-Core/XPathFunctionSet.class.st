@@ -53,13 +53,13 @@ XPathFunctionSet class >> new: aCapacity [
 
 { #category : #'instance creation' }
 XPathFunctionSet class >> newFrom: aCollection [
-	"for portability"
+	"for GS portability"
 	^ self withAll: aCollection
 ]
 
 { #category : #composition }
 XPathFunctionSet >> + aFunctionOrFunctionSet [
-	^ aFunctionOrFunctionSet asFunctionSetWithFunctions: self
+	^ aFunctionOrFunctionSet asXPathFunctionSetWithFunctions: self
 ]
 
 { #category : #copying }
@@ -72,7 +72,7 @@ XPathFunctionSet >> , aCollection [
 
 { #category : #composition }
 XPathFunctionSet >> - aFunctionOrFunctionSet [
-	^ aFunctionOrFunctionSet asFunctionSetSubtractedFromFunctions: self
+	^ aFunctionOrFunctionSet asXPathFunctionSetSubtractedFromFunctions: self
 ]
 
 { #category : #comparing }
@@ -95,27 +95,27 @@ XPathFunctionSet >> add: aFunction [
 ]
 
 { #category : #converting }
-XPathFunctionSet >> asFunctionSet [
+XPathFunctionSet >> asXPathFunctionSet [
 	^ self
 ]
 
 { #category : #converting }
-XPathFunctionSet >> asFunctionSetSubtractedFromFunction: aFunction [
-	^ aFunction asFunctionSet copyWithoutAll: self
+XPathFunctionSet >> asXPathFunctionSetSubtractedFromFunction: aFunction [
+	^ aFunction asXPathFunctionSet copyWithoutAll: self
 ]
 
 { #category : #converting }
-XPathFunctionSet >> asFunctionSetSubtractedFromFunctions: aFunctionSet [
+XPathFunctionSet >> asXPathFunctionSetSubtractedFromFunctions: aFunctionSet [
 	^ aFunctionSet copyWithoutAll: self
 ]
 
 { #category : #converting }
-XPathFunctionSet >> asFunctionSetWithFunction: aFunction [
+XPathFunctionSet >> asXPathFunctionSetWithFunction: aFunction [
 	^ self copyWith: aFunction
 ]
 
 { #category : #converting }
-XPathFunctionSet >> asFunctionSetWithFunctions: aFunctionSet [
+XPathFunctionSet >> asXPathFunctionSetWithFunctions: aFunctionSet [
 	^ self, aFunctionSet
 ]
 
@@ -175,6 +175,12 @@ XPathFunctionSet >> remove: aFunction ifAbsent: aBlock [
 	^ functionsByName
 		removeKey: aFunction functionName
 		ifAbsent: aBlock
+]
+
+{ #category : #removing }
+XPathFunctionSet >> removeAll [
+	"redefined for portability"
+	functionsByName removeAll
 ]
 
 { #category : #accessing }

@@ -42,11 +42,11 @@ Number >> asXPathString [
 				ifTrue: [^ '-Infinity']
 				ifFalse: [^ 'Infinity']].
 
-	"printOn:base: is needed for correct printing of BinaryFloats in
-	decimal notation on GS, but printOn:base: can't be used with integers
-	because it shows the 10r radix, and printOn:base:showRadix: can't be
-	used either because floats don't understand it, so integers and floats
-	are handled separately"
+	"printOn:base: can correctly print BinaryFloats in decimal notation
+	on GS (asString uses scientific), but printOn:base: can't be used with
+	integers because it shows the 10r radix, and printOn:base:showRadix:
+	can't be used either because floats don't understand it, so integers
+	and floats are handled separately"
 	self isInteger
 		ifTrue: [^ self asString]
 		ifFalse: [| writeStream |

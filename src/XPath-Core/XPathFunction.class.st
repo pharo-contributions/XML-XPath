@@ -23,12 +23,12 @@ Class {
 
 { #category : #composition }
 XPathFunction class >> + aFunctionOrFunctionSet [
-	^ aFunctionOrFunctionSet asFunctionSetWithFunction: self
+	^ aFunctionOrFunctionSet asXPathFunctionSetWithFunction: self
 ]
 
 { #category : #composition }
 XPathFunction class >> - aFunctionOrFunctionSet [
-	^ aFunctionOrFunctionSet asFunctionSetSubtractedFromFunction: self
+	^ aFunctionOrFunctionSet asXPathFunctionSetSubtractedFromFunction: self
 ]
 
 { #category : #accessing }
@@ -40,30 +40,30 @@ XPathFunction class >> argumentTypes [
 ]
 
 { #category : #converting }
-XPathFunction class >> asFunctionSet [
+XPathFunction class >> asXPathFunctionSet [
 	^ XPathFunctionSet with: self
 ]
 
 { #category : #converting }
-XPathFunction class >> asFunctionSetSubtractedFromFunction: aFunction [
-	^ aFunction asFunctionSet copyWithout: self
+XPathFunction class >> asXPathFunctionSetSubtractedFromFunction: aFunction [
+	^ aFunction asXPathFunctionSet copyWithout: self
 ]
 
 { #category : #converting }
-XPathFunction class >> asFunctionSetSubtractedFromFunctions: aFunctionSet [
+XPathFunction class >> asXPathFunctionSetSubtractedFromFunctions: aFunctionSet [
 	^ aFunctionSet copyWithout: self
 ]
 
 { #category : #converting }
-XPathFunction class >> asFunctionSetWithFunction: aFunction [
-	^ self asFunctionSet
+XPathFunction class >> asXPathFunctionSetWithFunction: aFunction [
+	^ self asXPathFunctionSet
 		add: aFunction;
 		yourself
 ]
 
 { #category : #converting }
-XPathFunction class >> asFunctionSetWithFunctions: aFunctionSet [
-	^ self asFunctionSet
+XPathFunction class >> asXPathFunctionSetWithFunctions: aFunctionSet [
+	^ self asXPathFunctionSet
 		addAll: aFunctionSet;
 		yourself
 ]

@@ -95,9 +95,11 @@ XPathNodeSet >> \ aNodeSet [
 
 { #category : #private }
 XPathNodeSet >> addAllIfNotPresentTo: aCollection [
-	"this inverts addAll: because addAll: uses do: and to:do: is needed for speed
-	and an includes: test avoids adding an already present element to the end of
-	a node set which requires left shifting everything after it by one"
+	"this inverts addAll: because addAll: uses do: because its arg may not
+	be a SequenceableCollection and may not understand to:do:, but to:do:
+	is needed for speed, and an includes: test avoids adding an already
+	present element to the end of a node set which requires left shifting
+	everything after it by one"
 	1 to: self size do: [:i | | node |
 		node := self at: i.
 		(aCollection includes: node)
@@ -106,7 +108,9 @@ XPathNodeSet >> addAllIfNotPresentTo: aCollection [
 
 { #category : #private }
 XPathNodeSet >> addAllTo: aCollection [
-	"this inverts addAll: because addAll: uses do: and to:do: is needed for speed"
+	"this inverts addAll: because addAll: uses do: because its arg may not
+	be a SequenceableCollection and may not understand to:do:, but to:do:
+	is needed for speed"
 	1 to: self size do: [:i | aCollection addLast: (self at: i)]
 ]
 

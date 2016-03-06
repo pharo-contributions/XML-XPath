@@ -125,6 +125,15 @@ XPathComparable >> notEqualsString: aString [
 	self subclassResponsibility
 ]
 
+{ #category : #printing }
+XPathComparable >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: value;
+		nextPut: $).
+]
+
 { #category : #initialization }
 XPathComparable >> setValue: anObject [
 	value := anObject

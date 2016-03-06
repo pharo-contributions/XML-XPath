@@ -77,7 +77,7 @@ XPathContext >> addFunction: aFunction [
 { #category : #private }
 XPathContext >> copiedFunctions [
 	"used to implement copy-on-write for functions"
-	^ functions := functions copy
+	^ functions := self functions copy
 ]
 
 { #category : #namespacing }
@@ -135,13 +135,23 @@ XPathContext >> functions [
 { #category : #accessing }
 XPathContext >> functions: aFunctionSet [
 	"will only be modified by copy-on-write"
-	functions := aFunctionSet
+	functions := aFunctionSet asXPathFunctionSet
+]
+
+{ #category : #testing }
+XPathContext >> hasFunctions [
+	^ self functions notEmpty
 ]
 
 { #category : #testing }
 XPathContext >> hasNamespaces [
 	^ namespaceScope notNil
 		and: [namespaceScope hasNamespaces]
+]
+
+{ #category : #testing }
+XPathContext >> hasVariables [
+	^ self variables notEmpty
 ]
 
 { #category : #testing }
@@ -203,6 +213,11 @@ XPathContext >> removeFunction: aFunction ifAbsent: aBlock [
 ]
 
 { #category : #removing }
+XPathContext >> removeFunctions [
+	self copiedFunctions removeAll
+]
+
+{ #category : #removing }
 XPathContext >> removeVariable: aVariable [
 	^ self variables removeKey: aVariable
 ]
@@ -212,6 +227,11 @@ XPathContext >> removeVariable: aVariable ifAbsent: aBlock [
 	^ self variables
 		removeKey: aVariable
 		ifAbsent: aBlock
+]
+
+{ #category : #removing }
+XPathContext >> removeVariables [
+	self variables removeAll
 ]
 
 { #category : #private }
@@ -360,7 +380,7 @@ XPathContext >> undeclarePrefixes [
 XPathContext >> variableAt: aVariableName [
 	^ self variables
 		at: aVariableName
-		ifAbsent: ['']
+		ifAbsent: [nil]
 ]
 
 { #category : #accessing }

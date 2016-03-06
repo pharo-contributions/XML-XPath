@@ -46,6 +46,20 @@ XPathNodeTestWithFilters >> hasXPathNodeSetFilters [
 	^ filters notEmpty
 ]
 
+{ #category : #printing }
+XPathNodeTestWithFilters >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: nodeTest.
+	filters
+		ifNotNil: [
+			aStream
+				space
+				print: filters].
+	aStream nextPut: $).
+]
+
 { #category : #initialization }
 XPathNodeTestWithFilters >> setNodeTest: aNodeTestBlock [
 	nodeTest := aNodeTestBlock
