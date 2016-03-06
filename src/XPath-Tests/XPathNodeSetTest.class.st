@@ -278,6 +278,22 @@ XPathNodeSetTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testAsXPathComparable [
+	self assert: self emptyList asXPathComparable class == XPathNodeSetComparable
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAsXPathFilterable [
+	| list filterable |
+
+	list := self listWithElements reversed.
+	filterable := list asXPathFilterable.
+	self
+		assertList: filterable copiedFrom: list equals: self listWithElements;
+		assertList: filterable hasSortOrder: XPathDocumentSortOrder.
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testAsXPathLocationPathRoot [
 	| list |
 
@@ -308,6 +324,14 @@ XPathNodeSetTest >> testAsXPathString [
 		assert: self emptyList asXPathString isEmpty;
 		assert: self listWithElements asXPathString = self singleElement stringValue;
 		assert: self listWithElements reversed asXPathString = self singleElement stringValue
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAsXPathUnionable [
+	| list |
+
+	list := self emptyList.
+	self assert: list asXPathUnionable == list.
 ]
 
 { #category : #tests }

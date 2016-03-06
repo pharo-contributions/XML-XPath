@@ -75,30 +75,30 @@ XPathFunctionSetTest >> setWithFunctions [
 XPathFunctionSetTest >> should: aBlock add: aFirstObject and: aSecondObject equaling: anExpectedSum [
 	| firstCopy secondCopy sum |
 
-	firstCopy := aFirstObject asFunctionSet copy.
-	secondCopy := aSecondObject asFunctionSet copy.
+	firstCopy := aFirstObject asXPathFunctionSet copy.
+	secondCopy := aSecondObject asXPathFunctionSet copy.
 	sum := aBlock value.
 	self
 		assert: sum = anExpectedSum;
 		deny: sum == aFirstObject;
 		deny: sum == aSecondObject;
-		assert: firstCopy = aFirstObject asFunctionSet;
-		assert: secondCopy = aSecondObject asFunctionSet.
+		assert: firstCopy = aFirstObject asXPathFunctionSet;
+		assert: secondCopy = aSecondObject asXPathFunctionSet.
 ]
 
 { #category : #asserting }
 XPathFunctionSetTest >> should: aBlock subtract: aFirstObject from: aSecondObject equaling: anExpectedDifference [
 	| firstCopy secondCopy difference |
 
-	firstCopy := aFirstObject asFunctionSet copy.
-	secondCopy := aSecondObject asFunctionSet copy.
+	firstCopy := aFirstObject asXPathFunctionSet copy.
+	secondCopy := aSecondObject asXPathFunctionSet copy.
 	difference := aBlock value.
 	self
 		assert: difference = anExpectedDifference;
 		deny: difference == aFirstObject;
 		deny: difference == aSecondObject;
-		assert: firstCopy = aFirstObject asFunctionSet;
-		assert: secondCopy = aSecondObject asFunctionSet.
+		assert: firstCopy = aFirstObject asXPathFunctionSet;
+		assert: secondCopy = aSecondObject asXPathFunctionSet.
 ]
 
 { #category : #tests }
@@ -121,12 +121,11 @@ XPathFunctionSetTest >> testAsFunctionSet [
 	| set function |
 
 	set := self setClass new.
-	self assert: set asFunctionSet == set.
-
 	function := self functions anyOne.
-	set := function asFunctionSet.
-	self assert: set = (self setClass with: function).
-	
+	self
+		assert: set asXPathFunctionSet == set;
+		assert: (function asXPathFunctionSet) = (self setClass with: function);
+		assert: self functions asXPathFunctionSet = self setWithFunctions.
 ]
 
 { #category : #tests }
@@ -363,6 +362,16 @@ XPathFunctionSetTest >> testPostCopy [
 		assert: set = copy;
 		assert: set functionsByName = copy functionsByName;
 		deny: set functionsByName == copy functionsByName.
+]
+
+{ #category : #tests }
+XPathFunctionSetTest >> testRemoveAll [
+	| set |
+
+	set := self setWithFunctions.
+	self
+		assert: set removeAll == set;
+		assert: set isEmpty.
 ]
 
 { #category : #tests }
