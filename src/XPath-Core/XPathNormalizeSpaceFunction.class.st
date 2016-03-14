@@ -26,7 +26,7 @@ XPathNormalizeSpaceFunction >> function [
 	isInWhitespace := false.
 	normalizedSpace := Character space.
 	string do: [:each |
-		each xmlParserIsSeparator
+		each isXMLSeparator
 			ifTrue: [
 				isInWhitespace
 					ifFalse: [isInWhitespace := true]]

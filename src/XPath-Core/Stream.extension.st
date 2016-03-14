@@ -10,6 +10,6 @@ Stream >> xPathSkipSeparators [
 	"provides consistent cross-platform separator skipping with the XML set of
 	separators"
 	[self atEnd not
-		and: [self peek xmlParserIsSeparator]]
+		and: [self peek isXMLSeparator]]
 		whileTrue: [self next]
 ]
