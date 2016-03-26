@@ -5,16 +5,16 @@ Class {
 	#name : #XPathPushedBackToken,
 	#superclass : #Object,
 	#instVars : [
-		'token',
+		'value',
 		'position'
 	],
 	#category : #'XPath-Core-Streams'
 }
 
 { #category : #'instance creation' }
-XPathPushedBackToken class >> token: aToken position: aPosition [
+XPathPushedBackToken class >> value: aValue position: aPosition [
 	^ self new
-		setToken: aToken
+		setValue: aValue
 		position: aPosition
 ]
 
@@ -29,12 +29,12 @@ XPathPushedBackToken >> position [
 ]
 
 { #category : #initialization }
-XPathPushedBackToken >> setToken: aToken position: aPosition [
-	token := aToken.
+XPathPushedBackToken >> setValue: aValue position: aPosition [
+	value := aValue.
 	position := aPosition.
 ]
 
 { #category : #accessing }
-XPathPushedBackToken >> token [
-	^ token
+XPathPushedBackToken >> value [
+	^ value
 ]

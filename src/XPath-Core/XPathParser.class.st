@@ -51,7 +51,7 @@ XPathParser >> errorExpectedLiteral: anExpectedCharacterOrString butGot: aReceiv
 
 { #category : #private }
 XPathParser >> errorExpectedName [
-	self errorExpected: 'name'
+	self errorExpected: 'an XPath qualified or non-qualified name'
 ]
 
 { #category : #private }
@@ -129,19 +129,13 @@ XPathParser >> nextNCName [
 
 { #category : #parsing }
 XPathParser >> nextNCNameOptional: aBoolean [
-	(inputStream hasPushedBackToken
-		and: [inputStream pushedBackToken isNCNameToken])
-		ifTrue: [^ inputStream nextPushedBackToken]
-		ifFalse: [
-			writeStream reset.
-			(XMLWellFormedParserTokenizer
-				nextNCNameFrom: inputStream
-				on: writeStream)
-				ifFalse: [
-					aBoolean
-						ifTrue: [^ nil]
-						ifFalse: [self errorExpectedName]].
-			^ writeStream contents]
+	| ncName |
+
+	(ncName := inputStream nextNCName)
+		ifNil: [
+			aBoolean
+				ifFalse: [self errorExpectedName]].
+	^ ncName.
 ]
 
 { #category : #parsing }
@@ -151,25 +145,13 @@ XPathParser >> nextName [
 
 { #category : #parsing }
 XPathParser >> nextNameOptional: aBoolean [
-	writeStream reset.
-	(inputStream hasPushedBackToken
-		and: [inputStream pushedBackToken isNCNameToken])
-		ifTrue: [
-			writeStream nextPutAll: inputStream nextPushedBackToken.
-			(inputStream peekFor: $:)
-				ifTrue: [
-					writeStream
-						nextPut: $:;
-						nextPutAll: self nextNCName]]
-		ifFalse: [
-			(XMLWellFormedParserTokenizer
-				nextNameFrom: inputStream
-				on: writeStream)
-				ifFalse: [
-					aBoolean
-						ifTrue: [^ nil]
-						ifFalse: [self errorExpectedName]]].
-	^ writeStream contents.
+	| name |
+
+	(name := inputStream nextName)
+		ifNil: [
+			aBoolean
+				ifFalse: [self errorExpectedName]].
+	^ name.
 ]
 
 { #category : #parsing }

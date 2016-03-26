@@ -6,7 +6,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'stream',
-		'pushedBackToken'
+		'pushedBackToken',
+		'writeStream'
 	],
 	#category : #'XPath-Core-Streams'
 }
@@ -27,12 +28,6 @@ XPathReadStreamAdapter >> atEnd [
 ]
 
 { #category : #testing }
-XPathReadStreamAdapter >> hasPushedBackToken [
-	^ pushedBackToken notNil
-		and: [pushedBackToken position = self position]
-]
-
-{ #category : #testing }
 XPathReadStreamAdapter >> isStream [
 	^ true
 ]
@@ -45,18 +40,59 @@ XPathReadStreamAdapter >> next [
 ]
 
 { #category : #accessing }
-XPathReadStreamAdapter >> nextPushedBackToken [
-	| token |
+XPathReadStreamAdapter >> nextNCName [
+	"returns the next non-qualified name or nil"
 
-	token := pushedBackToken token.
-	self position: self position + token size.
-	pushedBackToken := nil.
-	^ token.
+	(self peekPushedBackToken notNil
+		and: [self peekPushedBackToken isNCNameToken])
+		ifTrue: [^ self nextPushedBackToken value].
+
+	writeStream reset.
+	self peek isXMLNCNameStartChar
+		ifFalse: [^ nil].
+	writeStream nextPut: self next.
+
+	[self peek isXMLNCNameChar]
+		whileTrue: [writeStream nextPut: self next].
+	^ writeStream contents.
+]
+
+{ #category : #accessing }
+XPathReadStreamAdapter >> nextName [
+	"returns the next qualified or non-qualified name or nil"
+
+	| oldPosition ncNameOrPrefix |
+
+	oldPosition := self position.
+	(ncNameOrPrefix := self nextNCName)
+		ifNil: [^ nil].
+	(self peekFor: $:)
+		ifFalse: [
+			"just a local name"
+			^ ncNameOrPrefix].
+	self nextNCName
+		ifNil: [
+			"an NCName followed by : must have a local name after"
+			self position: oldPosition.
+			^ nil]
+		ifNotNil: [:localName |
+			"a full qualified name"
+			^ localName qualifyWithPrefix: ncNameOrPrefix].
+]
+
+{ #category : #accessing }
+XPathReadStreamAdapter >> nextPushedBackToken [
+	self peekPushedBackToken
+		ifNil: [^ nil]
+		ifNotNil: [:token |
+			self position: self position + token value size.
+			^ token]
 ]
 
 { #category : #initialization }
 XPathReadStreamAdapter >> on: aStream [
-	stream := aStream
+	stream := aStream.
+	writeStream := (String new: 32) writeStream.
 ]
 
 { #category : #accessing }
@@ -96,6 +132,14 @@ XPathReadStreamAdapter >> peekForAll: aString [
 ]
 
 { #category : #accessing }
+XPathReadStreamAdapter >> peekPushedBackToken [
+	^ (pushedBackToken notNil
+		and: [pushedBackToken position = self position])
+		ifTrue: [^ pushedBackToken]
+		ifFalse: [^ nil]
+]
+
+{ #category : #accessing }
 XPathReadStreamAdapter >> position [
 	^ stream position
 ]
@@ -105,23 +149,18 @@ XPathReadStreamAdapter >> position: aPosition [
 	stream position: aPosition
 ]
 
-{ #category : #accessing }
-XPathReadStreamAdapter >> pushBackNCName: anNcName position: aPosition [
+{ #category : #positioning }
+XPathReadStreamAdapter >> pushBackNCName: anNCName position: aPosition [
 	self pushBackToken:
 		(XPathPushedBackNCNameToken
-			token: anNcName
+			value: anNCName
 			position: aPosition)
 ]
 
-{ #category : #accessing }
+{ #category : #positioning }
 XPathReadStreamAdapter >> pushBackToken: aPushedBackToken [
 	pushedBackToken := aPushedBackToken.
 	self position: aPushedBackToken position.
-]
-
-{ #category : #accessing }
-XPathReadStreamAdapter >> pushedBackToken [
-	^ pushedBackToken
 ]
 
 { #category : #positioning }
