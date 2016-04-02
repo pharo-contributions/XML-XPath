@@ -64,7 +64,7 @@ XPathFunctionSet >> + aFunctionOrFunctionSet [
 
 { #category : #copying }
 XPathFunctionSet >> , aCollection [
-	", is not defined for non-sequenceable collections on gemstone"
+	"GS does not define , for non-sequenceable collections"
 	^ self copy
 		addAll: aCollection;
 		yourself
@@ -179,7 +179,9 @@ XPathFunctionSet >> remove: aFunction ifAbsent: aBlock [
 
 { #category : #removing }
 XPathFunctionSet >> removeAll [
-	"redefined for portability"
+	"Redefined because Collection>>removeAll assumes the collection can
+	be safely modified while iterating it with do:"
+
 	functionsByName removeAll
 ]
 

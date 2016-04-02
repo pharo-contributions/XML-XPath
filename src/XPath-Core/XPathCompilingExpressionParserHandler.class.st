@@ -34,7 +34,7 @@ XPathCompilingExpressionParserHandler >> contextVariable [
 
 { #category : #private }
 XPathCompilingExpressionParserHandler >> currentOperator [
-	^ operatorStack lastOrNil
+	^ operatorStack xmlLastOrNil
 ]
 
 { #category : #private }

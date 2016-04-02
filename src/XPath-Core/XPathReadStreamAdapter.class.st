@@ -40,6 +40,25 @@ XPathReadStreamAdapter >> next [
 ]
 
 { #category : #accessing }
+XPathReadStreamAdapter >> nextMatchAll: aString [
+	| oldPosition |
+
+	(stream atEnd not
+		and: [stream peek == (aString at: 1)])
+		ifFalse: [^ false].
+
+	oldPosition := stream position.
+	stream next.
+	2 to: aString size do: [:i |
+		(stream atEnd not
+			and: [stream next == (aString at: i)])
+			ifFalse: [
+				stream position: oldPosition.
+				^ false]].
+	^ true.
+]
+
+{ #category : #accessing }
 XPathReadStreamAdapter >> nextNCName [
 	"returns the next non-qualified name or nil"
 
@@ -77,7 +96,7 @@ XPathReadStreamAdapter >> nextName [
 			^ nil]
 		ifNotNil: [:localName |
 			"a full qualified name"
-			^ localName qualifyWithPrefix: ncNameOrPrefix].
+			^ localName qualifyWithXMLPrefix: ncNameOrPrefix].
 ]
 
 { #category : #accessing }
@@ -110,25 +129,6 @@ XPathReadStreamAdapter >> peekFor: aCharacter [
 			stream next.
 			^ true]
 		ifFalse: [^ false]
-]
-
-{ #category : #accessing }
-XPathReadStreamAdapter >> peekForAll: aString [
-	| oldPosition |
-
-	(stream atEnd not
-		and: [stream peek == (aString at: 1)])
-		ifFalse: [^ false].
-
-	oldPosition := stream position.
-	stream next.
-	2 to: aString size do: [:i |
-		(stream atEnd not
-			and: [stream next == (aString at: i)])
-			ifFalse: [
-				stream position: oldPosition.
-				^ false]].
-	^ true.
 ]
 
 { #category : #accessing }

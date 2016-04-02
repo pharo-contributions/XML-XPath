@@ -298,7 +298,7 @@ XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
 					and: [node localName = aLocalName
 						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
-			name := aLocalName qualifyWithPrefix: aPrefix.
+			name := aLocalName qualifyWithXMLPrefix: aPrefix.
 			^ [:node |
 				node isAttribute
 					and: [node name = name]]]
@@ -328,7 +328,7 @@ XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 					and: [node localName = aLocalName
 						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
-			name := aLocalName qualifyWithPrefix: aPrefix.
+			name := aLocalName qualifyWithXMLPrefix: aPrefix.
 			^ [:node |
 				node isElement
 					and: [node name = name]]]
@@ -358,7 +358,7 @@ XPathContext >> testForNamespaceWithPrefix: aPrefix localName: aLocalName [
 					and: [node localName = aLocalName
 						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
 		ifFalse: [| name |
-			name := aLocalName qualifyWithPrefix: aPrefix.
+			name := aLocalName qualifyWithXMLPrefix: aPrefix.
 			^ [:node |
 				node isNamespace
 					and: [node name = name]]]

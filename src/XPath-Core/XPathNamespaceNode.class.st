@@ -52,9 +52,9 @@ XPathNamespaceNode >> element [
 	^ parent
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XPathNamespaceNode >> expandedName [
-	^ self localName expandWithNamespaceURI: self namespaceURI
+	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
 { #category : #testing }
@@ -64,18 +64,20 @@ XPathNamespaceNode >> hasExpandedName [
 
 { #category : #testing }
 XPathNamespaceNode >> hasNamespaceURI [
+	"spec says namespace nodes cannot be namespaced
+	(the namespace part of the expanded name is null)"
 	^ false
 ]
 
 { #category : #testing }
 XPathNamespaceNode >> hasPrefix [
-	"this returns true only if the name is prefixed, and namespace
-	names cannot be prefixed"
+	"namespace names cannot be prefixed"
 	^ false
 ]
 
 { #category : #testing }
 XPathNamespaceNode >> hasPrefixedNamespaceURI: aURI [
+	"namespace names cannot be prefixed"
 	^ false
 ]
 
@@ -99,16 +101,16 @@ XPathNamespaceNode >> name [
 	^ name ifNil: [name := '']
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XPathNamespaceNode >> namespaceURI [
 	"spec says namespace nodes cannot be namespaced
 	(the namespace part of the expanded name is null)"
 	^ ''
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XPathNamespaceNode >> prefix [
-	"the name of a namespace node cannot be prefixed"
+	"namespace names cannot be prefixed"
 	^ ''
 ]
 
@@ -125,7 +127,7 @@ XPathNamespaceNode >> stringValue [
 	^ self uri
 ]
 
-{ #category : #namespaces }
+{ #category : #accessing }
 XPathNamespaceNode >> uri [
 	^ uri ifNil: [uri := '']
 ]

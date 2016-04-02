@@ -7,11 +7,6 @@ Class {
 	#category : #'XPath-Core-Parsers'
 }
 
-{ #category : #testing }
-XPathNodeTestParserNamespaceTypeTestContext >> canHandleTypeTests [
-	^ false
-]
-
 { #category : #handling }
 XPathNodeTestParserNamespaceTypeTestContext >> handleEmptyTestWith: aHandler [
 	aHandler handleTestForNamespaceWithAnyName

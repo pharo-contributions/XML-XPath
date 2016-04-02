@@ -332,7 +332,7 @@ XPathExpressionParser >> peekForAdditiveOperator [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAndOperator [
 	inputStream skipSeparators.
-	^ inputStream peekForAll: 'and'.
+	^ inputStream nextMatchAll: 'and'.
 ]
 
 { #category : #'parsing - peeking' }
@@ -402,7 +402,7 @@ XPathExpressionParser >> peekForEndPredicate [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForEqualityOperator [
 	inputStream skipSeparators.
-	(inputStream peekForAll: '!=')
+	(inputStream nextMatchAll: '!=')
 		ifTrue: [
 			handler handleNotEquals.
 			^ true].
@@ -451,11 +451,11 @@ XPathExpressionParser >> peekForMultiplicativeOperator [
 		ifTrue: [
 			handler handleMultiplication.
 			^ true].
-	(inputStream peekForAll: 'div')
+	(inputStream nextMatchAll: 'div')
 		ifTrue: [
 			handler handleDivision.
 			^ true].
-	(inputStream peekForAll: 'mod')
+	(inputStream nextMatchAll: 'mod')
 		ifTrue: [
 			handler handleModulus.
 			^ true].
@@ -500,7 +500,7 @@ XPathExpressionParser >> peekForNumber [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForOrOperator [
 	inputStream skipSeparators.
-	^ inputStream peekForAll: 'or'.
+	^ inputStream nextMatchAll: 'or'.
 ]
 
 { #category : #'parsing - peeking' }

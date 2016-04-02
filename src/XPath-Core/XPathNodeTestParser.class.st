@@ -1,11 +1,12 @@
 "
-This class parses node tests that are either node name tests like 'name' or '*' or node type tests like 'node()' or 'comment()'.
+This class parses node tests that are either node name tests like 'name' and '*' or node type tests like 'node()' and 'comment()'.
 "
 Class {
 	#name : #XPathNodeTestParser,
 	#superclass : #XPathParser,
 	#instVars : [
-		'context'
+		'context',
+		'isParsingNodeTypeTest'
 	],
 	#classVars : [
 		'NodeTypeTestParserSelectors'
@@ -99,6 +100,7 @@ XPathNodeTestParser >> nextTextTypeTest [
 { #category : #parsing }
 XPathNodeTestParser >> parseInput [
 	context := handler defaultNodeTestParserContextClass new.
+	isParsingNodeTypeTest := false.
 	self peekForNodeTest.
 ]
 
@@ -128,7 +130,7 @@ XPathNodeTestParser >> peekForNameTestOrNoteTypeTest: aLocalName [
 	(inputStream peekFor: $:)
 		ifTrue: [^ false]. ": after spaces; axis specifier"
 
-	(context canHandleTypeTests
+	(isParsingNodeTypeTest not
 		and: [self peekForStartArgumentList])
 		ifTrue: [^ self peekForNodeTypeTest: aLocalName]
 		ifFalse: [
@@ -164,10 +166,15 @@ XPathNodeTestParser >> peekForNodeTest [
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNodeTypeTest: aNodeTypeOrFunctionName [
-	self perform:
-		(NodeTypeTestParserSelectors
+	| nodeTypeTestParserSelector |
+
+	nodeTypeTestParserSelector :=
+		NodeTypeTestParserSelectors
 			at: aNodeTypeOrFunctionName
-			ifAbsent: [^ false]).
+			ifAbsent: [^ false].
+	isParsingNodeTypeTest := true.
+	self perform: nodeTypeTestParserSelector.
+	isParsingNodeTypeTest := false.
 	^ true.
 ]
 

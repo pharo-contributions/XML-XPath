@@ -2,7 +2,7 @@ Extension { #name : #XMLPI }
 
 { #category : #'*XPath-Core-accessing' }
 XMLPI >> expandedName [
-	^ self localName expandWithNamespaceURI: self namespaceURI
+	^ self localName expandWithXMLNamespaceURI: self namespaceURI
 ]
 
 { #category : #'*XPath-Core-testing' }

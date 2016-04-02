@@ -16,11 +16,6 @@ XPathNodeTestParserContext class >> new [
 	^ instance ifNil: [instance := self basicNew initialize]
 ]
 
-{ #category : #testing }
-XPathNodeTestParserContext >> canHandleTypeTests [
-	^ true
-]
-
 { #category : #handling }
 XPathNodeTestParserContext >> handleEmptyTestWith: aHandler [
 	aHandler handleEmptyTest

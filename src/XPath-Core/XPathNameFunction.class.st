@@ -29,7 +29,7 @@ XPathNameFunction >> function [
 					((self context resolvePrefixesOfNamespaceURI: namespaceURI)
 						ifEmpty: [^ node localName]
 						ifNotEmpty: [:prefixes |
-							^ node localName qualifyWithPrefix: prefixes anyOne])]
+							^ node localName qualifyWithXMLPrefix: prefixes anyOne])]
 				ifFalse: [^ node name]]
 		ifFalse: [^ ''].
 ]

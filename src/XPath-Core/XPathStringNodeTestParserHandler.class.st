@@ -95,7 +95,7 @@ XPathStringNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
 XPathStringNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
 	| name |
 
-	name := aLocalName qualifyWithPrefix: aPrefix.	
+	name := aLocalName qualifyWithXMLPrefix: aPrefix.	
 	self parsingResult:
 		[:node |
 			node isAttribute
@@ -157,7 +157,7 @@ XPathStringNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix [
 XPathStringNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
 	| name |
 
-	name := aLocalName qualifyWithPrefix: aPrefix.	
+	name := aLocalName qualifyWithXMLPrefix: aPrefix.	
 	self parsingResult:
 		[:node |
 			node isElement
@@ -214,7 +214,7 @@ XPathStringNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
 XPathStringNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
 	| name |
 
-	name := aLocalName qualifyWithPrefix: aPrefix.	
+	name := aLocalName qualifyWithXMLPrefix: aPrefix.	
 	self parsingResult:
 		[:node |
 			node isNamespace
