@@ -1,59 +1,25 @@
 Class {
 	#name : #XPathFunctionSetTest,
-	#superclass : #TestCase,
-	#instVars : [
-		'functions',
-		'disjointFunctions'
-	],
+	#superclass : #XMLAbstractSetTest,
 	#category : #'XPath-Tests'
 }
 
+{ #category : #testing }
+XPathFunctionSetTest class >> isAbstract [
+	^ false
+]
+
 { #category : #accessing }
-XPathFunctionSetTest >> absentFunction [
+XPathFunctionSetTest >> absentSetElement [
 	^ XPathStringFunction
 ]
 
-{ #category : #asserting }
-XPathFunctionSetTest >> assertSet: aFirstSet equals: aSecondSet [
-	self
-		assert: aFirstSet = aSecondSet;
-		assert: aSecondSet = aFirstSet
-]
-
-{ #category : #asserting }
-XPathFunctionSetTest >> denySet: aFirstSet equals: aSecondSet [
-	self
-		deny: aFirstSet = aSecondSet;
-		deny: aFirstSet == aSecondSet;
-		deny: aSecondSet = aFirstSet;
-		deny: aSecondSet == aFirstSet
-]
-
 { #category : #accessing }
-XPathFunctionSetTest >> disjointFunctions [
-	disjointFunctions ifNil: [
-		(disjointFunctions := OrderedCollection new)
-			addLast: XPathSubstringFunction;
-			addLast: XPathSubstringBeforeFunction;
-			addLast: XPathSubstringAfterFunction.
-		disjointFunctions := disjointFunctions asArray].
-	^ disjointFunctions copy.
-]
-
-{ #category : #accessing }
-XPathFunctionSetTest >> emptySet [
-	^ self setClass new
-]
-
-{ #category : #accessing }
-XPathFunctionSetTest >> functions [
-	functions ifNil: [
-		(functions := OrderedCollection new)
-			addLast: XPathTrueFunction;
-			addLast: XPathFalseFunction;
-			addLast: XPathNotFunction.
-		functions := functions asArray].
-	^ functions copy.
+XPathFunctionSetTest >> disjointSetElements [
+	^ Array
+		with: XPathSubstringFunction
+		with: XPathSubstringBeforeFunction;
+		with: XPathSubstringAfterFunction
 ]
 
 { #category : #accessing }
@@ -62,13 +28,11 @@ XPathFunctionSetTest >> setClass [
 ]
 
 { #category : #accessing }
-XPathFunctionSetTest >> setWithDisjointFunctions [
-	^ self setClass newFrom: self disjointFunctions
-]
-
-{ #category : #accessing }
-XPathFunctionSetTest >> setWithFunctions [
-	^ self setClass newFrom: self functions
+XPathFunctionSetTest >> setElements [
+	^ Array
+		with: XPathTrueFunction
+		with: XPathFalseFunction
+		with: XPathNotFunction
 ]
 
 { #category : #asserting }
@@ -102,125 +66,45 @@ XPathFunctionSetTest >> should: aBlock subtract: aFirstObject from: aSecondObjec
 ]
 
 { #category : #tests }
-XPathFunctionSetTest >> testAdd [
-	| set |
-
-	set := self emptySet.
-	self functions do: [:each |
-		self
-			assert: (set add: each) == each;
-			assert: (set includes: each)].
-	self
-		assert: set = self setWithFunctions;
-		assert: (self functions allSatisfy: [:each | (set add: each) == each]);
-		assert: set = self setWithFunctions.
-]
-
-{ #category : #tests }
 XPathFunctionSetTest >> testAsFunctionSet [
 	| set function |
 
 	set := self setClass new.
-	function := self functions anyOne.
+	function := self setElements anyOne.
 	self
 		assert: set asXPathFunctionSet == set;
 		assert: (function asXPathFunctionSet) = (self setClass with: function);
-		assert: self functions asXPathFunctionSet = self setWithFunctions.
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testConcatenation [
-	| firstSet secondSet |
-
-	firstSet := self setWithFunctions.
-	self assert: (firstSet, self setWithFunctions) = self setWithFunctions.
-
-	secondSet := self setWithDisjointFunctions.	
-	self
-		assert: (firstSet, secondSet) = (secondSet, firstSet);
-		deny: (firstSet, secondSet) = firstSet;
-		deny: (firstSet, secondSet) = secondSet;
-		assert:
-			(firstSet, secondSet) =
-				(self setClass newFrom: self functions, self disjointFunctions).
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testDo [
-	| enumerated |
-
-	enumerated := OrderedCollection new.
-	self emptySet do: [:each | enumerated addLast: each].
-	self assert: enumerated size = 0.
-
-	self setWithFunctions do: [:each | enumerated addLast: each].
-	self
-		assert: enumerated size = self functions size;
-		assert: (self functions allSatisfy: [:each | enumerated includes: each]).
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testEquals [
-	| set |
-
-	set := self emptySet.
-	self
-		assertSet: set equals: self emptySet;
-		denySet: set equals: self setWithFunctions;
-		denySet: set equals: self setWithDisjointFunctions.
-
-	set := self setWithFunctions.
-	self
-		assertSet: set equals: self setWithFunctions;
-		denySet: set equals: self setWithDisjointFunctions.
-
-	set := self setWithDisjointFunctions.
-	self assertSet: set equals: self setWithDisjointFunctions.
+		assert: self setElements asXPathFunctionSet = self setWithElements.
 ]
 
 { #category : #tests }
 XPathFunctionSetTest >> testFunctionNamed [
 	| set |
 
-	set := self setWithFunctions.
-	self functions do: [:each |
+	set := self setWithElements.
+	self setElements do: [:each |
 		self assert: (set functionNamed: each functionName) == each].
 
 	self
-		shouldnt: [set functionNamed: self absentFunction functionName]
+		shouldnt: [set functionNamed: self absentSetElement functionName]
 		raise: Error.
-	self assert: (set functionNamed: self absentFunction functionName) isNil.
+	self assert: (set functionNamed: self absentSetElement functionName) isNil.
 ]
 
 { #category : #tests }
 XPathFunctionSetTest >> testFunctionNamedIfAbsent [
 	| set |
 
-	set := self setWithFunctions.
-	self functions do: [:each |
+	set := self setWithElements.
+	self setElements do: [:each |
 		self assert:
 			(set
 				functionNamed: each functionName
-				ifAbsent: [self absentFunction]) == each].
+				ifAbsent: [self absentSetElement]) == each].
 	self assert:
 		(set
-			functionNamed: self absentFunction functionName
-			ifAbsent: [self absentFunction]) == self absentFunction.
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testIncludes [
-	| set |
-
-	set := self emptySet.
-	self deny: (self functions anySatisfy: [:each | set includes: each]).
-
-	set := self setWithFunctions.
-	self assert: (self functions allSatisfy: [:each | set includes: each]).
-	self deny: (self disjointFunctions anySatisfy: [:each | set includes: each]).
-
-	set := self setWithDisjointFunctions.
-	self assert: (self disjointFunctions allSatisfy: [:each | set includes: each]).
+			functionNamed: self absentSetElement functionName
+			ifAbsent: [self absentSetElement]) == self absentSetElement.
 ]
 
 { #category : #tests }
@@ -228,17 +112,17 @@ XPathFunctionSetTest >> testIncludesFunctionNamed [
 	| set |
 
 	set := self emptySet.
-	self functions do: [:each |
+	self setElements do: [:each |
 		self deny: (set includesFunctionNamed: each functionName)].
 
-	set := self setWithFunctions.
-	self functions do: [:each |
+	set := self setWithElements.
+	self setElements do: [:each |
 		self assert: (set includesFunctionNamed: each functionName)].
-	self disjointFunctions do: [:each |
+	self disjointSetElements do: [:each |
 		self deny: (set includesFunctionNamed: each functionName)].
 
-	set := self setWithDisjointFunctions.
-	self disjointFunctions do: [:each |
+	set := self setWithDisjointElements.
+	self disjointSetElements do: [:each |
 		self assert: (set includesFunctionNamed: each functionName)].
 ]
 
@@ -246,26 +130,26 @@ XPathFunctionSetTest >> testIncludesFunctionNamed [
 XPathFunctionSetTest >> testMinusFunction [
 	| set |
 
-	set := self setWithFunctions.
-	self functions do: [:each |
+	set := self setWithElements.
+	self setElements do: [:each |
 		self
 			should: [set - each]
 			subtract: each
 			from: set
-			equaling: (self setClass newFrom: (self functions copyWithout: each))].
+			equaling: (self setClass newFrom: (self setElements copyWithout: each))].
 
-	self disjointFunctions do: [:each |
+	self disjointSetElements do: [:each |
 		self
 			should: [set - each]
 			subtract: each
 			from: set
-			equaling: self setWithFunctions].
+			equaling: self setWithElements].
 
 	self assert:
-		(self functions first - self functions second) =
-			(self setClass with: self functions first).
+		(self setElements first - self setElements second) =
+			(self setClass with: self setElements first).
 	self assert:
-		(self functions first - self functions first) =
+		(self setElements first - self setElements first) =
 			self emptySet.
 ]
 
@@ -273,20 +157,20 @@ XPathFunctionSetTest >> testMinusFunction [
 XPathFunctionSetTest >> testMinusSet [
 	| firstSet secondSet |
 
-	firstSet := self setWithFunctions.
+	firstSet := self setWithElements.
 	secondSet := self emptySet.
 	self
 		should: [firstSet - secondSet]
 		subtract: secondSet
 		from: firstSet
-		equaling: self setWithFunctions.
+		equaling: self setWithElements.
 
-	secondSet := self setWithDisjointFunctions.
+	secondSet := self setWithDisjointElements.
 	self
 		should: [firstSet - secondSet]
 		subtract: secondSet
 		from: firstSet
-		equaling: self setWithFunctions.
+		equaling: self setWithElements.
 	self
 		should: [firstSet - firstSet]
 		subtract: firstSet
@@ -298,113 +182,56 @@ XPathFunctionSetTest >> testMinusSet [
 XPathFunctionSetTest >> testPlusFunction [
 	| set |
 
-	set := self setWithFunctions.
-	self functions do: [:each |
+	set := self setWithElements.
+	self setElements do: [:each |
 		self
 			should: [set + each]
 			add: each
 			and: set
-			equaling: self setWithFunctions].
+			equaling: self setWithElements].
 
-	set := self setWithFunctions.
-	self disjointFunctions do: [:each |
+	set := self setWithElements.
+	self disjointSetElements do: [:each |
 		self
 			should: [set + each]
 			add: each
 			and: set
-			equaling: (self setClass newFrom: (self functions copyWith: each))].
+			equaling: (self setClass newFrom: (self setElements copyWith: each))].
 
 	self assert:
-		(self functions first + self functions second) =
+		(self setElements first + self setElements second) =
 			(self setClass
-				with: self functions first
-				with: self functions second).
+				with: self setElements first
+				with: self setElements second).
 
 	self assert:
-		(self functions first + self functions first) =
-			(self setClass with: self functions first).
+		(self setElements first + self setElements first) =
+			(self setClass with: self setElements first).
 ]
 
 { #category : #tests }
 XPathFunctionSetTest >> testPlusSet [
 	| firstSet secondSet |
 
-	firstSet := self setWithFunctions.
+	firstSet := self setWithElements.
 	secondSet := self emptySet.
 	self
 		should: [firstSet + secondSet]
 		add: firstSet
 		and: secondSet
-		equaling: self setWithFunctions.
+		equaling: self setWithElements.
 	self
 		should: [firstSet + firstSet]
 		add: firstSet
 		and: firstSet
-		equaling: self setWithFunctions.
+		equaling: self setWithElements.
 
-	secondSet := self setWithDisjointFunctions.
+	secondSet := self setWithDisjointElements.
 	self
 		should: [firstSet + secondSet]
 		add: firstSet
 		and: secondSet
 		equaling:
 			(self setClass newFrom:
-				self setWithDisjointFunctions, self setWithFunctions).
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testPostCopy [
-	| set copy |
-
-	set := self setWithFunctions.
-	copy := set copy.
-	self
-		assert: set = copy;
-		assert: set functionsByName = copy functionsByName;
-		deny: set functionsByName == copy functionsByName.
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testRemoveAll [
-	| set |
-
-	set := self setWithFunctions.
-	self
-		assert: set removeAll == set;
-		assert: set isEmpty.
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testRemoveIfAbsent [
-	| set |
-
-	set := self setWithFunctions.
-	self functions do: [:each |
-		self assert:
-			(set
-				remove: each
-				ifAbsent: [self absentFunction]) == each.
-		self
-			assert:
-				(set
-					remove: each
-					ifAbsent: [self absentFunction]) == self absentFunction.
-		self deny: (set includes: each).
-		self
-			should: [set remove: each]
-			raise: Error].
-	self assert: set isEmpty.
-]
-
-{ #category : #tests }
-XPathFunctionSetTest >> testSize [
-	| set size |
-
-	set := self emptySet.
-	size := 0.
-	self assert: set size = size.
-	self functions do: [:each |
-		set add: each.
-		size := size + 1.
-		self assert: set size = size].
+				self setWithDisjointElements, self setWithElements).
 ]
