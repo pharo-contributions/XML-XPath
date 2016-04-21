@@ -122,7 +122,11 @@ XPathNodeSet >> afterAdding: aNode at: anIndex [
 	(self set
 		add: aNode;
 		size) > oldSize
-		ifFalse: [self movedNode: aNode to: anIndex].
+		ifFalse: [
+			self
+				replaced: aNode
+				with: aNode
+				at: anIndex].
 	sortOrder := nil.
 	super
 		afterAdding: aNode
@@ -137,7 +141,11 @@ XPathNodeSet >> afterAddingLast: aNode [
 	(self set
 		add: aNode;
 		size) > oldSize
-		ifFalse: [self movedNode: aNode to: oldSize].
+		ifFalse: [
+			self
+				replaced: aNode
+				with: aNode
+				at: oldSize].
 	sortOrder := nil.
 	super afterAddingLast: aNode.
 ]
@@ -402,20 +410,6 @@ XPathNodeSet >> includes: aNode [
 { #category : #enumerating }
 XPathNodeSet >> intersection: aNodeSet [
 	^ (self select: [:each | aNodeSet includes: each]) sort
-]
-
-{ #category : #private }
-XPathNodeSet >> movedNode: aNode to: anIndex [
-	| i |
-
-	(i :=
-		self
-			indexOf: aNode
-			otherThan: anIndex) > 0
-		ifTrue: [
-			"since a node is just being moved, the collection
-			is changed directly without notifying observers"
-			collection removeAt: i]
 ]
 
 { #category : #'enumerating - axis' }
