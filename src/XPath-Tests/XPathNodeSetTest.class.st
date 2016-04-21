@@ -1,9 +1,6 @@
 Class {
 	#name : #XPathNodeSetTest,
 	#superclass : #XMLNodeListTest,
-	#instVars : [
-		'document'
-	],
 	#category : #'XPath-Tests'
 }
 
@@ -53,19 +50,6 @@ XPathNodeSetTest >> assertListHasUnknownSortOrder: aList [
 { #category : #accessing }
 XPathNodeSetTest >> listClass [
 	^ XPathNodeSet
-]
-
-{ #category : #accessing }
-XPathNodeSetTest >> listItems [
-	| listElements |
-
-	listElements := super listItems.
-	document
-		ifNil: [
-			(document := XMLDocument new)
-				addElementNamed: 'root'.
-			document root addNodes: listElements].
-	^ listElements.
 ]
 
 { #category : #accessing }

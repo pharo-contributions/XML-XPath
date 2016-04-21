@@ -417,8 +417,10 @@ XPathTest >> testChildAxis [
 				in: document)
 		hasNodes: nodes.
 
-	nodes := document allElementsNamed: 'person'.
-	nodes third nodesDo: [:each | nodes addAll: each nodes].
+	nodes := document root nodes copy.
+	(document allElementsNamed: 'person') third nodesDo: [:each |
+		each hasChildren
+			ifTrue: [nodes addAll: each nodes]].
 	self
 		assertNodeSet:
 			(XPath
@@ -597,31 +599,38 @@ XPathTest >> testDocumentOrderLosing [
 		assertNodeSet: result hasNodes: expected;
 		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
 
-	expected := document root descendantNodesSelect: [:each | each previousNode notNil].
+	expected := XPathNodeSet new.
+	document descendantNodesDo: [:node |
+		node followingSiblingNodesDo: [:each |
+			expected addIfNotPresent: each]].
 	result := document xPath: 'descendant::node()/following-sibling::node()'.
 	self
 		assertNodeSet: result hasNodes: expected;
 		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
 
-	expected :=
-		document root firstNode descendantNodesSelect: [:each | each previousNode notNil].
-	document root nodes allButFirst do: [:each | expected addAll: each allNodes].
+	expected removeAll.
+	document descendantNodesDo: [:node |
+		node followingNodesDo: [:each |
+			expected addIfNotPresent: each]].
 	result := document xPath: '/descendant::node()/following::node()'.
 	self
 		assertNodeSet: result hasNodes: expected;
 		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
 
-	expected := document root descendantNodesSelect: [:each | each nextNode notNil].
+	expected removeAll.
+	document descendantNodesDo: [:node |
+		node precedingSiblingNodesDo: [:each |
+			expected addIfNotPresent: each]].
 	result := document xPath: 'descendant::node()/preceding-sibling::node()'.
 	self
 		assertNodeSet: result hasNodes: expected;
 		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
 
-	expected :=
-		document root nodes last descendantNodesSelect: [:each |
-			each nextNode notNil
-				or: [each parent nextNode notNil]].
-	document root nodes allButLast do: [:each | expected addAll: each allNodes].
+
+	expected removeAll.
+	document descendantNodesDo: [:node |
+		node precedingNodesDo: [:each |
+			expected addIfNotPresent: each]].
 	result := document xPath: 'descendant::node()/preceding::node()'.
 	self
 		assertNodeSet: result hasNodes: expected;
@@ -915,9 +924,9 @@ XPathTest >> testFollowingAxis [
 	| persons following |
 
 	persons := document allElementsNamed: 'person'.
-	following := XMLNodeList new.
-	persons allButFirst do: [:person |
-		person allNodesDo: [:each | following addLast: each]].
+	following := XPathNodeSet new.
+	persons first followingNodesDo: [:each |
+		following addLast: each].
 	self
 		assertNodeSet:
 			(XPath
@@ -927,8 +936,8 @@ XPathTest >> testFollowingAxis [
 
 	following removeAll.
 	persons do: [:person |
-		 person nodes allButFirst do: [:node |
-			node allNodesDo: [:each | following addLast: each]]].
+		 person firstNode followingNodesDo: [:each |
+			following add: each]].
 	self
 		assertNodeSet:
 			(XPath
@@ -937,17 +946,18 @@ XPathTest >> testFollowingAxis [
 		hasNodes: following.
 
 	following removeAll.
-	persons first descendantNodesDo: [:each |
-		each previousNode
-			ifNotNil: [following addLast: each]].
-	persons allButFirst do: [:person | following addAll: person allNodes].
+	document descendantNodesDo: [:node |
+		node followingNodesDo: [:each |
+			following addIfNotPresent: each]].
 	self
 		assertNodeSet: (XPath for: '//following::node()' in: document)
 		hasNodes: following.
 
 	following removeAll.
-	persons allButFirst do: [:person |
-		person allNodesDo: [:each | following addLast:each]].
+	persons first followingNodesDo: [:each |
+		following addIfNotPresent: each].
+	persons third firstNode followingNodesDo: [:each |
+		following addIfNotPresent: each].
 	self
 		assertNodeSet:
 			(XPath
@@ -967,7 +977,8 @@ XPathTest >> testFollowingSiblingAxis [
 	| persons siblings |
 
 	persons := document allElementsNamed: 'person'.
-	siblings := persons allButFirst.
+	siblings := XPathNodeSet new.
+	siblings addAll: persons allButFirst.
 	self
 		assertNodeSet:
 			(XPath
@@ -975,8 +986,10 @@ XPathTest >> testFollowingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings := XMLNodeList new.
-	persons do: [:each | siblings addAll: each nodes allButFirst].
+	siblings removeAll.
+	persons do: [:each | 
+		each hasChildren
+			ifTrue: [siblings addAll: each nodes allButFirst]].
 	self
 		assertNodeSet:
 			(XPath
@@ -984,8 +997,10 @@ XPathTest >> testFollowingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings := persons first descendantNodesSelect: [:each | each previousNode notNil].
-	siblings addAll: persons allButFirst.
+	siblings removeAll.
+	persons first allNodesDo: [:node |
+		node followingSiblingNodesDo: [:each |
+			siblings addIfNotPresent: each]].
 	self
 		assertNodeSet:
 			(XPath
@@ -993,9 +1008,10 @@ XPathTest >> testFollowingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings := document allNodesSelect: [:each |
-		each hasParent
-			and: [each previousNode notNil]].
+	siblings removeAll.
+	document allNodesDo: [:node |
+		node followingSiblingNodesDo: [:each |
+			siblings addIfNotPresent: each]].
 	self
 		assertNodeSet:
 			(XPath
@@ -1003,8 +1019,11 @@ XPathTest >> testFollowingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings := persons allButFirst.
-	siblings addAll: persons third nodes allButFirst.
+	siblings removeAll.
+	persons first followingSiblingNodesDo: [:each |
+		siblings addLast: each].
+	persons third nodes first followingSiblingNodesDo: [:each |
+		siblings addIfNotPresent: each].
 	self
 		assertNodeSet:
 			(XPath
@@ -1666,8 +1685,8 @@ XPathTest >> testPrecedingAxis [
 	| persons preceding |
 
 	persons := document allElementsNamed: 'person'.
-	preceding := XMLNodeList new.
-	persons allButLast do: [:each | preceding addAll: each allNodes].
+	preceding := XPathNodeSet new.
+	persons last precedingNodesDo: [:each | preceding addLast: each].
 	self
 		assertNodeSet:
 			(XPath
@@ -1677,7 +1696,10 @@ XPathTest >> testPrecedingAxis [
 
 	preceding removeAll.
 	persons do: [:person |
-		 person nodes allButLast do: [:each | preceding addAll: each allNodes]].
+		person hasChildren
+			ifTrue: [
+				person nodes last precedingNodesDo: [:each |
+					preceding addIfNotPresent: each]]].
 	self
 		assertNodeSet:
 			(XPath
@@ -1686,8 +1708,9 @@ XPathTest >> testPrecedingAxis [
 		hasNodes: preceding.
 
 	preceding removeAll.
-	persons allButLast do: [:each | preceding addAll: each allNodes].
-	preceding addAll: persons last descendantNodes allButLast.
+	document allNodesDo: [:node |
+		node precedingNodesDo: [:each |
+			preceding addIfNotPresent: each]].
 	self
 		assertNodeSet:
 			(XPath
@@ -1696,7 +1719,10 @@ XPathTest >> testPrecedingAxis [
 		hasNodes: preceding.
 
 	preceding removeAll.
-	persons allButLast do: [:person | preceding addAll: person allNodes].
+	persons last precedingNodesDo: [:each |
+		preceding addLast: each].
+	persons second nodes last precedingNodesDo: [:each |
+		preceding addLast: each].
 	self
 		assertNodeSet:
 			(XPath
@@ -1716,7 +1742,9 @@ XPathTest >> testPrecedingSiblingAxis [
 	| persons siblings |
 
 	persons := document allElementsNamed: 'person'.
-	siblings := persons allButLast.
+	siblings := XPathNodeSet new.
+	persons fourth precedingSiblingNodesDo: [:each |
+		siblings addLast: each].
 	self
 		assertNodeSet:
 			(XPath
@@ -1724,7 +1752,13 @@ XPathTest >> testPrecedingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings := (document allElementsNamed: 'manager') allButLast.
+	siblings removeAll.
+	persons fourth precedingSiblingNodesDo: [:node |
+		node hasChildren
+			ifTrue: [
+				node
+					elementsAt: 'manager'
+					do: [:each | siblings addIfNotPresent: each]]].
 	self
 		assertNodeSet:
 			(XPath
@@ -1732,11 +1766,10 @@ XPathTest >> testPrecedingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings := (document allElementsNamed: 'person') allButLast.
-	persons last
-		descendantNodesDo: [:each |
-			each nextNode
-				ifNotNil: [siblings addLast: each]].
+	siblings removeAll.
+	persons fourth allNodesDo: [:node |
+		node precedingSiblingNodesDo: [:each |
+			siblings addIfNotPresent: each]].
 	self
 		assertNodeSet:
 			(XPath
@@ -1744,17 +1777,20 @@ XPathTest >> testPrecedingSiblingAxis [
 				in: document)
 		hasNodes: siblings.
 
-	siblings :=
-		document allNodesSelect: [:each |
-			each hasParent
-				and: [each nextNode notNil]].
+	siblings removeAll.
+	document allNodesDo: [:node |
+		node precedingSiblingNodesDo: [:each |
+			siblings addIfNotPresent: each]].
 	self
 		assertNodeSet:
 			(XPath for: '//preceding-sibling::node()' in: document)
 		hasNodes: siblings.
 
-	siblings := persons copyFrom: 1 to: 3.
-	siblings addAll: persons second nodes allButLast.
+	siblings removeAll.
+	persons last precedingSiblingNodesDo: [:each |
+		siblings addLast: each].
+	persons second nodes last precedingSiblingNodesDo: [:each |
+		siblings addIfNotPresent: each].
 	self
 		assertNodeSet:
 			(XPath
