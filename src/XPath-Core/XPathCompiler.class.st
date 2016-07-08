@@ -17,12 +17,12 @@ XPathCompiler >> compile: aStringOrStream [
 
 { #category : #private }
 XPathCompiler >> compileGeneratedSourceCode: aString [
-	"On Pharo/Squeak, Compiler class>>evaluate: can be used to compile source code.
-	On GS, there is no Compiler class, but String>>evaluate does the same"
-	^ (Smalltalk
-		at: #Compiler
-		ifAbsent: [^ aString evaluate])
-			evaluate: aString
+	"On Pharo/Squeak, Behavior class>>compilerClass returns the preferred compiler
+	class for that platform and can be sent #evaluate: to compile a string.
+	On GS there is no compiler class, but String>>evaluate does the same"
+	(Behavior respondsTo: #compilerClass)
+		ifTrue: [^ Behavior compilerClass evaluate: aString]
+		ifFalse: [^ aString evaluate]
 ]
 
 { #category : #compiling }
