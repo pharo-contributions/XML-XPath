@@ -27,7 +27,7 @@ XPathTest >> setUp [
 			preservesCommentNodes: true;
 			parseDocument.
 	namespacedDocument := 
-		(XMLDOMParser on: XMLDOMParserTest addressBookNamespacePrefixedXML)
+		(XMLDOMParser on: XMLParserTest addressBookNamespacePrefixedXML)
 			preservesCommentNodes: true;
 			parseDocument.
 ]
