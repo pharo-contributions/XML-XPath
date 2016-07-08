@@ -347,6 +347,17 @@ ConfigurationOfXPath >> baseline168: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline169: spec [
+	<version: '1.6.9-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.7' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
 { #category : #accessing }
 ConfigurationOfXPath >> customProjectAttributes [
 	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
@@ -359,7 +370,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.6.8-baseline'.
+	spec for: #'common' version: '1.6.9-baseline'.
 ]
 
 { #category : #accessing }
@@ -379,7 +390,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.6.8'.
+	spec for: #'common' version: '1.6.9'.
 
 ]
 
@@ -1142,5 +1153,16 @@ ConfigurationOfXPath >> version168: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.78'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.65'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version169: spec [ 
+        <version: '1.6.9' imports: #('1.6.9-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.79'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.66'.
                 ].
 ]
