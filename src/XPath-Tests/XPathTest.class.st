@@ -1292,7 +1292,7 @@ XPathTest >> testNameFunction [
 
 	(element := XMLElement named: 'test')
 		addNode: (XMLElement named: 'test-two');
-		addNode: 'test-three' asXMLString.
+		addNode: 'test-three' asXMLStringNode.
 	self
 		assert: (XPath for: 'name()' in: element) = 'test';
 		assert: (XPath for: 'name(//.)' in: element) = 'test'.
@@ -2004,7 +2004,7 @@ XPathTest >> testStringLengthFunction [
 	self
 		assert: 'string-length("test")' asXPath evaluate = 4;
 		assert: 'string-length(false())' asXPath evaluate = 5;
-		assert: ('string-length()' asXPath in: 'string-value' asXMLString) = 12
+		assert: ('string-length()' asXPath in: 'string-value' asXMLStringNode) = 12
 ]
 
 { #category : #tests }

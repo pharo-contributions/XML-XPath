@@ -125,11 +125,11 @@ XMLElementTest >> testStringValue [
 
 	self assert:
 		(self nodeClass new
-			addContent: 'before';
+			addString: 'before';
 			addNode:
 				((self nodeClass named: 'element')
-					addContent: 'content';
+					addString: 'content';
 					yourself);
-			addContent: 'after';
+			addString: 'after';
 			yourself) stringValue = 'beforecontentafter'.
 ]
