@@ -2,29 +2,29 @@ Extension { #name : #XMLPITest }
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testExpandedName [
-	self assert: (self nodeClass target: 'target' data: 'data') expandedName = 'target'
+	self assert: self newPIWithTargetAndData expandedName = 'target'
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testHasExpandedName [
-	self assert: self nodeClass new hasExpandedName
+	self assert: self newNode hasExpandedName
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testHasNamespaceURI [
-	self deny: (self nodeClass target: 'target' data: 'data') hasNamespaceURI
+	self deny: self newPIWithTargetAndData hasNamespaceURI
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testHasPrefix [
-	self deny: (self nodeClass target: 'target' data: 'data') hasPrefix
+	self deny: self newPIWithTargetAndData hasPrefix
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testHasPrefixedNamespaceURI [
 	| pi |
 
-	pi := self nodeClass target: 'target' data: 'data'.
+	pi := self newPIWithTargetAndData.
 	self
 		deny: (pi hasPrefixedNamespaceURI: 'target');
 		deny: (pi hasPrefixedNamespaceURI: 'data');
@@ -33,30 +33,27 @@ XMLPITest >> testHasPrefixedNamespaceURI [
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testLocalName [
-	self assert: (self nodeClass target: 'target' data: 'data') localName = 'target'
+	self assert: self newPIWithTargetAndData localName = 'target'
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testName [
-	self assert: (self nodeClass target: 'target' data: 'data') name = 'target'
+	self assert: self newPIWithTargetAndData name = 'target'
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testNamespaceURI [
-	self assert: (self nodeClass target: 'target' data: 'data') namespaceURI isEmpty
+	self assert: self newPIWithTargetAndData namespaceURI = ''
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testPrefix [
-	self assert: (self nodeClass target: 'target' data: 'data') prefix isEmpty
+	self assert: self newPIWithTargetAndData prefix = ''
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testStringValue [
 	super testStringValue.
 
-	self assert:
-		(self nodeClass
-			target: 'target'
-			data: 'data') stringValue = 'data'.
+	self assert: self newPIWithTargetAndData stringValue = 'data'.
 ]

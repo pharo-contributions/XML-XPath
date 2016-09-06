@@ -67,7 +67,7 @@ XPathNamespaceNodeTest >> testExpandedName [
 
 { #category : #tests }
 XPathNamespaceNodeTest >> testHasExpandedName [
-	self assert: self nodeClass new hasExpandedName
+	self assert: self newNode hasExpandedName
 ]
 
 { #category : #tests }
@@ -90,7 +90,7 @@ XPathNamespaceNodeTest >> testHasPrefixedNamespaceURI [
 
 { #category : #tests }
 XPathNamespaceNodeTest >> testIsNamespace [
-	self assert: self nodeClass new isNamespace
+	self assert: self newNode isNamespace
 ]
 
 { #category : #tests }
@@ -105,13 +105,13 @@ XPathNamespaceNodeTest >> testName [
 
 { #category : #tests }
 XPathNamespaceNodeTest >> testNamespaceURI [
-	self assert: self newNamespaceNode namespaceURI isEmpty
+	self assert: self newNamespaceNode namespaceURI = ''
 ]
 
 { #category : #tests }
 XPathNamespaceNodeTest >> testPrefix [
 	"namespace nodes model prefixes, but cannot be prefixed themselves"
-	self assert: self newNamespaceNode prefix isEmpty
+	self assert: self newNamespaceNode prefix = ''
 ]
 
 { #category : #tests }

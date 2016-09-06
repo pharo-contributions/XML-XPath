@@ -12,20 +12,20 @@ XMLElementTest >> testAttributeAxis [
 		assert: list = (XPathNodeSet newFrom: element attributeNodes);
 		assertList: list hasSortOrder: XPathDocumentSortOrder.
 
-	element := self nodeClass new.
+	element := self newNode.
 	self assert: (element @ 'node()') isEmpty.
 ]
 
 { #category : #'*XPath-Tests' }
 XMLElementTest >> testHasExpandedName [
-	self assert: self nodeClass new hasExpandedName
+	self assert: self newNode hasExpandedName
 ]
 
 { #category : #'*XPath-Tests' }
 XMLElementTest >> testHasNamespaceNodes [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self assert: element hasNamespaceNodes.
 
 	element declareNamespaces: self namespaces.
@@ -42,7 +42,7 @@ XMLElementTest >> testHasPrefixedNamespaceURI [
 	element := self nodeClass name: 'test' namespaces: self namespaces.
 	self
 		assert: element namespaceURI notEmpty;
-		assert: element prefix isEmpty;
+		assert: element prefix = '';
 		deny: (element hasPrefixedNamespaceURI: '').
 
 	element name: 'prefix:test'.
@@ -53,14 +53,14 @@ XMLElementTest >> testHasPrefixedNamespaceURI [
 XMLElementTest >> testNamespaceAxis [
 	| element list |
 
-	element := self nodeClass new.
+	element := self newNode.
 	element declareNamespaces: self namespaces.
 	list := element @@ '*'.
 	self
 		assert: list = (XPathNodeSet newFrom: element namespaceNodes);
 		assertList: list hasSortOrder: XPathDocumentSortOrder.
 
-	element := self nodeClass new.
+	element := self newNode.
 	element configuration usesNamespaces: false.
 	self assert: (element @@ 'node()') isEmpty.
 ]
@@ -69,7 +69,7 @@ XMLElementTest >> testNamespaceAxis [
 XMLElementTest >> testNamespaceNodes [
 	| element nodes |
 
-	element := self nodeClass new.
+	element := self newNode.
 	nodes :=
 		XMLNodeList with:
 			(XPathNamespaceNode withXMLNamespaceOnElement: element).
@@ -97,7 +97,7 @@ XMLElementTest >> testNamespaceNodes [
 XMLElementTest >> testNamespaceNodesDo [
 	| element |
 
-	element := self nodeClass new.
+	element := self newNode.
 	self
 		should: [:block | element namespaceNodesDo: block]
 		enumerate: element namespaceNodes.
@@ -124,7 +124,7 @@ XMLElementTest >> testStringValue [
 	super testStringValue.
 
 	self assert:
-		(self nodeClass new
+		(self newNode
 			addString: 'before';
 			addNode:
 				((self nodeClass named: 'element')

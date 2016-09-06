@@ -15,10 +15,10 @@ XPathNodeSetTest >> assertList: aList copiedFrom: aSecondList equals: aThirdList
 		assertList: aList
 		copiedFrom: aSecondList
 		equals: aThirdList.
+	"internal set must be copied"
 	self
-		assert: aList set size = aList size;
 		assert: aList set = aThirdList set;
-		deny: aList set == aSecondList set. "internal set must be copied"
+		deny: aList set == aSecondList set.
 ]
 
 { #category : #assertions }
@@ -34,8 +34,8 @@ XPathNodeSetTest >> assertList: aList hasSortOrder: aSortOrder [
 { #category : #assertions }
 XPathNodeSetTest >> assertList: aList isCopyOf: aSecondList [
 	super assertList: aList isCopyOf: aSecondList.
+	"internal set must be copied"
 	self
-		assert: aList set size = aList size;
 		assert: aList set = aSecondList set;
 		deny: aList set == aSecondList set.
 ]
@@ -304,7 +304,7 @@ XPathNodeSetTest >> testAsXPathNumber [
 { #category : #tests }
 XPathNodeSetTest >> testAsXPathString [
 	self
-		assert: self emptyList asXPathString isEmpty;
+		assert: self emptyList asXPathString = '';
 		assert: self listWithItems asXPathString = self singleListItem stringValue;
 		assert: self listWithItems reversed asXPathString = self singleListItem stringValue
 ]

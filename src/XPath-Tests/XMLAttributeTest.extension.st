@@ -2,7 +2,7 @@ Extension { #name : #XMLAttributeTest }
 
 { #category : #'*XPath-Tests' }
 XMLAttributeTest >> testHasExpandedName [
-	self assert: self nodeClass new hasExpandedName
+	self assert: self newNode hasExpandedName
 ]
 
 { #category : #'*XPath-Tests' }

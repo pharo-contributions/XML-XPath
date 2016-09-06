@@ -9,7 +9,7 @@ XMLNodeTest >> assertList: aList hasSortOrder: aSortOrder [
 XMLNodeTest >> testAllNodesReverseDo [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		should: [:block | node allNodesReverseDo: block]
 		enumerate: (Array with: node).
@@ -18,15 +18,15 @@ XMLNodeTest >> testAllNodesReverseDo [
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testAncestorAxis [
 	self
-		assert: (self nodeClass new %% 'node()') isEmpty;
-		assert: (self nodeClass new %% '*') isEmpty
+		assert: (self newNode %% 'node()') isEmpty;
+		assert: (self newNode %% '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testAncestorOrSelfAxis [
 	| node list |
 
-	node := self nodeClass new.
+	node := self newNode.
 	list := node %%~ 'node()'.
 	self
 		assert: list = (XPathNodeSet with: node);
@@ -45,36 +45,36 @@ XMLNodeTest >> testAncestorOrSelfAxis [
 XMLNodeTest >> testAsXPathLocationPathRoot [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self assert: node asXPathLocationPathRoot == node.
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testAttributeAxis [
 	self
-		assert: (self nodeClass new @ 'node()') isEmpty;
-		assert: (self nodeClass new @ '*') isEmpty
+		assert: (self newNode @ 'node()') isEmpty;
+		assert: (self newNode @ '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testChildAxis [
 	self
-		assert: (self nodeClass new / 'node()') isEmpty;
-		assert: (self nodeClass new / '*') isEmpty
+		assert: (self newNode / 'node()') isEmpty;
+		assert: (self newNode / '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testDescendantAxis [
 	self
-		assert: (self nodeClass new // 'node()') isEmpty;
-		assert: (self nodeClass new // '*') isEmpty
+		assert: (self newNode // 'node()') isEmpty;
+		assert: (self newNode // '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testDescendantOrSelfAxis [
 	| node list |
 
-	node := self nodeClass new.
+	node := self newNode.
 	list := node //~ 'node()'.
 	self
 		assert: list = (XPathNodeSet with: node);
@@ -93,22 +93,22 @@ XMLNodeTest >> testDescendantOrSelfAxis [
 XMLNodeTest >> testDocumentRoot [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self assert: node documentRoot == node.
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testFollowingAxis [
 	self
-		assert: (self nodeClass new >> 'node()') isEmpty;
-		assert: (self nodeClass new >> '*') isEmpty
+		assert: (self newNode >> 'node()') isEmpty;
+		assert: (self newNode >> '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testFollowingNodesDo [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		should: [:block | node followingNodesDo: block]
 		enumerate: #().
@@ -117,15 +117,15 @@ XMLNodeTest >> testFollowingNodesDo [
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testFollowingSiblingAxis [
 	self
-		assert: (self nodeClass new >>> 'node()') isEmpty;
-		assert: (self nodeClass new >>> '*') isEmpty
+		assert: (self newNode >>> 'node()') isEmpty;
+		assert: (self newNode >>> '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testFollowingSiblingNodesDo [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		should: [:block | node followingSiblingNodesDo: block]
 		enumerate: #().
@@ -133,40 +133,40 @@ XMLNodeTest >> testFollowingSiblingNodesDo [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testHasExpandedName [
-	self deny: self nodeClass new hasExpandedName
+	self deny: self newNode hasExpandedName
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testIsNamespace [
-	self deny: self nodeClass new isNamespace
+	self deny: self newNode isNamespace
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testNamespaceAxis [
 	self
-		assert: (self nodeClass new @@ 'node()') isEmpty;
-		assert: (self nodeClass new @@ '*') isEmpty
+		assert: (self newNode @@ 'node()') isEmpty;
+		assert: (self newNode @@ '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testParentAxis [
 	self
-		assert: (self nodeClass new % 'node()') isEmpty;
-		assert: (self nodeClass new % '*') isEmpty
+		assert: (self newNode % 'node()') isEmpty;
+		assert: (self newNode % '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testPrecedingAxis [
 	self
-		assert: (self nodeClass new << 'node()') isEmpty;
-		assert: (self nodeClass new << '*') isEmpty
+		assert: (self newNode << 'node()') isEmpty;
+		assert: (self newNode << '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testPrecedingNodesDo [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		should: [:block | node precedingNodesDo: block]
 		enumerate: #().
@@ -175,15 +175,15 @@ XMLNodeTest >> testPrecedingNodesDo [
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testPrecedingSiblingAxis [
 	self
-		assert: (self nodeClass new <<< 'node()') isEmpty;
-		assert: (self nodeClass new <<< '*') isEmpty
+		assert: (self newNode <<< 'node()') isEmpty;
+		assert: (self newNode <<< '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testPrecedingSiblingNodesDo [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		should: [:block | node precedingSiblingNodesDo: block]
 		enumerate: #().
@@ -193,7 +193,7 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 XMLNodeTest >> testSelfAxis [
 	| node list |
 
-	node := self nodeClass new.
+	node := self newNode.
 	list := node ~ 'node()'.
 	self
 		assert: list = (XPathNodeSet with: node);
@@ -210,14 +210,14 @@ XMLNodeTest >> testSelfAxis [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testStringValue [
-	self assert: self nodeClass new stringValue isEmpty
+	self assert: self newNode stringValue = ''
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testXPath [
 	| node |
 
-	node := self nodeClass new.
+	node := self newNode.
 	self
 		assert: (node xPath: '.') = (XPathNodeSet with: node);
 		assert: (node xPath: (XPath for: '.')) = (XPathNodeSet with: node).
@@ -227,7 +227,7 @@ XMLNodeTest >> testXPath [
 XMLNodeTest >> testXPathContext [
 	| node context |
 
-	node := self nodeClass new.
+	node := self newNode.
 	(context := XPathContext new)
 		variableAt: 'var' put: 'test'.
 	self
