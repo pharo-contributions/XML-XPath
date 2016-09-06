@@ -4,7 +4,7 @@ A class for wrapping XPath numbers to polymorphically implement XPath comparison
 Class {
 	#name : #XPathNumberComparable,
 	#superclass : #XPathComparable,
-	#category : #'XPath-Core-Evaluation'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #comparing }

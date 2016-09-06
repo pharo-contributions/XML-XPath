@@ -4,7 +4,7 @@ This class compiles XPath expressions by first translating them into Smalltalk u
 Class {
 	#name : #XPathCompiler,
 	#superclass : #Object,
-	#category : #'XPath-Core'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #compiling }

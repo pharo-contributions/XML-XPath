@@ -4,7 +4,7 @@ A class for wrapping XPath booleans to polymorphically implement XPath compariso
 Class {
 	#name : #XPathBooleanComparable,
 	#superclass : #XPathComparable,
-	#category : #'XPath-Core-Evaluation'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #comparing }

@@ -4,7 +4,7 @@ A class for wrapping XPath strings to polymorphically implement XPath comparison
 Class {
 	#name : #XPathStringComparable,
 	#superclass : #XPathComparable,
-	#category : #'XPath-Core-Evaluation'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #comparing }

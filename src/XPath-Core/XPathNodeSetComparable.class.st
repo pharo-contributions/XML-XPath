@@ -4,7 +4,7 @@ A class for wrapping XPath node sets to polymorphically implement XPath comparis
 Class {
 	#name : #XPathNodeSetComparable,
 	#superclass : #XPathComparable,
-	#category : #'XPath-Core-Evaluation'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #comparing }

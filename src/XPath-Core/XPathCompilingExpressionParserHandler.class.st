@@ -9,7 +9,7 @@ Class {
 		'variableStack',
 		'operatorStack'
 	],
-	#category : #'XPath-Core-Parsers'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #private }

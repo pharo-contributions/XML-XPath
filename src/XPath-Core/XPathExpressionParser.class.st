@@ -331,8 +331,9 @@ XPathExpressionParser >> peekForAdditiveOperator [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAndOperator [
-	inputStream skipSeparators.
-	^ inputStream nextMatchAll: 'and'.
+	^ inputStream
+		skipSeparators;
+		nextMatchAll: 'and'
 ]
 
 { #category : #'parsing - peeking' }
@@ -395,8 +396,9 @@ XPathExpressionParser >> peekForAxis [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForEndPredicate [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $].
+	^ inputStream
+		skipSeparators;
+		peekFor: $]
 ]
 
 { #category : #'parsing - peeking' }
@@ -438,8 +440,9 @@ XPathExpressionParser >> peekForLocationPathExpression [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForLocationPathSeparator [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $/.
+	^ inputStream
+		skipSeparators;
+		peekFor: $/
 ]
 
 { #category : #'parsing - peeking' }
@@ -464,8 +467,9 @@ XPathExpressionParser >> peekForMultiplicativeOperator [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForNegationOperator [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $-.
+	^ inputStream
+		skipSeparators;
+		peekFor: $-
 ]
 
 { #category : #'parsing - peeking' }
@@ -499,8 +503,9 @@ XPathExpressionParser >> peekForNumber [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForOrOperator [
-	inputStream skipSeparators.
-	^ inputStream nextMatchAll: 'or'.
+	^ inputStream
+		skipSeparators;
+		nextMatchAll: 'or'
 ]
 
 { #category : #'parsing - peeking' }
@@ -569,8 +574,9 @@ XPathExpressionParser >> peekForRelativeLocationPath [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForStartPredicate [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $[.
+	^ inputStream
+		skipSeparators;
+		peekFor: $[
 ]
 
 { #category : #'parsing - peeking' }

@@ -7,6 +7,7 @@ BlockClosure >> asXPathAttributeNodeTestBlock [
 
 { #category : #'*XPath-Core-converting' }
 BlockClosure >> asXPathFilterable [
+	"assume the receiver is some kind of node test block"
 	^ XPathNodeTestWithFilters nodeTest: self
 ]
 

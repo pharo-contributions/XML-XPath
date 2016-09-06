@@ -118,43 +118,44 @@ XPathNodeSet >> addAllTo: aCollection [
 XPathNodeSet >> afterAdding: aNode at: anIndex [
 	| oldSize |
 
+	sortOrder := nil.
 	oldSize := self set size.
 	(self set
 		add: aNode;
-		size) > oldSize
-		ifFalse: [
+		size) = oldSize
+		ifTrue: [
 			self
-				replaced: aNode
-				with: aNode
-				at: anIndex].
-	sortOrder := nil.
-	super
-		afterAdding: aNode
-		at: anIndex.
+				removeDuplicateOf: aNode
+				notAt: anIndex]
+		ifFalse: [
+			observer
+				ifNotNil: [observer addedNode: aNode]].
 ]
 
 { #category : #private }
 XPathNodeSet >> afterAddingLast: aNode [
 	| oldSize |
 
+	sortOrder := nil.
 	oldSize := self set size.
 	(self set
 		add: aNode;
-		size) > oldSize
-		ifFalse: [
+		size) = oldSize
+		ifTrue: [
 			self
-				replaced: aNode
-				with: aNode
-				at: oldSize].
-	sortOrder := nil.
-	super afterAddingLast: aNode.
+				removeDuplicateOf: aNode
+				notAt: oldSize]
+		ifFalse: [
+			observer
+				ifNotNil: [observer addedNode: aNode]]
 ]
 
 { #category : #private }
 XPathNodeSet >> afterRemoving: aNode [
+	"removing does not change order, so sortOrder is not reset here"
 	self set remove: aNode.
-	"removing does not change order"
-	super afterRemoving: aNode.
+	observer
+		ifNotNil: [observer removedNode: aNode].
 ]
 
 { #category : #'enumerating - axis' }

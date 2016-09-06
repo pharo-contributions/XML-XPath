@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'value'
 	],
-	#category : #'XPath-Core-Evaluation'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #'instance creation' }

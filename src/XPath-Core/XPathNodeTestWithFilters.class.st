@@ -8,12 +8,21 @@ Class {
 		'filters',
 		'nodeTest'
 	],
-	#category : #'XPath-Core-Evaluation'
+	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #'instance creation' }
 XPathNodeTestWithFilters class >> nodeTest: aNodeTestBlock [
-	^ self new setNodeTest: aNodeTestBlock
+	^ self
+		nodeTest: aNodeTestBlock
+		filters: #()
+]
+
+{ #category : #'instance creation' }
+XPathNodeTestWithFilters class >> nodeTest: aNodeTestBlock filters: aFilterCollection [
+	^ self new
+		setNodeTest: aNodeTestBlock
+		filters: aFilterCollection
 ]
 
 { #category : #converting }
@@ -38,6 +47,8 @@ XPathNodeTestWithFilters >> asXPathNodeTestBlock [
 
 { #category : #private }
 XPathNodeTestWithFilters >> filterWithAll: aFilterCollection [
+	"instead of filtering anything, this stores the filters so the
+	node test and filters can be applied by an axis later"
 	filters := aFilterCollection
 ]
 
@@ -61,6 +72,7 @@ XPathNodeTestWithFilters >> printOn: aStream [
 ]
 
 { #category : #initialization }
-XPathNodeTestWithFilters >> setNodeTest: aNodeTestBlock [
-	nodeTest := aNodeTestBlock
+XPathNodeTestWithFilters >> setNodeTest: aNodeTestBlock filters: aFilterCollection [
+	nodeTest := aNodeTestBlock.
+	filters := aFilterCollection.
 ]
