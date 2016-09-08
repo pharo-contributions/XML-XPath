@@ -376,7 +376,7 @@ ConfigurationOfXPath >> baseline171: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.6' ].
+			spec project: 'XMLParser' with: #'release-2.8.7' ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
