@@ -203,7 +203,9 @@ ConfigurationOfXPath >> baseline10: spec [
 
 		spec group: 'default' with: #('Core' 'Tests').
 		spec group: 'Core' with: #('XPath-Core').
-		spec group: 'Tests' with: #('XPath-Tests'). ].
+		spec group: 'Tests' with: #('XPath-Tests').
+		
+		spec postLoadDoIt: #clearCompiledXPathCache].
 
 	"load gemstone methods"
 	spec for: #'gemstone' do: [
@@ -378,6 +380,11 @@ ConfigurationOfXPath >> baseline171: spec [
 			spec blessing: #baseline.
 			spec project: 'XMLParser' with: #'release-2.8.7' ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #doits }
+ConfigurationOfXPath >> clearCompiledXPathCache [
+	XPath clearCompiledXPathCache
 ]
 
 { #category : #accessing }
