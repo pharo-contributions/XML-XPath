@@ -6,6 +6,26 @@ XMLNodeTest >> assertList: aList hasSortOrder: aSortOrder [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> contextClass [
+	^ XPathContext
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> newContext [
+	^ self contextClass new
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> newNodeSet [
+	^ self nodeSetClass new
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> nodeSetClass [
+	^ XPathNodeSet
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testAllNodesReverseDo [
 	| node |
 
@@ -29,14 +49,14 @@ XMLNodeTest >> testAncestorOrSelfAxis [
 	node := self newNode.
 	list := node %%~ 'node()'.
 	self
-		assert: list = (XPathNodeSet with: node);
+		assert: list = (self nodeSetClass with: node);
 		assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
 
 	list := node %%~ '*'.
 	node isElement
 		ifTrue: [
 			self
-				assert: list = (XPathNodeSet with: node);
+				assert: list = (self nodeSetClass with: node);
 				assertList: list hasSortOrder: XPathReverseDocumentSortOrder]
 		ifFalse: [self assert: list isEmpty].
 ]
@@ -77,14 +97,14 @@ XMLNodeTest >> testDescendantOrSelfAxis [
 	node := self newNode.
 	list := node //~ 'node()'.
 	self
-		assert: list = (XPathNodeSet with: node);
+		assert: list = (self nodeSetClass with: node);
 		assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 	list := node //~ '*'.
 	node isElement
 		ifTrue: [
 			self
-				assert: list = (XPathNodeSet with: node);
+				assert: list = (self nodeSetClass with: node);
 				assertList: list hasSortOrder: XPathDocumentSortOrder]
 		ifFalse: [self assert: list isEmpty].
 ]
@@ -196,14 +216,14 @@ XMLNodeTest >> testSelfAxis [
 	node := self newNode.
 	list := node ~ 'node()'.
 	self
-		assert: list = (XPathNodeSet with: node);
+		assert: list = (self nodeSetClass with: node);
 		assertList: list hasSortOrder: XPathDocumentSortOrder.
 
 	list := node ~ '*'.
 	node isElement
 		ifTrue: [
 			self
-				assert: list = (XPathNodeSet with: node);
+				assert: list = (self nodeSetClass with: node);
 				assertList: list hasSortOrder: XPathDocumentSortOrder]
 		ifFalse: [self assert: list isEmpty].
 ]
@@ -219,8 +239,8 @@ XMLNodeTest >> testXPath [
 
 	node := self newNode.
 	self
-		assert: (node xPath: '.') = (XPathNodeSet with: node);
-		assert: (node xPath: (XPath for: '.')) = (XPathNodeSet with: node).
+		assert: (node xPath: '.') = (self nodeSetClass with: node);
+		assert: (node xPath: (XPath for: '.')) = (self nodeSetClass with: node).
 ]
 
 { #category : #'*XPath-Tests' }
@@ -228,8 +248,10 @@ XMLNodeTest >> testXPathContext [
 	| node context |
 
 	node := self newNode.
-	(context := XPathContext new)
-		variableAt: 'var' put: 'test'.
+	context := self newContext.
+	context
+		variableAt: 'var'
+		put: 'test'.
 	self
 		assert: (node xPath: '$var' context: context) = 'test';
 		assert: (node xPath: (XPath for: '$var') context: context) = 'test'.

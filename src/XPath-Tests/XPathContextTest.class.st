@@ -5,8 +5,18 @@ Class {
 }
 
 { #category : #accessing }
+XPathContextTest >> contextClass [
+	^ XPathContext
+]
+
+{ #category : #accessing }
+XPathContextTest >> functionSetClass [
+	^ XPathFunctionSet
+]
+
+{ #category : #accessing }
 XPathContextTest >> functions [
-	^ XPathContext defaultFunctions
+	^ self contextClass defaultFunctions
 ]
 
 { #category : #accessing }
@@ -19,7 +29,22 @@ XPathContextTest >> namespaces [
 
 { #category : #'instance creation' }
 XPathContextTest >> newContext [
-	^ XPathContext new
+	^ self contextClass new
+]
+
+{ #category : #'instance creation' }
+XPathContextTest >> newFunctionSet [
+	^ self functionSetClass new
+]
+
+{ #category : #'instance creation' }
+XPathContextTest >> newNodeSet [
+	^ self nodeSetClass new
+]
+
+{ #category : #accessing }
+XPathContextTest >> nodeSetClass [
+	^ XPathNodeSet
 ]
 
 { #category : #tests }
@@ -27,7 +52,7 @@ XPathContextTest >> testAddFunction [
 	| context |
 
 	context := self newContext.
-	context functions: XPathFunctionSet new.
+	context functions: self newFunctionSet.
 	self functions do: [:each | | oldFunctionSet |
 		"test copy-on-write"
 		oldFunctionSet := context functions.
@@ -95,7 +120,7 @@ XPathContextTest >> testFunctions [
 		assert: context functions = functions;
 		assert: context functions == functions.
 
-	functions := XPathFunctionSet default.
+	functions := self functionSetClass default.
 	self
 		assert: (context functions: functions) == context;
 		assert: context functions = functions;
@@ -114,7 +139,7 @@ XPathContextTest >> testHasFunctions [
 	context := self newContext.
 	self assert: context hasFunctions.
 
-	context functions: XPathFunctionSet new.
+	context functions: self newFunctionSet.
 	self deny: context hasFunctions.
 ]
 
@@ -495,6 +520,6 @@ XPathContextTest >> variables [
 	^ Dictionary new
 		at: 'one' put: '1';
 		at: 'two' put: 2;
-		at: 'three' put: XPathNodeSet new;
+		at: 'three' put: self newNodeSet;
 		yourself
 ]

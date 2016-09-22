@@ -20,6 +20,31 @@ XPathTest >> assertNodeSet: aNodeSet hasSortOrder: aSortOrder [
 	self assert: (aNodeSet sortOrder class == aSortOrder)
 ]
 
+{ #category : #accessing }
+XPathTest >> contextClass [
+	^ XPathContext
+]
+
+{ #category : #accessing }
+XPathTest >> functionSetClass [
+	^ XPathFunctionSet
+]
+
+{ #category : #'instance creation' }
+XPathTest >> newContext [
+	^ self contextClass new
+]
+
+{ #category : #'instance creation' }
+XPathTest >> newNodeSet [
+	^ self nodeSetClass new
+]
+
+{ #category : #accessing }
+XPathTest >> nodeSetClass [
+	^ XPathNodeSet
+]
+
 { #category : #running }
 XPathTest >> setUp [
 	document :=
@@ -36,7 +61,7 @@ XPathTest >> setUp [
 XPathTest >> testAbbreviatedSteps [
 	| result |
 
-	result := XPathNodeSet with: document.
+	result := self nodeSetClass with: document.
 	self
 		assert: (document xPath: '.') = result;
 		assert: (document xPath: './.') = result;
@@ -88,8 +113,9 @@ XPathTest >> testAddFunction [
 	path := XPath for: 'ceiling(1.9)'.
 
 	functionsWithoutCeiling :=
-		XPathFunctionSet default copyWithout: XPathCeilingFunction.
-	context := XPathContext functions: functionsWithoutCeiling.
+		self functionSetClass default copyWithout:
+			XPathCeilingFunction.
+	context := self contextClass functions: functionsWithoutCeiling.
 	self deny: (context includesFunction: XPathCeilingFunction).
 	self
 		should: [
@@ -98,7 +124,7 @@ XPathTest >> testAddFunction [
 				context: context]
 		raise: XPathUndeclaredFunctionException.
 
-	(context := XPathContext functions: functionsWithoutCeiling)
+	(context := self contextClass functions: functionsWithoutCeiling)
 		addFunction: XPathCeilingFunction.
 	self assert: (context includesFunction: XPathCeilingFunction).
 	"adding should modify an internal copy, not the original"
@@ -219,8 +245,8 @@ XPathTest >> testAsXPath [
 
 	path := '/addressbook' asXPath.
 	self
-		assert: (path isKindOf: XPath);
-		assert: (document xPath: path) = (XPathNodeSet with: document root);
+		assert: path class == XPath;
+		assert: (document xPath: path) = (self nodeSetClass with: document root);
 		assert: path asXPath == path.
 ]
 
@@ -599,7 +625,7 @@ XPathTest >> testDocumentOrderLosing [
 		assertNodeSet: result hasNodes: expected;
 		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
 
-	expected := XPathNodeSet new.
+	expected := self newNodeSet.
 	document descendantNodesDo: [:node |
 		node followingSiblingNodesDo: [:each |
 			expected addIfNotPresent: each]].
@@ -710,7 +736,7 @@ XPathTest >> testDoubleWildcard [
 			(XPath
 				for: '*:*/*:*'
 				in: namespacedDocument
-				context: (XPathContext new declarePrefix: 'two' uri: 'personNS'))
+				context: (self newContext declarePrefix: 'two' uri: 'personNS'))
 		hasNodes: (namespacedDocument allElementsNamed: 'person').
 ]
 
@@ -727,7 +753,7 @@ XPathTest >> testElementDoubleWildcard [
 			(XPath
 				for: 'element(*:*)/element(*:*)'
 				in: namespacedDocument
-				context: (XPathContext new declarePrefix: 'two' uri: 'personNS')) 
+				context: (self newContext declarePrefix: 'two' uri: 'personNS')) 
 		hasNodes: (namespacedDocument allElementsNamed: 'person').
 ]
 
@@ -780,19 +806,19 @@ XPathTest >> testElementLocalNameWildcardTest [
 			(XPath
 				for: 'element(one:*)/element(two:*)'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))
+				context: (self contextClass namespaces: mappings))
 		hasNodes: persons.
 	self assert:
 		(XPath
 			for: 'element(one:*)/element(one:*)'
 			in: namespacedDocument
-			context: (XPathContext namespaces: mappings)) isEmpty.
+			context: (self contextClass namespaces: mappings)) isEmpty.
 	self
 		should: [
 			(XPath
 				for: 'element(undeclared:*)'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))]
+				context: (self contextClass namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
 ]
 
@@ -819,13 +845,13 @@ XPathTest >> testElementPrefixWildcardTest [
 			(XPath
 				for: 'element(one:addressbook)/element(*:person)'
 				in: namespacedDocument
-				context: (XPathContext new declarePrefix: 'one' uri: 'bookNS'))
+				context: (self newContext declarePrefix: 'one' uri: 'bookNS'))
 		hasNodes: persons.
 	self assert:
 		(XPath
 			for: 'element(one:addressbook)/element(*:contact-info)'
 			in: namespacedDocument
-			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) isEmpty.
+			context: (self newContext declarePrefix: 'one' uri: 'bookNS')) isEmpty.
 ]
 
 { #category : #tests }
@@ -850,20 +876,20 @@ XPathTest >> testElementQualfiedNameTest [
 			(XPath
 				for: 'element(one:addressbook)/element(two:person)'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))
+				context: (self contextClass namespaces: mappings))
 		hasNodes: persons.
 	self assert:
 		(XPath
 			for: 'element(one:addressbook)/element(one:person)'
 			in: namespacedDocument
-			context: (XPathContext namespaces: mappings)) isEmpty.
+			context: (self contextClass namespaces: mappings)) isEmpty.
 
 	self
 		should: [
 			(XPath
 				for: 'element(undeclared:addressbook)'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))]
+				context: (self contextClass namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
 ]
 
@@ -924,7 +950,7 @@ XPathTest >> testFollowingAxis [
 	| persons following |
 
 	persons := document allElementsNamed: 'person'.
-	following := XPathNodeSet new.
+	following := self newNodeSet.
 	persons first followingNodesDo: [:each |
 		following addLast: each].
 	self
@@ -977,7 +1003,7 @@ XPathTest >> testFollowingSiblingAxis [
 	| persons siblings |
 
 	persons := document allElementsNamed: 'person'.
-	siblings := XPathNodeSet new.
+	siblings := self newNodeSet.
 	siblings addAll: persons allButFirst.
 	self
 		assertNodeSet:
@@ -1036,12 +1062,12 @@ XPathTest >> testFollowingSiblingAxis [
 XPathTest >> testFunctions [
 	| functionSet |
 
-	functionSet := XPathFunctionSet default.
+	functionSet := self functionSetClass default.
 	self
-		assert: XPathContext new functions = functionSet;
-		deny: XPathContext new functions == functionSet;
-		assert: (XPathContext functions: functionSet) functions == functionSet;
-		assert: (XPathContext new functions: functionSet) functions == functionSet.
+		assert: self newContext functions = functionSet;
+		deny: self newContext functions == functionSet;
+		assert: (self contextClass functions: functionSet) functions == functionSet;
+		assert: (self newContext functions: functionSet) functions == functionSet.
 ]
 
 { #category : #tests }
@@ -1056,7 +1082,7 @@ XPathTest >> testIDFunction [
 			<!ATTLIST two id2 ID #IMPLIED>
 			<!ELEMENT three ANY>
 			<!ATTLIST three
-				id ID #REQUIRED
+				xml:id ID #REQUIRED
 				id3 CDATA #IMPLIED>
 			<!ELEMENT four ANY>
 			<!ATTLIST four id4 ID #REQUIRED>
@@ -1067,20 +1093,38 @@ XPathTest >> testIDFunction [
 			<!ELEMENT seven ANY>
 			<!ATTLIST seven id4 CDATA #IMPLIED>
 		]>
-		<one id="first"><two/><three id="third" id3="non-id"><four id4="fourth">
-			<five id="non-id">first</five>
-			<six id2="non-id">third</six>
-			<seven id4="non=id">non-id</seven>
-		</four></three></one>'.
+		<one id="first">
+			<two/>
+			<three xml:id="third" id3="non-id">
+				<four id4="fourth">
+					<five id="non-id">first</five>
+					<six id2="non-id">third</six>
+					<seven id4="non=id">non-id</seven>
+				</four>
+			</three>
+		</one>'.
+
 	documentWithIds :=
 		XMLDOMParser
 			parse: xmlWithIds
 			usingNamespaces: true
 			validation: true.
-
 	idElements :=
-		documentWithIds allElements select: [:each |
-				each isNamedAny: #('one' 'three')].
+		documentWithIds allElementsSelect: [:each |
+			each isNamedAny: #('one' 'three')].
+	self
+		assert: (documentWithIds xPath: 'id("  first  third  non-id  ")') = idElements;
+		assert: (documentWithIds xPath: 'id("first third non-id")') = idElements;
+		assert: (documentWithIds xPath: 'id(//*)') = idElements.
+	
+	documentWithIds :=
+		XMLDOMParser
+			parse: xmlWithIds
+			usingNamespaces: true
+			validation: false.
+	idElements :=
+		documentWithIds allElementsSelect: [:each |
+				each includesAttribute: 'xml:id'].
 	self
 		assert: (documentWithIds xPath: 'id("  first  third  non-id  ")') = idElements;
 		assert: (documentWithIds xPath: 'id("first third non-id")') = idElements;
@@ -1230,20 +1274,20 @@ XPathTest >> testLocalNameWildcardTest [
 			(XPath
 				for: 'one:*/two:*'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))
+				context: (self contextClass namespaces: mappings))
 		hasNodes: persons.
 	self assert:
 		(XPath
 			for: 'one:*/one:*'
 			in: namespacedDocument
-			context: (XPathContext namespaces: mappings)) isEmpty.
+			context: (self contextClass namespaces: mappings)) isEmpty.
 
 	self
 		should: [
 			(XPath
 				for: 'undeclared:*'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))]
+				context: (self contextClass namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
 ]
 
@@ -1304,7 +1348,7 @@ XPathTest >> testNameFunction [
 			for: 'name()'
 			in: element
 			context:
-				(XPathContext new
+				(self newContext
 					declarePrefix: 'one'
 					uri: 'defaultNS')) = 'test'.
 
@@ -1315,7 +1359,7 @@ XPathTest >> testNameFunction [
 			for: 'name()'
 			in: element
 			context:
-				(XPathContext new
+				(self newContext
 					declarePrefix: 'two'
 					uri: 'prefixNS')) = 'two:test'.
 
@@ -1326,7 +1370,7 @@ XPathTest >> testNameFunction [
 XPathTest >> testNamespaceAxis [
 	| nodes |
 
-	nodes := XPathNodeSet new.
+	nodes := self newNodeSet.
 	namespacedDocument allElementsDo: [:each |
 		nodes
 			add: (XPathNamespaceNode withXMLNamespaceOnElement: each);
@@ -1685,7 +1729,7 @@ XPathTest >> testPrecedingAxis [
 	| persons preceding |
 
 	persons := document allElementsNamed: 'person'.
-	preceding := XPathNodeSet new.
+	preceding := self newNodeSet.
 	persons last precedingNodesDo: [:each | preceding addLast: each].
 	self
 		assertNodeSet:
@@ -1742,7 +1786,7 @@ XPathTest >> testPrecedingSiblingAxis [
 	| persons siblings |
 
 	persons := document allElementsNamed: 'person'.
-	siblings := XPathNodeSet new.
+	siblings := self newNodeSet.
 	persons fourth precedingSiblingNodesDo: [:each |
 		siblings addLast: each].
 	self
@@ -1813,13 +1857,13 @@ XPathTest >> testPrefixWildcardTest [
 			(XPath
 				for: 'one:addressbook/*:person'
 				in: namespacedDocument
-				context: (XPathContext new declarePrefix: 'one' uri: 'bookNS'))
+				context: (self newContext declarePrefix: 'one' uri: 'bookNS'))
 		hasNodes: persons.
 	self assert:
 		(XPath
 			for: 'one:addressbook/*:contact-info'
 			in: namespacedDocument
-			context: (XPathContext new declarePrefix: 'one' uri: 'bookNS')) isEmpty.
+			context: (self newContext declarePrefix: 'one' uri: 'bookNS')) isEmpty.
 ]
 
 { #category : #tests }
@@ -1854,18 +1898,18 @@ XPathTest >> testQualfiedNameTest [
 		(XPath
 			for: 'one:addressbook/two:person'
 			in: namespacedDocument
-			context: (XPathContext namespaces: mappings)) = persons.
+			context: (self contextClass namespaces: mappings)) = persons.
 	self assert:
 		(XPath
 			for: 'one:addressbook/one:person'
 			in: namespacedDocument
-			context: (XPathContext namespaces: mappings)) isEmpty.
+			context: (self contextClass namespaces: mappings)) isEmpty.
 	self
 		should: [
 			(XPath
 				for: 'undeclared:addressbook'
 				in: namespacedDocument
-				context: (XPathContext namespaces: mappings))]
+				context: (self contextClass namespaces: mappings))]
 		raise: XPathUndeclaredPrefixException.
 ]
 
@@ -1910,7 +1954,7 @@ XPathTest >> testReverseDocumentOrderPreserving [
 XPathTest >> testReverseForwardAxisCombination [
 	| nodes |
 
-	nodes := XPathNodeSet new.
+	nodes := self newNodeSet.
 	(document allElementsNamed: 'person') allButLast do: [:person |
 		person descendantNodesDo: [:each |
 			nodes addLast: each]].
@@ -1983,8 +2027,8 @@ XPathTest >> testSorting [
 
 	allNodes := document allNodes.
 	(Array
-		with: (XPathNodeSet newFrom: allNodes)
-		with: (XPathNodeSet newFrom: allNodes reversed))
+		with: (self nodeSetClass newFrom: allNodes)
+		with: (self nodeSetClass newFrom: allNodes reversed))
 		do: [:nodeSet |
 			self
 				assert: nodeSet sorted = allNodes;
@@ -2184,7 +2228,7 @@ XPathTest >> testUnion [
 XPathTest >> testVariables [
 	| context result |
 
-	(context := XPathContext new)
+	(context := self newContext)
 		variableAt: 'doc' put: document;
 		variableAt: 'pos' ifAbsentPut: [4].
 	result :=
@@ -2194,7 +2238,7 @@ XPathTest >> testVariables [
 	self assert: result = (document allElementsNamed: 'person') allButLast.
 
 	context :=
-		XPathContext variables:
+		self contextClass variables:
 			(Dictionary
 				with: 'doc' -> document
 				with: 'city' -> 'Los Angeles').
