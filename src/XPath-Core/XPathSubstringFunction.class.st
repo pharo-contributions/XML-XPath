@@ -26,7 +26,8 @@ XPathSubstringFunction >> function [
 			string := self pop.
 			length := string size - start + 1].
 
-	(length > 0 and: [start <= string size])
+	(length > 0
+		and: [start <= string size])
 		ifTrue: [
 			^ string
 				copyFrom: (start max: 1)

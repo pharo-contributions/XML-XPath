@@ -13,24 +13,31 @@ XPathIDFunction class >> functionPrototype [
 ]
 
 { #category : #private }
-XPathIDFunction >> addElementsWithIDs: anIDSet from: aDocument to: aNodeSet [
-	| doctypeDefinition elementsAndIDAttributes |
+XPathIDFunction >> addElementsFromDocument: aDocument withIDs: anIDSet to: aNodeSet [
+	| doctypeDefinition |
 
 	((doctypeDefinition := aDocument doctypeDefinition) notNil
-		and: [doctypeDefinition hasElementIDValidator])
-		ifFalse: [^ self].
-	elementsAndIDAttributes :=
-		doctypeDefinition elementIDValidator elementsAndIDAttributes.
-
-	aDocument allElementsDo: [:each |
-		each hasAttributes
-			ifTrue: [
-				elementsAndIDAttributes
-					at: each name
-					ifPresent: [:idAttribute |
-						((each includesAttribute: idAttribute)
-							and: [anIDSet includes: (each attributeAt: idAttribute)])
-							ifTrue: [aNodeSet add: each]]]].
+		and: [doctypeDefinition hasValidators])
+		ifTrue: [| elementsAndIDAttributes |
+			doctypeDefinition hasElementIDs
+				ifFalse: [^ self].
+			elementsAndIDAttributes :=
+				doctypeDefinition elementIDValidator elementsAndIDAttributes.
+			aDocument allElementsDo: [:each |
+				each hasAttributes
+					ifTrue: [
+						elementsAndIDAttributes
+							at: each name
+							ifPresent: [:idAttribute |
+								((each includesAttribute: idAttribute)
+									and: [anIDSet includes: (each attributeAt: idAttribute)])
+									ifTrue: [aNodeSet add: each]]]]]
+		ifFalse: [
+			aDocument allElementsDo: [:each |
+				(each hasAttributes
+					and: [(each includesAttribute: 'xml:id')
+						and: [anIDSet includes: (each attributeAt: 'xml:id')]])
+					ifTrue: [aNodeSet add: each]]]
 ]
 
 { #category : #invoking }
@@ -39,7 +46,7 @@ XPathIDFunction >> function [
 
 	object := self pop.
 	ids := Set new.
-	(object isKindOf: XPathNodeSet)
+	object class == self nodeSetClass
 		ifTrue: [
 			object do: [:each |
 				self
@@ -50,14 +57,14 @@ XPathIDFunction >> function [
 				splitSpaceSeparatedIDs: object asXPathString
 				into: ids].
 
-	nodeSet := XPathNodeSet new.
+	nodeSet := self newNodeSet.
 	(ids notEmpty
 		and: [self contextNode notNil
 			and: [(document := self contextNode document) notNil]])
 		ifTrue: [
 			self
-				addElementsWithIDs: ids
-				from: document
+				addElementsFromDocument: document
+				withIDs: ids
 				to: nodeSet].
 	^ nodeSet.
 ]

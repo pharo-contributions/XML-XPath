@@ -23,35 +23,9 @@ XPathInitializingFunctionPrototypeParserHandler class >> function: aFunction [
 	^ self new setFunction: aFunction
 ]
 
-{ #category : #'class initialization' }
-XPathInitializingFunctionPrototypeParserHandler class >> initialize [
-	"self initialize"
-
-	(ClassesByTypeName := Dictionary new)
-		at: 'object' put: Object;
-		at: 'boolean' put: Boolean;
-		at: 'string' put: String;
-		at: 'number' put: Number;
-		at: 'node-set' put: XPathNodeSet
-]
-
 { #category : #private }
 XPathInitializingFunctionPrototypeParserHandler >> addArgumentTypeFor: aTypeName [
-	argumentTypes addLast: (self classForTypeName: aTypeName)
-]
-
-{ #category : #private }
-XPathInitializingFunctionPrototypeParserHandler >> classForTypeName: aTypeName [
-	^ ClassesByTypeName
-		at: aTypeName
-		ifAbsent: [self errorUnrecognizedTypeName: aTypeName]
-]
-
-{ #category : #private }
-XPathInitializingFunctionPrototypeParserHandler >> errorUnrecognizedTypeName: aTypeName [
-	XPathTypeException
-		formatSignal: 'Unrecognized type name "{1}"'
-		with: aTypeName
+	argumentTypes addLast: (function classForTypeName: aTypeName)
 ]
 
 { #category : #handling }
@@ -84,7 +58,7 @@ XPathInitializingFunctionPrototypeParserHandler >> handleOptionalArgument: anArg
 
 { #category : #handling }
 XPathInitializingFunctionPrototypeParserHandler >> handleReturnType: aReturnType [
-	returnType := self classForTypeName: aReturnType
+	returnType := function classForTypeName: aReturnType
 ]
 
 { #category : #handling }

@@ -41,7 +41,7 @@ XPathFunction class >> argumentTypes [
 
 { #category : #converting }
 XPathFunction class >> asXPathFunctionSet [
-	^ XPathFunctionSet with: self
+	^ self functionSetClass with: self
 ]
 
 { #category : #converting }
@@ -69,18 +69,30 @@ XPathFunction class >> asXPathFunctionSetWithFunctions: aFunctionSet [
 ]
 
 { #category : #private }
+XPathFunction class >> booleanClass [
+	^ Boolean
+]
+
+{ #category : #accessing }
 XPathFunction class >> classForTypeName: aTypeName [
+	^ self
+		classForTypeName: aTypeName
+		ifAbsent: [self errorUnrecognizedTypeName: aTypeName]
+]
+
+{ #category : #accessing }
+XPathFunction class >> classForTypeName: aTypeName ifAbsent: aBlock [
 	aTypeName = 'object'
-		ifTrue: [^ Object].
+		ifTrue: [^ self objectClass].
 	aTypeName = 'boolean'
-		ifTrue: [^ Boolean].
+		ifTrue: [^ self booleanClass].
 	aTypeName = 'string'
-		ifTrue: [^ String].
+		ifTrue: [^ self stringClass].
 	aTypeName = 'number'
-		ifTrue: [^ Number].
+		ifTrue: [^ self numberClass].
 	aTypeName = 'node-set'
-		ifTrue: [^ XPathNodeSet].
-	^ nil.
+		ifTrue: [^ self nodeSetClass].
+	^ aBlock value.
 ]
 
 { #category : #'instance creation' }
@@ -88,6 +100,13 @@ XPathFunction class >> context: aContext contextNode: aContextNode [
 	^ self new
 		setContext: aContext
 		contextNode: aContextNode
+]
+
+{ #category : #private }
+XPathFunction class >> errorUnrecognizedTypeName: aTypeName [
+	XPathTypeException
+		formatSignal: 'Unrecognized type name "{1}"'
+		with: aTypeName
 ]
 
 { #category : #accessing }
@@ -102,6 +121,11 @@ XPathFunction class >> functionName [
 XPathFunction class >> functionPrototype [
 	"should return a protype string. see subclasses for examples."
 	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathFunction class >> functionSetClass [
+	^ XPathFunctionSet
 ]
 
 { #category : #accessing }
@@ -121,8 +145,26 @@ XPathFunction class >> minArguments [
 ]
 
 { #category : #private }
+XPathFunction class >> nodeSetClass [
+	^ XPathNodeSet
+]
+
+{ #category : #private }
+XPathFunction class >> numberClass [
+	^ Number
+]
+
+{ #category : #private }
+XPathFunction class >> objectClass [
+	^ Object
+]
+
+{ #category : #private }
 XPathFunction class >> parseFunctionPrototype [
-	"self allSubclassesDo: [:each | each parseFunctionPrototype]"
+	"
+	self allSubclassesDo: [:each |
+		each parseFunctionPrototype]
+	"
 
 	(XPathFunctionPrototypeParser
 		on: self functionPrototype
@@ -145,6 +187,11 @@ XPathFunction class >> setReturnType: aReturnType functionName: aName minArgumen
 	minArguments := aMinimum.
 	maxArguments := aMaximum.
 	argumentTypes := anArgumentTypeCollection asArray.
+]
+
+{ #category : #private }
+XPathFunction class >> stringClass [
+	^ String
 ]
 
 { #category : #accessing }
@@ -219,6 +266,16 @@ XPathFunction >> maxArguments [
 { #category : #accessing }
 XPathFunction >> minArguments [
 	^ self class minArguments
+]
+
+{ #category : #'instance creation' }
+XPathFunction >> newNodeSet [
+	^ self nodeSetClass new
+]
+
+{ #category : #accessing }
+XPathFunction >> nodeSetClass [
+	^ self class nodeSetClass
 ]
 
 { #category : #stack }

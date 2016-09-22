@@ -1,5 +1,5 @@
 "
-This class models an element namespace mapping as a DOM node for compatibility with the XPath standard.
+This class models an element namespace prefix and URI mapping as a DOM node for compatibility with the XPath standard.
 "
 Class {
 	#name : #XPathNamespaceNode,

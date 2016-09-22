@@ -517,6 +517,8 @@ XPathCompilingExpressionParserHandler >> handleStartOrExpression [
 
 { #category : #handling }
 XPathCompilingExpressionParserHandler >> handleStartParsing [
+	"must use #writeStream instead of 'WriteStream on:' to get a 0-based
+	stream on Gemstone"
 	outputStream := (String new: 128) writeStream.
 	variableStack := OrderedCollection new.
 	operatorStack := OrderedCollection new.

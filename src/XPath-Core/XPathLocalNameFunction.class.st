@@ -20,7 +20,8 @@ XPathLocalNameFunction >> function [
 		ifTrue: [node := self pop firstInDocumentOrder]
 		ifFalse: [node := self contextNode].
 
-	(node notNil and: [node hasExpandedName])
+	(node notNil
+		and: [node hasExpandedName])
 		ifTrue: [^ node localName]
 		ifFalse: [^ '']
 ]

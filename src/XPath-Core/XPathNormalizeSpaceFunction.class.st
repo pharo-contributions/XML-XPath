@@ -20,8 +20,8 @@ XPathNormalizeSpaceFunction >> function [
 		ifTrue: [string := self pop]
 		ifFalse: [string := self contextNode].
 
-	"must use #writeStream instead of WriteStream on: to get a 0-based stream
-	on Gemstone"
+	"must use #writeStream instead of 'WriteStream on:' to get a 0-based
+	stream on Gemstone"
 	writeStream := (String new: string size) writeStream.
 	isInWhitespace := false.
 	normalizedSpace := Character space.
