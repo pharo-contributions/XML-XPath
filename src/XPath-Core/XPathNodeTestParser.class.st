@@ -18,19 +18,18 @@ Class {
 XPathNodeTestParser class >> initialize [ 
 	"self initialize"
 
-	self initializeNodeTypeTestParserSelectors
-]
-
-{ #category : #'class initialization' }
-XPathNodeTestParser class >> initializeNodeTypeTestParserSelectors [
-	(NodeTypeTestParserSelectors := Dictionary new)
-		at: 'comment' put: #nextCommentTypeTest;
-		at: 'text' put: #nextTextTypeTest;
-		at: 'processing-instruction' put: #nextPITypeTest;
-		at: 'node' put: #nextAnyNodeTypeTest;
-		at: 'element' put: #nextElementTypeTest;
-		at: 'attribute' put: #nextAttributeTypeTest;
-		at: 'namespace' put: #nextNamespaceTypeTest
+	"assign after with #yourself to avoid possible race
+	conditions when reinitializing the class"
+	NodeTypeTestParserSelectors :=
+		Dictionary new
+			at: 'comment' put: #nextCommentTypeTest;
+			at: 'text' put: #nextTextTypeTest;
+			at: 'processing-instruction' put: #nextPITypeTest;
+			at: 'node' put: #nextAnyNodeTypeTest;
+			at: 'element' put: #nextElementTypeTest;
+			at: 'attribute' put: #nextAttributeTypeTest;
+			at: 'namespace' put: #nextNamespaceTypeTest;
+			yourself
 ]
 
 { #category : #parsing }

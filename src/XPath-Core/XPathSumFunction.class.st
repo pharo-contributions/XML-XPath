@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathSumFunction class >> functionPrototype [
+XPathSumFunction class >> functionPrototypeSource [
 	^ 'number sum(node-set)'
 ]
 

@@ -64,7 +64,7 @@ XPathFunctionSet >> + aFunctionOrFunctionSet [
 
 { #category : #copying }
 XPathFunctionSet >> , aCollection [
-	"GS does not define , for non-sequenceable collections"
+	"GS doesn't define #, for non-Sequenceable collections"
 	^ self copy
 		addAll: aCollection;
 		yourself

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathCeilingFunction class >> functionPrototype [
+XPathCeilingFunction class >> functionPrototypeSource [
 	^ 'number ceiling(number)'
 ]
 

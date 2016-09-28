@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathTrueFunction class >> functionPrototype [
+XPathTrueFunction class >> functionPrototypeSource [
 	^ 'boolean true()'
 ]
 

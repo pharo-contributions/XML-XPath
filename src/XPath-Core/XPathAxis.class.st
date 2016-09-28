@@ -63,30 +63,27 @@ XPathAxis class >> axisSpecifiersTemplate [
 XPathAxis class >> initialize [
 	"self initialize"
 
-	self initializeAxisSpecifiers
-]
+	| temp |
 
-{ #category : #'class initialization' }
-XPathAxis class >> initializeAxisSpecifiers [
-	AxisSpecifiers := Dictionary new.
-
-	self axisSpecifiersTemplate do: [:threeElementArray |
-		| axisSpecifier replacementSelector principalNodeType defaultNodeTestParserContextClass |
-
-		axisSpecifier := threeElementArray first.
-		replacementSelector := threeElementArray second.
-		principalNodeType := threeElementArray third.
-		defaultNodeTestParserContextClass :=
+	"use a temp to fully initialize it before assignment to avoid possible
+	race conditions during class reinitialization"
+	temp := Dictionary new.
+	self axisSpecifiersTemplate do: [:each |
+		| axisSpecifier replacementSelector principalNodeType parserContextClass |
+		axisSpecifier := each first.
+		replacementSelector := each second.
+		principalNodeType := each third.
+		parserContextClass :=
 			principalNodeType = #attribute
 				ifTrue: [XPathNodeTestParserAttributeContext]
 				ifFalse: [
 					principalNodeType = #namespace
 						ifTrue: [XPathNodeTestParserNamespaceContext]
 						ifFalse: [XPathNodeTestParserElementContext]].
-
-		AxisSpecifiers
+		temp
 			at: axisSpecifier
-			put: replacementSelector -> defaultNodeTestParserContextClass].
+			put: replacementSelector -> parserContextClass].
+	AxisSpecifiers := temp.
 ]
 
 { #category : #accessing }

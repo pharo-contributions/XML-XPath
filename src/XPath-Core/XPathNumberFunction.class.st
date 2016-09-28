@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathNumberFunction class >> functionPrototype [
+XPathNumberFunction class >> functionPrototypeSource [
 	^ 'number number(object?)'
 ]
 

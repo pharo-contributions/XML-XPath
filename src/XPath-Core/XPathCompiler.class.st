@@ -4,8 +4,29 @@ This class compiles XPath expressions by first translating them into Smalltalk u
 Class {
 	#name : #XPathCompiler,
 	#superclass : #Object,
+	#classInstVars : [
+		'systemCompilerClass'
+	],
 	#category : #'XPath-Core-Compilation'
 }
+
+{ #category : #accessing }
+XPathCompiler class >> systemCompilerClass [
+	"On Pharo/Squeak, Behavior class>>#compilerClass returns the platform's
+	preferred compiler class that can be sent #evaluate: to compile a
+	string. On GS, any object can be sent #evaluate: to compile a string."
+	^ systemCompilerClass
+		ifNil: [
+			systemCompilerClass :=
+				(Behavior respondsTo: #compilerClass)
+					ifTrue: [Behavior compilerClass]
+					ifFalse: [Behavior]]
+]
+
+{ #category : #accessing }
+XPathCompiler class >> systemCompilerClass: aClass [
+	systemCompilerClass := aClass
+]
 
 { #category : #compiling }
 XPathCompiler >> compile: aStringOrStream [
@@ -17,12 +38,7 @@ XPathCompiler >> compile: aStringOrStream [
 
 { #category : #private }
 XPathCompiler >> compileGeneratedSourceCode: aString [
-	"On Pharo/Squeak, Behavior class>>compilerClass returns the preferred compiler
-	class for that platform and can be sent #evaluate: to compile a string.
-	On GS there is no compiler class, but String>>evaluate does the same"
-	(Behavior respondsTo: #compilerClass)
-		ifTrue: [^ Behavior compilerClass evaluate: aString]
-		ifFalse: [^ aString evaluate]
+	^ self class systemCompilerClass evaluate: aString
 ]
 
 { #category : #compiling }

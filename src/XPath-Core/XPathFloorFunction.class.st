@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathFloorFunction class >> functionPrototype [
+XPathFloorFunction class >> functionPrototypeSource [
 	^ 'number floor(number)'
 ]
 

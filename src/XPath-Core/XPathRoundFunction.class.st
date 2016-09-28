@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathRoundFunction class >> functionPrototype [
+XPathRoundFunction class >> functionPrototypeSource [
 	^ 'number round(number)'
 ]
 

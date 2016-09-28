@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathSubstringFunction class >> functionPrototype [
+XPathSubstringFunction class >> functionPrototypeSource [
 	^ 'string substring(string, number, number?)'
 ]
 

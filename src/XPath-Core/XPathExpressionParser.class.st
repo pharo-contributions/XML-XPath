@@ -16,15 +16,9 @@ Class {
 
 { #category : #'class initialization' }
 XPathExpressionParser class >> initialize [
-	"self initialzie"
+	"self initialize"
 
-	self initializeAbbreviatedAxisSpecifierCharacters
-]
-
-{ #category : #'class initialization' }
-XPathExpressionParser class >> initializeAbbreviatedAxisSpecifierCharacters [
-	(AbbreviatedAxisSpecifierCharacters := BitmapCharacterSet new)
-		addAll: '%@~<>'
+	AbbreviatedAxisSpecifierCharacters := BitmapCharacterSet newFrom: '%@~<>'
 ]
 
 { #category : #testing }

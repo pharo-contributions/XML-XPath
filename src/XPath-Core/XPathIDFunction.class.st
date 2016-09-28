@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathIDFunction class >> functionPrototype [
+XPathIDFunction class >> functionPrototypeSource [
 	^ 'node-set id(object)'
 ]
 

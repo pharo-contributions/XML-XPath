@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathConcatFunction class >> functionPrototype [
+XPathConcatFunction class >> functionPrototypeSource [
 	^ 'string concat(string, string, string*)'
 ]
 

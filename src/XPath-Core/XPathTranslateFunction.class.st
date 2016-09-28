@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathTranslateFunction class >> functionPrototype [
+XPathTranslateFunction class >> functionPrototypeSource [
 	^ 'string translate(string, string, string)'
 ]
 
