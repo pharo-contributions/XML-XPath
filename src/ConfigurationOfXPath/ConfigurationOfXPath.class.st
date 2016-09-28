@@ -393,6 +393,17 @@ ConfigurationOfXPath >> baseline172: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline173: spec [
+	<version: '1.7.3-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearCompiledXPathCache [
 	XPath clearCompiledXPathCache
@@ -410,7 +421,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.7.2-baseline'.
+	spec for: #'common' version: '1.7.3-baseline'.
 ]
 
 { #category : #accessing }
@@ -430,7 +441,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.7.2'.
+	spec for: #'common' version: '1.7.3'.
 
 ]
 
@@ -1236,6 +1247,17 @@ ConfigurationOfXPath >> version172: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.81'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.69'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version173: spec [ 
+        <version: '1.7.3' imports: #('1.7.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.82'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.69'.
                 ].
 ]
