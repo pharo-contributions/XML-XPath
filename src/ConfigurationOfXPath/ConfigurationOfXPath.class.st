@@ -207,14 +207,18 @@ ConfigurationOfXPath >> baseline10: spec [
 		
 		spec postLoadDoIt: #clearCompiledXPathCache].
 
-	"load gemstone methods"
 	spec for: #'gemstone' do: [
+		"load gemstone compatibility methods"
 		spec
 			package: 'XPath-Core'
 			with: [ spec includes: 'XPath-GemstoneCompatibility' ].
 		spec
 			package: 'XPath-GemstoneCompatibility'
-			with: [ spec requires: 'XPath-Core' ]. ].
+			with: [ spec requires: 'XPath-Core' ].
+	
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #forceInitializationOfClassAndClassInstanceVariables. ].
 ]
 
 { #category : #baselines }
@@ -404,6 +408,17 @@ ConfigurationOfXPath >> baseline173: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline174: spec [
+	<version: '1.7.4-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.2' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearCompiledXPathCache [
 	XPath clearCompiledXPathCache
@@ -421,7 +436,31 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.7.3-baseline'.
+	spec for: #'common' version: '1.7.4-baseline'.
+]
+
+{ #category : #doits }
+ConfigurationOfXPath >> forceInitializationOfClassAndClassInstanceVariables [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		(SystemNavigation default allClassesInPackageNamed: 'XPath-Core') select:
+			[:each |
+				(each classVariables notEmpty
+					or: [each class instanceVariables notEmpty])
+					and: [(each class includesSelector: #initialize) not]]
+	"
+
+	XPath compiledXPathCache.
+	XPathCompiler systemCompilerClass.
+	XPathFunction allSubInstancesDo: [:each |
+		each functionPrototype].
+	XPathNodeTestParserContext allSubInstancesDo: [:each |
+		each instance].
+	XPathSortOrder allSubInstancesDo: [:each |
+		each instance].
 ]
 
 { #category : #accessing }
@@ -441,7 +480,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.7.3'.
+	spec for: #'common' version: '1.7.4'.
 
 ]
 
@@ -1258,6 +1297,17 @@ ConfigurationOfXPath >> version173: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.82'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.69'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version174: spec [ 
+        <version: '1.7.4' imports: #('1.7.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.83'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.69'.
                 ].
 ]
