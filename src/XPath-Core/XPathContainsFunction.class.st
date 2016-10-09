@@ -14,11 +14,8 @@ XPathContainsFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathContainsFunction >> function [
-	| substring |
-
-	substring := self pop.
 	"use findString:startingAt: for portability"
-	^ (self pop
-		findString: substring
+	^ (self firstArgument
+		findString: self lastArgument
 		startingAt: 1) > 0
 ]

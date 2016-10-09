@@ -11,8 +11,7 @@ Class {
 	#instVars : [
 		'variables',
 		'namespaceScope',
-		'functions',
-		'functionStack'
+		'functions'
 	],
 	#classInstVars : [
 		'defaultFunctions'
@@ -22,13 +21,15 @@ Class {
 
 { #category : #accessing }
 XPathContext class >> defaultFunctions [
-	^ defaultFunctions ifNil: [defaultFunctions := XPathFunctionSet default]
+	^ defaultFunctions
+		ifNil: [defaultFunctions := XPathFunctionSet default]
 ]
 
 { #category : #accessing }
-XPathContext class >> defaultFunctions: aFunctionSet [
-	"can be used to replace default function set with a custom function set"
-	defaultFunctions := aFunctionSet
+XPathContext class >> defaultFunctions: aFunctionSetOrNil [
+	"can be used to specify a custom default function set"
+
+	defaultFunctions := aFunctionSetOrNil
 ]
 
 { #category : #'instance creation' }
@@ -164,13 +165,6 @@ XPathContext >> includesVariable: aVariableName [
 	^ self variables includesKey: aVariableName
 ]
 
-{ #category : #initialization }
-XPathContext >> initialize [
-	super initialize.
-
-	functionStack := OrderedCollection new.
-]
-
 { #category : #testing }
 XPathContext >> isDeclaredPrefix: aPrefix [
 	^ self namespaceScope includesPrefix: aPrefix
@@ -186,16 +180,6 @@ XPathContext >> isDeclaredPrefix: aPrefix uri: aURI [
 { #category : #private }
 XPathContext >> namespaceScope [
 	^ namespaceScope ifNil: [namespaceScope := XMLNamespaceScope new]
-]
-
-{ #category : #private }
-XPathContext >> pop [
-	^ functionStack removeLast
-]
-
-{ #category : #private }
-XPathContext >> push: anObject [
-	^ functionStack addLast: anObject
 ]
 
 { #category : #removing }
@@ -235,12 +219,13 @@ XPathContext >> removeVariables [
 ]
 
 { #category : #private }
-XPathContext >> resolveFunctionReference: aFunctionName contextNode: aContextNode [
+XPathContext >> resolveFunctionReference: aFunctionName contextNode: aContextNode arguments: anArgumentArray [
 	^ (self
 		functionNamed: aFunctionName
 		ifAbsent: [self errorUndeclaredFunction: aFunctionName])
-		context: self
-		contextNode: aContextNode
+			context: self
+			contextNode: aContextNode
+			arguments: anArgumentArray
 ]
 
 { #category : #namespacing }

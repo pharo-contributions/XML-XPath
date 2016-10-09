@@ -14,5 +14,5 @@ XPathBooleanFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathBooleanFunction >> function [
-	^ self pop
+	^ self firstArgument
 ]

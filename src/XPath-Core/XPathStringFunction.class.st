@@ -14,5 +14,5 @@ XPathStringFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathStringFunction >> function [
-	^ self pop
+	^ self firstArgument
 ]

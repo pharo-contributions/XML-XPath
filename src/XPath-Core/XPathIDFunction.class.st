@@ -44,7 +44,7 @@ XPathIDFunction >> addElementsFromDocument: aDocument withIDs: anIDSet to: aNode
 XPathIDFunction >> function [
 	| object ids document nodeSet |
 
-	object := self pop.
+	object := self firstArgument.
 	ids := Set new.
 	object class == self nodeSetClass
 		ifTrue: [

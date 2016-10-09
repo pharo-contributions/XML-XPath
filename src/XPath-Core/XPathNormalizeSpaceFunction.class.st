@@ -16,8 +16,8 @@ XPathNormalizeSpaceFunction class >> functionPrototypeSource [
 XPathNormalizeSpaceFunction >> function [
 	| string writeStream isInWhitespace normalizedSpace |
 
-	self hasPushedArguments
-		ifTrue: [string := self pop]
+	self hasArguments
+		ifTrue: [string := self firstArgument]
 		ifFalse: [string := self contextNode].
 
 	"must use #writeStream instead of 'WriteStream on:' to get a 0-based

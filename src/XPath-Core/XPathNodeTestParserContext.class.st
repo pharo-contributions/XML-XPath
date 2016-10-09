@@ -10,10 +10,16 @@ Class {
 	#category : #'XPath-Core-Parsers'
 }
 
+{ #category : #accessing }
+XPathNodeTestParserContext class >> instance [
+	^ instance
+		ifNil: [instance := self basicNew initialize]
+]
+
 { #category : #'instance creation' }
 XPathNodeTestParserContext class >> new [
-	"these classes are shared immutable for efficiency"
-	^ instance ifNil: [instance := self basicNew initialize]
+	"these classes are immutable and shared, so they are only initialized once"
+	^ self instance
 ]
 
 { #category : #handling }

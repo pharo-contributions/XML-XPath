@@ -14,5 +14,5 @@ XPathRoundFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathRoundFunction >> function [
-	^ self pop rounded
+	^ self firstArgument rounded
 ]

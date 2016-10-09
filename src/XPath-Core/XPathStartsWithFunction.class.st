@@ -14,8 +14,5 @@ XPathStartsWithFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathStartsWithFunction >> function [
-	| substring |
-
-	substring := self pop.
-	^ self pop beginsWith: substring.
+	^ self firstArgument beginsWith: self lastArgument
 ]

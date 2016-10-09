@@ -14,8 +14,5 @@ XPathEndsWithFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathEndsWithFunction >> function [
-	| substring |
-
-	substring := self pop.
-	^ self pop endsWith: substring.
+	^ self firstArgument endsWith: self lastArgument
 ]

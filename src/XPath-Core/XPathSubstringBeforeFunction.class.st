@@ -14,13 +14,12 @@ XPathSubstringBeforeFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathSubstringBeforeFunction >> function [
-	| substring string indexOfSubstring |
+	| string indexOfSubstring |
 
-	substring := self pop.
-	string := self pop.
+	string := self firstArgument.
 	(indexOfSubstring :=
 		string
-			findString: substring
+			findString: self lastArgument
 			startingAt: 1) > 0
 		ifTrue: [
 			^ string

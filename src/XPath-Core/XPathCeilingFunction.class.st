@@ -14,5 +14,5 @@ XPathCeilingFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathCeilingFunction >> function [
-	^ self pop ceiling
+	^ self firstArgument ceiling
 ]

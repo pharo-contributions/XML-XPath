@@ -14,5 +14,5 @@ XPathNotFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathNotFunction >> function [
-	^ self pop not
+	^ self firstArgument not
 ]

@@ -14,10 +14,10 @@ XPathConcatFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathConcatFunction >> function [
-	| concatenation |
+	| writeStream |
 
-	concatenation := self pop.
-	[self hasPushedArguments]
-		whileTrue: [concatenation := self pop, concatenation].
-	^ concatenation.
+	writeStream := (String new: self totalArguments * 10) writeStream.
+	1 to: self totalArguments do: [:i |
+		writeStream nextPutAll: (self argumentAt: i)].
+	^ writeStream contents.
 ]

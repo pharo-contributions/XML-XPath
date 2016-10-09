@@ -16,15 +16,11 @@ XPathSubstringFunction class >> functionPrototypeSource [
 XPathSubstringFunction >> function [
 	| string start length |
 
-	self totalPushedArguments > 2
-		ifTrue: [
-			length := self pop rounded.
-			start := self pop rounded.
-			string := self pop]
-		ifFalse: [
-			start := self pop rounded.
-			string := self pop.
-			length := string size - start + 1].
+	string := self argumentAt: 1.
+	start := (self argumentAt: 2) rounded.
+	self totalArguments > 2
+		ifTrue: [length := (self argumentAt: 3) rounded]
+		ifFalse: [length := string size - start + 1].
 
 	(length > 0
 		and: [start <= string size])

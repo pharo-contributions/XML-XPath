@@ -14,8 +14,5 @@ XPathLangFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathLangFunction >> function [
-	| language |
-
-	language := self pop.
-	^ self contextNode isInLanguage: language.
+	^ self contextNode isInLanguage: self firstArgument
 ]

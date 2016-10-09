@@ -10,10 +10,16 @@ Class {
 	#category : #'XPath-Core-DOM'
 }
 
+{ #category : #accessing }
+XPathSortOrder class >> instance [
+	^ instance
+		ifNil: [instance := self basicNew initialize]
+]
+
 { #category : #'instance creation' }
 XPathSortOrder class >> new [
 	"these classes are immutable and shared, so they are only initialized once"
-	^ instance ifNil: [instance := self basicNew initialize]
+	^ self instance
 ]
 
 { #category : #converting }

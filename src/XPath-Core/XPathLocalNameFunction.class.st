@@ -16,8 +16,8 @@ XPathLocalNameFunction class >> functionPrototypeSource [
 XPathLocalNameFunction >> function [
 	| node |
 
-	self hasPushedArguments
-		ifTrue: [node := self pop firstInDocumentOrder]
+	self hasArguments
+		ifTrue: [node := self firstArgument firstInDocumentOrder]
 		ifFalse: [node := self contextNode].
 
 	(node notNil

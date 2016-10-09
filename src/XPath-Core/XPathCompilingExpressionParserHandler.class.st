@@ -248,12 +248,12 @@ XPathCompilingExpressionParserHandler >> handleEndFilterExpression [
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleEndFunctionArgument [
-	self emitAll: ');'
+	self emit: $.
 ]
 
 { #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleEndFunctionCall [
-	self emitAll: 'invoke)'
+	self emitAll: '})invoke)'
 ]
 
 { #category : #'handling - operators' }
@@ -485,11 +485,6 @@ XPathCompilingExpressionParserHandler >> handleStartFilterExpressionLocationPath
 ]
 
 { #category : #'handling - functions' }
-XPathCompilingExpressionParserHandler >> handleStartFunctionArgument [
-	self emitAll: 'push: ('
-]
-
-{ #category : #'handling - functions' }
 XPathCompilingExpressionParserHandler >> handleStartFunctionCall: aFunctionName [
 	self
 		emitAll: '((';
@@ -498,7 +493,7 @@ XPathCompilingExpressionParserHandler >> handleStartFunctionCall: aFunctionName 
 		emitAll: aFunctionName;
 		emitAll: ''' contextNode: ';
 		emitAll: self contextNodeVariable;
-		emit: $)
+		emitAll: ' arguments: {'.
 ]
 
 { #category : #'handling - operators' }

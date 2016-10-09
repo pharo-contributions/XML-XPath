@@ -24,6 +24,46 @@ XPathFunctionPrototype class >> returnType: aReturnType functionName: aName minA
 		argumentTypes: anArgumentTypeCollection
 ]
 
+{ #category : #testing }
+XPathFunctionPrototype >> acceptsArguments [
+	^ self minArguments > 0
+		or: [self maxArguments isNil
+			or: [self maxArguments > 0]]
+]
+
+{ #category : #testing }
+XPathFunctionPrototype >> acceptsOptionalArguments [
+	^ self acceptsArguments
+		and: [self minArguments ~= self maxArguments]
+]
+
+{ #category : #testing }
+XPathFunctionPrototype >> acceptsVariableArguments [
+	^ self acceptsArguments
+		and: [self maxArguments isNil]
+]
+
+{ #category : #accessing }
+XPathFunctionPrototype >> argumentTypeAt: anIndex [
+	^ self
+		argumentTypeAt: anIndex
+		ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+XPathFunctionPrototype >> argumentTypeAt: anIndex ifAbsent: aBlock [
+	anIndex > 0
+		ifFalse: [^ aBlock value].
+	anIndex > self argumentTypes size
+		ifTrue: [
+			"If it has a variable number of arguments, then
+			use the last argument type for the remaining"
+			self acceptsVariableArguments
+				ifTrue: [^ self argumentTypes last]
+				ifFalse: [^ aBlock value]].
+	^ self argumentTypes at: anIndex.
+]
+
 { #category : #accessing }
 XPathFunctionPrototype >> argumentTypes [
 	^ argumentTypes

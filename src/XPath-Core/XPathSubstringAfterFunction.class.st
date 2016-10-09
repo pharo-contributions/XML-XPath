@@ -14,10 +14,10 @@ XPathSubstringAfterFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathSubstringAfterFunction >> function [
-	| substring string indexOfSubstring |
+	| string substring indexOfSubstring |
 
-	substring := self pop.
-	string := self pop.
+	string := self firstArgument.
+	substring := self lastArgument.
 	(indexOfSubstring :=
 		string
 			findString: substring

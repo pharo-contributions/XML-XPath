@@ -14,5 +14,5 @@ XPathCountFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathCountFunction >> function [
-	^ self pop size
+	^ self firstArgument size
 ]

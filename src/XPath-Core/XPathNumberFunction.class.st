@@ -14,7 +14,7 @@ XPathNumberFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathNumberFunction >> function [
-	self hasPushedArguments
-		ifTrue: [^ self pop]
+	self hasArguments
+		ifTrue: [^ self firstArgument]
 		ifFalse: [^ self nodeSetClass with: self contextNode]
 ]

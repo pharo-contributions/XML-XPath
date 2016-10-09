@@ -14,20 +14,26 @@ XPathTranslateFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathTranslateFunction >> function [
-	| replacementTable replacementString searchString sourceString writeStream |
+	| sourceString searchString replacementString replacementMap writeStream |
 
-	replacementTable := IdentityDictionary new.
-	replacementString := self pop.
-	searchString := self pop.
+	sourceString := self argumentAt: 1.
+	searchString := self argumentAt: 2.
+	replacementString := self argumentAt: 3.
+	replacementMap := Dictionary new.
 	1 to: searchString size do: [:i |
-		replacementTable
+		replacementMap
 			at: (searchString at: i)
-			ifAbsentPut: (replacementString at: i ifAbsent: [nil])].
+			ifAbsentPut: [
+				replacementString
+					at: i
+					ifAbsent: [nil]]].
 
-	sourceString := self pop.
-	writeStream  := (String new: sourceString size) writeStream.
+	writeStream := (String new: sourceString size) writeStream.
 	sourceString do: [:each |	
-		(replacementTable at: each ifAbsent: [each])
-			ifNotNil: [:nextChar | writeStream  nextPut: nextChar]].
-	^ writeStream  contents.
+		(replacementMap
+			at: each
+			ifAbsent: [each])
+				ifNotNil: [:nextChar |
+					writeStream nextPut: nextChar]].
+	^ writeStream contents.
 ]

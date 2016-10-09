@@ -14,5 +14,5 @@ XPathFloorFunction class >> functionPrototypeSource [
 
 { #category : #invoking }
 XPathFloorFunction >> function [
-	^ self pop floor
+	^ self firstArgument floor
 ]

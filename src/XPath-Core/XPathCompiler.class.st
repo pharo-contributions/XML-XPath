@@ -4,20 +4,20 @@ This class compiles XPath expressions by first translating them into Smalltalk u
 Class {
 	#name : #XPathCompiler,
 	#superclass : #Object,
-	#classInstVars : [
-		'systemCompilerClass'
+	#classVars : [
+		'SystemCompilerClass'
 	],
 	#category : #'XPath-Core-Compilation'
 }
 
 { #category : #accessing }
 XPathCompiler class >> systemCompilerClass [
-	"On Pharo/Squeak, Behavior class>>#compilerClass returns the platform's
-	preferred compiler class that can be sent #evaluate: to compile a
-	string. On GS, any object can be sent #evaluate: to compile a string."
-	^ systemCompilerClass
+	^ SystemCompilerClass
 		ifNil: [
-			systemCompilerClass :=
+			"On Pharo/Squeak, Behavior class>>#compilerClass returns the  platform's
+			preferred compiler class that can be sent #evaluate: to compile a
+			string. On GS, any object can be sent #evaluate: to compile a string."
+			SystemCompilerClass :=
 				(Behavior respondsTo: #compilerClass)
 					ifTrue: [Behavior compilerClass]
 					ifFalse: [Behavior]]
@@ -25,7 +25,7 @@ XPathCompiler class >> systemCompilerClass [
 
 { #category : #accessing }
 XPathCompiler class >> systemCompilerClass: aClass [
-	systemCompilerClass := aClass
+	SystemCompilerClass := aClass
 ]
 
 { #category : #compiling }

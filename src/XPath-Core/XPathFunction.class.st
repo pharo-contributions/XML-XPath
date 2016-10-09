@@ -1,7 +1,7 @@
 "
-An abstract class for XPath functions. Subclasses need to override the class functionPrototype method to return a string with an XPath function prototype and then implement the instance-side function method to implement the function. Arguments are passed using a stack because functions can have optional arguments or even an unbounded number of arguments, and are popped off in LIFO order (last arg popped off first).
+An abstract class for XPath functions. Subclasses need to implement the class #functionPrototype method to return a string with an XPath function prototype and then implement the instance-side #function method to implement the function and return its value.
 
-Arguments and return values are automatically converted to the types specified in the prototype.
+When invoked, the arguments and the return value are automatically converted to the types specified by the prototype.
 "
 Class {
 	#name : #XPathFunction,
@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'context',
 		'contextNode',
-		'totalPushedArguments'
+		'arguments'
 	],
 	#classInstVars : [
 		'functionPrototype'
@@ -57,10 +57,11 @@ XPathFunction class >> asXPathFunctionSetWithFunctions: aFunctionSet [
 ]
 
 { #category : #'instance creation' }
-XPathFunction class >> context: aContext contextNode: aContextNode [
+XPathFunction class >> context: aContext contextNode: aContextNode arguments: aSequenceableCollection [
 	^ self new
 		setContext: aContext
 		contextNode: aContextNode
+		arguments: aSequenceableCollection
 ]
 
 { #category : #accessing }
@@ -76,7 +77,7 @@ XPathFunction class >> functionPrototype [
 				(XPathFunctionPrototypeParser
 					on: self functionPrototypeSource
 					for: XPathTypedFunctionPrototypeParserHandler new)
-				parse]
+					parse]
 ]
 
 { #category : #accessing }
@@ -87,6 +88,7 @@ XPathFunction class >> functionPrototype: aFunctionPrototype [
 			functionPrototype: nil;
 			functionPrototype]
 	"
+
 	functionPrototype := aFunctionPrototype
 ]
 
@@ -102,14 +104,55 @@ XPathFunction class >> functionSetClass [
 	^ XPathFunctionSet
 ]
 
+{ #category : #testing }
+XPathFunction >> acceptsArguments [
+	^ self functionPrototype acceptsArguments
+]
+
+{ #category : #testing }
+XPathFunction >> acceptsOptionalArguments [
+	^ self functionPrototype acceptsOptionalArguments
+]
+
+{ #category : #testing }
+XPathFunction >> acceptsVariableArguments [
+	^ self functionPrototype acceptsVariableArguments
+]
+
 { #category : #accessing }
-XPathFunction >> argumentTypeAt: anInteger [
-	^ self argumentTypes at: (anInteger min: self argumentTypes size)
+XPathFunction >> argumentAt: anIndex [
+	^ self
+		argumentAt: anIndex
+		ifAbsent: [nil]
+]
+
+{ #category : #accessing }
+XPathFunction >> argumentAt: anIndex ifAbsent: aBlock [
+	^ self arguments
+		at: anIndex
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XPathFunction >> argumentTypeAt: anIndex [
+	^ self functionPrototype argumentTypeAt: anIndex
+]
+
+{ #category : #accessing }
+XPathFunction >> argumentTypeAt: anIndex ifAbsent: aBlock [
+	^ self functionPrototype
+		argumentTypeAt: anIndex
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XPathFunction >> argumentTypes [
 	^ self functionPrototype argumentTypes
+]
+
+{ #category : #accessing }
+XPathFunction >> arguments [
+	^ arguments
 ]
 
 { #category : #accessing }
@@ -123,19 +166,27 @@ XPathFunction >> contextNode [
 ]
 
 { #category : #private }
-XPathFunction >> errorTooFewArguments [
+XPathFunction >> errorAcceptsAtMost: anArgumentMaximum argumentsButGot: anArgumentTotal [
 	XPathArgumentNumberException
-		formatSignal: '{1}() requires at least {2} arguments'
+		formatSignal: '{1}() accepts at most {2} argument(s) but was called with {3}'
 		with: self functionName
-		with: self minArguments
+		with: anArgumentMaximum
+		with: anArgumentTotal
 ]
 
 { #category : #private }
-XPathFunction >> errorTooManyArguments [
+XPathFunction >> errorRequiresAtLeast: anArgumentMinimum argumentsButGot: anArgumentTotal [
 	XPathArgumentNumberException
-		formatSignal: '{1}() accepts at most {2} arguments'
+		formatSignal:
+			'{1}() requires at least {2} argument(s) but was called with {3}'
 		with: self functionName
-		with: self maxArguments
+		with: anArgumentMinimum
+		with: anArgumentTotal
+]
+
+{ #category : #accessing }
+XPathFunction >> firstArgument [
+	^ self argumentAt: 1
 ]
 
 { #category : #invoking }
@@ -154,16 +205,18 @@ XPathFunction >> functionPrototype [
 ]
 
 { #category : #testing }
-XPathFunction >> hasPushedArguments [
-	^ totalPushedArguments > 0
+XPathFunction >> hasArguments [
+	^ self totalArguments > 0
 ]
 
 { #category : #invoking }
 XPathFunction >> invoke [
-	totalPushedArguments < self minArguments
-		ifTrue: [self errorTooFewArguments].
+	^ self returnType xPathNewFrom: self function
+]
 
-	^ self returnType xPathNewFrom: self function.
+{ #category : #accessing }
+XPathFunction >> lastArgument [
+	^ self argumentAt: self totalArguments
 ]
 
 { #category : #accessing }
@@ -186,12 +239,6 @@ XPathFunction >> nodeSetClass [
 	^ XPathNodeSet
 ]
 
-{ #category : #stack }
-XPathFunction >> pop [
-	totalPushedArguments := totalPushedArguments - 1.
-	^ context pop.
-]
-
 { #category : #printing }
 XPathFunction >> printOn: aStream [
 	super printOn: aStream.
@@ -200,32 +247,45 @@ XPathFunction >> printOn: aStream [
 	aStream nextPut: $).
 ]
 
-{ #category : #stack }
-XPathFunction >> push: anArgument [
-	self maxArguments
-		ifNotNil: [:maxArguments |
-			totalPushedArguments >= maxArguments
-				ifTrue: [self errorTooManyArguments]].
-
-	totalPushedArguments := totalPushedArguments + 1.
-	^ context push:
-		((self argumentTypeAt: totalPushedArguments)
-			xPathNewFrom: anArgument).
-]
-
 { #category : #accessing }
 XPathFunction >> returnType [
 	^ self functionPrototype returnType
 ]
 
 { #category : #initialization }
-XPathFunction >> setContext: aContext contextNode: aContextNode [
+XPathFunction >> setArguments: aSequenceableCollection [
+	"ensure there aren't too many or too few"
+	aSequenceableCollection size < self minArguments
+		ifTrue: [
+			self
+				errorRequiresAtLeast: self minArguments
+				argumentsButGot: aSequenceableCollection size].
+	(self maxArguments notNil
+		and: [aSequenceableCollection size > self maxArguments])
+		ifTrue: [
+			self
+				errorAcceptsAtMost: self maxArguments
+				argumentsButGot: aSequenceableCollection size].
+
+	"convert them to the appropriate type (use to:do: for speed)"
+	1 to: aSequenceableCollection size do: [:i |
+		aSequenceableCollection
+			at: i
+			put:
+				((self argumentTypeAt: i) xPathNewFrom:
+					(aSequenceableCollection at: i))].
+
+	arguments := aSequenceableCollection asArray.
+]
+
+{ #category : #initialization }
+XPathFunction >> setContext: aContext contextNode: aContextNode arguments: aSequenceableCollection [
 	context := aContext.
 	contextNode := aContextNode.
-	totalPushedArguments := 0.
+	self setArguments: aSequenceableCollection.
 ]
 
 { #category : #accessing }
-XPathFunction >> totalPushedArguments [
-	^ totalPushedArguments
+XPathFunction >> totalArguments [
+	^ self arguments size
 ]
