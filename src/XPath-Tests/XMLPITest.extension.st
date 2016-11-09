@@ -21,17 +21,6 @@ XMLPITest >> testHasPrefix [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLPITest >> testHasPrefixedNamespaceURI [
-	| pi |
-
-	pi := self newPIWithTargetAndData.
-	self
-		deny: (pi hasPrefixedNamespaceURI: 'target');
-		deny: (pi hasPrefixedNamespaceURI: 'data');
-		deny: (pi hasPrefixedNamespaceURI: '').
-]
-
-{ #category : #'*XPath-Tests' }
 XMLPITest >> testLocalName [
 	self assert: self newPIWithTargetAndData localName = 'target'
 ]

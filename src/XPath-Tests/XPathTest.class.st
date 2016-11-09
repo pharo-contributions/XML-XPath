@@ -861,6 +861,7 @@ XPathTest >> testElementQualfiedNameTest [
 	persons := namespacedDocument allElementsNamed: 'person'.
 	mappings := 
 		Array
+			with: 'zero' -> 'defaultNS'
 			with: 'one' -> 'bookNS'
 			with: 'two' -> 'personNS'.
 	self
@@ -871,6 +872,15 @@ XPathTest >> testElementQualfiedNameTest [
 	self assert:
 		(namespacedDocument xPath:
 			'element(book:addressbook)/element(undeclared:person)') isEmpty.
+	self
+		assertNodeSet:
+			(XPath
+				for: '//element(zero:*)'
+				in: namespacedDocument
+				context: (self contextClass namespaces: mappings))
+		hasNodes:
+			(namespacedDocument allElementsSelect: [:each |
+				each namespaceURI = 'defaultNS']).
 	self
 		assertNodeSet:
 			(XPath

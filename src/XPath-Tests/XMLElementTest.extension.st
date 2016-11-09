@@ -36,20 +36,6 @@ XMLElementTest >> testHasNamespaceNodes [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLElementTest >> testHasPrefixedNamespaceURI [
-	| element |
-
-	element := self nodeClass name: 'test' namespaces: self namespaces.
-	self
-		assert: element namespaceURI notEmpty;
-		assert: element prefix = '';
-		deny: (element hasPrefixedNamespaceURI: '').
-
-	element name: 'prefix:test'.
-	self assert: (element hasPrefixedNamespaceURI: 'prefixNS').
-]
-
-{ #category : #'*XPath-Tests' }
 XMLElementTest >> testNamespaceAxis [
 	| element list |
 

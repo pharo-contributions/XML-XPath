@@ -81,14 +81,6 @@ XPathNamespaceNodeTest >> testHasPrefix [
 ]
 
 { #category : #tests }
-XPathNamespaceNodeTest >> testHasPrefixedNamespaceURI [
-	| namespace |
-
-	namespace := self newNamespaceNode.
-	self deny: (namespace hasPrefixedNamespaceURI: namespace uri).
-]
-
-{ #category : #tests }
 XPathNamespaceNodeTest >> testIsNamespace [
 	self assert: self newNode isNamespace
 ]
