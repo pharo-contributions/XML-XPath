@@ -266,7 +266,7 @@ XPathContext >> testForAttributeWithPrefix: aPrefix [
 			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isAttribute
-					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
+					and: [node namespaceURI = namespaceURI]]]
 		ifFalse: [
 			^ [:node |
 				node isAttribute
@@ -281,7 +281,7 @@ XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
 			^ [:node |
 				node isAttribute
 					and: [node localName = aLocalName
-						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
+						and: [node namespaceURI = namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithXMLPrefix: aPrefix.
 			^ [:node |
@@ -296,7 +296,7 @@ XPathContext >> testForElementWithPrefix: aPrefix [
 			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isElement
-					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
+					and: [node namespaceURI = namespaceURI]]]
 		ifFalse: [
 			^ [:node |
 				node isElement
@@ -311,7 +311,7 @@ XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
 			^ [:node |
 				node isElement
 					and: [node localName = aLocalName
-						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
+						and: [node namespaceURI = namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithXMLPrefix: aPrefix.
 			^ [:node |
@@ -326,7 +326,7 @@ XPathContext >> testForNamespaceWithPrefix: aPrefix [
 			namespaceURI := self resolvePrefixReference: aPrefix.
 			^ [:node |
 				node isNamespace
-					and: [node hasPrefixedNamespaceURI: namespaceURI]]]
+					and: [node namespaceURI = namespaceURI]]]
 		ifFalse: [
 			^ [:node |
 				node isNamespace
@@ -341,7 +341,7 @@ XPathContext >> testForNamespaceWithPrefix: aPrefix localName: aLocalName [
 			^ [:node |
 				node isNamespace
 					and: [node localName = aLocalName
-						and: [node hasPrefixedNamespaceURI: namespaceURI]]]]
+						and: [node namespaceURI = namespaceURI]]]]
 		ifFalse: [| name |
 			name := aLocalName qualifyWithXMLPrefix: aPrefix.
 			^ [:node |

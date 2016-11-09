@@ -75,12 +75,6 @@ XPathNamespaceNode >> hasPrefix [
 	^ false
 ]
 
-{ #category : #testing }
-XPathNamespaceNode >> hasPrefixedNamespaceURI: aURI [
-	"namespace names cannot be prefixed"
-	^ false
-]
-
 { #category : #comparing }
 XPathNamespaceNode >> hash [
 	^ self name hash bitXor: self uri hash

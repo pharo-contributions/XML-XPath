@@ -20,11 +20,6 @@ XMLPI >> hasPrefix [
 	^ false
 ]
 
-{ #category : #'*XPath-Core-testing' }
-XMLPI >> hasPrefixedNamespaceURI: aURI [
-	^ false
-]
-
 { #category : #'*XPath-Core-accessing' }
 XMLPI >> localName [
 	^ self name

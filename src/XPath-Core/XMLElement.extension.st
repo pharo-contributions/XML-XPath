@@ -21,12 +21,6 @@ XMLElement >> hasNamespaceNodes [
 	^ self usesNamespaces
 ]
 
-{ #category : #'*XPath-Core-testing' }
-XMLElement >> hasPrefixedNamespaceURI: aURI [
-	^ self hasPrefix
-		and: [self namespaceURI = aURI]
-]
-
 { #category : #'*XPath-Core-private' }
 XMLElement >> namespaceAxisSelect: aNamespaceNodeTestBlock into: aNodeSet [
 	self hasNamespaceNodes
