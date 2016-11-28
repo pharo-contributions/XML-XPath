@@ -61,11 +61,11 @@ XPathIDFunction >> function [
 	(ids notEmpty
 		and: [self contextNode notNil
 			and: [(document := self contextNode document) notNil]])
-		ifTrue: [
-			self
-				addElementsFromDocument: document
-				withIDs: ids
-				to: nodeSet].
+		ifTrue: [| element |
+			ids do: [:each |
+				((element := document findElementWithID: each) notNil
+					and: [(nodeSet includes: element) not])
+					ifTrue: [nodeSet addLast: element]]].
 	^ nodeSet.
 ]
 

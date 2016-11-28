@@ -24,6 +24,6 @@ XPathException >> position [
 XPathException >> position: aPosition [
 	position := aPosition.
 	self
-		append: aPosition
+		messageTextAppend: aPosition
 		withDescription: 'at pos.'.
 ]
