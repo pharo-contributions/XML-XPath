@@ -110,14 +110,6 @@ XMLNodeTest >> testDescendantOrSelfAxis [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testDocumentRoot [
-	| node |
-
-	node := self newNode.
-	self assert: node documentRoot == node.
-]
-
-{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testFollowingAxis [
 	self
 		assert: (self newNode >> 'node()') isEmpty;

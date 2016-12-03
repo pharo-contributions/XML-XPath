@@ -17,17 +17,6 @@ XMLNodeWithChildrenTest >> testAllNodesReverseDo [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeWithChildrenTest >> testDocumentRoot [
-	| nodeWithNodes |
-
-	super testDocumentRoot.
-
-	nodeWithNodes := self newNodeWithNodes.
-	nodeWithNodes allNodesDo: [:each |
-		self assert: each documentRoot == nodeWithNodes].
-]
-
-{ #category : #'*XPath-Tests' }
 XMLNodeWithChildrenTest >> testFollowingNodesDo [
 	| nodeWithNodes |
 
