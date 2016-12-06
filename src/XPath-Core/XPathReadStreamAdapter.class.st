@@ -44,14 +44,14 @@ XPathReadStreamAdapter >> nextMatchAll: aString [
 	| oldPosition |
 
 	(stream atEnd not
-		and: [stream peek == (aString at: 1)])
+		and: [stream peek = (aString at: 1)])
 		ifFalse: [^ false].
 
 	oldPosition := stream position.
 	stream next.
 	2 to: aString size do: [:i |
 		(stream atEnd not
-			and: [stream next == (aString at: i)])
+			and: [stream next = (aString at: i)])
 			ifFalse: [
 				stream position: oldPosition.
 				^ false]].
@@ -126,7 +126,7 @@ XPathReadStreamAdapter >> peek [
 { #category : #accessing }
 XPathReadStreamAdapter >> peekFor: aCharacter [
 	(stream atEnd not
-		and: [stream peek == aCharacter])
+		and: [stream peek = aCharacter])
 		ifTrue: [
 			stream next.
 			^ true]

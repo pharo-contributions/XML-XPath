@@ -75,7 +75,7 @@ XPathParser >> expectNext: aCharacter [
 XPathParser >> expectUpTo: aCharacter [
 	writeStream reset.
 	[inputStream atEnd
-		or: [inputStream peek == aCharacter]]
+		or: [inputStream peek = aCharacter]]
 		whileFalse: [writeStream nextPut: inputStream next].
 	self expectNext: aCharacter.
 	^ writeStream contents.

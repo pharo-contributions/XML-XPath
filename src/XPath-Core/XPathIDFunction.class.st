@@ -12,34 +12,6 @@ XPathIDFunction class >> functionPrototypeSource [
 	^ 'node-set id(object)'
 ]
 
-{ #category : #private }
-XPathIDFunction >> addElementsFromDocument: aDocument withIDs: anIDSet to: aNodeSet [
-	| doctypeDefinition |
-
-	((doctypeDefinition := aDocument doctypeDefinition) notNil
-		and: [doctypeDefinition hasValidators])
-		ifTrue: [| elementsAndIDAttributes |
-			doctypeDefinition hasElementIDs
-				ifFalse: [^ self].
-			elementsAndIDAttributes :=
-				doctypeDefinition elementIDValidator elementsAndIDAttributes.
-			aDocument allElementsDo: [:each |
-				each hasAttributes
-					ifTrue: [
-						elementsAndIDAttributes
-							at: each name
-							ifPresent: [:idAttribute |
-								((each includesAttribute: idAttribute)
-									and: [anIDSet includes: (each attributeAt: idAttribute)])
-									ifTrue: [aNodeSet add: each]]]]]
-		ifFalse: [
-			aDocument allElementsDo: [:each |
-				(each hasAttributes
-					and: [(each includesAttribute: 'xml:id')
-						and: [anIDSet includes: (each attributeAt: 'xml:id')]])
-					ifTrue: [aNodeSet add: each]]]
-]
-
 { #category : #invoking }
 XPathIDFunction >> function [
 	| object ids document nodeSet |
