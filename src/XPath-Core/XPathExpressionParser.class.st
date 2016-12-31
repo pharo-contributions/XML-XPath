@@ -8,18 +8,8 @@ Class {
 		'currentAxis',
 		'nodeTestParser'
 	],
-	#classVars : [
-		'AbbreviatedAxisSpecifierCharacters'
-	],
 	#category : #'XPath-Core-Parsers'
 }
-
-{ #category : #'class initialization' }
-XPathExpressionParser class >> initialize [
-	"self initialize"
-
-	AbbreviatedAxisSpecifierCharacters := BitmapCharacterSet newFrom: '%@~<>'
-]
 
 { #category : #testing }
 XPathExpressionParser >> atDigit [
@@ -230,19 +220,11 @@ XPathExpressionParser >> peekFailedAt: aPosition [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbbreviatedAxis [
-	| nextChar |
-
-	((nextChar := inputStream peek) notNil
-		and: [AbbreviatedAxisSpecifierCharacters includes: nextChar])
-		ifFalse: [^ false].
-	writeStream
-		reset;
-		nextPut: inputStream next.
-	[(nextChar := inputStream peek) notNil
-		and: [AbbreviatedAxisSpecifierCharacters includes: nextChar]]
-		whileTrue: [writeStream nextPut: inputStream next].
-	currentAxis axisSpecifier: writeStream contents.
-	^ true.
+	(inputStream peekFor: $@)
+		ifTrue: [
+			currentAxis axisSpecifier: 'attribute'.
+			^ true]
+		ifFalse: [^ false]
 ]
 
 { #category : #'parsing - peeking' }

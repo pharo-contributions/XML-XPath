@@ -28,9 +28,7 @@ XPathAxis class >> axisSpecifiersTemplate [
 	"Returns an array of arrays where each subarray has an axis name,
 	a selector to map it to, and the principal node type for that axis,
 	which is used to determine the parser context class when parsing
-	the node test after.
-
-	The / and // axis are handled implicitly and so are not defined here."
+	the node test after."
 
 	^ #(
 		#('ancestor'           '%%'  element)
@@ -46,16 +44,6 @@ XPathAxis class >> axisSpecifiersTemplate [
 		#('preceding'          '<<'  element)
 		#('preceding-sibling'  '<<<' element)
 		#('self'               '~'   element)
-		#('%%'                 '%%'  element)
-		#('%%~'                '%%~' element)
-		#('@'                  '@'   attribute)
-		#('>>'                 '>>'  element)
-		#('>>>'                '>>>' element)
-		#('@@'                 '@@'  namespace)
-		#('%'                  '%'   element)
-		#('<<'                 '<<'  element)
-		#('<<<'                '<<<' element)
-		#('~'                  '~'   element)
 	)
 ]
 
