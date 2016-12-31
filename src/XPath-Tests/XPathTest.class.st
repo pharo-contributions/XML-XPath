@@ -551,9 +551,6 @@ XPathTest >> testDescendantOrSelfAxis [
 		assertNodeSet: (XPath for: '//./node()' in: document)
 		hasNodes: document descendantNodes.
 	self
-		assertNodeSet: (XPath for: '//~node()' in: document)
-		hasNodes: document allNodes.
-	self
 		assertNodeSet: (XPath for: '// self :: node()' in: document)
 		hasNodes: document allNodes.
 	self
@@ -688,7 +685,7 @@ XPathTest >> testDocumentOrderPreserving [
 
 	expected removeAll.
 	namespacedDocument allElementsDo: [:each | expected addAll: each namespaceNodes].
-	result := namespacedDocument xPath: 'descendant::*/@@*[true()]'.
+	result := namespacedDocument xPath: 'descendant::*/namespace::*[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
@@ -1968,7 +1965,7 @@ XPathTest >> testReverseDocumentOrderPreserving [
 	expected removeAll.
 	document allNodes last ancestorElements reverseDo: [:each |
 		expected addAll: each namespaceNodes].
-	result := document allNodes last xPath: 'ancestor::*/@@*[true()]'.
+	result := document allNodes last xPath: 'ancestor::*/namespace::*[true()]'.
 	self
 		assert: result = expected;
 		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
@@ -2228,7 +2225,7 @@ XPathTest >> testUnion [
 			addAll: each elements].
 	result :=
 		XPath
-			for: 'addressbook/person/@* | */person/@@* | addressbook/person | */person/*'
+			for: 'addressbook/person/@* | */person/namespace::* | addressbook/person | */person/*'
 			in: document.
 	self
 		assert: result = expected;
@@ -2241,7 +2238,7 @@ XPathTest >> testUnion [
 		nodesDo: [:each | expected addLast: each].
 	result :=
 		XPath
-			for: 'addressbook/person[1]/node() | */person[1]/@* | addressbook/person[1]/@@*'
+			for: 'addressbook/person[1]/node() | */person[1]/@* | addressbook/person[1]/namespace::*'
 			in: document.
 	self
 		assert: result = expected;
