@@ -442,6 +442,22 @@ ConfigurationOfXPath >> baseline177: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline177. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline180: spec [
+	<version: '1.8.0-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #gemstone do: [
+		spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.12'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearCompiledXPathCache [
 	XPath clearCompiledXPathCache
@@ -459,7 +475,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.7.7-baseline'.
+	spec for: #'common' version: '1.8.0-baseline'.
 ]
 
 { #category : #doits }
@@ -486,6 +502,12 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline177 [
 		each instance].
 ]
 
+{ #category : #doits }
+ConfigurationOfXPath >> initializeClassesForGSBaseline180 [
+	self initializeClassesForGSBaseline177.
+	XPathASTNullNode instance.
+]
+
 { #category : #accessing }
 ConfigurationOfXPath >> project [
 
@@ -503,7 +525,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.7.9'.
+	spec for: #'common' version: '1.8.0'.
 
 ]
 
@@ -1387,5 +1409,16 @@ ConfigurationOfXPath >> version179: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.88'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.73'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version180: spec [ 
+        <version: '1.8.0' imports: #('1.8.0-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.89'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.74'.
                 ].
 ]
