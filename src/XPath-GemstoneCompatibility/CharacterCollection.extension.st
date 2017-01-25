@@ -25,13 +25,13 @@ CharacterCollection >> asXPathComparable [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asXPathFilterable [
-	XPathTypeException signal: 'Cannot filter strings'
+CharacterCollection >> asXPathFilterExpressionLocationPathRoot [
+	XPathTypeException signal: 'Cannot use strings as location path roots'
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asXPathLocationPathRoot [
-	XPathTypeException signal: 'Cannot use strings as location path roots'
+CharacterCollection >> asXPathFilterable [
+	XPathTypeException signal: 'Cannot filter strings'
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
@@ -49,11 +49,6 @@ CharacterCollection >> asXPathNodeSet [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asXPathNodeSetFilters [
-	^ #()
-]
-
-{ #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> asXPathNodeTestBlock [
 	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser
@@ -63,7 +58,11 @@ CharacterCollection >> asXPathNodeTestBlock [
 
 { #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> asXPathNumber [
-	^ Number xPathReadFrom: self readStream
+	^ [(XPathNumberParser
+			on: self
+			for: XPathFloatNumberParserHandler new) parse]
+		on: XPathSyntaxException
+		do: [:error | Float nan]
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
@@ -74,9 +73,4 @@ CharacterCollection >> asXPathString [
 { #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> asXPathUnionable [
 	XPathTypeException signal: 'Cannot union strings'
-]
-
-{ #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> hasXPathNodeSetFilters [
-	^ false
 ]
