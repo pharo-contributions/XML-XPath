@@ -1520,9 +1520,10 @@ XPathTest >> testNegation [
 		assert: '-1.0' asXPath evaluate = -1.0;
 		assert: '--1.0' asXPath evaluate = 1.0;
 		assert: '---1.0' asXPath evaluate = -1.0;
-		assert: '-(1 div 0)' asXPath evaluate = Float negativeInfinity;
+		"avoid #negativeInfinity for portability"
+		assert: '-(1 div 0)' asXPath evaluate = Float infinity negated;
 		assert: '--(1 div 0)' asXPath evaluate = Float infinity;
-		assert: '---(1 div 0)' asXPath evaluate = Float negativeInfinity;
+		assert: '---(1 div 0)' asXPath evaluate = Float infinity negated;
 		assert: '-"test"' asXPath evaluate isNaN;
 		assert: '--"test"' asXPath evaluate isNaN;
 		assert: '---"test"' asXPath evaluate isNaN
@@ -2503,5 +2504,6 @@ XPathTest >> testZeroDivision [
 
 	"otherwise it should be negative"
 	#('-1 div 0' '-0.1 div 0.0' '1 div -0.0' '0.1 div -0') do: [:each |
-		self assert: each asXPath evaluate = Float negativeInfinity].
+		"avoid #negativeInfinity for portability"
+		self assert: each asXPath evaluate = Float infinity negated].
 ]
