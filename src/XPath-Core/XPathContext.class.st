@@ -41,7 +41,7 @@ XPathContext class >> functions: aFunctionSet [
 XPathContext class >> initialize [
 	"self initialize"
 
-	self defaultFunctions: nil
+	self defaultFunctions: nil.
 ]
 
 { #category : #'instance creation' }
