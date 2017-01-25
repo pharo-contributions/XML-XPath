@@ -11,7 +11,7 @@ Class {
 		'maxArguments',
 		'argumentTypes'
 	],
-	#category : #'XPath-Core-Parsers'
+	#category : #'XPath-Core-Functions'
 }
 
 { #category : #private }
@@ -65,7 +65,7 @@ XPathTypedFunctionPrototypeParserHandler >> handleEndParsing [
 	self parsingResult:
 		(XPathFunctionPrototype
 			returnType: returnType
-			functionName: functionName
+			name: functionName
 			minArguments: minArguments
 			maxArguments: maxArguments
 			argumentTypes: argumentTypes)

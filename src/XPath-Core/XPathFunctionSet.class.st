@@ -19,7 +19,6 @@ XPathFunctionSet class >> default [
 		XPathContainsFunction +
 		XPathCountFunction +
 		XPathEndsWithFunction +
-		XPathFalseFunction +
 		XPathFloorFunction +
 		XPathIDFunction +
 		XPathLangFunction +
@@ -37,8 +36,7 @@ XPathFunctionSet class >> default [
 		XPathSubstringBeforeFunction +
 		XPathSubstringFunction +
 		XPathSumFunction +
-		XPathTranslateFunction +
-		XPathTrueFunction
+		XPathTranslateFunction
 ]
 
 { #category : #'instance creation' }
@@ -90,7 +88,7 @@ XPathFunctionSet >> = aFunctionSet [
 { #category : #adding }
 XPathFunctionSet >> add: aFunction [
 	^ functionsByName
-		at: aFunction functionName
+		at: aFunction prototypeName
 		put: aFunction
 ]
 
@@ -151,7 +149,7 @@ XPathFunctionSet >> hash [
 { #category : #testing }
 XPathFunctionSet >> includes: aFunction [
 	^ (functionsByName
-		at: aFunction functionName
+		at: aFunction prototypeName
 		ifAbsent: [^ false]) == aFunction
 ]
 
@@ -173,7 +171,7 @@ XPathFunctionSet >> postCopy [
 { #category : #removing }
 XPathFunctionSet >> remove: aFunction ifAbsent: aBlock [
 	^ functionsByName
-		removeKey: aFunction functionName
+		removeKey: aFunction prototypeName
 		ifAbsent: aBlock
 ]
 

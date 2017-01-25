@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathStartsWithFunction class >> functionPrototypeSource [
+XPathStartsWithFunction class >> prototypeSource [
 	^ 'boolean starts-with(string, string)'
 ]
 

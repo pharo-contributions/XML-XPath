@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-XPathRoundFunction class >> functionPrototypeSource [
+XPathRoundFunction class >> prototypeSource [
 	^ 'number round(number)'
 ]
 
 { #category : #invoking }
 XPathRoundFunction >> function [
-	^ self firstArgument rounded
+	^ self firstArgument xPathRounded
 ]

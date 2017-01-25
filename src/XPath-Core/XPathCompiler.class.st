@@ -30,28 +30,52 @@ XPathCompiler class >> systemCompilerClass: aClass [
 
 { #category : #compiling }
 XPathCompiler >> compile: aStringOrStream [
-	^ self compileWithParser:
-		(self parserClass
-			on: aStringOrStream
-			for: self parserHandlerClass new)
+	^ self compileTranslatedSource:
+		(self translateParsedSource:
+			(self optimizeParsedSource:
+				(self parseSource: aStringOrStream)))
 ]
 
 { #category : #private }
-XPathCompiler >> compileGeneratedSourceCode: aString [
+XPathCompiler >> compileTranslatedSource: aString [
 	^ self class systemCompilerClass evaluate: aString
 ]
 
-{ #category : #compiling }
-XPathCompiler >> compileWithParser: aParser [
-	^ self compileGeneratedSourceCode: aParser parse
+{ #category : #private }
+XPathCompiler >> optimizeParsedSource: anAST [
+	^ self optimizerClass new visitNode: anAST
 ]
 
-{ #category : #accessing }
+{ #category : #private }
+XPathCompiler >> optimizerClass [
+	^ XPathASTOptimizingMutatingNodeVisitor
+]
+
+{ #category : #private }
+XPathCompiler >> parseSource: aStringOrStream [
+	^ (self parserClass
+		on: aStringOrStream
+		for: self parserHandlerClass new) parse
+]
+
+{ #category : #private }
 XPathCompiler >> parserClass [
 	^ XPathExpressionParser
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XPathCompiler >> parserHandlerClass [
-	^ XPathCompilingExpressionParserHandler
+	^ XPathASTExpressionParserHandler
+]
+
+{ #category : #private }
+XPathCompiler >> translateParsedSource: anAST [
+	^ self translatorClass new
+		visitNode: anAST;
+		contents
+]
+
+{ #category : #private }
+XPathCompiler >> translatorClass [
+	^ XPathASTTranslatingNodeVisitor
 ]

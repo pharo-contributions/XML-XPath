@@ -22,18 +22,18 @@ XPathNodeSet class >> xPathNewFrom: anObject [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> % aStringOrBlockOrNodeTestWithFilters [
-	^ self parentAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> % aNodeTestStringOrBlock [
+	^ self parentAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> %% aStringOrBlockOrNodeTestWithFilters [
-	^ self ancestorAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> %% aNodeTestStringOrBlock [
+	^ self ancestorAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> %%~ aStringOrBlockOrNodeTestWithFilters [
-	^ self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> %%~ aNodeTestStringOrBlock [
+	^ self ancestorOrSelfAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #enumerating }
@@ -43,48 +43,48 @@ XPathNodeSet >> & aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> / aStringOrBlockOrNodeTestWithFilters [
-	^ self childAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> / aNodeTestStringOrBlock [
+	^ self childAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> // aStringOrBlockOrNodeTestWithFilters [
-	^ self descendantAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> // aNodeTestStringOrBlock [
+	^ self descendantAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> //~ aStringOrBlockOrNodeTestWithFilters [
-	^ self descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> //~ aNodeTestStringOrBlock [
+	^ self descendantOrSelfAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> << aStringOrBlockOrNodeTestWithFilters [
-	^ self precedingAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> << aNodeTestStringOrBlock [
+	^ self precedingAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> <<< aStringOrBlockOrNodeTestWithFilters [
-	^ self precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> <<< aNodeTestStringOrBlock [
+	^ self precedingSiblingAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> >> aStringOrBlockOrNodeTestWithFilters [
-	^ self followingAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> >> aNodeTestStringOrBlock [
+	^ self followingAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> >>> aStringOrBlockOrNodeTestWithFilters [
-	^ self followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> >>> aNodeTestStringOrBlock [
+	^ self followingSiblingAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> @ aStringOrBlockOrNodeTestWithFilters [
-	^ self attributeAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> @ aNodeTestStringOrBlock [
+	^ self attributeAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> @@ aStringOrBlockOrNodeTestWithFilters [
-	^ self namespaceAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> @@ aNodeTestStringOrBlock [
+	^ self namespaceAxis: aNodeTestStringOrBlock
 ]
 
 { #category : #enumerating }
@@ -159,17 +159,33 @@ XPathNodeSet >> afterRemoving: aNode [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> ancestorAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> ancestorAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		ancestorAxis: aStringOrBlockOrNodeTestWithFilters
+		ancestorAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> ancestorAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		ancestorAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> ancestorOrSelfAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
+		ancestorOrSelfAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> ancestorOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		ancestorOrSelfAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #converting }
@@ -183,13 +199,13 @@ XPathNodeSet >> asXPathComparable [
 ]
 
 { #category : #converting }
-XPathNodeSet >> asXPathFilterable [
-	^ self sorted
+XPathNodeSet >> asXPathFilterExpressionLocationPathRoot [
+	^ self
 ]
 
 { #category : #converting }
-XPathNodeSet >> asXPathLocationPathRoot [
-	^ self
+XPathNodeSet >> asXPathFilterable [
+	^ self sorted
 ]
 
 { #category : #converting }
@@ -215,17 +231,33 @@ XPathNodeSet >> asXPathUnionable [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> attributeAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> attributeAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		attributeAxis: aStringOrBlockOrNodeTestWithFilters
+		attributeAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		attributeAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> childAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> childAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		childAxis: aStringOrBlockOrNodeTestWithFilters
+		childAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> childAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		childAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #copying }
@@ -279,17 +311,33 @@ XPathNodeSet >> copyWithoutAll: aCollection [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> descendantAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> descendantAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		descendantAxis: aStringOrBlockOrNodeTestWithFilters
+		descendantAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> descendantAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		descendantAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> descendantOrSelfAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		descendantOrSelfAxis: aStringOrBlockOrNodeTestWithFilters
+		descendantOrSelfAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> descendantOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		descendantOrSelfAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #enumerating }
@@ -390,17 +438,33 @@ XPathNodeSet >> firstInDocumentOrder [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> followingAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> followingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		followingAxis: aStringOrBlockOrNodeTestWithFilters
+		followingAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> followingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		followingAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> followingSiblingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		followingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
+		followingSiblingAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> followingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		followingSiblingAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #testing }
@@ -414,31 +478,63 @@ XPathNodeSet >> intersection: aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> namespaceAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> namespaceAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		namespaceAxis: aStringOrBlockOrNodeTestWithFilters
+		namespaceAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		namespaceAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> parentAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> parentAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		parentAxis: aStringOrBlockOrNodeTestWithFilters
+		parentAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> parentAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		parentAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> precedingAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> precedingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		precedingAxis: aStringOrBlockOrNodeTestWithFilters
+		precedingAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> precedingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		precedingAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> precedingSiblingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		precedingSiblingAxis: aStringOrBlockOrNodeTestWithFilters
+		precedingSiblingAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> precedingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		precedingSiblingAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #enumerating }
@@ -475,10 +571,18 @@ XPathNodeSet >> select: aBlock [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> selfAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathNodeSet >> selfAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
-		selfAxis: aStringOrBlockOrNodeTestWithFilters
+		selfAxis: aNodeTestStringOrBlock
+]
+
+{ #category : #'enumerating - predicate axis' }
+XPathNodeSet >> selfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ self sortOrder
+		on: self
+		selfAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection
 ]
 
 { #category : #private }
@@ -561,6 +665,6 @@ XPathNodeSet >> | aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> ~ aStringOrBlockOrNodeTestWithFilters [
-	^ self selfAxis: aStringOrBlockOrNodeTestWithFilters
+XPathNodeSet >> ~ aNodeTestStringOrBlock [
+	^ self selfAxis: aNodeTestStringOrBlock
 ]

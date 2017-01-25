@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-XPathCeilingFunction class >> functionPrototypeSource [
+XPathCeilingFunction class >> prototypeSource [
 	^ 'number ceiling(number)'
 ]
 
 { #category : #invoking }
 XPathCeilingFunction >> function [
-	^ self firstArgument ceiling
+	^ self firstArgument xPathCeiling
 ]

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathNameFunction class >> functionPrototypeSource [
+XPathNameFunction class >> prototypeSource [
 	^ 'string name(node-set?)'
 ]
 

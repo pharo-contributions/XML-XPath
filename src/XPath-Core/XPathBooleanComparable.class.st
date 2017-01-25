@@ -8,11 +8,6 @@ Class {
 }
 
 { #category : #comparing }
-XPathBooleanComparable >> != aComparable [
-	^ aComparable notEqualsBoolean: value
-]
-
-{ #category : #comparing }
 XPathBooleanComparable >> < aComparable [
 	^ aComparable greaterThanBoolean: value
 ]
@@ -117,4 +112,9 @@ XPathBooleanComparable >> notEqualsNumber: aNumber [
 { #category : #private }
 XPathBooleanComparable >> notEqualsString: aString [
 	^ value ~= aString asXPathBoolean
+]
+
+{ #category : #comparing }
+XPathBooleanComparable >> ~= aComparable [
+	^ aComparable notEqualsBoolean: value
 ]

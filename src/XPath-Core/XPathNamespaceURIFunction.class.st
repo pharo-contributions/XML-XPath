@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathNamespaceURIFunction class >> functionPrototypeSource [
+XPathNamespaceURIFunction class >> prototypeSource [
 	^ 'string namespace-uri(node-set?)'
 ]
 

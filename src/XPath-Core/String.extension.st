@@ -25,13 +25,13 @@ String >> asXPathComparable [
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathFilterable [
-	XPathTypeException signal: 'Cannot filter strings'
+String >> asXPathFilterExpressionLocationPathRoot [
+	XPathTypeException signal: 'Cannot use strings as location path roots'
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathLocationPathRoot [
-	XPathTypeException signal: 'Cannot use strings as location path roots'
+String >> asXPathFilterable [
+	XPathTypeException signal: 'Cannot filter strings'
 ]
 
 { #category : #'*XPath-Core-converting' }
@@ -49,11 +49,6 @@ String >> asXPathNodeSet [
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathNodeSetFilters [
-	^ #()
-]
-
-{ #category : #'*XPath-Core-converting' }
 String >> asXPathNodeTestBlock [
 	"parses string as a node test to produce a node test block"
 	^ (XPathNodeTestParser
@@ -63,7 +58,11 @@ String >> asXPathNodeTestBlock [
 
 { #category : #'*XPath-Core-converting' }
 String >> asXPathNumber [
-	^ Number xPathReadFrom: self readStream
+	^ [(XPathNumberParser
+			on: self
+			for: XPathFloatNumberParserHandler new) parse]
+		on: XPathSyntaxException
+		do: [:error | Float nan]
 ]
 
 { #category : #'*XPath-Core-converting' }
@@ -74,11 +73,6 @@ String >> asXPathString [
 { #category : #'*XPath-Core-converting' }
 String >> asXPathUnionable [
 	XPathTypeException signal: 'Cannot union strings'
-]
-
-{ #category : #'*XPath-Core-testing' }
-String >> hasXPathNodeSetFilters [
-	^ false
 ]
 
 { #category : #'*XPath-Core' }

@@ -8,40 +8,40 @@ Class {
 }
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForAnyNameWith: aHandler [
-	aHandler handleTestForAttributeWithAnyName
-]
-
-{ #category : #handling }
 XPathNodeTestParserAttributeContext >> handleTestForLocalName: aLocalName with: aHandler [
-	aHandler handleTestForAttributeWithLocalName: aLocalName
+	aHandler handleAttributeTestForLocalName: aLocalName
 ]
 
 { #category : #handling }
 XPathNodeTestParserAttributeContext >> handleTestForName: aName with: aHandler [
-	aHandler handleTestForAttributeWithName: aName
+	aHandler handleAttributeTestForName: aName
 ]
 
 { #category : #handling }
 XPathNodeTestParserAttributeContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
 	aHandler
-		handleTestForAttributeWithNamespaceURI: aURI
+		handleAttributeTestForNamespaceURI: aURI
 		localName: aLocalName
 ]
 
 { #category : #handling }
 XPathNodeTestParserAttributeContext >> handleTestForNamespaceURI: aURI with: aHandler [
-	aHandler handleTestForAttributeWithNamespaceURI: aURI
+	aHandler handleAttributeTestForNamespaceURI: aURI
 ]
 
 { #category : #handling }
 XPathNodeTestParserAttributeContext >> handleTestForPrefix: aPrefix localName: aLocalName with: aHandler [
 	aHandler
-		handleTestForAttributeWithPrefix: aPrefix
+		handleAttributeTestForPrefix: aPrefix
 		localName: aLocalName
 ]
 
 { #category : #handling }
 XPathNodeTestParserAttributeContext >> handleTestForPrefix: aPrefix with: aHandler [
-	aHandler handleTestForAttributeWithPrefix: aPrefix
+	aHandler handleAttributeTestForPrefix: aPrefix
+]
+
+{ #category : #handling }
+XPathNodeTestParserAttributeContext >> handleWildcardTestWith: aHandler [
+	aHandler handleAttributeTest
 ]

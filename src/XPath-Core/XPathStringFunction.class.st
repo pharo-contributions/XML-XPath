@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathStringFunction class >> functionPrototypeSource [
+XPathStringFunction class >> prototypeSource [
 	^ 'string string(object?)'
 ]
 

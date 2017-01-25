@@ -51,7 +51,9 @@ XPath class >> compiledXPathCache [
 
 { #category : #accessing }
 XPath class >> compiledXPathCacheAt: anXPathSourceString [
-	^ self compiledXPathCache at: anXPathSourceString
+	^ self compiledXPathCache
+		at: anXPathSourceString
+		ifAbsent: [nil]
 ]
 
 { #category : #accessing }
@@ -118,7 +120,7 @@ XPath >> asXPath [
 
 { #category : #compiling }
 XPath >> compile [
-	^ self compileWith: self compilerClass new
+	self compileWith: self compilerClass new
 ]
 
 { #category : #compiling }
@@ -127,16 +129,20 @@ XPath >> compileWith: anXPathCompiler [
 	self class
 		compiledXPathCacheAt: self xPathSource
 		put: compiledXPath.
-	^ compiledXPath.
 ]
 
 { #category : #accessing }
 XPath >> compiledXPath [
-	^ compiledXPath ifNil: [
-		compiledXPath :=
-			self class
-				compiledXPathCacheAt: self xPathSource
-				ifAbsent: [self compile]]
+	^ compiledXPath
+		ifNil: [
+			"avoid #compiledXPathCacheAt:ifAbsent: and
+			#compiledXPathCacheAt:ifAbsentPut: here so the cache isn't locked
+			during compilation, which could stall other processes"
+			(self class compiledXPathCacheAt: self xPathSource)
+				ifNil: [self compile]
+				ifNotNil: [:cachedCompiledXPath |
+					compiledXPath := cachedCompiledXPath].
+			compiledXPath]
 ]
 
 { #category : #accessing }
@@ -165,7 +171,7 @@ XPath >> in: aNode [
 
 { #category : #evaluating }
 XPath >> in: aNode context: aContext [
-	"evaluate in context of aNode with aContext controlling evaluation"
+	"evaluate for aNode with aContext controlling evaluation"
 	^ self compiledXPath
 		value: aNode
 		value: aContext

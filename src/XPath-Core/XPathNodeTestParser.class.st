@@ -22,24 +22,24 @@ XPathNodeTestParser class >> initialize [
 	conditions when reinitializing the class"
 	NodeTypeTestParserSelectors :=
 		Dictionary new
-			at: 'comment' put: #nextCommentTypeTest;
-			at: 'text' put: #nextTextTypeTest;
-			at: 'processing-instruction' put: #nextPITypeTest;
-			at: 'node' put: #nextAnyNodeTypeTest;
-			at: 'element' put: #nextElementTypeTest;
-			at: 'attribute' put: #nextAttributeTypeTest;
-			at: 'namespace' put: #nextNamespaceTypeTest;
+			at: 'comment' put: #nextCommentTest;
+			at: 'text' put: #nextTextTest;
+			at: 'processing-instruction' put: #nextPITest;
+			at: 'node' put: #nextAnyNodeTest;
+			at: 'element' put: #nextElementTest;
+			at: 'attribute' put: #nextAttributeTest;
+			at: 'namespace' put: #nextNamespaceTest;
 			yourself
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextAnyNodeTypeTest [
+XPathNodeTestParser >> nextAnyNodeTest [
 	self nextEndArgumentList.
-	context handleTestForAnyNodeTypeWith: handler.
+	context handleAnyNodeTestWith: handler.
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextAttributeTypeTest [
+XPathNodeTestParser >> nextAttributeTest [
 	context := XPathNodeTestParserAttributeTypeTestContext new.
 	self
 		peekForNodeTest;
@@ -47,13 +47,13 @@ XPathNodeTestParser >> nextAttributeTypeTest [
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextCommentTypeTest [
+XPathNodeTestParser >> nextCommentTest [
 	self nextEndArgumentList.
-	context handleTestForCommentTypeWith: handler.
+	context handleCommentTestWith: handler.
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextElementTypeTest [
+XPathNodeTestParser >> nextElementTest [
 	context := XPathNodeTestParserElementTypeTestContext new.
 	self
 		peekForNodeTest;
@@ -66,7 +66,7 @@ XPathNodeTestParser >> nextEmptyTest [
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextNamespaceTypeTest [
+XPathNodeTestParser >> nextNamespaceTest [
 	context := XPathNodeTestParserNamespaceTypeTestContext new.
 	self
 		peekForNodeTest;
@@ -74,7 +74,7 @@ XPathNodeTestParser >> nextNamespaceTypeTest [
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextPITypeTest [
+XPathNodeTestParser >> nextPITest [
 	| name |
 
 	inputStream skipSeparators.
@@ -82,18 +82,18 @@ XPathNodeTestParser >> nextPITypeTest [
 		(self nextStringLiteralOptional: true)
 			ifNil: [self nextNCNameOptional: true].
 	name
-		ifNil: [context handleTestForPITypeWith: handler]
+		ifNil: [context handlePITestWith: handler]
 		ifNotNil: [
 			context
-				handleTestForPIWithName: name
+				handlePITestForName: name
 				with: handler].
 	self nextEndArgumentList.
 ]
 
 { #category : #parsing }
-XPathNodeTestParser >> nextTextTypeTest [
+XPathNodeTestParser >> nextTextTest [
 	self nextEndArgumentList.
-	context handleTestForTextTypeWith: handler.
+	context handleTextTestWith: handler.
 ]
 
 { #category : #parsing }
@@ -228,11 +228,11 @@ XPathNodeTestParser >> peekForWildCardNameTest [
 	(inputStream peekFor: $:)
 		ifTrue: [
 			(inputStream peekFor: $*)
-				ifTrue: [context handleTestForAnyNameWith: handler]
+				ifTrue: [context handleWildcardTestWith: handler]
 				ifFalse: [
 					context
 						handleTestForLocalName: self nextNCName
 						with: handler]]
-		ifFalse: [context handleTestForAnyNameWith: handler].
+		ifFalse: [context handleWildcardTestWith: handler].
 	^ true.
 ]

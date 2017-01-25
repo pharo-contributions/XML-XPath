@@ -16,11 +16,6 @@ XPathComparable class >> value: aValue [
 ]
 
 { #category : #comparing }
-XPathComparable >> != aComparable [
-	self subclassResponsibility
-]
-
-{ #category : #comparing }
 XPathComparable >> < aComparable [
 	self subclassResponsibility
 ]
@@ -137,4 +132,9 @@ XPathComparable >> printOn: aStream [
 { #category : #initialization }
 XPathComparable >> setValue: anObject [
 	value := anObject
+]
+
+{ #category : #comparing }
+XPathComparable >> ~= aComparable [
+	self subclassResponsibility
 ]

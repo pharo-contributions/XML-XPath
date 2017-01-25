@@ -6,7 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'returnType',
-		'functionName',
+		'name',
 		'minArguments',
 		'maxArguments',
 		'argumentTypes'
@@ -15,10 +15,10 @@ Class {
 }
 
 { #category : #'instance creation' }
-XPathFunctionPrototype class >> returnType: aReturnType functionName: aName minArguments: aMinimum maxArguments: aMaximum argumentTypes: anArgumentTypeCollection [
+XPathFunctionPrototype class >> returnType: aReturnType name: aName minArguments: aMinimum maxArguments: aMaximum argumentTypes: anArgumentTypeCollection [
 	^ self new
 		setReturnType: aReturnType
-		functionName: aName
+		name: aName
 		minArguments: aMinimum
 		maxArguments: aMaximum
 		argumentTypes: anArgumentTypeCollection
@@ -70,11 +70,6 @@ XPathFunctionPrototype >> argumentTypes [
 ]
 
 { #category : #accessing }
-XPathFunctionPrototype >> functionName [
-	^ functionName
-]
-
-{ #category : #accessing }
 XPathFunctionPrototype >> maxArguments [
 	^ maxArguments
 ]
@@ -84,6 +79,11 @@ XPathFunctionPrototype >> minArguments [
 	^ minArguments
 ]
 
+{ #category : #accessing }
+XPathFunctionPrototype >> name [
+	^ name
+]
+
 { #category : #printing }
 XPathFunctionPrototype >> printOn: aStream [
 	super printOn: aStream.
@@ -91,7 +91,7 @@ XPathFunctionPrototype >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: self returnType name asString;
 		space;
-		nextPutAll: self functionName;
+		nextPutAll: self name;
 		nextPut: $(.
 	self argumentTypes withIndexDo: [:each :i |
 		i > 1
@@ -111,9 +111,9 @@ XPathFunctionPrototype >> returnType [
 ]
 
 { #category : #initialization }
-XPathFunctionPrototype >> setReturnType: aReturnType functionName: aName minArguments: aMinimum maxArguments: aMaximum argumentTypes: anArgumentTypeCollection [
+XPathFunctionPrototype >> setReturnType: aReturnType name: aName minArguments: aMinimum maxArguments: aMaximum argumentTypes: anArgumentTypeCollection [
 	returnType := aReturnType.
-	functionName := aName.
+	name := aName.
 	minArguments := aMinimum.
 	maxArguments := aMaximum.
 	argumentTypes := anArgumentTypeCollection asArray.

@@ -23,30 +23,46 @@ XPathDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> on: aNodeSet attributeAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock [
 	^ (super
 		on: aNodeSet
-		attributeAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		attributeAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> on: aNodeSet namespaceAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ (super
 		on: aNodeSet
-		namespaceAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		attributeAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection) sortOrderFrom: aNodeSet
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> on: aNodeSet parentAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock [
+	^ (super
+		on: aNodeSet
+		namespaceAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
+]
+
+{ #category : #enumerating }
+XPathDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
+	^ (super
+		on: aNodeSet
+		namespaceAxis: aNodeTestStringOrBlock
+		predicates: aPredicateCollection) sortOrderFrom: aNodeSet
+]
+
+{ #category : #enumerating }
+XPathDocumentSortOrder >> on: aNodeSet parentAxis: aNodeTestStringOrBlock [
 	"this is a document order axis according to the spec"
 	^ (super
 		on: aNodeSet
-		parentAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		parentAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
 ]
 
 { #category : #enumerating }
-XPathDocumentSortOrder >> on: aNodeSet selfAxis: aStringOrBlockOrNodeTestWithFilters [
+XPathDocumentSortOrder >> on: aNodeSet selfAxis: aNodeTestStringOrBlock [
 	^ (super
 		on: aNodeSet
-		selfAxis: aStringOrBlockOrNodeTestWithFilters) sortOrderFrom: aNodeSet
+		selfAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
 ]

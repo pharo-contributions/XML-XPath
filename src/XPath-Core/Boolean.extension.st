@@ -11,13 +11,13 @@ Boolean >> asXPathComparable [
 ]
 
 { #category : #'*XPath-Core-converting' }
-Boolean >> asXPathFilterable [
-	XPathTypeException signal: 'Cannot filter booleans'
+Boolean >> asXPathFilterExpressionLocationPathRoot [
+	XPathTypeException signal: 'Cannot use booleans as location path roots'
 ]
 
 { #category : #'*XPath-Core-converting' }
-Boolean >> asXPathLocationPathRoot [
-	XPathTypeException signal: 'Cannot use booleans as location path roots'
+Boolean >> asXPathFilterable [
+	XPathTypeException signal: 'Cannot filter booleans'
 ]
 
 { #category : #'*XPath-Core-converting' }

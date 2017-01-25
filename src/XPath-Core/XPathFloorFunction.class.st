@@ -8,11 +8,11 @@ Class {
 }
 
 { #category : #accessing }
-XPathFloorFunction class >> functionPrototypeSource [
+XPathFloorFunction class >> prototypeSource [
 	^ 'number floor(number)'
 ]
 
 { #category : #invoking }
 XPathFloorFunction >> function [
-	^ self firstArgument floor
+	^ self firstArgument xPathFloor
 ]

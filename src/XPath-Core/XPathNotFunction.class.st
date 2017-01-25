@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathNotFunction class >> functionPrototypeSource [
+XPathNotFunction class >> prototypeSource [
 	^ 'boolean not(boolean)'
 ]
 

@@ -8,11 +8,6 @@ Class {
 }
 
 { #category : #comparing }
-XPathNodeSetComparable >> != aComparable [
-	^ aComparable notEqualsNodeSet: value
-]
-
-{ #category : #comparing }
 XPathNodeSetComparable >> < aComparable [
 	^ aComparable greaterThanNodeSet: value
 ]
@@ -153,4 +148,9 @@ XPathNodeSetComparable >> notEqualsNumber: aNumber [
 { #category : #private }
 XPathNodeSetComparable >> notEqualsString: aString [
 	^ value anySatisfy: [:each | each stringValue ~= aString]
+]
+
+{ #category : #comparing }
+XPathNodeSetComparable >> ~= aComparable [
+	^ aComparable notEqualsNodeSet: value
 ]

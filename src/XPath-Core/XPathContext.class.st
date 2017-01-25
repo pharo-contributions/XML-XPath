@@ -76,6 +76,36 @@ XPathContext >> addFunction: aFunction [
 ]
 
 { #category : #private }
+XPathContext >> attributeTestForPrefix: aPrefix [
+	self hasNamespaces
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefixReference: aPrefix.
+			^ [:node |
+				node isAttribute
+					and: [node namespaceURI = namespaceURI]]]
+		ifFalse: [
+			^ [:node |
+				node isAttribute
+					and: [node prefix = aPrefix]]]
+]
+
+{ #category : #private }
+XPathContext >> attributeTestForPrefix: aPrefix localName: aLocalName [
+	self hasNamespaces
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefixReference: aPrefix.
+			^ [:node |
+				node isAttribute
+					and: [node localName = aLocalName
+						and: [node namespaceURI = namespaceURI]]]]
+		ifFalse: [| name |
+			name := aLocalName qualifyWithXMLPrefix: aPrefix.
+			^ [:node |
+				node isAttribute
+					and: [node name = name]]]
+]
+
+{ #category : #private }
 XPathContext >> copiedFunctions [
 	"used to implement copy-on-write for functions"
 	^ functions := self functions copy
@@ -91,6 +121,36 @@ XPathContext >> declarePrefix: aPrefix uri: aURI [
 	self namespaceScope
 		mapPrefix: aPrefix
 		to: aURI
+]
+
+{ #category : #private }
+XPathContext >> elementTestForPrefix: aPrefix [
+	self hasNamespaces
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefixReference: aPrefix.
+			^ [:node |
+				node isElement
+					and: [node namespaceURI = namespaceURI]]]
+		ifFalse: [
+			^ [:node |
+				node isElement
+					and: [node prefix = aPrefix]]]
+]
+
+{ #category : #private }
+XPathContext >> elementTestForPrefix: aPrefix localName: aLocalName [
+	self hasNamespaces
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefixReference: aPrefix.
+			^ [:node |
+				node isElement
+					and: [node localName = aLocalName
+						and: [node namespaceURI = namespaceURI]]]]
+		ifFalse: [| name |
+			name := aLocalName qualifyWithXMLPrefix: aPrefix.
+			^ [:node |
+				node isElement
+					and: [node name = name]]]
 ]
 
 { #category : #private }
@@ -182,6 +242,36 @@ XPathContext >> namespaceScope [
 	^ namespaceScope ifNil: [namespaceScope := XMLNamespaceScope new]
 ]
 
+{ #category : #private }
+XPathContext >> namespaceTestForPrefix: aPrefix [
+	self hasNamespaces
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefixReference: aPrefix.
+			^ [:node |
+				node isNamespace
+					and: [node namespaceURI = namespaceURI]]]
+		ifFalse: [
+			^ [:node |
+				node isNamespace
+					and: [node prefix = aPrefix]]]
+]
+
+{ #category : #private }
+XPathContext >> namespaceTestForPrefix: aPrefix localName: aLocalName [
+	self hasNamespaces
+		ifTrue: [| namespaceURI |
+			namespaceURI := self resolvePrefixReference: aPrefix.
+			^ [:node |
+				node isNamespace
+					and: [node localName = aLocalName
+						and: [node namespaceURI = namespaceURI]]]]
+		ifFalse: [| name |
+			name := aLocalName qualifyWithXMLPrefix: aPrefix.
+			^ [:node |
+				node isNamespace
+					and: [node name = name]]]
+]
+
 { #category : #removing }
 XPathContext >> removeFunction: aFunction [
 	"use copy-on-write so the default function set isn't modified"
@@ -257,96 +347,6 @@ XPathContext >> resolveVariableReference: aVariableName [
 	^ self
 		variableAt: aVariableName
 		ifAbsent: [self errorUndeclaredVariable: aVariableName]
-]
-
-{ #category : #private }
-XPathContext >> testForAttributeWithPrefix: aPrefix [
-	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isAttribute
-					and: [node namespaceURI = namespaceURI]]]
-		ifFalse: [
-			^ [:node |
-				node isAttribute
-					and: [node prefix = aPrefix]]]
-]
-
-{ #category : #private }
-XPathContext >> testForAttributeWithPrefix: aPrefix localName: aLocalName [
-	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isAttribute
-					and: [node localName = aLocalName
-						and: [node namespaceURI = namespaceURI]]]]
-		ifFalse: [| name |
-			name := aLocalName qualifyWithXMLPrefix: aPrefix.
-			^ [:node |
-				node isAttribute
-					and: [node name = name]]]
-]
-
-{ #category : #private }
-XPathContext >> testForElementWithPrefix: aPrefix [
-	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isElement
-					and: [node namespaceURI = namespaceURI]]]
-		ifFalse: [
-			^ [:node |
-				node isElement
-					and: [node prefix = aPrefix]]]
-]
-
-{ #category : #private }
-XPathContext >> testForElementWithPrefix: aPrefix localName: aLocalName [
-	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isElement
-					and: [node localName = aLocalName
-						and: [node namespaceURI = namespaceURI]]]]
-		ifFalse: [| name |
-			name := aLocalName qualifyWithXMLPrefix: aPrefix.
-			^ [:node |
-				node isElement
-					and: [node name = name]]]
-]
-
-{ #category : #private }
-XPathContext >> testForNamespaceWithPrefix: aPrefix [
-	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isNamespace
-					and: [node namespaceURI = namespaceURI]]]
-		ifFalse: [
-			^ [:node |
-				node isNamespace
-					and: [node prefix = aPrefix]]]
-]
-
-{ #category : #private }
-XPathContext >> testForNamespaceWithPrefix: aPrefix localName: aLocalName [
-	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isNamespace
-					and: [node localName = aLocalName
-						and: [node namespaceURI = namespaceURI]]]]
-		ifFalse: [| name |
-			name := aLocalName qualifyWithXMLPrefix: aPrefix.
-			^ [:node |
-				node isNamespace
-					and: [node name = name]]]
 ]
 
 { #category : #namespacing }

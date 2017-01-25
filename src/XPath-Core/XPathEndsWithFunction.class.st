@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathEndsWithFunction class >> functionPrototypeSource [
+XPathEndsWithFunction class >> prototypeSource [
 	^ 'boolean ends-with(string, string)'
 ]
 

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathNormalizeSpaceFunction class >> functionPrototypeSource [
+XPathNormalizeSpaceFunction class >> prototypeSource [
 	^ 'string normalize-space(string?)'
 ]
 

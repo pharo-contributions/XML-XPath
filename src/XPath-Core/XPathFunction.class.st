@@ -1,7 +1,9 @@
 "
-An abstract class for XPath functions. Subclasses need to implement the class #functionPrototype method to return a string with an XPath function prototype and then implement the instance-side #function method to implement the function and return its value.
+An abstract class for XPath functions. Subclasses need to implement the class #prototypeSource method to return a string with an XPath function prototype and then implement the instance-side #function method to implement the function and return its value.
 
 When invoked, the arguments and the return value are automatically converted to the types specified by the prototype.
+
+Functions, including user-defined, can be combined in an XPathFunctionSet and injected into an XPathContext object before evaluation, but some functions (including last() and position()) are compiled inline and can never be redefined.
 "
 Class {
 	#name : #XPathFunction,
@@ -12,7 +14,7 @@ Class {
 		'arguments'
 	],
 	#classInstVars : [
-		'functionPrototype'
+		'prototype'
 	],
 	#category : #'XPath-Core-Functions'
 }
@@ -64,59 +66,59 @@ XPathFunction class >> context: aContext contextNode: aContextNode arguments: aS
 		arguments: aSequenceableCollection
 ]
 
-{ #category : #accessing }
-XPathFunction class >> functionName [
-	^ self functionPrototype functionName
-]
-
-{ #category : #accessing }
-XPathFunction class >> functionPrototype [
-	^ functionPrototype
-		ifNil: [
-			functionPrototype :=
-				(XPathFunctionPrototypeParser
-					on: self functionPrototypeSource
-					for: XPathTypedFunctionPrototypeParserHandler new)
-					parse]
-]
-
-{ #category : #accessing }
-XPathFunction class >> functionPrototype: aFunctionPrototype [
-	"
-	self allSubclassesDo: [:each |
-		each
-			functionPrototype: nil;
-			functionPrototype]
-	"
-
-	functionPrototype := aFunctionPrototype
-]
-
-{ #category : #accessing }
-XPathFunction class >> functionPrototypeSource [
-	"Should return a protype string. See subclasses for examples."
-
-	self subclassResponsibility
-]
-
 { #category : #private }
 XPathFunction class >> functionSetClass [
 	^ XPathFunctionSet
 ]
 
+{ #category : #accessing }
+XPathFunction class >> prototype [
+	^ prototype
+		ifNil: [
+			prototype :=
+				(XPathFunctionPrototypeParser
+					on: self prototypeSource
+					for: XPathTypedFunctionPrototypeParserHandler new)
+					parse]
+]
+
+{ #category : #accessing }
+XPathFunction class >> prototype: aFunctionPrototype [
+	"
+	self allSubclassesDo: [:each |
+		each
+			prototype: nil;
+			prototype]
+	"
+
+	prototype := aFunctionPrototype
+]
+
+{ #category : #accessing }
+XPathFunction class >> prototypeName [
+	^ self prototype name
+]
+
+{ #category : #accessing }
+XPathFunction class >> prototypeSource [
+	"Should return a protype string. See subclasses for examples."
+
+	self subclassResponsibility
+]
+
 { #category : #testing }
 XPathFunction >> acceptsArguments [
-	^ self functionPrototype acceptsArguments
+	^ self prototype acceptsArguments
 ]
 
 { #category : #testing }
 XPathFunction >> acceptsOptionalArguments [
-	^ self functionPrototype acceptsOptionalArguments
+	^ self prototype acceptsOptionalArguments
 ]
 
 { #category : #testing }
 XPathFunction >> acceptsVariableArguments [
-	^ self functionPrototype acceptsVariableArguments
+	^ self prototype acceptsVariableArguments
 ]
 
 { #category : #accessing }
@@ -135,19 +137,19 @@ XPathFunction >> argumentAt: anIndex ifAbsent: aBlock [
 
 { #category : #accessing }
 XPathFunction >> argumentTypeAt: anIndex [
-	^ self functionPrototype argumentTypeAt: anIndex
+	^ self prototype argumentTypeAt: anIndex
 ]
 
 { #category : #accessing }
 XPathFunction >> argumentTypeAt: anIndex ifAbsent: aBlock [
-	^ self functionPrototype
+	^ self prototype
 		argumentTypeAt: anIndex
 		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
 XPathFunction >> argumentTypes [
-	^ self functionPrototype argumentTypes
+	^ self prototype argumentTypes
 ]
 
 { #category : #accessing }
@@ -169,7 +171,7 @@ XPathFunction >> contextNode [
 XPathFunction >> errorAcceptsAtMost: anArgumentMaximum argumentsButGot: anArgumentTotal [
 	XPathArgumentNumberException
 		formatSignal: '{1}() accepts at most {2} argument(s) but was called with {3}'
-		with: self functionName
+		with: self name
 		with: anArgumentMaximum
 		with: anArgumentTotal
 ]
@@ -179,7 +181,7 @@ XPathFunction >> errorRequiresAtLeast: anArgumentMinimum argumentsButGot: anArgu
 	XPathArgumentNumberException
 		formatSignal:
 			'{1}() requires at least {2} argument(s) but was called with {3}'
-		with: self functionName
+		with: self name
 		with: anArgumentMinimum
 		with: anArgumentTotal
 ]
@@ -192,16 +194,6 @@ XPathFunction >> firstArgument [
 { #category : #invoking }
 XPathFunction >> function [
 	self subclassResponsibility
-]
-
-{ #category : #accessing }
-XPathFunction >> functionName [
-	^ self functionPrototype functionName
-]
-
-{ #category : #accessing }
-XPathFunction >> functionPrototype [
-	^ self class functionPrototype
 ]
 
 { #category : #testing }
@@ -221,12 +213,17 @@ XPathFunction >> lastArgument [
 
 { #category : #accessing }
 XPathFunction >> maxArguments [
-	^ self functionPrototype maxArguments
+	^ self prototype maxArguments
 ]
 
 { #category : #accessing }
 XPathFunction >> minArguments [
-	^ self functionPrototype minArguments
+	^ self prototype minArguments
+]
+
+{ #category : #accessing }
+XPathFunction >> name [
+	^ self prototype name
 ]
 
 { #category : #'instance creation' }
@@ -243,13 +240,18 @@ XPathFunction >> nodeSetClass [
 XPathFunction >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPut: $(.
-	self functionPrototype printOn: aStream.
+	self prototype printOn: aStream.
 	aStream nextPut: $).
 ]
 
 { #category : #accessing }
+XPathFunction >> prototype [
+	^ self class prototype
+]
+
+{ #category : #accessing }
 XPathFunction >> returnType [
-	^ self functionPrototype returnType
+	^ self prototype returnType
 ]
 
 { #category : #initialization }

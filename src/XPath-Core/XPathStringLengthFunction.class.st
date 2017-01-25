@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathStringLengthFunction class >> functionPrototypeSource [
+XPathStringLengthFunction class >> prototypeSource [
 	^ 'number string-length(string?)'
 ]
 

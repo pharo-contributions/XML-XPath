@@ -13,109 +13,109 @@ XPathNodeTestParserHandler >> defaultNodeTestParserContextClass [
 ]
 
 { #category : #handling }
+XPathNodeTestParserHandler >> handleAnyNodeTest [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTest [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTestForLocalName: aLocalName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTestForName: aName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTestForNamespaceURI: aURI [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTestForNamespaceURI: aURI localName: aLocalName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTestForPrefix: aPrefix [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleAttributeTestForPrefix: aPrefix localName: aLocalName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleCommentTest [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTest [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTestForLocalName: aLocalName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTestForName: aName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTestForNamespaceURI: aURI [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTestForNamespaceURI: aURI localName: aLocalName [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTestForPrefix: aPrefix [
+]
+
+{ #category : #handling }
+XPathNodeTestParserHandler >> handleElementTestForPrefix: aPrefix localName: aLocalName [
+]
+
+{ #category : #handling }
 XPathNodeTestParserHandler >> handleEmptyTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAnyNodeType [
+XPathNodeTestParserHandler >> handleNamespaceTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithAnyName [
+XPathNodeTestParserHandler >> handleNamespaceTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithLocalName: aLocalName [
+XPathNodeTestParserHandler >> handleNamespaceTestForName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithName: aName [
+XPathNodeTestParserHandler >> handleNamespaceTestForNamespaceURI: aURI [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI [
+XPathNodeTestParserHandler >> handleNamespaceTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithNamespaceURI: aURI localName: aLocalName [
+XPathNodeTestParserHandler >> handleNamespaceTestForPrefix: aPrefix [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix [
+XPathNodeTestParserHandler >> handleNamespaceTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForAttributeWithPrefix: aPrefix localName: aLocalName [
+XPathNodeTestParserHandler >> handlePITest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForCommentType [
+XPathNodeTestParserHandler >> handlePITestForName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithAnyName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithLocalName: aLocalName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithName: aName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithNamespaceURI: aURI localName: aLocalName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForElementWithPrefix: aPrefix localName: aLocalName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithAnyName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithLocalName: aLocalName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithName: aName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithNamespaceURI: aURI localName: aLocalName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForNamespaceWithPrefix: aPrefix localName: aLocalName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForPIWithAnyName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForPIWithName: aName [
-]
-
-{ #category : #handling }
-XPathNodeTestParserHandler >> handleTestForTextType [
+XPathNodeTestParserHandler >> handleTextTest [
 ]

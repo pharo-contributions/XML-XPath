@@ -9,5 +9,5 @@ Class {
 
 { #category : #handling }
 XPathNodeTestParserAttributeTypeTestContext >> handleEmptyTestWith: aHandler [
-	aHandler handleTestForAttributeWithAnyName
+	aHandler handleAttributeTest
 ]

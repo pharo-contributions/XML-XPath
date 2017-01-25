@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathBooleanFunction class >> functionPrototypeSource [
+XPathBooleanFunction class >> prototypeSource [
 	^ 'boolean boolean(object)'
 ]
 

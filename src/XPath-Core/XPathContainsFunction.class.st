@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathContainsFunction class >> functionPrototypeSource [
+XPathContainsFunction class >> prototypeSource [
 	^ 'boolean contains(string, string)'
 ]
 

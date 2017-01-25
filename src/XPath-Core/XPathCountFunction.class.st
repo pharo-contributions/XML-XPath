@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathCountFunction class >> functionPrototypeSource [
+XPathCountFunction class >> prototypeSource [
 	^ 'number count(node-set)'
 ]
 

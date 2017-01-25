@@ -1,12 +1,12 @@
 "
-This class holds the current axis while a step is being parsed and maps them to selectors that implement the axis and parser context classes to parse the node test after.
+This class holds the current axis while a step is being parsed and maps them to handler selectors and parser context classes to parse the node test that comes after.
 "
 Class {
 	#name : #XPathAxis,
 	#superclass : #Object,
 	#instVars : [
 		'axisSpecifier',
-		'replacementSelector',
+		'handlerSelector',
 		'defaultNodeTestParserContextClass',
 		'isImplicit',
 		'isStartOfRelativeLocationPath',
@@ -26,24 +26,24 @@ XPathAxis class >> axisSpecifiers [
 { #category : #private }
 XPathAxis class >> axisSpecifiersTemplate [
 	"Returns an array of arrays where each subarray has an axis name,
-	a selector to map it to, and the principal node type for that axis,
-	which is used to determine the parser context class when parsing
-	the node test after."
+	a handler selector to map it to, and the principal node type for
+	that axis, which is used to determine the parser context class
+	when parsing the node test after."
 
 	^ #(
-		#('ancestor'           '%%'  element)
-		#('ancestor-or-self'   '%%~' element)
-		#('attribute'          '@'   attribute)
-		#('child'              '/'   element)
-		#('descendant'         '//'  element)
-		#('descendant-or-self' '//~' element)
-		#('following'          '>>'  element)
-		#('following-sibling'  '>>>' element)
-		#('namespace'          '@@'  namespace)
-		#('parent'             '%'   element)
-		#('preceding'          '<<'  element)
-		#('preceding-sibling'  '<<<' element)
-		#('self'               '~'   element)
+		#('ancestor'           handleAncestorAxis         element)
+		#('ancestor-or-self'   handleAncestorOrSelfAxis   element)
+		#('attribute'          handleAttributeAxis        attribute)
+		#('child'              handleChildAxis            element)
+		#('descendant'         handleDescendantAxis       element)
+		#('descendant-or-self' handleDescendantOrSelfAxis element)
+		#('following'          handleFollowingAxis        element)
+		#('following-sibling'  handleFollowingSiblingAxis element)
+		#('namespace'          handleNamespaceAxis        namespace)
+		#('parent'             handleParentAxis           element)
+		#('preceding'          handlePrecedingAxis        element)
+		#('preceding-sibling'  handlePrecedingSiblingAxis element)
+		#('self'               handleSelfAxis             element)
 	)
 ]
 
@@ -57,9 +57,9 @@ XPathAxis class >> initialize [
 	race conditions during class reinitialization"
 	temp := Dictionary new.
 	self axisSpecifiersTemplate do: [:each |
-		| axisSpecifier replacementSelector principalNodeType parserContextClass |
+		| axisSpecifier handlerSelector principalNodeType parserContextClass |
 		axisSpecifier := each first.
-		replacementSelector := each second.
+		handlerSelector := each second.
 		principalNodeType := each third.
 		parserContextClass :=
 			principalNodeType = #attribute
@@ -70,7 +70,7 @@ XPathAxis class >> initialize [
 						ifFalse: [XPathNodeTestParserElementContext]].
 		temp
 			at: axisSpecifier
-			put: replacementSelector -> parserContextClass].
+			put: handlerSelector -> parserContextClass].
 	AxisSpecifiers := temp.
 ]
 
@@ -84,7 +84,7 @@ XPathAxis >> axisSpecifier: anAxisSpecifier [
 	anAxisSpecifier = axisSpecifier
 		ifFalse: [
 			axisSpecifier := anAxisSpecifier.
-			replacementSelector := nil.
+			handlerSelector := nil.
 			defaultNodeTestParserContextClass := nil].
 	"now explicit"
 	isImplicit := false.
@@ -93,7 +93,7 @@ XPathAxis >> axisSpecifier: anAxisSpecifier [
 { #category : #changing }
 XPathAxis >> beDefaultImplicitAxis [
 	axisSpecifier := 'child'.
-	replacementSelector := '/'.
+	handlerSelector := #handleChildAxis.
 	defaultNodeTestParserContextClass := XPathNodeTestParserElementContext.
 	isImplicit := true.
 	isFirstAxis := false.
@@ -125,6 +125,14 @@ XPathAxis >> errorUnrecognizedAxisSpecifier [
 		with: self axisSpecifier
 ]
 
+{ #category : #accessing }
+XPathAxis >> handlerSelector [
+	^ handlerSelector
+		ifNil: [
+			self lookupAxisSpecifier.
+			handlerSelector]
+]
+
 { #category : #initialization }
 XPathAxis >> initialize [
 	super initialize.
@@ -154,7 +162,7 @@ XPathAxis >> lookupAxisSpecifier [
 		AxisSpecifiers
 			at: self axisSpecifier
 			ifAbsent: [self errorUnrecognizedAxisSpecifier].
-	replacementSelector := association key.
+	handlerSelector := association key.
 	defaultNodeTestParserContextClass := association value.
 ]
 
@@ -165,12 +173,4 @@ XPathAxis >> printOn: aStream [
 		nextPut: $(;
 		nextPutAll: self axisSpecifier;
 		nextPut: $).
-]
-
-{ #category : #accessing }
-XPathAxis >> replacementSelector [
-	^ replacementSelector
-		ifNil: [
-			self lookupAxisSpecifier.
-			replacementSelector]
 ]

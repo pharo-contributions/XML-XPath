@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathSubstringAfterFunction class >> functionPrototypeSource [
+XPathSubstringAfterFunction class >> prototypeSource [
 	^ 'string substring-after(string, string)'
 ]
 

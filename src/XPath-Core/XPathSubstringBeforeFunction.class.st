@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathSubstringBeforeFunction class >> functionPrototypeSource [
+XPathSubstringBeforeFunction class >> prototypeSource [
 	^ 'string substring-before(string, string)'
 ]
 
@@ -24,6 +24,6 @@ XPathSubstringBeforeFunction >> function [
 		ifTrue: [
 			^ string
 				copyFrom: 1
-				to:indexOfSubstring - 1]
+				to: indexOfSubstring - 1]
 		ifFalse: [^ ''].
 ]

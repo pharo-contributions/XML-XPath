@@ -23,23 +23,28 @@ XPathNodeTestParserContext class >> new [
 ]
 
 { #category : #handling }
+XPathNodeTestParserContext >> handleAnyNodeTestWith: aHandler [
+	aHandler handleAnyNodeTest
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleCommentTestWith: aHandler [
+	aHandler handleCommentTest
+]
+
+{ #category : #handling }
 XPathNodeTestParserContext >> handleEmptyTestWith: aHandler [
 	aHandler handleEmptyTest
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForAnyNameWith: aHandler [
-	self subclassResponsibility
+XPathNodeTestParserContext >> handlePITestForName: aName with: aHandler [
+	aHandler handlePITestForName: aName
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForAnyNodeTypeWith: aHandler [
-	aHandler handleTestForAnyNodeType
-]
-
-{ #category : #handling }
-XPathNodeTestParserContext >> handleTestForCommentTypeWith: aHandler [
-	aHandler handleTestForCommentType
+XPathNodeTestParserContext >> handlePITestWith: aHandler [
+	aHandler handlePITest
 ]
 
 { #category : #handling }
@@ -64,16 +69,6 @@ XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI with: aHandler [
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForPITypeWith: aHandler [
-	aHandler handleTestForPIWithAnyName
-]
-
-{ #category : #handling }
-XPathNodeTestParserContext >> handleTestForPIWithName: aName with: aHandler [
-	aHandler handleTestForPIWithName: aName
-]
-
-{ #category : #handling }
 XPathNodeTestParserContext >> handleTestForPrefix: aPrefix localName: aLocalName with: aHandler [
 	self subclassResponsibility
 ]
@@ -84,6 +79,11 @@ XPathNodeTestParserContext >> handleTestForPrefix: aPrefix with: aHandler [
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForTextTypeWith: aHandler [
-	aHandler handleTestForTextType
+XPathNodeTestParserContext >> handleTextTestWith: aHandler [
+	aHandler handleTextTest
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleWildcardTestWith: aHandler [
+	self subclassResponsibility
 ]

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathNumberFunction class >> functionPrototypeSource [
+XPathNumberFunction class >> prototypeSource [
 	^ 'number number(object?)'
 ]
 
@@ -16,5 +16,8 @@ XPathNumberFunction class >> functionPrototypeSource [
 XPathNumberFunction >> function [
 	self hasArguments
 		ifTrue: [^ self firstArgument]
-		ifFalse: [^ self nodeSetClass with: self contextNode]
+		ifFalse: [
+			"From the spec: 'If the argument is omitted, it defaults to a
+			node-set with the context node as its only member.'"
+			^ self nodeSetClass with: self contextNode]
 ]

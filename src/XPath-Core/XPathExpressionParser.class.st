@@ -1,5 +1,5 @@
 "
-This class parses XPath expressions. It understands all of XPath 1.0 syntax and supports some extensions like abbreviated syntax for other axis specifiers.
+This class parses XPath expressions. It understands all of XPath 1.0 syntax and supports some extensions like the attribute(), element(), and namespace() type tests that can optionally have name test arguments, and name tests like 'Q{NamespaceURI}localName', '*:localName', and 'Q{NamespaceURI}*'.
 "
 Class {
 	#name : #XPathExpressionParser,
@@ -54,7 +54,7 @@ XPathExpressionParser >> nextAndExpression [
 	self nextEqualityExpression.
 	[self peekForAndOperator]
 		whileTrue: [
-			handler handleAnd.
+			handler handleAndOperator.
 			self nextEqualityExpression].
 	handler handleEndAndExpression.
 ]
@@ -94,19 +94,7 @@ XPathExpressionParser >> nextFilterExpression [
 
 { #category : #parsing }
 XPathExpressionParser >> nextFunctionCall [
-	| name |
-
-	name := self nextName.
-	name = 'position'
-		ifTrue: [
-			handler handlePositionFunctionCall.
-			^ self nextEmptyArgumentList].
-	name = 'last'
-		ifTrue: [
-			handler handleLastFunctionCall.
-			^ self nextEmptyArgumentList].
-
-	handler handleStartFunctionCall: name.
+	handler handleStartFunctionCall: self nextName.
 	self nextArgumentList.
 	handler handleEndFunctionCall.
 ]
@@ -126,7 +114,7 @@ XPathExpressionParser >> nextOrExpression [
 	self nextAndExpression.
 	[self peekForOrOperator]
 		whileTrue: [
-			handler handleOr.
+			handler handleOrOperator.
 			self nextAndExpression].
 	handler handleEndOrExpression.
 ]
@@ -140,21 +128,18 @@ XPathExpressionParser >> nextPathExpression [
 			self peekForLocationPathSeparator
 				ifTrue: [
 					handler handleStartFilterExpressionLocationPath.
-					self nextAdditionalSteps]].
+					self nextAdditionalSteps.
+					handler handleEndLocationPath]].
 	handler handleEndPathExpression.
 ]
 
 { #category : #parsing }
 XPathExpressionParser >> nextPredicateBody [
-	inputStream skipSeparators.
-	(self peekForIntegerPredicate
-		or: [self peekForAttributePredicate])
-		ifFalse: [
-			handler handleStartPredicate.
-			self nextOrExpression.
-			self peekForEndPredicate
-				ifFalse: [self errorExpectedEndPredicate].
-			handler handleEndPredicate].
+	handler handleStartPredicate.
+	self nextOrExpression.
+	self peekForEndPredicate
+		ifFalse: [self errorExpectedEndPredicate].
+	handler handleEndPredicate.
 ]
 
 { #category : #parsing }
@@ -178,14 +163,9 @@ XPathExpressionParser >> nextRelationalExpression [
 
 { #category : #parsing }
 XPathExpressionParser >> nextUnaryExpression [
-	| totalNegations |
-
 	handler handleStartUnaryExpression.
-	totalNegations := 0.
 	[self peekForNegationOperator]
-		whileTrue: [totalNegations := totalNegations + 1].
-	totalNegations odd
-		ifTrue: [handler handleNegation].
+		whileTrue: [handler handleNegationOperator].
 	self nextUnionExpression.
 	handler handleEndUnaryExpression.
 ]
@@ -194,7 +174,7 @@ XPathExpressionParser >> nextUnaryExpression [
 XPathExpressionParser >> nextUnionExpression [
 	handler handleStartUnionExpression.
 	self nextPathExpression.
-	[self peekForUnion]
+	[self peekForUnionOperator]
 		whileTrue: [self nextPathExpression].
 	handler handleEndUnionExpression.
 ]
@@ -206,7 +186,7 @@ XPathExpressionParser >> parseInput [
 		XPathNodeTestParser
 			on: inputStream
 			for:
-				(XPathCompilingNodeTestParserHandler
+				(XPathASTExpressionNodeTestParserHandler
 					currentAxis: currentAxis
 					expressionParserHandler: handler).
 	self nextOrExpression.
@@ -250,13 +230,7 @@ XPathExpressionParser >> peekForAbbreviatedStep [
 
 	(inputStream peekFor: $.)
 		ifTrue: [currentAxis axisSpecifier: 'parent']
-		ifFalse: [
-			currentAxis isFirstAxis
-				ifFalse: [
-					"can be omitted"
-					currentAxis beDefaultImplicitAxis.
-					^ true].
-			currentAxis axisSpecifier: 'self'].
+		ifFalse: [currentAxis axisSpecifier: 'self'].
 	"abbreviated steps cannot have filters"
 	self startNodeTestForAnyNodeType.
 	^ true.
@@ -275,6 +249,7 @@ XPathExpressionParser >> peekForAbsoluteLocationPath [
 		ifFalse: [
 			currentAxis axisSpecifier: 'self'.
 			self startNodeTestForAnyNodeType].
+	handler handleEndLocationPath.
 	^ true.
 ]
 
@@ -296,11 +271,11 @@ XPathExpressionParser >> peekForAdditiveOperator [
 	inputStream skipSeparators.
 	(inputStream peekFor: $+)
 		ifTrue: [
-			handler handleAddition.
+			handler handleAdditionOperator.
 			^ true].
 	(inputStream peekFor: $-)
 		ifTrue: [
-			handler handleSubtraction.
+			handler handleSubtractionOperator.
 			^ true].
 	^ false.
 ]
@@ -310,43 +285,6 @@ XPathExpressionParser >> peekForAndOperator [
 	^ inputStream
 		skipSeparators;
 		nextMatchAll: 'and'
-]
-
-{ #category : #'parsing - peeking' }
-XPathExpressionParser >> peekForAttributePredicate [
-	| startPosition namePosition ncName isNotEquals stringLiteral |
-
-	startPosition := inputStream position.
-	(inputStream peekFor: $@)
-		ifFalse: [^ false].
-
-	inputStream skipSeparators.
-	namePosition := inputStream position.
-	(ncName := self nextNCNameOptional: true)
-		ifNil: [^ self peekFailedAt: startPosition].
-
-	inputStream skipSeparators.
-	isNotEquals := inputStream peekFor: $!.
-	(inputStream peekFor: $=)
-		ifTrue: [
-			inputStream skipSeparators.
-			((stringLiteral := self nextStringLiteralOptional: true) notNil
-				and: [self peekForEndPredicate])
-				ifTrue: [
-					isNotEquals
-						ifTrue: [
-							handler
-								handlePredicateAttribute: ncName
-								notEqualsStringLiteral: stringLiteral]
-						ifFalse: [
-							handler
-								handlePredicateAttribute: ncName
-								equalsStringLiteral: stringLiteral].
-					^ true]].
-	inputStream
-		pushBackNCName: ncName
-		position: namePosition.
-	^ self peekFailedAt: startPosition.
 ]
 
 { #category : #'parsing - peeking' }
@@ -382,30 +320,13 @@ XPathExpressionParser >> peekForEqualityOperator [
 	inputStream skipSeparators.
 	(inputStream nextMatchAll: '!=')
 		ifTrue: [
-			handler handleNotEquals.
+			handler handleNotEqualsOperator.
 			^ true].
 	(inputStream peekFor: $=)
 		ifTrue: [
-			handler handleEquals.
+			handler handleEqualsOperator.
 			^ true].
 	^ false.
-]
-
-{ #category : #'parsing - peeking' }
-XPathExpressionParser >> peekForIntegerPredicate [
-	| startPosition |
-
-	self atDigit
-		ifFalse: [^ false].
-	
-	startPosition := inputStream position.
-	writeStream reset.
-	self nextDigitsOnWriteStream.
-	self peekForEndPredicate
-		ifTrue: [
-			handler handleIntegerPredicate: writeStream contents.
-			^ true]
-		ifFalse: [^ self peekFailedAt: startPosition].
 ]
 
 { #category : #'parsing - peeking' }
@@ -428,15 +349,15 @@ XPathExpressionParser >> peekForMultiplicativeOperator [
 		ifTrue: [^ false].
 	(inputStream peekFor: $*)
 		ifTrue: [
-			handler handleMultiplication.
+			handler handleMultiplicationOperator.
 			^ true].
 	(inputStream nextMatchAll: 'div')
 		ifTrue: [
-			handler handleDivision.
+			handler handleDivisionOperator.
 			^ true].
 	(inputStream nextMatchAll: 'mod')
 		ifTrue: [
-			handler handleModulus.
+			handler handleModulusOperator.
 			^ true].
 	^ false.
 ]
@@ -459,18 +380,15 @@ XPathExpressionParser >> peekForNumber [
 			self nextDigitsOnWriteStream.
 			(inputStream peekFor: $.)
 				ifTrue: [
-					"Smalltalk float literals can't have a trailing '.' like in '1. + 1'"
+					writeStream nextPut: $..
 					self atDigit
-						ifTrue: [
-							writeStream nextPut: $..
-							self nextDigitsOnWriteStream]].
+						ifTrue: [self nextDigitsOnWriteStream]].
 			handler handleNumberLiteral: writeStream contents.
 			^ true].
 	((inputStream peekFor: $.)
 		and: [self atDigit])
 		ifTrue: [
-			"Smalltalk float literals can't have a leading '.' like in '1 + .1'"
-			writeStream nextPutAll: '0.'.
+			writeStream nextPut: $..
 			self nextDigitsOnWriteStream.
 			handler handleNumberLiteral: writeStream contents.
 			^ true].
@@ -508,13 +426,12 @@ XPathExpressionParser >> peekForPredicate [
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForPredicates [
 	self peekForStartPredicate
-		ifTrue: [
-			handler handleStartPredicates.
-			self nextPredicateBody.
-			[self peekForPredicate] whileTrue.
-			handler handleEndPredicates.
-			^ true]
-		ifFalse: [^ false]
+		ifFalse: [^ false].
+	handler handleStartPredicates.
+	self nextPredicateBody.
+	[self peekForPredicate] whileTrue.
+	handler handleEndPredicates.
+	^ true.
 ]
 
 { #category : #'parsing - peeking' }
@@ -523,14 +440,14 @@ XPathExpressionParser >> peekForRelationalOperator [
 	(inputStream peekFor: $<)
 		ifTrue: [
 			(inputStream peekFor: $=)
-				ifTrue: [handler handleLessThanOrEqualTo]
-				ifFalse: [handler handleLessThan].
+				ifTrue: [handler handleLessThanOrEqualToOperator]
+				ifFalse: [handler handleLessThanOperator].
 			^ true].
 	(inputStream peekFor: $>)
 		ifTrue: [
 			(inputStream peekFor: $=)
-				ifTrue: [handler handleGreaterThanOrEqualTo]
-				ifFalse: [handler handleGreaterThan].
+				ifTrue: [handler handleGreaterThanOrEqualToOperator]
+				ifFalse: [handler handleGreaterThanOperator].
 			^ true].
 	^ false.
 ]
@@ -545,6 +462,7 @@ XPathExpressionParser >> peekForRelativeLocationPath [
 		ifFalse: [^ false].
 	self peekForLocationPathSeparator
 		ifTrue: [self nextAdditionalSteps].
+	handler handleEndLocationPath.
 	^ true.
 ]
 
@@ -587,11 +505,11 @@ XPathExpressionParser >> peekForStringLiteral [
 ]
 
 { #category : #'parsing - peeking' }
-XPathExpressionParser >> peekForUnion [
+XPathExpressionParser >> peekForUnionOperator [
 	inputStream skipSeparators.
 	(inputStream peekFor: $|)
 		ifTrue: [
-			handler handleUnion.
+			handler handleUnionOperator.
 			^ true]
 		ifFalse: [^ false]
 ]
@@ -611,8 +529,8 @@ XPathExpressionParser >> startNodeTestForAnyNodeType [
 		ifTrue: [handler handleStartRelativeLocationPath].
 	handler
 		handleStartStep;
-		handleAxis: currentAxis;
-		handleTestForAnyNodeType;
+		perform: currentAxis handlerSelector;
+		handleAnyNodeTest;
 		handleEndStep.
 	currentAxis beDefaultImplicitAxis.
 ]

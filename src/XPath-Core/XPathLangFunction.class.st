@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #accessing }
-XPathLangFunction class >> functionPrototypeSource [
+XPathLangFunction class >> prototypeSource [
 	^ 'boolean lang(string)'
 ]
 
