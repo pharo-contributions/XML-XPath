@@ -266,6 +266,14 @@ XPathNodeSetTest >> testAsXPathComparable [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testAsXPathFilterExpressionLocationPathRoot [
+	| list |
+
+	list := self emptyList.
+	self assert: list asXPathFilterExpressionLocationPathRoot == list.
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testAsXPathFilterable [
 	| list filterable |
 
@@ -274,14 +282,6 @@ XPathNodeSetTest >> testAsXPathFilterable [
 	self
 		assertList: filterable copiedFrom: list equals: self listWithItems;
 		assertList: filterable hasSortOrder: XPathDocumentSortOrder.
-]
-
-{ #category : #tests }
-XPathNodeSetTest >> testAsXPathLocationPathRoot [
-	| list |
-
-	list := self emptyList.
-	self assert: list asXPathLocationPathRoot == list.
 ]
 
 { #category : #tests }

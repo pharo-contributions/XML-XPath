@@ -88,9 +88,9 @@ XPathContextTest >> testFunctionNamed [
 
 	context := self newContext.
 	self functions do: [:each |
-		self assert: (context functionNamed: each functionName) == each.
+		self assert: (context functionNamed: each prototypeName) == each.
 		context removeFunction: each.
-		self assert: (context functionNamed: each functionName) isNil].
+		self assert: (context functionNamed: each prototypeName) isNil].
 ]
 
 { #category : #tests }
@@ -101,12 +101,12 @@ XPathContextTest >> testFunctionNamedIfAbsent [
 	self functions do: [:each |
 		self assert:
 			(context
-				functionNamed: each functionName
+				functionNamed: each prototypeName
 				ifAbsent: [#absent]) == each.
 		context removeFunction: each.
 		self assert:
 			(context
-				functionNamed: each functionName
+				functionNamed: each prototypeName
 				ifAbsent: [#absent]) = #absent].
 ]
 

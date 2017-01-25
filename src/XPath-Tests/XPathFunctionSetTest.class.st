@@ -30,9 +30,10 @@ XPathFunctionSetTest >> setClass [
 { #category : #accessing }
 XPathFunctionSetTest >> setElements [
 	^ Array
-		with: XPathTrueFunction
-		with: XPathFalseFunction
-		with: XPathNotFunction
+		with: XPathCeilingFunction
+		with: XPathFloorFunction
+		with: XPathRoundFunction
+		with: XPathSumFunction
 ]
 
 { #category : #asserting }
@@ -96,12 +97,12 @@ XPathFunctionSetTest >> testFunctionNamed [
 
 	set := self setWithElements.
 	self setElements do: [:each |
-		self assert: (set functionNamed: each functionName) == each].
+		self assert: (set functionNamed: each prototypeName) == each].
 
 	self
-		shouldnt: [set functionNamed: self absentSetElement functionName]
+		shouldnt: [set functionNamed: self absentSetElement prototypeName]
 		raise: Error.
-	self assert: (set functionNamed: self absentSetElement functionName) isNil.
+	self assert: (set functionNamed: self absentSetElement prototypeName) isNil.
 ]
 
 { #category : #tests }
@@ -112,11 +113,11 @@ XPathFunctionSetTest >> testFunctionNamedIfAbsent [
 	self setElements do: [:each |
 		self assert:
 			(set
-				functionNamed: each functionName
+				functionNamed: each prototypeName
 				ifAbsent: [self absentSetElement]) == each].
 	self assert:
 		(set
-			functionNamed: self absentSetElement functionName
+			functionNamed: self absentSetElement prototypeName
 			ifAbsent: [self absentSetElement]) == self absentSetElement.
 ]
 
@@ -126,17 +127,17 @@ XPathFunctionSetTest >> testIncludesFunctionNamed [
 
 	set := self emptySet.
 	self setElements do: [:each |
-		self deny: (set includesFunctionNamed: each functionName)].
+		self deny: (set includesFunctionNamed: each prototypeName)].
 
 	set := self setWithElements.
 	self setElements do: [:each |
-		self assert: (set includesFunctionNamed: each functionName)].
+		self assert: (set includesFunctionNamed: each prototypeName)].
 	self disjointSetElements do: [:each |
-		self deny: (set includesFunctionNamed: each functionName)].
+		self deny: (set includesFunctionNamed: each prototypeName)].
 
 	set := self setWithDisjointElements.
 	self disjointSetElements do: [:each |
-		self assert: (set includesFunctionNamed: each functionName)].
+		self assert: (set includesFunctionNamed: each prototypeName)].
 ]
 
 { #category : #tests }

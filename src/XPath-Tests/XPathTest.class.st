@@ -1169,15 +1169,15 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 ]
 
 { #category : #tests }
-XPathTest >> testInvalidFilterExpressionType [
-	#('1[true()]' '"string"[true()]' 'true()[true()]'
-		'(1)[true()]' '("string")[true()]' '(true())[true()]'
+XPathTest >> testInvalidFilterExpressionRootType [
+	#('1[1]' '"string"[position()=1]' 'true()[1]'
+		'(1)[1]' '("string")[1]' '(true())[1]'
 		'1/addressbook' '"string"/addressbook' 'true()/addressbook'
-		'(1)/addressbook' '("string")/addressbook' '(true())/addressbook'
-	) do: [:each |
-		self
-			should: [document xPath: each]
-			raise: XPathTypeException]
+		'(1)/addressbook' '("string")/addressbook' '(true())/addressbook')
+		do: [:each |
+			self
+				should: [document xPath: each]
+				raise: XPathTypeException]
 ]
 
 { #category : #tests }
@@ -1352,6 +1352,60 @@ XPathTest >> testLogicalOperators [
 ]
 
 { #category : #tests }
+XPathTest >> testModulus [
+	#('5 mod 2' '5 mod -2' '$var mod 2' '$var mod -2') do: [:each |
+		self assert:
+			(each asXPath
+				in: nil
+				context:
+					(XPathContext new
+						variableAt: 'var' put: 5;
+						yourself)) = 1].
+
+	#('-5 mod 2' '-5 mod -2' '$var mod 2' '$var mod -2') do: [:each |
+		self assert:
+			(each asXPath
+				in: nil
+				context:
+					(XPathContext new
+						variableAt: 'var' put: -5;
+						yourself)) = -1].
+
+	#('6 mod 3' '6 mod -3' '$var mod 3' '$var mod -3') do: [:each | | result |
+		result :=
+			each asXPath
+				in: nil
+				context:
+					(XPathContext new
+						variableAt: 'var' put: 6.0;
+						yourself).
+		self
+			assert: result isZero;
+			assert: result sign isZero].
+
+	#('-6 mod 3' '-6 mod -3' '$var mod 3' '$var mod -3') do: [:each | | result |
+		result :=
+			each asXPath
+				in: nil
+				context:
+					(XPathContext new
+						variableAt: 'var' put: -6.0;
+						yourself).
+		self
+			assert: result isZero;
+			assert: result sign = -1].
+
+	#('-0.0 mod 0' '-0.0 mod -.0' '$var mod 0' '$var mod -.0') do: [:each |
+		self assert:
+			(each asXPath
+				in: nil
+				context:
+					(XPathContext new
+						variableAt: 'var' put: -0.0;
+						yourself)) isNaN].
+]
+
+{ #category : #tests }
 XPathTest >> testNameFunction [
 	| element |
 
@@ -1458,6 +1512,20 @@ XPathTest >> testNamespaceURIFunction [
 		assert: (namespacedDocument xPath: 'namespace-uri(/*)') = 'bookNS';
 		assert: (namespacedDocument root xPath: 'namespace-uri()') = 'bookNS';
 		assert: (namespacedDocument xPath: 'namespace-uri(/*/*)') = 'personNS'
+]
+
+{ #category : #tests }
+XPathTest >> testNegation [
+	self
+		assert: '-1.0' asXPath evaluate = -1.0;
+		assert: '--1.0' asXPath evaluate = 1.0;
+		assert: '---1.0' asXPath evaluate = -1.0;
+		assert: '-(1 div 0)' asXPath evaluate = Float negativeInfinity;
+		assert: '--(1 div 0)' asXPath evaluate = Float infinity;
+		assert: '---(1 div 0)' asXPath evaluate = Float negativeInfinity;
+		assert: '-"test"' asXPath evaluate isNaN;
+		assert: '--"test"' asXPath evaluate isNaN;
+		assert: '---"test"' asXPath evaluate isNaN
 ]
 
 { #category : #tests }
@@ -1730,6 +1798,10 @@ XPathTest >> testPositionFunction [
 					in: document) = (XMLNodeList with: each).
 			self assert:
 				(XPath
+					for: 'addressbook/person[', i printString, '=position()]'
+					in: document) = (XMLNodeList with: each).
+			self assert:
+				(XPath
 					for: 'addressbook/person[ ', i printString, ' ]'
 					in: document) = (XMLNodeList with: each)].
 
@@ -1999,6 +2071,25 @@ XPathTest >> testReverseForwardAxisCombination [
 ]
 
 { #category : #tests }
+XPathTest >> testRoundFunction [
+	self
+		assert: 'round(1.1)' asXPath evaluate = 1;
+		assert: 'round(1.9)' asXPath evaluate = 2;
+		assert: 'round(1 div 0)' asXPath evaluate isInfinite;
+		assert: 'round(1 div 0)' asXPath evaluate sign = 1;
+		assert: 'round(-1 div 0)' asXPath evaluate isInfinite;
+		assert: 'round(-1 div 0)' asXPath evaluate sign = -1;
+		assert: 'round(0 div 0)' asXPath evaluate isNaN;
+		assert: 'round(0.5)' asXPath evaluate = 1;
+		assert: 'round(-0.5)' asXPath evaluate isZero;
+		assert: 'round(-0.5)' asXPath evaluate sign = -1;
+		assert: 'round(0.0)' asXPath evaluate isZero;
+		assert: 'round(0.0)' asXPath evaluate sign isZero;
+		assert: 'round(-0.0)' asXPath evaluate isZero;
+		assert: 'round(-0.0)' asXPath evaluate sign = -1
+]
+
+{ #category : #tests }
 XPathTest >> testSelfAxis [
 	self
 		assertNodeSet: (XPath for: ' / self::node() ' in: document)
@@ -2061,7 +2152,22 @@ XPathTest >> testStartsWithFunction [
 	self
 		assert: 'starts-with("onetwothree", "one")' asXPath evaluate;
 		deny: 'starts-with("onetwothree", "ONE")' asXPath evaluate;
-		assert: 'starts-with("123", 1)' asXPath evaluate
+		"string-type argument converts 1.0 to '1', but not 1.1 to '1'"
+		assert: 'starts-with("123", 1.0)' asXPath evaluate;
+		deny: 'starts-with("123", 1.1)' asXPath evaluate;
+		assert: 'starts-with("1.123", 1.1)' asXPath evaluate
+]
+
+{ #category : #tests }
+XPathTest >> testStringFunction [
+	self
+		assert: 'string("test")' asXPath evaluate = 'test';
+		assert: 'string(1.0)' asXPath evaluate = '1';
+		assert: 'string(1 div 0)' asXPath evaluate = 'Infinity';
+		assert: 'string(-1 div 0)' asXPath evaluate = '-Infinity';
+		assert: 'string(0 div 0)' asXPath evaluate = 'NaN';
+		assert: 'string(0.0)' asXPath evaluate = '0';
+		assert: 'string(-0.0)' asXPath evaluate = '0'
 ]
 
 { #category : #tests }
@@ -2092,13 +2198,42 @@ XPathTest >> testSubstringBeforeFunction [
 
 { #category : #tests }
 XPathTest >> testSubstringFunction [
-	self
-		assert: 'substring("onetwothree", 4, 3)' asXPath evaluate = 'two';
-		assert: 'substring("onetwothree", 4)' asXPath evaluate = 'twothree';
-		assert: 'substring("onetwothree", -3, 2)' asXPath evaluate = 'on';
-		assert: 'substring("onetwothree", 12, 2)' asXPath evaluate isEmpty;
-		assert: 'substring("", 0, 1)' asXPath evaluate isEmpty;
-		assert: 'substring("", 0)' asXPath evaluate isEmpty
+	#('substring("onetwothree", 4, 3)'
+		'substring("onetwothree", 4)'
+		'substring("onetwothree", -3, 7)'
+		'substring("onetwothree", 12, 2)'
+		'substring("", 0, 1)'
+		'substring("", 0)')
+		with:
+			#('two'
+				'twothree'
+				'one'
+				''
+				''
+				'')
+		do: [:expression :result |
+			self assert: expression asXPath evaluate = result].
+
+	"from the spec"
+	#('substring("12345",2,3)'
+		'substring("12345",2)'
+		'substring("12345", 1.5, 2.6)'
+		'substring("12345", 0, 3)'
+		'substring("12345", 0 div 0, 3)'
+		'substring("12345", 1, 0 div 0)'
+		'substring("12345", -42, 1 div 0)'
+		'substring("12345", -1 div 0, 1 div 0)')
+		with:
+			#('234'
+				'2345'
+				'234'
+				'12'
+				''
+				''
+				'12345'
+				'')
+		do: [:expression :result |
+			self assert: expression asXPath evaluate = result].
 ]
 
 { #category : #tests }
@@ -2156,7 +2291,12 @@ XPathTest >> testTranslateFunction [
 	self
 		assert: 'translate("onetwothree", "oe", "O")' asXPath evaluate = 'OntwOthr';
 		assert: 'translate("onetwothree", "oe", "OEN")' asXPath evaluate = 'OnEtwOthrEE';
-		assert: 'translate("onetwothree", "z", "x")' asXPath evaluate = 'onetwothree'
+		assert: 'translate("onetwothree", "z", "x")' asXPath evaluate = 'onetwothree'.
+
+	"from the spec"
+	self
+		assert: 'translate("bar","abc","ABC")' asXPath evaluate = 'BAr';
+		assert: 'translate("--aaa--","abc-","ABC")' asXPath evaluate = 'AAA'.
 ]
 
 { #category : #tests }
@@ -2324,4 +2464,44 @@ XPathTest >> testWildcardDescendantAttributeValue [
 			(document allElementsSelect: [:each |
 				(each isNamed: 'address')
 					and: [(each attributeAt: 'city') = 'Los Angeles']]).
+]
+
+{ #category : #tests }
+XPathTest >> testXPathAsNumber [
+	self
+		assert: '1.5' asXPathNumber = 1.5;
+		assert: ' -1.5 ' asXPathNumber = -1.5;
+		assert: '21.25' asXPathNumber = 21.25;
+		assert: ' -21.25 ' asXPathNumber = -21.25;
+		assert: '321.325' asXPathNumber = 321.325;
+		assert: ' -321.325 ' asXPathNumber = -321.325;
+		assert: ' 	0.0 ' asXPathNumber isZero;
+		assert: ' 	0.0  ' asXPathNumber sign isZero;
+		assert: '  -0.0   ' asXPathNumber isZero ;
+		assert: '  -0.0   ' asXPathNumber sign = -1;
+		assert: '  .1  ' asXPathNumber = 0.1;
+		assert: '  1. ' asXPathNumber = 1;
+		assert: '  -.1  ' asXPathNumber = -0.1;
+		assert: '  -1. ' asXPathNumber = -1;
+		assert: '  .  ' asXPathNumber isNaN;
+		assert: '   ' asXPathNumber isNaN.
+]
+
+{ #category : #tests }
+XPathTest >> testZeroDivision [
+	#('0 div 0' '0.0 div 0.0' '0 div 0.0' '0.0 div 0') do: [:each |
+		self assert: each asXPath evaluate isNaN].
+
+	"ensure nan propagates"
+	#('(0 div 0) div 0' '(0.0 div 0.0) div 0' '(0 div 0.0) div 0' '(0.0 div 0) div 0') do: [:each |
+		self assert: each asXPath evaluate isNaN].
+
+	"if the sign is the same, the infinity should be positive"
+	#('1 div 0' '0.1 div 0.0' '1 div 0.0' '0.1 div 0'
+		'-1 div -0' '-0.1 div -0.0' '-1 div -0.0' '-0.1 div -0') do: [:each |
+		self assert: each asXPath evaluate = Float infinity].
+
+	"otherwise it should be negative"
+	#('-1 div 0' '-0.1 div 0.0' '1 div -0.0' '0.1 div -0') do: [:each |
+		self assert: each asXPath evaluate = Float negativeInfinity].
 ]

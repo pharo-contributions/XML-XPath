@@ -62,11 +62,11 @@ XMLNodeTest >> testAncestorOrSelfAxis [
 ]
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> testAsXPathLocationPathRoot [
+XMLNodeTest >> testAsXPathFilterExpressionLocationPathRoot [
 	| node |
 
 	node := self newNode.
-	self assert: node asXPathLocationPathRoot == node.
+	self assert: node asXPathFilterExpressionLocationPathRoot == node.
 ]
 
 { #category : #'*XPath-Tests' }
