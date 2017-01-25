@@ -1418,7 +1418,7 @@ ConfigurationOfXPath >> version180: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XPath-Core' with: 'XPath-Core-monty.89'.
-			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.74'.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.90'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.75'.
                 ].
 ]
