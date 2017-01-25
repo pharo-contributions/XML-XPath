@@ -361,6 +361,12 @@ XMLNode >> isNamespace [
 	^ false
 ]
 
+{ #category : #'*XPath-Core-testing' }
+XMLNode >> matches: aNodeTestBlock [
+	"#in: is not portable to GS"
+	^ aNodeTestBlock value: self
+]
+
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> namespaceAxis: aNodeTestStringOrBlock [
 	^ (self

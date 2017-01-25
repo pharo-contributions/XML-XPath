@@ -944,13 +944,13 @@ XPathASTTranslatingNodeVisitor >> visitSelfStep: aSelfStep [
 		ifTrue: [
 			aSelfStep isPredicateLocationPathStep
 				ifTrue: [
-					self emitAll: ' in:'.
+					self emitAll: ' matches:'.
 					aSelfStep nodeTest acceptNodeVisitor: self.
 					self emit: $).
 					^ aSelfStep].
 			aSelfStep isUnaryOrLiteralBinaryOperatorLocationPathStep
 				ifTrue: [
-					self emitAll: ' in:'.
+					self emitAll: ' matches:'.
 					aSelfStep nodeTest acceptNodeVisitor: self.
 					self
 						emitAll: ')ifTrue:[';

@@ -93,7 +93,9 @@ Number >> xPathDivision: aDivisor [
 			(self sign = aDivisor sign
 				or: [(self sign + aDivisor sign) = 1])
 				ifTrue: [^ Float infinity]
-				ifFalse: [^ Float negativeInfinity]].
+				ifFalse: [
+					"avoid #negativeInfinity for portability"
+					^ Float infinity negated]].
 			
 	^ self / aDivisor.
 ]
