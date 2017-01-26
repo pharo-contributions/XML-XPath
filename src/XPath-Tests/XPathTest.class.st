@@ -1379,9 +1379,7 @@ XPathTest >> testModulus [
 					(XPathContext new
 						variableAt: 'var' put: 6.0;
 						yourself).
-		self
-			assert: result isZero;
-			assert: result sign isZero].
+		self assert: result isXPathPositiveZero].
 
 	#('-6 mod 3' '-6 mod -3' '$var mod 3' '$var mod -3') do: [:each | | result |
 		result :=
@@ -1391,9 +1389,7 @@ XPathTest >> testModulus [
 					(XPathContext new
 						variableAt: 'var' put: -6.0;
 						yourself).
-		self
-			assert: result isZero;
-			assert: result sign = -1].
+		self assert: result isXPathNegativeZero].
 
 	#('-0.0 mod 0' '-0.0 mod -.0' '$var mod 0' '$var mod -.0') do: [:each |
 		self assert:
@@ -2076,18 +2072,14 @@ XPathTest >> testRoundFunction [
 	self
 		assert: 'round(1.1)' asXPath evaluate = 1;
 		assert: 'round(1.9)' asXPath evaluate = 2;
-		assert: 'round(1 div 0)' asXPath evaluate isInfinite;
-		assert: 'round(1 div 0)' asXPath evaluate sign = 1;
-		assert: 'round(-1 div 0)' asXPath evaluate isInfinite;
-		assert: 'round(-1 div 0)' asXPath evaluate sign = -1;
+		assert: 'round(1 div 0)' asXPath evaluate = Float infinity;
+		"avoid #negativeInfinity for portability"
+		assert: 'round(-1 div 0)' asXPath evaluate = Float infinity negated;
 		assert: 'round(0 div 0)' asXPath evaluate isNaN;
 		assert: 'round(0.5)' asXPath evaluate = 1;
-		assert: 'round(-0.5)' asXPath evaluate isZero;
-		assert: 'round(-0.5)' asXPath evaluate sign = -1;
-		assert: 'round(0.0)' asXPath evaluate isZero;
-		assert: 'round(0.0)' asXPath evaluate sign isZero;
-		assert: 'round(-0.0)' asXPath evaluate isZero;
-		assert: 'round(-0.0)' asXPath evaluate sign = -1
+		assert: 'round(-0.5)' asXPath evaluate isXPathNegativeZero;
+		assert: 'round(0.0)' asXPath evaluate isXPathPositiveZero;
+		assert: 'round(-0.0)' asXPath evaluate isXPathNegativeZero
 ]
 
 { #category : #tests }
@@ -2476,10 +2468,8 @@ XPathTest >> testXPathAsNumber [
 		assert: ' -21.25 ' asXPathNumber = -21.25;
 		assert: '321.325' asXPathNumber = 321.325;
 		assert: ' -321.325 ' asXPathNumber = -321.325;
-		assert: ' 	0.0 ' asXPathNumber isZero;
-		assert: ' 	0.0  ' asXPathNumber sign isZero;
-		assert: '  -0.0   ' asXPathNumber isZero ;
-		assert: '  -0.0   ' asXPathNumber sign = -1;
+		assert: ' 	0.0 ' asXPathNumber isXPathPositiveZero;
+		assert: '  -0.0   ' asXPathNumber isXPathNegativeZero;
 		assert: '  .1  ' asXPathNumber = 0.1;
 		assert: '  1. ' asXPathNumber = 1;
 		assert: '  -.1  ' asXPathNumber = -0.1;
