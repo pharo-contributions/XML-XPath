@@ -505,7 +505,15 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline177 [
 
 { #category : #doits }
 ConfigurationOfXPath >> initializeClassesForGSBaseline180 [
-	self initializeClassesForGSBaseline177.
+	XPath compiledXPathCache.
+	XPathCompiler systemCompilerClass.
+	XPathFunction allSubclassesDo: [:each |
+		each prototype].
+	XPathContext defaultFunctions.
+	XPathNodeTestParserContext allSubclassesDo: [:each |
+		each instance].
+	XPathSortOrder allSubclassesDo: [:each |
+		each instance].
 	XPathASTNullNode instance.
 ]
 
