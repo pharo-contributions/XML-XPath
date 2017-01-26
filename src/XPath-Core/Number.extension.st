@@ -44,7 +44,7 @@ Number >> asXPathString [
 		ifTrue: [^ '0'].
 	self isInfinite
 		ifTrue: [
-			self sign = -1
+			self negative
 				ifTrue: [^ '-Infinity']
 				ifFalse: [^ 'Infinity']].
 
@@ -71,6 +71,31 @@ Number >> asXPathUnionable [
 	XPathTypeException signal: 'Cannot union numbers'
 ]
 
+{ #category : #'*XPath-Core-testing' }
+Number >> hasSameXPathSignAs: aNumber [
+	"do not use #sign here, because it doesn't handle -0.0 on GS correctly"
+	^ (self negative
+		or: [self isXPathNegativeZero]) =
+			(aNumber negative
+				or: [aNumber isXPathNegativeZero])
+]
+
+{ #category : #'*XPath-Core-testing' }
+Number >> isXPathNegativeZero [
+	"the 'self == -0.0' works on GS and Pharo/Squeak VMs without boxed
+	floats while the 'self sign = -1' works Pharo/Squeak VMs with boxed floats,
+	but not GS, where 0.0 and -0.0 wrongly have the same #sign"
+	^ self == -0.0
+		or: [self isZero
+			and: [self sign = -1]]
+]
+
+{ #category : #'*XPath-Core-testing' }
+Number >> isXPathPositiveZero [
+	^ self isZero
+		and: [self isXPathNegativeZero not]
+]
+
 { #category : #'*XPath-Core-evaluating' }
 Number >> xPathCeiling [
 	(self isNaN
@@ -88,10 +113,9 @@ Number >> xPathDivision: aDivisor [
 		ifTrue: [
 			self isZero
 				ifTrue: [^ Float nan].
-			"if the signs are different (but not just 0 and 1),
-			then the result should be negative infinity"
-			(self sign = aDivisor sign
-				or: [(self sign + aDivisor sign) = 1])
+			"if the signs are different, the result should be negative infinity
+			(#sign/#sign: do not work for -0.0 on GS)"
+			(self hasSameXPathSignAs: aDivisor)
 				ifTrue: [^ Float infinity]
 				ifFalse: [
 					"avoid #negativeInfinity for portability"
@@ -110,10 +134,15 @@ Number >> xPathFloor [
 
 { #category : #'*XPath-Core-evaluating' }
 Number >> xPathModulus: aDivisor [
-	"XPath modulus must take the sign of the receiver unlike // which
+	| modulus |
+
+	"XPath modulus must take the sign of the receiver unlike #// which
 	takes the sign of the argument"
-	^ self - ((self xPathDivision: aDivisor) xPathFloor * aDivisor)
-		sign: self sign
+	modulus := self - ((self xPathDivision: aDivisor) xPathFloor * aDivisor).
+	"#sign/#sign: do not work for -0.0 on GS"
+	(modulus hasSameXPathSignAs: self)
+		ifTrue: [^ modulus]
+		ifFalse: [^ modulus negated].
 ]
 
 { #category : #'*XPath-Core' }
@@ -131,7 +160,7 @@ Number >> xPathRounded [
 		ifTrue: [^ self].
 
 	((rounded := (self + 0.5) xPathFloor) isZero
-		and: [self sign = -1])
+		and: [self negative])
 		ifTrue: [^ -0.0]
 		ifFalse: [^ rounded].
 ]
