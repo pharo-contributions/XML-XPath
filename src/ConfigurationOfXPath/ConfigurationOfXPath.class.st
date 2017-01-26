@@ -494,12 +494,12 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline177 [
 
 	XPath compiledXPathCache.
 	XPathCompiler systemCompilerClass.
-	XPathFunction allSubInstancesDo: [:each |
+	XPathFunction allSubclassesDo: [:each |
 		each functionPrototype].
 	XPathContext defaultFunctions.
-	XPathNodeTestParserContext allSubInstancesDo: [:each |
+	XPathNodeTestParserContext allSubclassesDo: [:each |
 		each instance].
-	XPathSortOrder allSubInstancesDo: [:each |
+	XPathSortOrder allSubclassesDo: [:each |
 		each instance].
 ]
 
