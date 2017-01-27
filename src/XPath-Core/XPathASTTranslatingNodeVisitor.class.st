@@ -842,11 +842,27 @@ XPathASTTranslatingNodeVisitor >> visitNotEqualsExpression: aNotEqualsExpression
 
 { #category : #'visiting - literals' }
 XPathASTTranslatingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
+	| number |
+
 	"do not use asXPathString here; we do not want the XPath string
 	representation of the number, but its Smalltalk representation,
 	so NaN is rendered as something like 'Float nan' on Pharo
 	and not 'NaN'"
-	self emitNumberLiteral: aNumberLiteral number asString.
+	(number := aNumberLiteral number) isNaN
+		ifTrue: [self emitNumberLiteral: 'Float nan']
+		ifFalse: [
+			number isInfinite
+				ifTrue: [
+					number negative
+						ifTrue: [self emitNumberLiteral: 'Float infinity negated']
+						ifFalse: [self emitNumberLiteral: 'Float infinity']]
+				ifFalse: [
+					number isZero
+						ifTrue: [
+							number isXPathNegativeZero
+								ifTrue: [self emitNumberLiteral: '-0.0']
+								ifFalse: [self emitNumberLiteral: '0.0']]
+						ifFalse: [self emitNumberLiteral: number asString]]].
 	^ aNumberLiteral.
 ]
 
