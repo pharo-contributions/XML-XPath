@@ -487,6 +487,28 @@ ConfigurationOfXPath >> baseline182: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline183: spec [
+	<version: '1.8.3-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.13'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline183. ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearCompiledXPathCache [
 	XPath clearCompiledXPathCache
@@ -504,7 +526,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.8.2-baseline'.
+	spec for: #'common' version: '1.8.3-baseline'.
 ]
 
 { #category : #doits }
@@ -514,11 +536,7 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline177 [
 	conflicts between Gems later on. 
 	
 	This can help identify classes that use lazy initialization:
-		(SystemNavigation default allClassesInPackageNamed: 'XPath-Core') select:
-			[:each |
-				(each classVariables notEmpty
-					or: [each class instanceVariables notEmpty])
-					and: [(each class includesSelector: #initialize) not]]
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage: 'XPath'
 	"
 
 	XPath compiledXPathCache.
@@ -534,6 +552,14 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline177 [
 
 { #category : #doits }
 ConfigurationOfXPath >> initializeClassesForGSBaseline180 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage: 'XPath'
+	"
+
 	XPath compiledXPathCache.
 	XPathCompiler systemCompilerClass.
 	XPathFunction allSubclassesDo: [:each |
@@ -544,6 +570,30 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline180 [
 	XPathSortOrder allSubclassesDo: [:each |
 		each instance].
 	XPathASTNullNode instance.
+]
+
+{ #category : #doits }
+ConfigurationOfXPath >> initializeClassesForGSBaseline183 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage: 'XPath'
+	"
+
+	XPath compiledXPathCache.
+	XPathCompiler systemCompilerClass.
+	XPathFunction allSubclassesDo: [:each |
+		each prototype].
+	XPathContext defaultFunctions.
+	XPathNodeTestParserContext allSubclassesDo: [:each |
+		each instance].
+	XPathSortOrder allSubclassesDo: [:each |
+		each instance].
+	XPathASTNullNode instance.
+	XPathType allSubclassesDo: [:each |
+		each instance].
 ]
 
 { #category : #accessing }
@@ -563,7 +613,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.8.2'.
+	spec for: #'common' version: '1.8.3'.
 
 ]
 
@@ -1480,5 +1530,16 @@ ConfigurationOfXPath >> version182: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.94'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.77'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version183: spec [ 
+        <version: '1.8.3' imports: #('1.8.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.95'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.78'.
                 ].
 ]
