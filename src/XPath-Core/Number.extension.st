@@ -127,11 +127,6 @@ Number >> xPathModulus: aDivisor [
 		ifFalse: [^ modulus negated].
 ]
 
-{ #category : #'*XPath-Core' }
-Number class >> xPathNewFrom: anObject [
-	^ anObject asXPathNumber
-]
-
 { #category : #'*XPath-Core-evaluating' }
 Number >> xPathRounded [
 	| rounded |

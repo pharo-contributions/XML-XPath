@@ -9,41 +9,20 @@ Class {
 		'functionName',
 		'minArguments',
 		'maxArguments',
-		'argumentTypes'
+		'argumentTypes',
+		'typesByName'
 	],
-	#category : #'XPath-Core-Functions'
+	#category : #'XPath-Core-Parsers'
 }
 
 { #category : #private }
 XPathTypedFunctionPrototypeParserHandler >> addArgumentTypeFor: aTypeName [
-	argumentTypes addLast: (self classForTypeName: aTypeName)
+	argumentTypes addLast: (self typeNamed: aTypeName)
 ]
 
 { #category : #private }
 XPathTypedFunctionPrototypeParserHandler >> booleanClass [
 	^ Boolean
-]
-
-{ #category : #accessing }
-XPathTypedFunctionPrototypeParserHandler >> classForTypeName: aTypeName [
-	^ self
-		classForTypeName: aTypeName
-		ifAbsent: [self errorUnrecognizedTypeName: aTypeName]
-]
-
-{ #category : #accessing }
-XPathTypedFunctionPrototypeParserHandler >> classForTypeName: aTypeName ifAbsent: aBlock [
-	aTypeName = 'object'
-		ifTrue: [^ self objectClass].
-	aTypeName = 'boolean'
-		ifTrue: [^ self booleanClass].
-	aTypeName = 'string'
-		ifTrue: [^ self stringClass].
-	aTypeName = 'number'
-		ifTrue: [^ self numberClass].
-	aTypeName = 'node-set'
-		ifTrue: [^ self nodeSetClass].
-	^ aBlock value.
 ]
 
 { #category : #private }
@@ -84,7 +63,7 @@ XPathTypedFunctionPrototypeParserHandler >> handleOptionalArgument: anArgument [
 
 { #category : #handling }
 XPathTypedFunctionPrototypeParserHandler >> handleReturnType: aReturnType [
-	returnType := self classForTypeName: aReturnType
+	returnType := self typeNamed: aReturnType
 ]
 
 { #category : #handling }
@@ -92,6 +71,13 @@ XPathTypedFunctionPrototypeParserHandler >> handleStartParsing [
 	minArguments := 0.
 	maxArguments := 0.
 	argumentTypes := OrderedCollection new.
+
+	typesByName := Dictionary new.
+	XPathType allSubclassesDo: [:each | | type |
+		type := each new.
+		typesByName
+			at: type name
+			put: type].
 ]
 
 { #category : #handling }
@@ -118,4 +104,18 @@ XPathTypedFunctionPrototypeParserHandler >> objectClass [
 { #category : #private }
 XPathTypedFunctionPrototypeParserHandler >> stringClass [
 	^ String
+]
+
+{ #category : #accessing }
+XPathTypedFunctionPrototypeParserHandler >> typeName: aTypeName ifNone: aBlock [
+	^ typesByName
+		at: aTypeName
+		ifAbsent: aBlock
+]
+
+{ #category : #accessing }
+XPathTypedFunctionPrototypeParserHandler >> typeNamed: aTypeName [
+	^ self
+		typeName: aTypeName
+		ifNone: [self errorUnrecognizedTypeName: aTypeName]
 ]

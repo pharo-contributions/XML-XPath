@@ -16,11 +16,6 @@ XPathNodeSet class >> new [
 	^ self new: 10
 ]
 
-{ #category : #'instance creation' }
-XPathNodeSet class >> xPathNewFrom: anObject [
-	^ anObject asXPathNodeSet
-]
-
 { #category : #'enumerating - axis' }
 XPathNodeSet >> % aNodeTestStringOrBlock [
 	^ self parentAxis: aNodeTestStringOrBlock

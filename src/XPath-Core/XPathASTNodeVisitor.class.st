@@ -5,77 +5,74 @@ Class {
 	#name : #XPathASTNodeVisitor,
 	#superclass : #Object,
 	#instVars : [
-		'stepStream',
-		'previousStep',
-		'predicateStream',
-		'previousPredicate',
-		'argumentStream',
-		'previousArgument'
+		'argumentIterator',
+		'predicateIterator',
+		'stepIterator'
 	],
 	#category : #'XPath-Core-Compilation-AST'
 }
 
+{ #category : #private }
+XPathASTNodeVisitor >> argumentIterator [
+	^ argumentIterator
+		ifNil: [argumentIterator := XPathASTNodeVisitorIterator null]
+]
+
 { #category : #iterating }
 XPathASTNodeVisitor >> nextArgument [
-	(argumentStream isNil
-		or: [argumentStream atEnd])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ argumentStream next]
+	^ self argumentIterator next
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> nextPredicate [
-	(predicateStream isNil
-		or: [predicateStream atEnd])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ predicateStream next]
+	^ self predicateIterator next
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> nextStep [
-	(stepStream isNil
-		or: [stepStream atEnd])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ stepStream next]
+	^ self stepIterator next
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> peekArgument [
-	(argumentStream isNil
-		or: [argumentStream atEnd])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ argumentStream peek]
+	^ self argumentIterator peek
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> peekPredicate [
-	(predicateStream isNil
-		or: [predicateStream atEnd])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ predicateStream peek]
+	^ self predicateIterator peek
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> peekStep [
-	(stepStream isNil
-		or: [stepStream atEnd])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ stepStream peek]
+	^ self stepIterator peek
+]
+
+{ #category : #private }
+XPathASTNodeVisitor >> predicateIterator [
+	^ predicateIterator
+		ifNil: [predicateIterator := XPathASTNodeVisitorIterator null]
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> previousArgument [
-	^ previousArgument ifNil: [previousArgument := XPathASTNullNode new]
+	^ self argumentIterator previousVisited
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> previousPredicate [
-	^ previousPredicate ifNil: [previousPredicate := XPathASTNullNode new]
+	^ self predicateIterator previousVisited
 ]
 
 { #category : #iterating }
 XPathASTNodeVisitor >> previousStep [
-	^ previousStep ifNil: [previousStep := XPathASTNullNode new]
+	^ self stepIterator previousVisited
+]
+
+{ #category : #private }
+XPathASTNodeVisitor >> stepIterator [
+	^ stepIterator
+		ifNil: [stepIterator := XPathASTNodeVisitorIterator null]
 ]
 
 { #category : #'visiting - location paths' }
@@ -245,16 +242,13 @@ XPathASTNodeVisitor >> visitFilterExpressionLocationPath: aFilterExpressionLocat
 { #category : #'visiting - location paths' }
 XPathASTNodeVisitor >> visitFilterable: aFilterable [
 	aFilterable hasPredicates
-		ifTrue: [| oldPredicateStream oldPreviousPredicate |
-			oldPredicateStream := predicateStream.
-			oldPreviousPredicate := previousPredicate.
-			predicateStream := aFilterable predicates readStream.
-			previousPredicate := XPathASTNullNode new.
-			[predicateStream atEnd]
-				whileFalse: [
-					previousPredicate := self nextPredicate acceptNodeVisitor: self].
-			predicateStream := oldPredicateStream.
-			previousPredicate := oldPreviousPredicate].
+		ifTrue: [| oldPredicateIterator |
+			oldPredicateIterator := predicateIterator.
+			predicateIterator :=
+				XPathASTNodeVisitorIterator on: aFilterable predicates.
+			[predicateIterator atEnd]
+				whileFalse: [predicateIterator visitNextWith: self].
+			predicateIterator := oldPredicateIterator].
 	^ aFilterable.
 ]
 
@@ -271,16 +265,13 @@ XPathASTNodeVisitor >> visitFollowingStep: aFollowingStep [
 { #category : #'visiting - functions' }
 XPathASTNodeVisitor >> visitFunctionCall: aFunctionCall [
 	aFunctionCall hasArguments
-		ifTrue: [| oldArgumentStream oldPreviousArgument |
-			oldArgumentStream := argumentStream.
-			oldPreviousArgument := previousArgument.
-			argumentStream := aFunctionCall arguments readStream.
-			previousArgument := XPathASTNullNode new.
-			[argumentStream atEnd]
-				whileFalse: [
-					previousArgument := self nextArgument acceptNodeVisitor: self].
-			argumentStream := oldArgumentStream.
-			previousArgument := oldPreviousArgument].
+		ifTrue: [| oldArgumentIterator |
+			oldArgumentIterator := argumentIterator.
+			argumentIterator :=
+				XPathASTNodeVisitorIterator on: aFunctionCall arguments.
+			[argumentIterator atEnd]
+				whileFalse: [argumentIterator visitNextWith: self].
+			argumentIterator := oldArgumentIterator].
 	^ aFunctionCall.
 ]
 
@@ -307,16 +298,12 @@ XPathASTNodeVisitor >> visitLessThanOrEqualToExpression: aLessThanOrEqualToExpre
 { #category : #'visiting - location paths' }
 XPathASTNodeVisitor >> visitLocationPath: aLocationPath [
 	aLocationPath hasSteps
-		ifTrue: [| oldStepStream oldPreviousStep |
-			oldStepStream := stepStream.
-			oldPreviousStep := previousStep.
-			stepStream := aLocationPath steps readStream.
-			previousStep := XPathASTNullNode new.
-			[stepStream atEnd]
-				whileFalse: [
-					previousStep := self nextStep acceptNodeVisitor: self].
-			stepStream := oldStepStream.
-			previousStep := oldPreviousStep].
+		ifTrue: [| oldStepIterator |
+			oldStepIterator := stepIterator.
+			stepIterator := XPathASTNodeVisitorIterator on: aLocationPath steps.
+			[stepIterator atEnd]
+				whileFalse: [stepIterator visitNextWith: self].
+			stepIterator := oldStepIterator].
 	^ aLocationPath.
 ]
 

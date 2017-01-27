@@ -47,8 +47,3 @@ Boolean >> asXPathString [
 Boolean >> asXPathUnionable [
 	XPathTypeException signal: 'Cannot union booleans'
 ]
-
-{ #category : #'*XPath-Core' }
-Boolean class >> xPathNewFrom: anObject [
-	^ anObject asXPathBoolean
-]

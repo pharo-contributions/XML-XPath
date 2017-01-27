@@ -71,6 +71,14 @@ XPathFunction class >> functionSetClass [
 	^ XPathFunctionSet
 ]
 
+{ #category : #'class initialization' }
+XPathFunction class >> initialize [
+	"self initialize"
+
+	self allSubclassesDo: [:each |
+		each prototype: nil].
+]
+
 { #category : #accessing }
 XPathFunction class >> prototype [
 	^ prototype
@@ -203,7 +211,7 @@ XPathFunction >> hasArguments [
 
 { #category : #invoking }
 XPathFunction >> invoke [
-	^ self returnType xPathNewFrom: self function
+	^ self returnType newFrom: self function
 ]
 
 { #category : #accessing }
@@ -274,7 +282,7 @@ XPathFunction >> setArguments: aSequenceableCollection [
 		aSequenceableCollection
 			at: i
 			put:
-				((self argumentTypeAt: i) xPathNewFrom:
+				((self argumentTypeAt: i) newFrom:
 					(aSequenceableCollection at: i))].
 
 	arguments := aSequenceableCollection asArray.

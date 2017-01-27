@@ -8,7 +8,7 @@ Class {
 		'expressionNodeStack',
 		'operatorNodeStack'
 	],
-	#category : #'XPath-Core-Compilation-AST'
+	#category : #'XPath-Core-Parsers'
 }
 
 { #category : #'handling - operators' }

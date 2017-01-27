@@ -8,7 +8,7 @@ Class {
 		'currentAxis',
 		'expressionParserHandler'
 	],
-	#category : #'XPath-Core-Compilation-AST'
+	#category : #'XPath-Core-Parsers'
 }
 
 { #category : #'instance creation' }

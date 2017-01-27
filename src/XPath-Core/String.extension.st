@@ -74,8 +74,3 @@ String >> asXPathString [
 String >> asXPathUnionable [
 	XPathTypeException signal: 'Cannot union strings'
 ]
-
-{ #category : #'*XPath-Core' }
-String class >> xPathNewFrom: anObject [
-	^ anObject asXPathString
-]

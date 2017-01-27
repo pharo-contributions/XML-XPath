@@ -10,66 +10,50 @@ Class {
 { #category : #'visiting - location paths' }
 XPathASTMutatingNodeVisitor >> visitFilterable: aFilterable [
 	aFilterable hasPredicates
-		ifTrue: [| oldPredicateStream oldPreviousPredicate predicates |
-			oldPredicateStream := predicateStream.
-			oldPreviousPredicate := previousPredicate.
-			predicateStream := aFilterable predicates readStream.
-			previousPredicate := XPathASTNullNode new.
+		ifTrue: [| oldPredicateIterator  predicates |
+			oldPredicateIterator := predicateIterator.
+			predicateIterator :=
+				XPathASTNodeVisitorIterator on: aFilterable predicates.
 			predicates := OrderedCollection new: aFilterable totalPredicates.
-			[predicateStream atEnd]
+			[predicateIterator atEnd]
 				whileFalse: [| predicate |
-				((predicate := self nextPredicate acceptNodeVisitor: self) isNil
-					or: [predicate isNull])
-					ifFalse: [
-						predicates addLast: predicate.
-						previousPredicate := predicate]].
+				(predicate := predicateIterator visitNextWith: self) isNull
+					ifFalse: [predicates addLast: predicate]].
 			aFilterable predicates: predicates.
-			predicateStream := oldPredicateStream.
-			previousPredicate := oldPreviousPredicate].
+			predicateIterator := oldPredicateIterator].
 	^ aFilterable.
 ]
 
 { #category : #'visiting - functions' }
 XPathASTMutatingNodeVisitor >> visitFunctionCall: aFunctionCall [
 	aFunctionCall hasArguments
-		ifTrue: [| oldArgumentStream oldPreviousArgument arguments |
-			oldArgumentStream := argumentStream.
-			oldPreviousArgument := previousArgument.
-			argumentStream := aFunctionCall arguments readStream.
-			previousArgument := XPathASTNullNode new.
+		ifTrue: [| oldArgumentIterator arguments |
+			oldArgumentIterator := argumentIterator.
+			argumentIterator :=
+				XPathASTNodeVisitorIterator on: aFunctionCall arguments.
 			arguments := OrderedCollection new: aFunctionCall totalArguments.
-			[argumentStream atEnd]
+			[argumentIterator atEnd]
 				whileFalse: [| argument |
-					((argument := self nextArgument acceptNodeVisitor: self) isNil
-						or: [argument isNull])
-						ifFalse: [
-							arguments addLast: argument.
-							previousArgument := argument]].
+					(argument := argumentIterator visitNextWith: self) isNull
+						ifFalse: [arguments addLast: argument]].
 			aFunctionCall arguments: arguments.
-			argumentStream := oldArgumentStream.
-			previousArgument := oldPreviousArgument].
+			argumentIterator := oldArgumentIterator].
 	^ aFunctionCall.
 ]
 
 { #category : #'visiting - location paths' }
 XPathASTMutatingNodeVisitor >> visitLocationPath: aLocationPath [
 	aLocationPath hasSteps
-		ifTrue: [| oldStepStream oldPreviousStep steps |
-			oldStepStream := stepStream.
-			oldPreviousStep := previousStep.
-			stepStream := aLocationPath steps readStream.
-			previousStep := XPathASTNullNode new.
+		ifTrue: [| oldStepIterator steps |
+			oldStepIterator := stepIterator.
+			stepIterator := XPathASTNodeVisitorIterator on: aLocationPath steps.
 			steps := OrderedCollection new: aLocationPath totalSteps.
-			[stepStream atEnd]
+			[stepIterator atEnd]
 				whileFalse: [| step |
-					((step := self nextStep acceptNodeVisitor: self) isNil
-						or: [step isNull])
-							ifFalse: [
-								steps addLast: step.
-								previousStep := step]].
+					(step := stepIterator visitNextWith: self) isNull
+						ifFalse: [steps addLast: step]].
 			aLocationPath steps: steps.
-			stepStream := oldStepStream.
-			previousStep := oldPreviousStep].
+			stepIterator := oldStepIterator].
 	^ aLocationPath.
 ]
 
