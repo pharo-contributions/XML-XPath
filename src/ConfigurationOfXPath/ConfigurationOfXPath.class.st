@@ -207,8 +207,15 @@ ConfigurationOfXPath >> baseline10: spec [
 		
 		spec postLoadDoIt: #clearCompiledXPathCache].
 
+	spec for: #'squeakCommon' do: [
+		spec
+			package: 'XPath-Core'
+			with: [ spec includes: 'XPath-SqueakCommonCompatibility' ].
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: [ spec requires: 'XPath-Core' ]. ].
+
 	spec for: #'gemstone' do: [
-		"load gemstone compatibility methods"
 		spec
 			package: 'XPath-Core'
 			with: [ spec includes: 'XPath-GemstoneCompatibility' ].
@@ -458,6 +465,28 @@ ConfigurationOfXPath >> baseline180: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline182: spec [
+	<version: '1.8.2-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.13'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearCompiledXPathCache [
 	XPath clearCompiledXPathCache
@@ -475,7 +504,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.8.0-baseline'.
+	spec for: #'common' version: '1.8.2-baseline'.
 ]
 
 { #category : #doits }
@@ -534,7 +563,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.8.1'.
+	spec for: #'common' version: '1.8.2'.
 
 ]
 
@@ -1440,5 +1469,16 @@ ConfigurationOfXPath >> version181: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.92'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.76'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version182: spec [ 
+        <version: '1.8.2' imports: #('1.8.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.93'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.77'.
                 ].
 ]
