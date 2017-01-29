@@ -14,6 +14,13 @@ XPathStringTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathStringTest >> testAsXPathNodeSet [
+	self
+		should: ['test' asXPathNodeSet]
+		raise: XPathTypeException
+]
+
+{ #category : #tests }
 XPathStringTest >> testAsXPathNumber [
 	self
 		assert: '1.5' asXPathNumber = 1.5;

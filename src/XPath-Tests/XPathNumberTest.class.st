@@ -18,6 +18,13 @@ XPathNumberTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathNumberTest >> testAsXPathNodeSet [
+	self
+		should: [1.0 asXPathNodeSet]
+		raise: XPathTypeException
+]
+
+{ #category : #tests }
 XPathNumberTest >> testAsXPathNumber [
 	| number |
 

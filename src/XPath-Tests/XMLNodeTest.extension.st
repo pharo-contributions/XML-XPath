@@ -70,6 +70,13 @@ XMLNodeTest >> testAsXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #'*XPath-Tests' }
+XMLNodeTest >> testAsXPathNodeSet [
+	self
+		should: [self newNode asXPathNodeSet]
+		raise: XPathTypeException
+]
+
+{ #category : #'*XPath-Tests' }
 XMLNodeTest >> testAttributeAxis [
 	self
 		assert: (self newNode @ 'node()') isEmpty;
