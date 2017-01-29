@@ -854,13 +854,13 @@ XPathASTTranslatingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
 			number isInfinite
 				ifTrue: [
 					number negative
-						ifTrue: [self emitNumberLiteral: 'Float infinity negated']
+						ifTrue: [self emitNumberLiteral: 'Float xPathNegativeInfinity']
 						ifFalse: [self emitNumberLiteral: 'Float infinity']]
 				ifFalse: [
 					number isZero
 						ifTrue: [
 							number isXPathNegativeZero
-								ifTrue: [self emitNumberLiteral: '-0.0']
+								ifTrue: [self emitNumberLiteral: 'Float xPathNegativeZero']
 								ifFalse: [self emitNumberLiteral: '0.0']]
 						ifFalse: [self emitNumberLiteral: number asString]]].
 	^ aNumberLiteral.

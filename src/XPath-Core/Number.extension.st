@@ -100,9 +100,7 @@ Number >> xPathDivision: aDivisor [
 			"if the signs are different, the result should be negative infinity"
 			(self hasSameXPathSignAs: aDivisor)
 				ifTrue: [^ Float infinity]
-				ifFalse: [
-					"avoid #negativeInfinity for portability"
-					^ Float infinity negated]].
+				ifFalse: [^ Float xPathNegativeInfinity]].
 
 	^ self / aDivisor.
 ]
@@ -138,6 +136,6 @@ Number >> xPathRounded [
 
 	((rounded := (self + 0.5) xPathFloor) isZero
 		and: [self negative])
-		ifTrue: [^ -0.0]
+		ifTrue: [^ Float xPathNegativeZero]
 		ifFalse: [^ rounded].
 ]
