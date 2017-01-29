@@ -1391,13 +1391,22 @@ XPathTest >> testModulus [
 						yourself).
 		self assert: result isXPathNegativeZero].
 
+	#('0.0 mod 0' '0.0 mod -.0' '$var mod 0' '$var mod -.0') do: [:each |
+		self assert:
+			(each asXPath
+				in: nil
+				context:
+					(XPathContext new
+						variableAt: 'var' put: 0.0;
+						yourself)) isNaN].
+
 	#('-0.0 mod 0' '-0.0 mod -.0' '$var mod 0' '$var mod -.0') do: [:each |
 		self assert:
 			(each asXPath
 				in: nil
 				context:
 					(XPathContext new
-						variableAt: 'var' put: -0.0;
+						variableAt: 'var' put: Float xPathNegativeZero;
 						yourself)) isNaN].
 ]
 
@@ -1513,13 +1522,15 @@ XPathTest >> testNamespaceURIFunction [
 { #category : #tests }
 XPathTest >> testNegation [
 	self
+		assert: '-0.0' asXPath evaluate isXPathNegativeZero;
+		assert: '--0.0' asXPath evaluate isXPathPositiveZero;
+		assert: '---0.0' asXPath evaluate isXPathNegativeZero;
 		assert: '-1.0' asXPath evaluate = -1.0;
 		assert: '--1.0' asXPath evaluate = 1.0;
 		assert: '---1.0' asXPath evaluate = -1.0;
-		"avoid #negativeInfinity for portability"
-		assert: '-(1 div 0)' asXPath evaluate = Float infinity negated;
+		assert: '-(1 div 0)' asXPath evaluate = Float xPathNegativeInfinity;
 		assert: '--(1 div 0)' asXPath evaluate = Float infinity;
-		assert: '---(1 div 0)' asXPath evaluate = Float infinity negated;
+		assert: '---(1 div 0)' asXPath evaluate = Float xPathNegativeInfinity;
 		assert: '-"test"' asXPath evaluate isNaN;
 		assert: '--"test"' asXPath evaluate isNaN;
 		assert: '---"test"' asXPath evaluate isNaN
@@ -2073,8 +2084,7 @@ XPathTest >> testRoundFunction [
 		assert: 'round(1.1)' asXPath evaluate = 1;
 		assert: 'round(1.9)' asXPath evaluate = 2;
 		assert: 'round(1 div 0)' asXPath evaluate = Float infinity;
-		"avoid #negativeInfinity for portability"
-		assert: 'round(-1 div 0)' asXPath evaluate = Float infinity negated;
+		assert: 'round(-1 div 0)' asXPath evaluate = Float xPathNegativeInfinity;
 		assert: 'round(0 div 0)' asXPath evaluate isNaN;
 		assert: 'round(0.5)' asXPath evaluate = 1;
 		assert: 'round(-0.5)' asXPath evaluate isXPathNegativeZero;
@@ -2476,5 +2486,5 @@ XPathTest >> testZeroDivision [
 	"otherwise it should be negative"
 	#('-1 div 0' '-0.1 div 0.0' '1 div -0.0' '0.1 div -0') do: [:each |
 		"avoid #negativeInfinity for portability"
-		self assert: each asXPath evaluate = Float infinity negated].
+		self assert: each asXPath evaluate = Float xPathNegativeInfinity].
 ]
