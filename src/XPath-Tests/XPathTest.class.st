@@ -1760,9 +1760,11 @@ XPathTest >> testOptimizedChildAxis [
 	self
 		assertNodeSet: nodes
 		hasNodes:
-			(textDocument allNodesSelect: [:each |
-				each isElement
-					and: [each rawContentString = 'two']]).
+			(textDocument allNodesSelect: [:node |
+				node isElement
+					and: [
+						(node nodesDetect: [:each |
+							each rawContentString = 'two']) notNil]]).
 	nodes := textDocument xPath: '//*[child::node() = "four"]'.
 	self assert: nodes isEmpty.
 ]
@@ -1783,8 +1785,9 @@ XPathTest >> testOptimizedParentAxis [
 		assertNodeSet: nodes
 		hasNodes:
 			(textDocument allNodesSelect: [:each |
-				(each isStringNode: 'two')
-					and: [each parent isElementNamed: 'b']]).
+				each isStringNode
+					and: [(each parent isElementNamed: 'b')
+						and: [each parent rawContentString = 'two']]]).
 	nodes := textDocument xPath: '//text()[parent::b = "four"]'.
 	self assert: nodes isEmpty.
 ]
