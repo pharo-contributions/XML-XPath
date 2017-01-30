@@ -28,9 +28,13 @@ XPathASTNullNode >> isNull [
 
 { #category : #accessing }
 XPathASTNullNode >> parent [
-	^ self
+	^ parent ifNil: [parent := self]
 ]
 
 { #category : #accessing }
 XPathASTNullNode >> parent: aNode [
+]
+
+{ #category : #accessing }
+XPathASTNullNode >> type: aType [
 ]

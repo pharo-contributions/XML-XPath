@@ -20,6 +20,17 @@ XPathType class >> new [
 	^ self instance
 ]
 
+{ #category : #comparing }
+XPathType >> = anObject [
+	^ self == anObject
+		or: [self class == anObject class]
+]
+
+{ #category : #comparing }
+XPathType >> hash [
+	^ self class hash
+]
+
 { #category : #testing }
 XPathType >> isTypeOf: anObject [
 	self subclassResponsibility

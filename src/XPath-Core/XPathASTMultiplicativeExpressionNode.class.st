@@ -7,6 +7,11 @@ Class {
 	#category : #'XPath-Core-Compilation-AST'
 }
 
+{ #category : #private }
+XPathASTMultiplicativeExpressionNode >> defaultTypeClass [
+	^ XPathNumberType
+]
+
 { #category : #testing }
 XPathASTMultiplicativeExpressionNode >> isMultiplicativeExpression [
 	^ true

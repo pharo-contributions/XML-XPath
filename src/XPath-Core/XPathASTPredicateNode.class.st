@@ -16,3 +16,13 @@ XPathASTPredicateNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTPredicateNode >> isPredicate [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTPredicateNode >> type [
+	^ self expression type
+]
+
+{ #category : #accessing }
+XPathASTPredicateNode >> type: aType [
+	self expression type: aType
+]

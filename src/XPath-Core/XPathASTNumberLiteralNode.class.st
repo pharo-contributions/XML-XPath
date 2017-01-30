@@ -31,6 +31,11 @@ XPathASTNumberLiteralNode >> asXPathString [
 	^ xPathString ifNil: [xPathString := self number asXPathString]
 ]
 
+{ #category : #private }
+XPathASTNumberLiteralNode >> defaultTypeClass [
+	^ XPathNumberType
+]
+
 { #category : #testing }
 XPathASTNumberLiteralNode >> isNumberLiteral [
 	^ true

@@ -192,12 +192,6 @@ XPathExpressionParser >> parseInput [
 	self nextOrExpression.
 ]
 
-{ #category : #private }
-XPathExpressionParser >> peekFailedAt: aPosition [
-	inputStream position: aPosition.
-	^ false.
-]
-
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbbreviatedAxis [
 	(inputStream peekFor: $@)
@@ -223,8 +217,9 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 XPathExpressionParser >> peekForAbbreviatedStep [
 	(inputStream peekFor: $.)
 		ifFalse: [^ false].
-	self atDigit "float literal"
+	self atDigit
 		ifTrue: [
+			"a float literal, not a . or .. step"
 			inputStream skipBack.
 			^ false].
 
@@ -392,7 +387,8 @@ XPathExpressionParser >> peekForNumber [
 			self nextDigitsOnWriteStream.
 			handler handleNumberLiteral: writeStream contents.
 			^ true].
-	^ self peekFailedAt: startPosition.
+	inputStream position: startPosition.
+	^ false.
 ]
 
 { #category : #'parsing - peeking' }

@@ -16,3 +16,13 @@ XPathASTArgumentNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTArgumentNode >> isArgument [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTArgumentNode >> type [
+	^ self expression type
+]
+
+{ #category : #accessing }
+XPathASTArgumentNode >> type: aType [
+	self expression type: aType
+]

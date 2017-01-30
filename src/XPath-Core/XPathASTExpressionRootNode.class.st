@@ -16,3 +16,13 @@ XPathASTExpressionRootNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTExpressionRootNode >> isExpressionRoot [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTExpressionRootNode >> type [
+	^ self expression type
+]
+
+{ #category : #accessing }
+XPathASTExpressionRootNode >> type: aType [
+	self expression type: aType
+]

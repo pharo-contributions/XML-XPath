@@ -7,6 +7,11 @@ Class {
 	#category : #'XPath-Core-Compilation-AST'
 }
 
+{ #category : #private }
+XPathASTEqualityExpressionNode >> defaultTypeClass [
+	^ XPathBooleanType
+]
+
 { #category : #testing }
 XPathASTEqualityExpressionNode >> isEqualityExpression [
 	^ true

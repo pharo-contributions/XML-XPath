@@ -128,6 +128,45 @@ XPathASTOptimizingMutatingNodeVisitor >> visitEqualsExpression: anEqualsExpressi
 							anEqualsExpression otherExpression asXPathString])].
 ]
 
+{ #category : #'visiting - location paths' }
+XPathASTOptimizingMutatingNodeVisitor >> visitFilterExpression: aFilterExpression [
+	super visitFilterExpression: aFilterExpression.
+
+	aFilterExpression hasPredicates
+		ifFalse: [
+			aFilterExpression type:
+				aFilterExpression expression type].
+	^ aFilterExpression.
+]
+
+{ #category : #'visiting - location paths' }
+XPathASTOptimizingMutatingNodeVisitor >> visitFilterExpressionLocationPath: aFilterExpressionLocationPath [
+	super visitFilterExpressionLocationPath: aFilterExpressionLocationPath.
+
+	aFilterExpressionLocationPath hasSteps
+		ifFalse: [
+			aFilterExpressionLocationPath type:
+				aFilterExpressionLocationPath expression type].
+	^ aFilterExpressionLocationPath.
+]
+
+{ #category : #'visiting - functions' }
+XPathASTOptimizingMutatingNodeVisitor >> visitFunctionCall: aFunctionCall [
+	super visitFunctionCall: aFunctionCall.
+
+	"these function calls are inlined by the translator, so we can infer their
+	types during compilation, but all other functions can be dynamically
+	rebound at runtime with XPathContext objects, so we don't infer them"
+	(aFunctionCall isTrueFunctionCall
+		or: [aFunctionCall isFalseFunctionCall])
+		ifTrue: [aFunctionCall type: XPathBooleanType new]
+		ifFalse: [
+			(aFunctionCall isPositionFunctionCall
+				or: [aFunctionCall isLastFunctionCall])
+				ifTrue: [aFunctionCall type: XPathNumberType new]].
+	^ aFunctionCall.
+]
+
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitGreaterThanExpression: aGreaterThanExpression [
 	"visit operands first to traverse bottom-up"
@@ -260,7 +299,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitSelfStep: aSelfStep [
 	and the previous step is a forward axis step"
 	(aSelfStep nodeTest isAnyNodeTest
 		and: [aSelfStep hasPredicates not
-			and: [self previousStep isStep
+			and: [self previousStep isNull not
 				and: [self previousStep isForwardAxisStep]]])
 		ifTrue: [^ XPathASTNullNode new]
 		ifFalse: [^ aSelfStep].

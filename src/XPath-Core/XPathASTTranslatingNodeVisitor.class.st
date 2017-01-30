@@ -81,46 +81,96 @@ XPathASTTranslatingNodeVisitor >> emitAll: aString [
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> emitBinaryArithmeticExpression: aBinaryExpression withOperator: aSelectorString [
 	self emit: $(.
-	aBinaryExpression expression acceptNodeVisitor: self.
+	(aBinaryExpression expression
+		acceptNodeVisitor: self;
+		type) isNumberType
+		ifFalse: [self emitNumberConversion].
 	self
-		emitNumberConversion;
 		emitSpace;
 		emitAll: aSelectorString.
-	aBinaryExpression otherExpression acceptNodeVisitor: self.
-	self
-		emitNumberConversion;
-		emit: $).
+	(aBinaryExpression otherExpression
+		acceptNodeVisitor: self;
+		type) isNumberType
+		ifFalse: [self emitNumberConversion].
+	self emit: $).
 	^ aBinaryExpression.
 ]
 
 { #category : #private }
-XPathASTTranslatingNodeVisitor >> emitBinaryComparisonExpression: aBinaryExpression withOperator: aSelectorString [
+XPathASTTranslatingNodeVisitor >> emitBinaryEqualityExpression: aBinaryExpression withOperator: aSelectorString [
+	| omitComparableConversions |
+
+	"Smalltalk strings, numbers, and booleans have = and ~= selectors that behave
+	like the XPath spec requires when the argument is the same type, so no
+	comparable converion is needed"
+	omitComparableConversions :=
+		(aBinaryExpression expression type isNumberType
+			or: [aBinaryExpression expression type isStringType
+				or: [aBinaryExpression expression type isBooleanType]])
+			and: [
+				aBinaryExpression expression type =
+					aBinaryExpression otherExpression type].
+
 	self emit: $(.
 	aBinaryExpression expression acceptNodeVisitor: self.
+	omitComparableConversions
+		ifFalse: [self emitComparableConversion].
 	self
-		emitComparableConversion;
 		emitSpace;
 		emitAll: aSelectorString.
 	aBinaryExpression otherExpression acceptNodeVisitor: self.
+	omitComparableConversions
+		ifFalse: [self emitComparableConversion].
+	self emit: $).
+	^ aBinaryExpression.
+]
+
+{ #category : #private }
+XPathASTTranslatingNodeVisitor >> emitBinaryRelationalExpression: aBinaryExpression withOperator: aSelectorString [
+	| needsComparableConversions |
+
+	"If either subexpression is of nodeset type, then comparable conversions
+	are needed. Otherwise, converting to numbers if needed is enough."
+	needsComparableConversions :=
+		aBinaryExpression expression type isNodeSetType
+			or: [aBinaryExpression otherExpression type isNodeSetType].
+
+	self emit: $(.
+	aBinaryExpression expression acceptNodeVisitor: self.
+	needsComparableConversions
+		ifTrue: [self emitComparableConversion]
+		ifFalse: [
+			aBinaryExpression expression type isNumberType
+				ifFalse: [self emitNumberConversion]].
 	self
-		emitComparableConversion;
-		emit: $).
+		emitSpace;
+		emitAll: aSelectorString.
+	aBinaryExpression otherExpression acceptNodeVisitor: self.
+	needsComparableConversions
+		ifTrue: [self emitComparableConversion]
+		ifFalse: [
+			aBinaryExpression otherExpression type isNumberType
+				ifFalse: [self emitNumberConversion]].
+	self emit: $).
 	^ aBinaryExpression.
 ]
 
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> emitBinaryShortCircuitExpression: aBinaryExpression withOperator: aSelectorString [
 	self emit: $(.
-	aBinaryExpression expression acceptNodeVisitor: self.
+	(aBinaryExpression expression
+		acceptNodeVisitor: self;
+		type) isBooleanType
+		ifFalse: [self emitBooleanConversion].
 	self
-		emitBooleanConversion;
 		emitSpace;
 		emitAll: aSelectorString;
 		emit: $[.
-	aBinaryExpression otherExpression acceptNodeVisitor: self.
-	self
-		emitBooleanConversion;
-		emitAll: '])'.
+	(aBinaryExpression otherExpression
+		acceptNodeVisitor: self;
+		type) isBooleanType
+		ifFalse: [self emitBooleanConversion].
+	self emitAll: '])'.
 	^ aBinaryExpression.
 ]
 
@@ -405,25 +455,18 @@ XPathASTTranslatingNodeVisitor >> visitAttributeStep: anAttributeStep [
 							anAttributeStep nodeTest acceptNodeVisitor: self].
 					self emitAll: ']])'.
 					^ anAttributeStep].
-			anAttributeStep isUnaryOrLiteralBinaryOperatorLocationPathStep
+			anAttributeStep nodeTest isAttributeTestForName
 				ifTrue: [
 					self
-						emitAll: ' isElement ifTrue:[';
+						emitAll: ' isElement and:[';
 						emitAll: self locationPathRootVariable;
-						emitAll: ' hasAttributes ifTrue:[(';
-						emitAll: self locationPathRootVariable.
-					anAttributeStep nodeTest isAttributeTestForName
-						ifTrue: [
-							"can use a direct lookup here"
-							self
-								emitAll: ' attributeAt:';
-								emitQuotedString: anAttributeStep nodeTest name;
-								emit: $)]
-						ifFalse: [
-							self emitAll: ' attributeNodes detect:'.
-							anAttributeStep nodeTest acceptNodeVisitor: self.
-							self emitAll: ')ifNil:['''']ifNotNil:[:n|n stringValue]'].
-					self emitAll: ']ifFalse:['''']]ifFalse:[''''])'.
+						emitAll: ' hasAttributes])ifTrue:[(';
+						emitAll: self locationPathRootVariable;
+						emitAll: ' attributeNodeAt:';
+						emitQuotedString: anAttributeStep nodeTest name;
+						emitAll: ')ifNil:[XPathNodeSet new]';
+						emitAll: 'ifNotNil:[:n|XPathNodeSet with:n]]';
+						emitAll: 'ifFalse:[XPathNodeSet new]'.
 					^ anAttributeStep]].
 
 	self emitAll: ' attributeAxis:'.
@@ -504,28 +547,16 @@ XPathASTTranslatingNodeVisitor >> visitAttributeTestForPrefixAndLocalName: anAtt
 XPathASTTranslatingNodeVisitor >> visitChildStep: aChildStep [
 	(aChildStep isRelativeOrAbsoluteLocationPathStep
 		and: [aChildStep hasPredicates not
-			and: [aChildStep isSoleStep]])
+			and: [aChildStep isSoleStep
+				and: [aChildStep isPredicateLocationPathStep]]])
 		ifTrue: [
-			aChildStep isPredicateLocationPathStep
-				ifTrue: [
-					self
-						emitAll: ' hasChildren and:[';
-						emitAll: self locationPathRootVariable;
-						emitAll: ' nodes anySatisfy:'.
-					aChildStep nodeTest acceptNodeVisitor: self.
-					self emitAll: '])'.
-					^ aChildStep].
-			aChildStep isUnaryOrLiteralBinaryOperatorLocationPathStep
-				ifTrue: [
-					self
-						emitAll: ' hasChildren ifTrue:[(';
-						emitAll: self locationPathRootVariable;
-						emitAll: ' nodes detect:'.
-					aChildStep nodeTest acceptNodeVisitor: self.
-					self
-						emitAll: ')ifNil:['''']ifNotNil:[:n|n stringValue]]';
-						emitAll: 'ifFalse:[''''])'.
-					^ aChildStep]].
+			self
+				emitAll: ' hasChildren and:[';
+				emitAll: self locationPathRootVariable;
+				emitAll: ' nodes anySatisfy:'.
+			aChildStep nodeTest acceptNodeVisitor: self.
+			self emitAll: '])'.
+			^ aChildStep].
 
 	self emitAll: ' childAxis:'.
 	^ super visitChildStep: aChildStep.
@@ -541,20 +572,13 @@ XPathASTTranslatingNodeVisitor >> visitCommentTest: aCommentTest [
 XPathASTTranslatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfStep [
 	(aDescendantOrSelfStep isRelativeOrAbsoluteLocationPathStep
 		and: [aDescendantOrSelfStep hasPredicates not
-			and: [aDescendantOrSelfStep isSoleStep]])
+			and: [aDescendantOrSelfStep isSoleStep
+				and: [aDescendantOrSelfStep isPredicateLocationPathStep]]])
 		ifTrue: [
-			aDescendantOrSelfStep isPredicateLocationPathStep
-				ifTrue: [
-					self emitAll: ' allNodesDetect:'.
-					aDescendantOrSelfStep nodeTest acceptNodeVisitor: self.
-					self emitAll: ') notNil'.
-					^ aDescendantOrSelfStep].
-			aDescendantOrSelfStep isUnaryOrLiteralBinaryOperatorLocationPathStep
-				ifTrue: [
-					self emitAll: ' allNodesDetect:'.
-					aDescendantOrSelfStep nodeTest acceptNodeVisitor: self.
-					self emitAll: ')ifNil:['''']ifNotNil:[:n|n stringValue]'.
-					^ aDescendantOrSelfStep]].
+			self emitAll: ' allNodesDetect:'.
+			aDescendantOrSelfStep nodeTest acceptNodeVisitor: self.
+			self emitAll: ') notNil'.
+			^ aDescendantOrSelfStep].
 
 	self emitAll: ' descendantOrSelfAxis:'.
 	^ super visitDescendantOrSelfStep: aDescendantOrSelfStep.
@@ -564,20 +588,13 @@ XPathASTTranslatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfSt
 XPathASTTranslatingNodeVisitor >> visitDescendantStep: aDescendantStep [
 	(aDescendantStep isRelativeOrAbsoluteLocationPathStep
 		and: [aDescendantStep hasPredicates not
-			and: [aDescendantStep isSoleStep]])
+			and: [aDescendantStep isSoleStep
+				and: [aDescendantStep isPredicateLocationPathStep]]])
 		ifTrue: [
-			aDescendantStep isPredicateLocationPathStep
-				ifTrue: [
-					self emitAll: ' descendantNodesDetect:'.
-					aDescendantStep nodeTest acceptNodeVisitor: self.
-					self emitAll: ') notNil'.
-					^ aDescendantStep].
-			aDescendantStep isUnaryOrLiteralBinaryOperatorLocationPathStep
-				ifTrue: [
-					self emitAll: ' descendantNodesDetect:'.
-					aDescendantStep nodeTest acceptNodeVisitor: self.
-					self emitAll: ')ifNil:['''']ifNotNil:[:n|n stringValue]'.
-					^ aDescendantStep]].
+			self emitAll: ' descendantNodesDetect:'.
+			aDescendantStep nodeTest acceptNodeVisitor: self.
+			self emitAll: ') notNil'.
+			^ aDescendantStep].
 
 	self emitAll: ' descendantAxis:'.
 	^ super visitDescendantStep: aDescendantStep.
@@ -663,7 +680,7 @@ XPathASTTranslatingNodeVisitor >> visitElementTestForPrefixAndLocalName: anEleme
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitEqualsExpression: anEqualsExpression [
 	^ self
-		emitBinaryComparisonExpression: anEqualsExpression
+		emitBinaryEqualityExpression: anEqualsExpression
 		withOperator: '='
 ]
 
@@ -749,28 +766,28 @@ XPathASTTranslatingNodeVisitor >> visitFunctionCall: aFunctionCall [
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitGreaterThanExpression: aGreaterThanExpression [
 	^ self
-		emitBinaryComparisonExpression: aGreaterThanExpression
+		emitBinaryRelationalExpression: aGreaterThanExpression
 		withOperator: '>'
 ]
 
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitGreaterThanOrEqualToExpression: aGreaterThanOrEqualToExpression [
 	^ self
-		emitBinaryComparisonExpression: aGreaterThanOrEqualToExpression
+		emitBinaryRelationalExpression: aGreaterThanOrEqualToExpression
 		withOperator: '>='
 ]
 
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitLessThanExpression: aLessThanExpression [
 	^ self
-		emitBinaryComparisonExpression: aLessThanExpression
+		emitBinaryRelationalExpression: aLessThanExpression
 		withOperator: '<'
 ]
 
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitLessThanOrEqualToExpression: aLessThanOrEqualToExpression [
 	^ self
-		emitBinaryComparisonExpression: aLessThanOrEqualToExpression
+		emitBinaryRelationalExpression: aLessThanOrEqualToExpression
 		withOperator: '<='
 ]
 
@@ -868,16 +885,16 @@ XPathASTTranslatingNodeVisitor >> visitNamespaceTestForPrefixAndLocalName: aName
 XPathASTTranslatingNodeVisitor >> visitNegationExpression: aNegationExpression [
 	self emit: $(.
 	super visitNegationExpression: aNegationExpression.
-	self
-		emitNumberConversion;
-		emitAll: ' negated)'.
+	aNegationExpression expression type isNumberType
+		ifFalse: [self emitNumberConversion].
+	self emitAll: ' negated)'.
 	^ aNegationExpression.
 ]
 
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitNotEqualsExpression: aNotEqualsExpression [
 	^ self
-		emitBinaryComparisonExpression: aNotEqualsExpression
+		emitBinaryEqualityExpression: aNotEqualsExpression
 		withOperator: '~='
 ]
 
@@ -933,28 +950,16 @@ XPathASTTranslatingNodeVisitor >> visitPITestForName: aPITestForName [
 XPathASTTranslatingNodeVisitor >> visitParentStep: aParentStep [
 	(aParentStep isRelativeOrAbsoluteLocationPathStep
 		and: [aParentStep hasPredicates not
-			and: [aParentStep isSoleStep]])
+			and: [aParentStep isSoleStep
+				and: [aParentStep isPredicateLocationPathStep]]])
 		ifTrue: [
-			aParentStep isPredicateLocationPathStep
-				ifTrue: [
-					self emitAll: ' hasParent and:['.
-					aParentStep nodeTest acceptNodeVisitor: self.
-					self
-						emitAll: ' value:';
-						emitAll: self locationPathRootVariable.
-					self emitAll: ' parent])'.
-					^ aParentStep].
-			aParentStep isUnaryOrLiteralBinaryOperatorLocationPathStep
-				ifTrue: [
-					self emitAll: ' hasParent ifTrue:[('.
-					aParentStep nodeTest acceptNodeVisitor: self.
-					self
-						emitAll: 'value:';
-						emitAll: self locationPathRootVariable;
-						emitAll: ' parent)ifTrue:[';
-						emitAll: self locationPathRootVariable;
-						emitAll: ' parent stringValue]ifFalse:['''']]ifFalse:[''''])'.
-					^ aParentStep]].
+			self emitAll: ' hasParent and:['.
+			aParentStep nodeTest acceptNodeVisitor: self.
+			self
+				emitAll: ' value:';
+				emitAll: self locationPathRootVariable.
+			self emitAll: ' parent])'.
+			^ aParentStep].
 
 	self emitAll: ' parentAxis:'.
 	^ super visitParentStep: aParentStep.
@@ -1010,23 +1015,13 @@ XPathASTTranslatingNodeVisitor >> visitRelativeLocationPath: aRelativeLocationPa
 XPathASTTranslatingNodeVisitor >> visitSelfStep: aSelfStep [
 	(aSelfStep isRelativeOrAbsoluteLocationPathStep
 		and: [aSelfStep hasPredicates not
-			and: [aSelfStep isSoleStep]])
+			and: [aSelfStep isSoleStep
+				and: [aSelfStep isPredicateLocationPathStep]]])
 		ifTrue: [
-			aSelfStep isPredicateLocationPathStep
-				ifTrue: [
-					self emitAll: ' matches:'.
-					aSelfStep nodeTest acceptNodeVisitor: self.
-					self emit: $).
-					^ aSelfStep].
-			aSelfStep isUnaryOrLiteralBinaryOperatorLocationPathStep
-				ifTrue: [
-					self emitAll: ' matches:'.
-					aSelfStep nodeTest acceptNodeVisitor: self.
-					self
-						emitAll: ')ifTrue:[';
-						emitAll: self locationPathRootVariable;
-						emitAll: ' stringValue]ifFalse:['''']'.
-					^ aSelfStep]].
+			self emitAll: ' matches:'.
+			aSelfStep nodeTest acceptNodeVisitor: self.
+			self emit: $).
+			^ aSelfStep].
 
 	self emitAll: ' selfAxis:'.
 	^ super visitSelfStep: aSelfStep.
@@ -1061,14 +1056,16 @@ XPathASTTranslatingNodeVisitor >> visitTextTest: aTestText [
 { #category : #'visiting - operators' }
 XPathASTTranslatingNodeVisitor >> visitUnionExpression: aUnionExpression [
 	self emit: $(.
-	aUnionExpression expression acceptNodeVisitor: self.
-	self
-		emitUnionableConversion;
-		emit: $|.
-	aUnionExpression otherExpression acceptNodeVisitor: self.
-	self
-		emitUnionableConversion;
-		emit: $).
+	(aUnionExpression expression
+		acceptNodeVisitor: self;
+		type) isNodeSetType
+		ifFalse: [self emitUnionableConversion].
+	self emit: $|.
+	(aUnionExpression otherExpression
+		acceptNodeVisitor: self;
+		type) isNodeSetType
+		ifFalse: [self emitUnionableConversion].
+	self emit: $).
 	^ aUnionExpression.
 ]
 

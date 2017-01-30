@@ -12,6 +12,11 @@ XPathASTAndExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitAndExpression: self
 ]
 
+{ #category : #private }
+XPathASTAndExpressionNode >> defaultTypeClass [
+	^ XPathBooleanType
+]
+
 { #category : #testing }
 XPathASTAndExpressionNode >> isAndExpression [
 	^ true

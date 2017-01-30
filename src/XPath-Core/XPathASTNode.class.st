@@ -5,7 +5,8 @@ Class {
 	#name : #XPathASTNode,
 	#superclass : #Object,
 	#instVars : [
-		'parent'
+		'parent',
+		'type'
 	],
 	#category : #'XPath-Core-Compilation-AST'
 }
@@ -67,6 +68,11 @@ XPathASTNode >> beParentOf: aNode [
 XPathASTNode >> beParentOfAll: aNodeCollection [
 	aNodeCollection do: [:each | self beParentOf: each].
 	^ aNodeCollection.
+]
+
+{ #category : #private }
+XPathASTNode >> defaultTypeClass [
+	^ XPathObjectType
 ]
 
 { #category : #testing }
@@ -483,4 +489,14 @@ XPathASTNode >> parent [
 { #category : #accessing }
 XPathASTNode >> parent: aParent [
 	parent := aParent
+]
+
+{ #category : #accessing }
+XPathASTNode >> type [
+	^ type ifNil: [type := self defaultTypeClass new]
+]
+
+{ #category : #accessing }
+XPathASTNode >> type: aType [
+	type := aType
 ]

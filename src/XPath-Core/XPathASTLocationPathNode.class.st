@@ -25,6 +25,11 @@ XPathASTLocationPathNode >> addStep: aStep [
 	^ self steps addLast: (self beParentOf: aStep)
 ]
 
+{ #category : #private }
+XPathASTLocationPathNode >> defaultTypeClass [
+	^ XPathNodeSetType
+]
+
 { #category : #testing }
 XPathASTLocationPathNode >> hasSteps [
 	^ steps notNil

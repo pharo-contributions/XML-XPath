@@ -12,6 +12,11 @@ XPathASTUnionExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitUnionExpression: self
 ]
 
+{ #category : #private }
+XPathASTUnionExpressionNode >> defaultTypeClass [
+	^ XPathNodeSetType
+]
+
 { #category : #testing }
 XPathASTUnionExpressionNode >> isUnionExpression [
 	^ true

@@ -7,6 +7,11 @@ Class {
 	#category : #'XPath-Core-Compilation-AST'
 }
 
+{ #category : #private }
+XPathASTAdditiveExpressionNode >> defaultTypeClass [
+	^ XPathNumberType
+]
+
 { #category : #testing }
 XPathASTAdditiveExpressionNode >> isAdditiveExpression [
 	^ true

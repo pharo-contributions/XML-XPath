@@ -12,6 +12,11 @@ XPathASTNegationExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitNegationExpression: self
 ]
 
+{ #category : #private }
+XPathASTNegationExpressionNode >> defaultTypeClass [
+	^ XPathNumberType
+]
+
 { #category : #testing }
 XPathASTNegationExpressionNode >> isNegationExpression [
 	^ true

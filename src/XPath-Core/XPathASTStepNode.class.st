@@ -80,17 +80,6 @@ XPathASTStepNode >> isStep [
 	^ true
 ]
 
-{ #category : #testing }
-XPathASTStepNode >> isUnaryOrLiteralBinaryOperatorLocationPathStep [
-	^ self hasParent
-		and: [| locationPath |
-			(locationPath := self parent) hasParent
-				and: [| operator |
-					(operator := locationPath parent) isUnaryOperatorExpression
-						or: [operator isBinaryOperatorExpression
-							and: [operator hasLiteralExpression]]]]
-]
-
 { #category : #accessing }
 XPathASTStepNode >> nodeTest [
 	^ nodeTest ifNil: [nodeTest := XPathASTNullNode new]
