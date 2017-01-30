@@ -3,7 +3,8 @@ Class {
 	#superclass : #TestCase,
 	#instVars : [
 		'document',
-		'namespacedDocument'
+		'namespacedDocument',
+		'textDocument'
 	],
 	#category : #'XPath-Tests'
 }
@@ -55,6 +56,12 @@ XPathTest >> setUp [
 		(XMLDOMParser on: XMLParserTest addressBookNamespacePrefixedXML)
 			preservesCommentNodes: true;
 			parseDocument.
+	textDocument :=
+		'<a>
+			<b>one</b>
+			<b>two</b>
+			<b>three</b>
+		</a>' parseXML.
 ]
 
 { #category : #tests }
@@ -1170,8 +1177,8 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 
 { #category : #tests }
 XPathTest >> testInvalidFilterExpressionRootType [
-	#('1[1]' '"string"[position()=1]' 'true()[1]'
-		'(1)[1]' '("string")[1]' '(true())[1]'
+	#('1[1]' '"string"[position()=1]' 'true()[true()]'
+		'(1)[1]' '("string")[position()=1]' '(true())[true()]'
 		'1/addressbook' '"string"/addressbook' 'true()/addressbook'
 		'(1)/addressbook' '("string")/addressbook' '(true())/addressbook')
 		do: [:each |
@@ -1710,6 +1717,97 @@ XPathTest >> testOneLevel [
 	path := XPath for: 'addressbook/person'.
 	results := path in: document.
 	self assert: (results size = 4).
+]
+
+{ #category : #tests }
+XPathTest >> testOptimizedAttributeAxis [
+	| nodes |
+
+	nodes := document xPath: '//address[@city]'.
+	self
+		assertNodeSet: nodes
+		hasNodes:
+			(document allElementsSelect: [:each |
+				(each isNamed: 'address')
+					and: [(each attributeAt: 'city') notEmpty]]).
+	nodes := document xPath: '//address[@absent]'.
+	self assert: nodes isEmpty.
+
+	nodes := document xPath: '//address[@city = "New York"]'.
+	self
+		assertNodeSet: nodes
+		hasNodes:
+			(document allElementsSelect: [:each |
+				(each isNamed: 'address')
+					and: [each hasAttributes
+						and: [(each attributeAt: 'city') = 'New York']]]).
+	nodes := document xPath: '//address[@city = "Absent"]'.
+	self assert: nodes isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testOptimizedChildAxis [
+	| nodes |
+
+	nodes := document xPath: '//*[child::text()]'.
+	self
+		assertNodeSet: nodes
+		hasNodes: (document allElementsSelect: [:each | each hasStringNodes]).
+	nodes := document xPath: '//*[self::processing-instruction()]'.
+	self assert: nodes isEmpty.
+
+	nodes := textDocument xPath: '//*[child::node() = "two"]'.
+	self
+		assertNodeSet: nodes
+		hasNodes:
+			(textDocument allNodesSelect: [:each |
+				each isElement
+					and: [each rawContentString = 'two']]).
+	nodes := textDocument xPath: '//*[child::node() = "four"]'.
+	self assert: nodes isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testOptimizedParentAxis [
+	| nodes |
+
+	nodes := document xPath: '//*[parent::addressbook]'.
+	self
+		assertNodeSet: nodes
+		hasNodes: (document allElementsNamed: 'person').
+	nodes := document xPath: '//*[parent::absent]'.
+	self assert: nodes isEmpty.
+
+	nodes := textDocument xPath: '//text()[parent::b = "two"]'.
+	self
+		assertNodeSet: nodes
+		hasNodes:
+			(textDocument allNodesSelect: [:each |
+				(each isStringNode: 'two')
+					and: [each parent isElementNamed: 'b']]).
+	nodes := textDocument xPath: '//text()[parent::b = "four"]'.
+	self assert: nodes isEmpty.
+]
+
+{ #category : #tests }
+XPathTest >> testOptimizedSelfAxis [
+	| nodes |
+
+	nodes := document xPath: '//*[self::person]'.
+	self
+		assertNodeSet: nodes
+		hasNodes: (document allElementsNamed: 'person').
+	nodes := document xPath: '//*[self::absent]'.
+	self assert: nodes isEmpty.
+
+	nodes := textDocument xPath: '//text()[self::node() = "two"]'.
+	self
+		assertNodeSet: nodes
+		hasNodes:
+			(textDocument allNodesSelect: [:each |
+				each isStringNode: 'two']).
+	nodes := textDocument xPath: '//text()[self::node() = "four"]'.
+	self assert: nodes isEmpty.
 ]
 
 { #category : #tests }
