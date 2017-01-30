@@ -6,7 +6,9 @@ Class {
 	#superclass : #XPathASTNodeVisitor,
 	#instVars : [
 		'outputStream',
-		'variableStack'
+		'contextBlockVariables',
+		'contextBlockIndex',
+		'locationPathRootVariable'
 	],
 	#classVars : [
 		'InlinableFunctionNamesAndSelectors'
@@ -33,24 +35,37 @@ XPathASTTranslatingNodeVisitor >> contents [
 ]
 
 { #category : #private }
+XPathASTTranslatingNodeVisitor >> contextBlockVariableAt: anIndex [
+	^ (contextBlockVariables
+		ifNil: [self generateNewContextBlockVariables])
+			at: anIndex
+]
+
+{ #category : #private }
 XPathASTTranslatingNodeVisitor >> contextNodeVariable [
-	^ self topVariables at: 1
+	^ self contextBlockVariableAt: 1
 ]
 
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> contextPositionVariable [
-	^ self topVariables at: 2
+	^ self contextBlockVariableAt: 2
 ]
 
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> contextSizeVariable [
-	^ self topVariables at: 3
+	^ self contextBlockVariableAt: 3
 ]
 
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> contextVariable [
-	"the context doesn't change during evaluation"
+	"the XPathContext variable doesn't change during evaluation"
 	^ 'c'
+]
+
+{ #category : #private }
+XPathASTTranslatingNodeVisitor >> documentRootVariable [
+	"the document root variable doesn't change during evaluation"
+	^ 'r'
 ]
 
 { #category : #private }
@@ -121,9 +136,19 @@ XPathASTTranslatingNodeVisitor >> emitComparableConversion [
 
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> emitEndBlock [
+	self emit: $]
+]
+
+{ #category : #private }
+XPathASTTranslatingNodeVisitor >> emitInitializingDocumentRootVariableReference [
 	self
-		emit: $];
-		popVariables
+		emit: $(;
+		emitAll: self documentRootVariable;
+		emitAll: ' ifNil:[';
+		emitAll: self documentRootVariable;
+		emitAll: ':=';
+		emitAll: self contextNodeVariable;
+		emitAll: ' documentRoot])'
 ]
 
 { #category : #private }
@@ -197,15 +222,17 @@ XPathASTTranslatingNodeVisitor >> emitSpace [
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> emitStartContextBlock [
 	self
-		pushVariables;
+		generateNewContextBlockVariables;
 		emitAll: '[:';
 		emitAll: self contextNodeVariable;
 		emitAll: ' :';
 		emitAll: self contextVariable;
 		emitAll: '| |';
 		emitAll: self contextPositionVariable;
-		emitAll: ' ';
+		emitSpace;
 		emitAll: self contextSizeVariable;
+		emitSpace;
+		emitAll: self documentRootVariable;
 		emit: $|
 ]
 
@@ -220,7 +247,7 @@ XPathASTTranslatingNodeVisitor >> emitStartGroupingsForLocationPath: aLocationPa
 { #category : #private }
 XPathASTTranslatingNodeVisitor >> emitStartPredicateBlock [
 	self
-		pushVariables;
+		generateNewContextBlockVariables;
 		emitAll: '[:';
 		emitAll: self contextNodeVariable;
 		emitAll: ' :';
@@ -262,6 +289,23 @@ XPathASTTranslatingNodeVisitor >> errorTrueFunctionTakesNoArguments [
 	self errorFunctionTakesNoArguments: 'true'
 ]
 
+{ #category : #private }
+XPathASTTranslatingNodeVisitor >> generateNewContextBlockIndex [
+	^ contextBlockIndex := contextBlockIndex + 1
+]
+
+{ #category : #private }
+XPathASTTranslatingNodeVisitor >> generateNewContextBlockVariables [
+	| indexString |
+
+	indexString := self generateNewContextBlockIndex asString.
+	^ contextBlockVariables :=
+		Array
+			with: (indexString copyWithFirst: $n) "node variable"
+			with: (indexString copyWithFirst: $p) "position variable"
+			with: (indexString copyWithFirst: $s). "size variable"
+]
+
 { #category : #initialization }
 XPathASTTranslatingNodeVisitor >> initialize [
 	super initialize.
@@ -269,7 +313,12 @@ XPathASTTranslatingNodeVisitor >> initialize [
 	"must use #writeStream instead of 'WriteStream on:' to get a 0-based
 	stream on Gemstone"
 	outputStream := (String new: 128) writeStream.
-	variableStack := OrderedCollection new.
+	contextBlockIndex := 0.
+]
+
+{ #category : #private }
+XPathASTTranslatingNodeVisitor >> locationPathRootVariable [
+	^ locationPathRootVariable
 ]
 
 { #category : #private }
@@ -277,37 +326,19 @@ XPathASTTranslatingNodeVisitor >> outputStream [
 	^ outputStream
 ]
 
-{ #category : #private }
-XPathASTTranslatingNodeVisitor >> popVariables [
-	^ variableStack removeLast
-]
-
-{ #category : #private }
-XPathASTTranslatingNodeVisitor >> pushVariables [
-	| indexString |
-
-	indexString := (variableStack size + 1) printString.
-	^ variableStack addLast:
-		(Array
-			with: (indexString copyWithFirst: $n) "node variable"
-			with: (indexString copyWithFirst: $p) "position variable"
-			with: (indexString copyWithFirst: $s)). "size variable"
-]
-
-{ #category : #private }
-XPathASTTranslatingNodeVisitor >> topVariables [
-	^ variableStack last
-]
-
 { #category : #'visiting - location paths' }
 XPathASTTranslatingNodeVisitor >> visitAbsoluteLocationPath: anAbsoluteLocationPath [
+	| oldLocationPathRootVariable |
+
+	oldLocationPathRootVariable := locationPathRootVariable.
+	locationPathRootVariable := self documentRootVariable.
 	self
 		emit: $(;
 		emitStartGroupingsForLocationPath: anAbsoluteLocationPath;
-		emitAll: self contextNodeVariable;
-		emitAll: ' documentRoot'.
+		emitInitializingDocumentRootVariableReference.
 	super visitAbsoluteLocationPath: anAbsoluteLocationPath.
 	self emit: $).
+	locationPathRootVariable := oldLocationPathRootVariable.
 	^ anAbsoluteLocationPath.
 ]
 
@@ -352,15 +383,17 @@ XPathASTTranslatingNodeVisitor >> visitArgument: anArgument [
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingNodeVisitor >> visitAttributeStep: anAttributeStep [
-	anAttributeStep isOnlyRelativeLocationPathStepAndHasNoPredicates
+	(anAttributeStep isRelativeOrAbsoluteLocationPathStep
+		and: [anAttributeStep hasPredicates not
+			and: [anAttributeStep isSoleStep]])
 		ifTrue: [
 			anAttributeStep isPredicateLocationPathStep
 				ifTrue: [
 					self
 						emitAll: ' isElement and:[';
-						emitAll: self contextNodeVariable;
+						emitAll: self locationPathRootVariable;
 						emitAll: ' hasAttributes and:[';
-						emitAll: self contextNodeVariable.
+						emitAll: self locationPathRootVariable.
 					anAttributeStep nodeTest isAttributeTestForName
 						ifTrue: [
 							"can use a direct lookup here"
@@ -376,9 +409,9 @@ XPathASTTranslatingNodeVisitor >> visitAttributeStep: anAttributeStep [
 				ifTrue: [
 					self
 						emitAll: ' isElement ifTrue:[';
-						emitAll: self contextNodeVariable;
+						emitAll: self locationPathRootVariable;
 						emitAll: ' hasAttributes ifTrue:[(';
-						emitAll: self contextNodeVariable.
+						emitAll: self locationPathRootVariable.
 					anAttributeStep nodeTest isAttributeTestForName
 						ifTrue: [
 							"can use a direct lookup here"
@@ -469,13 +502,15 @@ XPathASTTranslatingNodeVisitor >> visitAttributeTestForPrefixAndLocalName: anAtt
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingNodeVisitor >> visitChildStep: aChildStep [
-	aChildStep isOnlyRelativeLocationPathStepAndHasNoPredicates
+	(aChildStep isRelativeOrAbsoluteLocationPathStep
+		and: [aChildStep hasPredicates not
+			and: [aChildStep isSoleStep]])
 		ifTrue: [
 			aChildStep isPredicateLocationPathStep
 				ifTrue: [
 					self
 						emitAll: ' hasChildren and:[';
-						emitAll: self contextNodeVariable;
+						emitAll: self locationPathRootVariable;
 						emitAll: ' nodes anySatisfy:'.
 					aChildStep nodeTest acceptNodeVisitor: self.
 					self emitAll: '])'.
@@ -484,7 +519,7 @@ XPathASTTranslatingNodeVisitor >> visitChildStep: aChildStep [
 				ifTrue: [
 					self
 						emitAll: ' hasChildren ifTrue:[(';
-						emitAll: self contextNodeVariable;
+						emitAll: self locationPathRootVariable;
 						emitAll: ' nodes detect:'.
 					aChildStep nodeTest acceptNodeVisitor: self.
 					self
@@ -504,7 +539,9 @@ XPathASTTranslatingNodeVisitor >> visitCommentTest: aCommentTest [
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfStep [
-	aDescendantOrSelfStep isOnlyRelativeLocationPathStepAndHasNoPredicates
+	(aDescendantOrSelfStep isRelativeOrAbsoluteLocationPathStep
+		and: [aDescendantOrSelfStep hasPredicates not
+			and: [aDescendantOrSelfStep isSoleStep]])
 		ifTrue: [
 			aDescendantOrSelfStep isPredicateLocationPathStep
 				ifTrue: [
@@ -525,7 +562,9 @@ XPathASTTranslatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfSt
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingNodeVisitor >> visitDescendantStep: aDescendantStep [
-	aDescendantStep isOnlyRelativeLocationPathStepAndHasNoPredicates
+	(aDescendantStep isRelativeOrAbsoluteLocationPathStep
+		and: [aDescendantStep hasPredicates not
+			and: [aDescendantStep isSoleStep]])
 		ifTrue: [
 			aDescendantStep isPredicateLocationPathStep
 				ifTrue: [
@@ -630,7 +669,9 @@ XPathASTTranslatingNodeVisitor >> visitEqualsExpression: anEqualsExpression [
 
 { #category : #visiting }
 XPathASTTranslatingNodeVisitor >> visitExpressionRoot: anExpressionRoot [
-	self emitStartContextBlock.
+	self
+		generateNewContextBlockVariables;
+		emitStartContextBlock.
 	super visitExpressionRoot: anExpressionRoot.
 	self emitEndBlock.
 	^ anExpressionRoot.
@@ -650,8 +691,8 @@ XPathASTTranslatingNodeVisitor >> visitFilterExpressionLocationPath: aFilterExpr
 		emit: $(;
 		emitStartGroupingsForLocationPath: aFilterExpressionLocationPath.
 	aFilterExpressionLocationPath expression acceptNodeVisitor: self.
-	self emitAll: ' asXPathFilterExpressionLocationPathRoot'.
 	self
+		emitAll: ' asXPathFilterExpressionLocationPathRoot';
 		visitLocationPath: aFilterExpressionLocationPath;
 		emit: $).
 	^ aFilterExpressionLocationPath.
@@ -890,7 +931,9 @@ XPathASTTranslatingNodeVisitor >> visitPITestForName: aPITestForName [
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingNodeVisitor >> visitParentStep: aParentStep [
-	aParentStep isOnlyRelativeLocationPathStepAndHasNoPredicates
+	(aParentStep isRelativeOrAbsoluteLocationPathStep
+		and: [aParentStep hasPredicates not
+			and: [aParentStep isSoleStep]])
 		ifTrue: [
 			aParentStep isPredicateLocationPathStep
 				ifTrue: [
@@ -898,8 +941,8 @@ XPathASTTranslatingNodeVisitor >> visitParentStep: aParentStep [
 					aParentStep nodeTest acceptNodeVisitor: self.
 					self
 						emitAll: ' value:';
-						emitAll: self contextNodeVariable.
-					self emitAll: '])'.
+						emitAll: self locationPathRootVariable.
+					self emitAll: ' parent])'.
 					^ aParentStep].
 			aParentStep isUnaryOrLiteralBinaryOperatorLocationPathStep
 				ifTrue: [
@@ -907,10 +950,10 @@ XPathASTTranslatingNodeVisitor >> visitParentStep: aParentStep [
 					aParentStep nodeTest acceptNodeVisitor: self.
 					self
 						emitAll: 'value:';
-						emitAll: self contextNodeVariable;
-						emitAll: ')ifTrue:[';
-						emitAll: self contextNodeVariable;
-						emitAll: ' stringValue]ifFalse:['''']]ifFalse:[''''])'.
+						emitAll: self locationPathRootVariable;
+						emitAll: ' parent)ifTrue:[';
+						emitAll: self locationPathRootVariable;
+						emitAll: ' parent stringValue]ifFalse:['''']]ifFalse:[''''])'.
 					^ aParentStep]].
 
 	self emitAll: ' parentAxis:'.
@@ -935,28 +978,39 @@ XPathASTTranslatingNodeVisitor >> visitPredicate: aPredicate [
 	predicate block"
 	aPredicate expression isNumberLiteral
 		ifTrue: [super visitPredicate: aPredicate]
-		ifFalse: [
-			self emitStartPredicateBlock.
+		ifFalse: [| oldContextBlockVariables |
+			oldContextBlockVariables := contextBlockVariables.
+			self
+				generateNewContextBlockVariables;
+				emitStartPredicateBlock.
 			super visitPredicate: aPredicate.
-			self emitEndBlock].
+			self emitEndBlock.
+			contextBlockVariables := oldContextBlockVariables].
 	self emitPredicateSeparator.
 	^ aPredicate.
 ]
 
 { #category : #'visiting - location paths' }
 XPathASTTranslatingNodeVisitor >> visitRelativeLocationPath: aRelativeLocationPath [
+	| oldLocationPathRootVariable |
+
+	oldLocationPathRootVariable := locationPathRootVariable.
+	locationPathRootVariable := self contextNodeVariable.
 	self
 		emit: $(;
 		emitStartGroupingsForLocationPath: aRelativeLocationPath;
 		emitAll: self contextNodeVariable.
 	super visitRelativeLocationPath: aRelativeLocationPath.
 	self emit: $).
+	locationPathRootVariable := oldLocationPathRootVariable.
 	^ aRelativeLocationPath.
 ]
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingNodeVisitor >> visitSelfStep: aSelfStep [
-	aSelfStep isOnlyRelativeLocationPathStepAndHasNoPredicates
+	(aSelfStep isRelativeOrAbsoluteLocationPathStep
+		and: [aSelfStep hasPredicates not
+			and: [aSelfStep isSoleStep]])
 		ifTrue: [
 			aSelfStep isPredicateLocationPathStep
 				ifTrue: [
@@ -970,7 +1024,7 @@ XPathASTTranslatingNodeVisitor >> visitSelfStep: aSelfStep [
 					aSelfStep nodeTest acceptNodeVisitor: self.
 					self
 						emitAll: ')ifTrue:[';
-						emitAll: self contextNodeVariable;
+						emitAll: self locationPathRootVariable;
 						emitAll: ' stringValue]ifFalse:['''']'.
 					^ aSelfStep]].
 

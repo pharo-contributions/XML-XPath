@@ -49,15 +49,6 @@ XPathASTStepNode >> isForwardAxisStep [
 ]
 
 { #category : #testing }
-XPathASTStepNode >> isOnlyRelativeLocationPathStepAndHasNoPredicates [
-	^ self hasParent
-		and: [| relativeLocationPathNode |
-			(relativeLocationPathNode := self parent) isRelativeLocationPath
-			and: [relativeLocationPathNode totalSteps = 1
-				and: [self hasPredicates not]]]
-]
-
-{ #category : #testing }
 XPathASTStepNode >> isPredicateLocationPathStep [
 	^ self hasParent
 		and: [| locationPath |
@@ -66,8 +57,22 @@ XPathASTStepNode >> isPredicateLocationPathStep [
 ]
 
 { #category : #testing }
+XPathASTStepNode >> isRelativeOrAbsoluteLocationPathStep [
+	^ self hasParent
+		and: [| locationPath |
+			(locationPath := self parent) isRelativeLocationPath
+				or: [locationPath isAbsoluteLocationPath]]
+]
+
+{ #category : #testing }
 XPathASTStepNode >> isReverseAxisStep [
 	^ false
+]
+
+{ #category : #testing }
+XPathASTStepNode >> isSoleStep [
+	^ self hasParent not
+		or: [self parent totalSteps = 1]
 ]
 
 { #category : #testing }
