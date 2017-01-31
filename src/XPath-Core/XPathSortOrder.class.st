@@ -116,7 +116,7 @@ XPathSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock [
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
 	copy := (aNodeSet at: 1) attributeAxis: nodeTestBlock.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
@@ -132,7 +132,7 @@ XPathSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock predicates:
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
 	copy :=
 		(aNodeSet at: 1)
 			attributeAxis: nodeTestBlock
@@ -332,7 +332,7 @@ XPathSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock [
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
 	copy := (aNodeSet at: 1) namespaceAxis: nodeTestBlock.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
@@ -348,7 +348,7 @@ XPathSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock predicates:
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
 	copy :=
 		(aNodeSet at: 1)
 			namespaceAxis: nodeTestBlock

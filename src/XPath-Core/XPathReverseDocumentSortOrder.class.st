@@ -29,7 +29,7 @@ XPathReverseDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBl
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
 	copy := (aNodeSet at: aNodeSet size) attributeAxis: nodeTestBlock.
 	aNodeSet size - 1 to: 1 by: -1 do: [:i |
 		(aNodeSet at: i)
@@ -45,7 +45,7 @@ XPathReverseDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBl
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
 	copy :=
 		(aNodeSet at: aNodeSet size)
 			attributeAxis: nodeTestBlock
@@ -65,7 +65,7 @@ XPathReverseDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBl
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
 	copy := (aNodeSet at: aNodeSet size) namespaceAxis: nodeTestBlock.
 	aNodeSet size - 1 to: 1 by: -1 do: [:i |
 		(aNodeSet at: i)
@@ -81,7 +81,7 @@ XPathReverseDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBl
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
 	copy :=
 		(aNodeSet at: aNodeSet size)
 			namespaceAxis: nodeTestBlock
