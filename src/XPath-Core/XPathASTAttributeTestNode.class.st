@@ -16,3 +16,19 @@ XPathASTAttributeTestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTAttributeTestNode >> isAttributeTest [
 	^ true
 ]
+
+{ #category : #testing }
+XPathASTAttributeTestNode >> omitTypeTestWhenPrinting [
+	^ self hasParent
+		and: [self parent isAttributeStep]
+]
+
+{ #category : #printing }
+XPathASTAttributeTestNode >> printTypeTestArgumentsOn: aStream [
+	aStream nextPut: $*
+]
+
+{ #category : #accessing }
+XPathASTAttributeTestNode >> typeName [
+	^ 'attribute'
+]

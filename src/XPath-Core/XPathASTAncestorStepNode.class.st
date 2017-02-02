@@ -12,6 +12,11 @@ XPathASTAncestorStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitAncestorStep: self
 ]
 
+{ #category : #accessing }
+XPathASTAncestorStepNode >> axisName [
+	^ 'ancestor'
+]
+
 { #category : #testing }
 XPathASTAncestorStepNode >> isAncestorStep [
 	^ true

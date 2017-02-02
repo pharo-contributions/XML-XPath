@@ -12,6 +12,11 @@ XPathASTSelfStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitSelfStep: self
 ]
 
+{ #category : #accessing }
+XPathASTSelfStepNode >> axisName [
+	^ 'self'
+]
+
 { #category : #testing }
 XPathASTSelfStepNode >> isForwardAxisStep [
 	^ true

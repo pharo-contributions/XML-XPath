@@ -41,6 +41,15 @@ XPathASTLocationPathNode >> isLocationPath [
 	^ true
 ]
 
+{ #category : #printing }
+XPathASTLocationPathNode >> printOn: aStream [
+	self hasSteps
+		ifTrue: [
+			self steps
+				do: [:each | each printOn: aStream]
+				separatedBy: [aStream nextPut: $/]]
+]
+
 { #category : #removing }
 XPathASTLocationPathNode >> removeStep: aStep [
 	^ self steps remove: aStep

@@ -16,3 +16,8 @@ XPathASTAdditionExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTAdditionExpressionNode >> isAdditionExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTAdditionExpressionNode >> operatorName [
+	^ '+'
+]

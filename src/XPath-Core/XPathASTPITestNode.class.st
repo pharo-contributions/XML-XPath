@@ -16,3 +16,8 @@ XPathASTPITestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTPITestNode >> isPITest [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTPITestNode >> typeName [
+	^ 'processing-instruction'
+]

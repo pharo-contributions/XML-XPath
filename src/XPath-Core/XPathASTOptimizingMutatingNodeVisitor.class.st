@@ -96,7 +96,9 @@ XPathASTOptimizingMutatingNodeVisitor >> visitEqualsExpression: anEqualsExpressi
 				and: [anEqualsExpression parent isPredicate])
 				ifTrue: [
 					"replace predicate expressions like 'position()=10'
-					and '10=position()' with '10'"
+					and '10=position()' with '10', because position()
+					calls are inlined, and number predicates can be
+					optimized more easily"
 					anEqualsExpression expression isNumberLiteral
 						ifTrue: [
 							(anEqualsExpression otherExpression isFunctionCall

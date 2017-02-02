@@ -16,3 +16,8 @@ XPathASTModulusExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTModulusExpressionNode >> isModulusExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTModulusExpressionNode >> operatorName [
+	^ 'mod'
+]

@@ -16,3 +16,8 @@ XPathASTNotEqualsExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTNotEqualsExpressionNode >> isNotEqualsExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTNotEqualsExpressionNode >> operatorName [
+	^ '!='
+]

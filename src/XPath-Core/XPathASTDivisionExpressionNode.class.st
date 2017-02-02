@@ -16,3 +16,8 @@ XPathASTDivisionExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTDivisionExpressionNode >> isDivisionExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTDivisionExpressionNode >> operatorName [
+	^ 'div'
+]

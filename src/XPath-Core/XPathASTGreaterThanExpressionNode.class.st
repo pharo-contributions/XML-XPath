@@ -16,3 +16,8 @@ XPathASTGreaterThanExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTGreaterThanExpressionNode >> isGreaterThanExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTGreaterThanExpressionNode >> operatorName [
+	^ '>'
+]

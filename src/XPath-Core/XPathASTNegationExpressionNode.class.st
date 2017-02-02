@@ -21,3 +21,8 @@ XPathASTNegationExpressionNode >> defaultTypeClass [
 XPathASTNegationExpressionNode >> isNegationExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTNegationExpressionNode >> operatorName [
+	^ '-'
+]

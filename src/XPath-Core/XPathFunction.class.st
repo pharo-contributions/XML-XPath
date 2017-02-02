@@ -165,6 +165,11 @@ XPathFunction >> arguments [
 	^ arguments
 ]
 
+{ #category : #enumerating }
+XPathFunction >> argumentsDo: aBlock [
+	self arguments do: aBlock
+]
+
 { #category : #accessing }
 XPathFunction >> context [
 	^ context

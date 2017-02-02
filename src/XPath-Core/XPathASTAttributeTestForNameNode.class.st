@@ -34,3 +34,8 @@ XPathASTAttributeTestForNameNode >> name [
 XPathASTAttributeTestForNameNode >> name: aName [
 	name := aName
 ]
+
+{ #category : #printing }
+XPathASTAttributeTestForNameNode >> printTypeTestArgumentsOn: aStream [
+	aStream nextPutAll: self name
+]

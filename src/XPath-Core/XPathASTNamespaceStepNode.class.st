@@ -12,6 +12,11 @@ XPathASTNamespaceStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitNamespaceStep: self
 ]
 
+{ #category : #accessing }
+XPathASTNamespaceStepNode >> axisName [
+	^ 'namespace'
+]
+
 { #category : #testing }
 XPathASTNamespaceStepNode >> isForwardAxisStep [
 	^ true

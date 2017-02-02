@@ -63,6 +63,18 @@ XPathASTFilterExpressionNode >> predicatesDo: aBlock [
 		ifNotNil: [predicates do: aBlock]
 ]
 
+{ #category : #printing }
+XPathASTFilterExpressionNode >> printOn: aStream [
+	self hasPredicates
+		ifTrue: [
+			aStream nextPut: $(.
+			super printOn: aStream.
+			aStream nextPut: $).
+			self predicatesDo: [:each |
+				each printOn: aStream]]
+		ifFalse: [super printOn: aStream]
+]
+
 { #category : #removing }
 XPathASTFilterExpressionNode >> removePredicate: aPredicate [
 	^ self predicates remove: aPredicate

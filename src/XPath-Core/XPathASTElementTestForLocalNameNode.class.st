@@ -34,3 +34,8 @@ XPathASTElementTestForLocalNameNode >> localName [
 XPathASTElementTestForLocalNameNode >> localName: aLocalName [
 	localName := aLocalName
 ]
+
+{ #category : #printing }
+XPathASTElementTestForLocalNameNode >> printTypeTestArgumentsOn: aStream [
+	aStream nextPutAll: self localName
+]

@@ -16,3 +16,8 @@ XPathASTEqualsExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTEqualsExpressionNode >> isEqualsExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTEqualsExpressionNode >> operatorName [
+	^ '='
+]

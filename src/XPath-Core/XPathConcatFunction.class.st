@@ -17,7 +17,7 @@ XPathConcatFunction >> function [
 	| writeStream |
 
 	writeStream := (String new: self totalArguments * 10) writeStream.
-	1 to: self totalArguments do: [:i |
-		writeStream nextPutAll: (self argumentAt: i)].
+	self argumentsDo: [:each |
+		writeStream nextPutAll: each].
 	^ writeStream contents.
 ]

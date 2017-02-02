@@ -12,6 +12,11 @@ XPathASTDescendantStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitDescendantStep: self
 ]
 
+{ #category : #accessing }
+XPathASTDescendantStepNode >> axisName [
+	^ 'descendant'
+]
+
 { #category : #testing }
 XPathASTDescendantStepNode >> isDescendantStep [
 	^ true

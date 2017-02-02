@@ -16,3 +16,19 @@ XPathASTNamespaceTestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTNamespaceTestNode >> isNamespaceTest [
 	^ true
 ]
+
+{ #category : #testing }
+XPathASTNamespaceTestNode >> omitTypeTestWhenPrinting [
+	^ self hasParent
+		and: [self parent isNamespaceStep]
+]
+
+{ #category : #printing }
+XPathASTNamespaceTestNode >> printTypeTestArgumentsOn: aStream [
+	aStream nextPut: $*
+]
+
+{ #category : #accessing }
+XPathASTNamespaceTestNode >> typeName [
+	^ 'namespace'
+]

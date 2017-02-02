@@ -16,3 +16,8 @@ XPathASTSubtractionExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTSubtractionExpressionNode >> isSubtractionExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTSubtractionExpressionNode >> operatorName [
+	^ '-'
+]

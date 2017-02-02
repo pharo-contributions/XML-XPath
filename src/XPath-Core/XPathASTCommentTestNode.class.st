@@ -16,3 +16,8 @@ XPathASTCommentTestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTCommentTestNode >> isCommentTest [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTCommentTestNode >> typeName [
+	^ 'comment'
+]

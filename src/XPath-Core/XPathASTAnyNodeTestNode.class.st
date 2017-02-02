@@ -16,3 +16,8 @@ XPathASTAnyNodeTestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTAnyNodeTestNode >> isAnyNodeTest [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTAnyNodeTestNode >> typeName [
+	^ 'node'
+]

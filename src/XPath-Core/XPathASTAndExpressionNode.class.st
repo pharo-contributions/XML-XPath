@@ -21,3 +21,8 @@ XPathASTAndExpressionNode >> defaultTypeClass [
 XPathASTAndExpressionNode >> isAndExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTAndExpressionNode >> operatorName [
+	^ 'and'
+]

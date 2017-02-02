@@ -16,3 +16,8 @@ XPathASTMultiplicationExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTMultiplicationExpressionNode >> isMultiplicationExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTMultiplicationExpressionNode >> operatorName [
+	^ '*'
+]

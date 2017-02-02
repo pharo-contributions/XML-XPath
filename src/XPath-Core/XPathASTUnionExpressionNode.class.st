@@ -21,3 +21,8 @@ XPathASTUnionExpressionNode >> defaultTypeClass [
 XPathASTUnionExpressionNode >> isUnionExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTUnionExpressionNode >> operatorName [
+	^ '|'
+]

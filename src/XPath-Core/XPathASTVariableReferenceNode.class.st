@@ -34,3 +34,10 @@ XPathASTVariableReferenceNode >> name [
 XPathASTVariableReferenceNode >> name: aVariableName [
 	name := aVariableName
 ]
+
+{ #category : #printing }
+XPathASTVariableReferenceNode >> printOn: aStream [
+	aStream
+		nextPut: $$;
+		nextPutAll: self name
+]

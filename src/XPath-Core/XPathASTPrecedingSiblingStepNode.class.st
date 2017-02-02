@@ -12,6 +12,11 @@ XPathASTPrecedingSiblingStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitPrecedingSiblingStep: self
 ]
 
+{ #category : #accessing }
+XPathASTPrecedingSiblingStepNode >> axisName [
+	^ 'preceding-sibling'
+]
+
 { #category : #testing }
 XPathASTPrecedingSiblingStepNode >> isPrecedingSiblingStep [
 	^ true

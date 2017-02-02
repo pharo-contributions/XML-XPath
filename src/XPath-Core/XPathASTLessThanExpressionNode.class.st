@@ -16,3 +16,8 @@ XPathASTLessThanExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTLessThanExpressionNode >> isLessThanExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTLessThanExpressionNode >> operatorName [
+	^ '<'
+]

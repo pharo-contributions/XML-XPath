@@ -12,6 +12,11 @@ XPathASTAttributeStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitAttributeStep: self
 ]
 
+{ #category : #accessing }
+XPathASTAttributeStepNode >> axisName [
+	^ 'attribute'
+]
+
 { #category : #testing }
 XPathASTAttributeStepNode >> isAttributeStep [
 	^ true

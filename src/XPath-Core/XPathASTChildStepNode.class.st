@@ -12,6 +12,11 @@ XPathASTChildStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitChildStep: self
 ]
 
+{ #category : #accessing }
+XPathASTChildStepNode >> axisName [
+	^ 'child'
+]
+
 { #category : #testing }
 XPathASTChildStepNode >> isChildStep [
 	^ true

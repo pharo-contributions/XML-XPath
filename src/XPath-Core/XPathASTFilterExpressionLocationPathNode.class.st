@@ -47,6 +47,19 @@ XPathASTFilterExpressionLocationPathNode >> isLocationPath [
 	^ true
 ]
 
+{ #category : #printing }
+XPathASTFilterExpressionLocationPathNode >> printOn: aStream [
+	aStream nextPut: $(.
+	super printOn: aStream.
+	aStream nextPut: $).
+	self hasSteps
+		ifTrue: [
+			self stepsDo: [:each |
+				aStream
+					nextPut: $/;
+					print: each]].
+]
+
 { #category : #removing }
 XPathASTFilterExpressionLocationPathNode >> removeStep: aStep [
 	^ self steps remove: aStep

@@ -54,16 +54,24 @@ Number >> asXPathString [
 		ifTrue: [
 			"#integerPart returns a float, so it can't be used"
 			^ self asInteger asString]
-		ifFalse: [| writeStream |
-			"use asFloat to convert types like GS's DecimalFloat that don't
-			have #printOn:base: (#asString works here on newer GS versions,
-			but for backwards compatibility with older versions where it
-			gives scientific notation, it isn't used)"
-			writeStream := (String new: 10) writeStream.
-			self asFloat
-				printOn: writeStream
-				base: 10.
-			^ writeStream contents].
+		ifFalse: [| printedWithFixedDecimalPlaces end |
+			"this portably gives a decimal, not scientific, representation
+			of the number (unlike #asString or #printString:base:, which use
+			scientific for some floats), but it may have redundant trailing
+			zeros that the spec forbids that need to be removed"
+			printedWithFixedDecimalPlaces := self printShowingDecimalPlaces: 16.
+			end := printedWithFixedDecimalPlaces size.
+			[end > 3
+				and: [(printedWithFixedDecimalPlaces at: end) == $0
+					and: [(printedWithFixedDecimalPlaces at: end - 1) ~~ $.]]]
+				whileTrue: [end := end - 1].
+			end < printedWithFixedDecimalPlaces size
+				ifTrue: [
+					"avoid #first: for portability"
+					^ printedWithFixedDecimalPlaces
+						copyFrom: 1
+						to: end]
+				ifFalse: [^ printedWithFixedDecimalPlaces]].
 ]
 
 { #category : #'*XPath-Core-converting' }

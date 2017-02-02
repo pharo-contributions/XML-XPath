@@ -21,3 +21,8 @@ XPathASTOrExpressionNode >> defaultTypeClass [
 XPathASTOrExpressionNode >> isOrExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTOrExpressionNode >> operatorName [
+	^ 'or'
+]

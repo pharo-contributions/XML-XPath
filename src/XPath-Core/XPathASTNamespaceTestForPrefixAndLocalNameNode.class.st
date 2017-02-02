@@ -34,3 +34,11 @@ XPathASTNamespaceTestForPrefixAndLocalNameNode >> localName [
 XPathASTNamespaceTestForPrefixAndLocalNameNode >> localName: aLocalName [
 	localName := aLocalName
 ]
+
+{ #category : #printing }
+XPathASTNamespaceTestForPrefixAndLocalNameNode >> printTypeTestArgumentsOn: aStream [
+	aStream
+		nextPutAll: self prefix;
+		nextPut: $:;
+		nextPutAll: self localName
+]

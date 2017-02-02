@@ -34,3 +34,9 @@ XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> localName [
 XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> localName: aLocalName [
 	localName := aLocalName
 ]
+
+{ #category : #printing }
+XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> printTypeTestArgumentsOn: aStream [
+	aStream nextPutAll:
+		(self localName expandWithXMLNamespaceURI: self namespaceURI)
+]

@@ -32,6 +32,11 @@ XPathASTStepNode >> addPredicate: aPredicate [
 	^ self predicates addLast: (self beParentOf: aPredicate)
 ]
 
+{ #category : #accessing }
+XPathASTStepNode >> axisName [
+	self subclassResponsibility
+]
+
 { #category : #testing }
 XPathASTStepNode >> hasPredicates [
 	^ predicates notNil
@@ -104,6 +109,18 @@ XPathASTStepNode >> predicates: aPredicateCollection [
 XPathASTStepNode >> predicatesDo: aBlock [
 	predicates
 		ifNotNil: [predicates do: aBlock]
+]
+
+{ #category : #printing }
+XPathASTStepNode >> printOn: aStream [
+	aStream
+		nextPutAll: self axisName;
+		nextPutAll: '::';
+		print: self nodeTest.
+	self hasPredicates
+		ifTrue: [
+			self predicatesDo: [:each |
+				each printOn: aStream]].
 ]
 
 { #category : #removing }

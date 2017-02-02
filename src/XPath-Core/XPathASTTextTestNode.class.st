@@ -16,3 +16,8 @@ XPathASTTextTestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTTextTestNode >> isTextTest [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTTextTestNode >> typeName [
+	^ 'text'
+]

@@ -34,3 +34,10 @@ XPathASTNamespaceTestForPrefixNode >> prefix [
 XPathASTNamespaceTestForPrefixNode >> prefix: aPrefix [
 	prefix := aPrefix
 ]
+
+{ #category : #printing }
+XPathASTNamespaceTestForPrefixNode >> printTypeTestArgumentsOn: aStream [
+	aStream
+		nextPutAll: self prefix;
+		nextPutAll: ':*'
+]

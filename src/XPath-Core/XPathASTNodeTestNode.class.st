@@ -16,3 +16,29 @@ XPathASTNodeTestNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTNodeTestNode >> isNodeTest [
 	^ true
 ]
+
+{ #category : #testing }
+XPathASTNodeTestNode >> omitTypeTestWhenPrinting [
+	^ false
+]
+
+{ #category : #printing }
+XPathASTNodeTestNode >> printOn: aStream [
+	self omitTypeTestWhenPrinting
+		ifTrue: [self printTypeTestArgumentsOn: aStream]
+		ifFalse: [
+			aStream
+				nextPutAll: self typeName;
+				nextPut: $(.
+			self printTypeTestArgumentsOn: aStream.
+			aStream nextPut: $)]
+]
+
+{ #category : #printing }
+XPathASTNodeTestNode >> printTypeTestArgumentsOn: aStream [
+]
+
+{ #category : #accessing }
+XPathASTNodeTestNode >> typeName [
+	self subclassResponsibility
+]

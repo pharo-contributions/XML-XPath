@@ -34,3 +34,10 @@ XPathASTAttributeTestForPrefixNode >> prefix [
 XPathASTAttributeTestForPrefixNode >> prefix: aPrefix [
 	prefix := aPrefix
 ]
+
+{ #category : #printing }
+XPathASTAttributeTestForPrefixNode >> printTypeTestArgumentsOn: aStream [
+	aStream
+		nextPutAll: self prefix;
+		nextPutAll: ':*'
+]

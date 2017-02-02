@@ -34,3 +34,9 @@ XPathASTAttributeTestForNamespaceURINode >> namespaceURI [
 XPathASTAttributeTestForNamespaceURINode >> namespaceURI: aURI [
 	namespaceURI := aURI
 ]
+
+{ #category : #printing }
+XPathASTAttributeTestForNamespaceURINode >> printTypeTestArgumentsOn: aStream [
+	aStream nextPutAll:
+		('*' expandWithXMLNamespaceURI: self namespaceURI)
+]

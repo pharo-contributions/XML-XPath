@@ -16,3 +16,8 @@ XPathASTGreaterThanOrEqualToExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTGreaterThanOrEqualToExpressionNode >> isGreaterThanOrEqualToExpression [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTGreaterThanOrEqualToExpressionNode >> operatorName [
+	^ '>='
+]

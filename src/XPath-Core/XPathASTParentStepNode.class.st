@@ -12,6 +12,11 @@ XPathASTParentStepNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitParentStep: self
 ]
 
+{ #category : #accessing }
+XPathASTParentStepNode >> axisName [
+	^ 'parent'
+]
+
 { #category : #testing }
 XPathASTParentStepNode >> isForwardAxisStep [
 	"according to the spec, this is a forward axis"
