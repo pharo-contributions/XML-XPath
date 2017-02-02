@@ -272,6 +272,143 @@ XPathNodeSetTest >> testAllButLastFew [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testAncestorAxis [
+	| list result |
+
+	list := self listWithItems.
+	result := list %% '*'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass withAll: self singleListItem ancestorElements).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert: (result %% '*') isEmpty.
+
+	result := list %% 'root'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: self singleListItem ancestorElements first).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert: (result %% 'root') isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAncestorAxisPredicates [
+	| list result |
+
+	list := self listWithItems.
+	result :=
+		list
+			ancestorAxis: '*'
+			predicates: #(1).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: self singleListItem ancestorElements first).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert:
+		(result
+			ancestorAxis: '*'
+			predicates: #(1)) isEmpty.
+
+	result :=
+		list
+			ancestorAxis: 'root'
+			predicates: #(1).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: self singleListItem ancestorElements first).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert:
+		(result
+			ancestorAxis: 'root'
+			predicates: #(1)) isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAncestorOrSelfAxis [
+	| list result |
+
+	list := self listWithItems.
+	result := list %%~ '*'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals:
+			((self listClass with: self listElements first)
+				addAll: self listElements first ancestorElements;
+				addAll: self listElements allButFirst;
+				yourself).
+	self
+		assertListHasUnknownSortOrder: result;
+		assert: (result %%~ 'absent') isEmpty.
+
+	result := list %%~ 'root'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals:
+			(self listClass with:
+				self listElements first ancestorElements first).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert: (result %%~ 'absent') isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testAncestorOrSelfAxisPredicates [
+	| list result |
+
+	list := self listWithItems.
+	result :=
+		list
+			ancestorOrSelfAxis: '*'
+			predicates: #(2).
+	self
+		assertList: result
+		copiedFrom: list
+		equals:
+			(self listClass with:
+				self listElements first ancestorElements first).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert:
+		(result
+			ancestorOrSelfAxis: '*'
+			predicates: #(2)) isEmpty.
+
+	result :=
+		list
+			ancestorOrSelfAxis: 'root'
+			predicates: #(1).
+	self
+		assertList: result
+		copiedFrom: list
+		equals:
+			(self listClass with:
+				self listElements first ancestorElements first).
+	self
+		assertList: result
+		hasSortOrder: XPathReverseDocumentSortOrder.
+	self assert:
+		(result
+			ancestorOrSelfAxis: 'root'
+			predicates: #(2)) isEmpty.
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testAsXPathBoolean [
 	self
 		deny: self emptyList asXPathBoolean;
@@ -347,67 +484,139 @@ XPathNodeSetTest >> testAtPut [
 
 { #category : #tests }
 XPathNodeSetTest >> testAttributeAxis [
-	| element list result |
+	| element listWithElement |
 
 	element := self newElementWithAttributes.
-	list := self listClass with: element.
-	result := list @ '*'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass withAll: element attributeNodes).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result @ '*') isEmpty.
+	listWithElement := self listClass with: element.
+	(Array
+		with: listWithElement sorted
+		with: listWithElement sorted reversed)
+		do: [:list | | result |
+			result := list @ '*'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass withAll: element attributeNodes).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result @ '*') isEmpty.
 
-	result := list @ 'two'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: element attributeNodes second).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result @ 'two') isEmpty.
+			result := list @ 'two'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: element attributeNodes second).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result @ 'two') isEmpty].
 ]
 
 { #category : #tests }
 XPathNodeSetTest >> testAttributeAxisPredicates [
-	| element list result |
+	| element listWithElement |
 
 	element := self newElementWithAttributes.
-	list := self listClass with: element.
-	result :=
-		list
-			attributeAxis: '*'
-			predicates: #(2).
+	listWithElement := self listClass with: element.
+	(Array
+		with: listWithElement sorted
+		with: listWithElement sorted reversed)
+		do: [:list | | result |
+			result :=
+				list
+					attributeAxis: '*'
+					predicates: #(2).
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: element attributeNodes second).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					attributeAxis: '*'
+					predicates: #(1)) isEmpty.
+
+			result :=
+				list
+					attributeAxis: 'two'
+					predicates: #(1).
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: element attributeNodes second).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					attributeAxis: 'two'
+					predicates: #(1)) isEmpty].
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testChildAxis [
+	| list result |
+
+	list := self listClass with: self singleListItem parent.
+	result := list / '*'.
 	self
 		assertList: result
 		copiedFrom: list
-		equals: (self listClass with: element attributeNodes second).
+		equals: (self listClass withAll: self listElements).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert: (result / '*') isEmpty.
+
+	result := list / 'three'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: self listElements third).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert: (result / 'three') isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testChildAxisPredicates [
+	| list result |
+
+	list := self listClass with: self singleListItem parent.
+	result :=
+		list
+			childAxis: '*'
+			predicates: #(3).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: self listElements third).
 	self
 		assertList: result
 		hasSortOrder: XPathDocumentSortOrder.
 	self assert:
 		(result
-			attributeAxis: '*'
-			predicates: #(1)) isEmpty.
+			childAxis: '*'
+			predicates: #(3)) isEmpty.
 
 	result :=
 		list
-			attributeAxis: 'two'
+			childAxis: 'three'
 			predicates: #(1).
 	self
 		assertList: result
 		copiedFrom: list
-		equals: (self listClass with: element attributeNodes second).
+		equals: (self listClass with: self listElements third).
 	self
 		assertList: result
 		hasSortOrder: XPathDocumentSortOrder.
 	self assert:
 		(result
-			attributeAxis: 'two'
+			childAxis: 'three'
 			predicates: #(1)) isEmpty.
 ]
 
@@ -573,6 +782,138 @@ XPathNodeSetTest >> testDefaultSortOrder [
 ]
 
 { #category : #tests }
+XPathNodeSetTest >> testDescendantAxis [
+	| root list result |
+
+	root := self singleListItem documentRoot.
+	list := self listClass with: root.
+	result := list // '*'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass withAll: root descendantElements).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert: (result // 'absent') isEmpty.
+
+	result := list // 'three'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: root descendantElements fourth).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert: (result // 'absent') isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testDescendantAxisPredicates [
+	| root list result |
+
+	root := self singleListItem documentRoot.
+	list := self listClass with: root.
+	result :=
+		list
+			descendantAxis: '*'
+			predicates: #(3).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: root descendantElements third).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert:
+		(result
+			descendantAxis: '*'
+			predicates: #(3)) isEmpty.
+
+	result :=
+		list
+			descendantAxis: 'three'
+			predicates: #(1).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: root descendantElements fourth).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert:
+		(result
+			descendantAxis: 'three'
+			predicates: #(1)) isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testDescendantOrSelfAxis [
+	| root list result |
+
+	root := self singleListItem documentRoot.
+	list := self listClass with: root.
+	result := list //~ '*'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass withAll: root allElements).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert: (result //~ 'absent') isEmpty.
+
+	result := list //~ 'three'.
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: root allElements fourth).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert: (result //~ 'absent') isEmpty.
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testDescendantOrSelfAxisPredicates [
+	| root list result |
+
+	root := self singleListItem documentRoot.
+	list := self listClass with: root.
+	result :=
+		list
+			descendantOrSelfAxis: '*'
+			predicates: #(4).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: root allElements fourth).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert:
+		(result
+			descendantOrSelfAxis: '*'
+			predicates: #(4)) isEmpty.
+
+	result :=
+		list
+			descendantOrSelfAxis: 'three'
+			predicates: #(1).
+	self
+		assertList: result
+		copiedFrom: list
+		equals: (self listClass with: root allElements fourth).
+	self
+		assertList: result
+		hasSortOrder: XPathDocumentSortOrder.
+	self assert:
+		(result
+			descendantOrSelfAxis: 'three'
+			predicates: #(4)) isEmpty.
+]
+
+{ #category : #tests }
 XPathNodeSetTest >> testDifference [
 	self assert:
 		(self listWithItems \ self listWithItems) =
@@ -667,135 +1008,145 @@ XPathNodeSetTest >> testLastFew [
 
 { #category : #tests }
 XPathNodeSetTest >> testNamespaceAxis [
-	| element list result |
+	| element listWithElement |
 
 	element := self newElementWithNamespaces.
-	list := self listClass with: element.
-	result := list @@ '*'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass withAll: element namespaceNodes).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result @@ '*') isEmpty.
+	listWithElement := self listClass with: element.
+	(Array
+		with: listWithElement sorted
+		with: listWithElement sorted reversed)
+		do: [:list | | result |
+			result := list @@ '*'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass withAll: element namespaceNodes).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result @@ '*') isEmpty.
 
-	result := list @@ 'two'.
-	self
-		assertList: result
-		copiedFrom: list
-		"there is an implicit 'xml' namespace node that comes first"
-		equals: (self listClass with: element namespaceNodes third).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result @@ 'two') isEmpty.
+			result := list @@ 'two'.
+			self
+				assertList: result
+				copiedFrom: list
+				"there is an implicit 'xml' namespace node that comes first"
+				equals: (self listClass with: element namespaceNodes third).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result @@ 'two') isEmpty].
 ]
 
 { #category : #tests }
 XPathNodeSetTest >> testNamespaceAxisPredicates [
-	| element list result |
+	| element listWithElement |
 
 	element := self newElementWithNamespaces.
-	list := self listClass with: element.
-	result :=
-		list
-			namespaceAxis: '*'
-			predicates: #(3).
-	self
-		assertList: result
-		copiedFrom: list
-		"there is an implicit 'xml' namespace node that comes first"
-		equals: (self listClass with: element namespaceNodes third).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert:
-		(result
-			namespaceAxis: '*'
-			predicates: #(1)) isEmpty.
+	listWithElement := self listClass with: element.
+	(Array
+		with: listWithElement sorted
+		with: listWithElement sorted reversed)
+		do: [:list | | result |
+			result :=
+				list
+					namespaceAxis: '*'
+					predicates: #(3).
+			self
+				assertList: result
+				copiedFrom: list
+				"there is an implicit 'xml' namespace node that comes first"
+				equals: (self listClass with: element namespaceNodes third).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					namespaceAxis: '*'
+					predicates: #(1)) isEmpty.
 
-	result :=
-		list
-			namespaceAxis: 'two'
-			predicates: #(1).
-	self
-		assertList: result
-		copiedFrom: list
-		"there is an implicit 'xml' namespace node that comes first"
-		equals: (self listClass with: element namespaceNodes third).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert:
-		(result
-			namespaceAxis: 'two'
-			predicates: #(1)) isEmpty.
+			result :=
+				list
+					namespaceAxis: 'two'
+					predicates: #(1).
+			self
+				assertList: result
+				copiedFrom: list
+				"there is an implicit 'xml' namespace node that comes first"
+				equals: (self listClass with: element namespaceNodes third).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					namespaceAxis: 'two'
+					predicates: #(1)) isEmpty].
 ]
 
 { #category : #tests }
 XPathNodeSetTest >> testParentAxis [
-	| list result |
+	(Array
+		with: self listWithSortOrder
+		with: self listWithSortOrder reversed)
+		do: [:list | | result |
+			result := list % '*'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: self singleListItem parent).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result % 'root') isEmpty.
 
-	list := self listWithSortOrder.
-	result := list % '*'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: self singleListItem parent).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result % 'root') isEmpty.
-
-	result := list % 'root'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: self singleListItem parent).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result % 'root') isEmpty.
+			result := list % 'root'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: self singleListItem parent).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result % 'root') isEmpty]
 ]
 
 { #category : #tests }
 XPathNodeSetTest >> testParentAxisPredicates [
-	| list result |
+	(Array
+		with: self listWithSortOrder
+		with: self listWithSortOrder reversed)
+		do: [:list | | result |
+			result :=
+				list
+					parentAxis: '*'
+					predicates: #(1).
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: self singleListItem parent).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					parentAxis: 'root'
+					predicates: #(1)) isEmpty.
 
-	list := self listWithSortOrder.
-	result :=
-		list
-			parentAxis: '*'
-			predicates: #(1).
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: self singleListItem parent).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert:
-		(result
-			parentAxis: 'root'
-			predicates: #(1)) isEmpty.
-
-	result :=
-		list
-			parentAxis: 'root'
-			predicates: #(1).
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: self singleListItem parent).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert:
-		(result
-			parentAxis: 'root'
-			predicates: #(1)) isEmpty.
+			result :=
+				list
+					parentAxis: 'root'
+					predicates: #(1).
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: self singleListItem parent).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					parentAxis: 'root'
+					predicates: #(1)) isEmpty]
 ]
 
 { #category : #tests }
@@ -1018,66 +1369,68 @@ XPathNodeSetTest >> testSelect [
 
 { #category : #tests }
 XPathNodeSetTest >> testSelfAxis [
-	| list result |
+	(Array
+		with: self listWithSortOrder
+		with: self listWithSortOrder reversed)
+		do: [:list | | result |
+			result := list ~ '*'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass withAll: self listElements).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result ~ 'absent') isEmpty.
 
-	list := self listWithSortOrder.
-	result := list ~ '*'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass withAll: self listElements).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result ~ 'absent') isEmpty.
-
-	result := list ~ 'three'.
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: self listElements third).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert: (result ~ 'absent') isEmpty.
+			result := list ~ 'three'.
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: self listElements third).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert: (result ~ 'absent') isEmpty]
 ]
 
 { #category : #tests }
 XPathNodeSetTest >> testSelfAxisPredicates [
-	| list result |
+	(Array
+		with: self listWithSortOrder
+		with: self listWithSortOrder reversed)
+		do: [:list | | result |
+			result :=
+				list
+					selfAxis: '*'
+					predicates: #(1).
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass withAll: self listElements).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					selfAxis: '*'
+					predicates: #(3)) isEmpty.
 
-	list := self listWithSortOrder.
-	result :=
-		list
-			selfAxis: '*'
-			predicates: #(1).
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass withAll: self listElements).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert:
-		(result
-			selfAxis: '*'
-			predicates: #(3)) isEmpty.
-
-	result :=
-		(list
-			selfAxis: 'three'
-			predicates: #(1)).
-	self
-		assertList: result
-		copiedFrom: list
-		equals: (self listClass with: self listElements third).
-	self
-		assertList: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self assert:
-		(result
-			selfAxis: 'three'
-			predicates: #(3)) isEmpty.
+			result :=
+				(list
+					selfAxis: 'three'
+					predicates: #(1)).
+			self
+				assertList: result
+				copiedFrom: list
+				equals: (self listClass with: self listElements third).
+			self
+				assertList: result
+				hasSortOrder: XPathDocumentSortOrder.
+			self assert:
+				(result
+					selfAxis: 'three'
+					predicates: #(3)) isEmpty]
 ]
 
 { #category : #tests }
