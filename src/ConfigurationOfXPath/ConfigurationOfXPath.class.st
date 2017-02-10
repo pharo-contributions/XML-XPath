@@ -203,9 +203,7 @@ ConfigurationOfXPath >> baseline10: spec [
 
 		spec group: 'default' with: #('Core' 'Tests').
 		spec group: 'Core' with: #('XPath-Core').
-		spec group: 'Tests' with: #('XPath-Tests').
-		
-		spec postLoadDoIt: #clearCompiledXPathCache].
+		spec group: 'Tests' with: #('XPath-Tests')].
 
 	spec for: #'squeakCommon' do: [
 		spec
@@ -509,9 +507,32 @@ ConfigurationOfXPath >> baseline183: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline183. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline189: spec [
+	<version: '1.8.9-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.14'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
+]
+
 { #category : #doits }
-ConfigurationOfXPath >> clearCompiledXPathCache [
-	XPath clearCompiledXPathCache
+ConfigurationOfXPath >> clearXPathCache [
+	XPath clearCompiledExpressionCache
 ]
 
 { #category : #accessing }
@@ -584,6 +605,32 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline183 [
 
 	XPath compiledXPathCache.
 	XPathCompiler systemCompilerClass.
+	XPathFunction allSubclassesDo: [:each |
+		each prototype].
+	XPathContext defaultFunctions.
+	XPathNodeTestParserContext allSubclassesDo: [:each |
+		each instance].
+	XPathSortOrder allSubclassesDo: [:each |
+		each instance].
+	XPathASTNullNode instance.
+	XPathType allSubclassesDo: [:each |
+		each instance].
+]
+
+{ #category : #doits }
+ConfigurationOfXPath >> initializeClassesForGSBaseline189 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage: 'XPath'
+	"
+
+	XPath
+		compiledExpressionCache;
+		compiledExpressionCacheEnabled.
+	XPathExpressionCompiler systemCompilerClass.
 	XPathFunction allSubclassesDo: [:each |
 		each prototype].
 	XPathContext defaultFunctions.
@@ -1596,5 +1643,16 @@ ConfigurationOfXPath >> version188: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.100'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.83'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version189: spec [ 
+        <version: '1.8.9' imports: #('1.8.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.101'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.84'.
                 ].
 ]
