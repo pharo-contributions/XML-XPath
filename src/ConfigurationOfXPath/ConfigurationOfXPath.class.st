@@ -547,7 +547,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.8.3-baseline'.
+	spec for: #'common' version: '1.8.9-baseline'.
 ]
 
 { #category : #doits }
@@ -660,7 +660,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.8.8'.
+	spec for: #'common' version: '1.8.9'.
 
 ]
 
