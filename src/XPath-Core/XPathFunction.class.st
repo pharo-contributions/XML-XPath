@@ -75,8 +75,7 @@ XPathFunction class >> functionSetClass [
 XPathFunction class >> initialize [
 	"self initialize"
 
-	self allSubclassesDo: [:each |
-		each prototype: nil].
+	self allSubclassesDo: [:each | each prototype: nil]
 ]
 
 { #category : #accessing }
