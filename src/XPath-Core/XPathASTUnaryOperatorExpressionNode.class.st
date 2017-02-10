@@ -26,12 +26,3 @@ XPathASTUnaryOperatorExpressionNode >> isUnaryOperatorExpression [
 XPathASTUnaryOperatorExpressionNode >> operatorName [
 	self subclassResponsibility
 ]
-
-{ #category : #printing }
-XPathASTUnaryOperatorExpressionNode >> printOn: aStream [
-	aStream
-		nextPutAll: self operatorName;
-		nextPut: $(.
-	super printOn: aStream.
-	aStream nextPut: $).
-]

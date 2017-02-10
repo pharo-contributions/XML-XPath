@@ -82,19 +82,6 @@ XPathASTFunctionCallNode >> name: aFunctionName [
 	name := aFunctionName
 ]
 
-{ #category : #printing }
-XPathASTFunctionCallNode >> printOn: aStream [
-	aStream
-		nextPutAll: self name;
-		nextPut: $(.
-	self hasArguments
-		ifTrue: [
-			self arguments
-				do: [:each | each printOn: aStream]
-				separatedBy: [aStream nextPutAll: ', ']].
-	aStream nextPut: $).
-]
-
 { #category : #removing }
 XPathASTFunctionCallNode >> removeArgument: aNode [
 	^ self arguments remove: aNode

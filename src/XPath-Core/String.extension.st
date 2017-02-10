@@ -6,9 +6,8 @@ String >> asXPath [
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathAttributeNodeTestBlock [
-	"parses string as a node test to produce a node test block where attributes
-	are the principal node type"
+String >> asXPathAttributeAxisNodeTest [
+	"parse the receiver as a node test where attributes are the principal node type"
 	^ (XPathNodeTestParser
 		on: self
 		for: XPathStringNodeTestParserHandler withAttributePrincipalNodeType) parse
@@ -35,9 +34,8 @@ String >> asXPathFilterable [
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathNamespaceNodeTestBlock [
-	"parses string as a node test to produce a node test block where namespaces
-	are the principal node type"
+String >> asXPathNamespaceAxisNodeTest [
+	"parse the receiver as a node test where namespaces are the principal node type"
 	^ (XPathNodeTestParser
 		on: self
 		for: XPathStringNodeTestParserHandler withNamespacePrincipalNodeType) parse
@@ -49,8 +47,8 @@ String >> asXPathNodeSet [
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathNodeTestBlock [
-	"parses string as a node test to produce a node test block"
+String >> asXPathNodeTest [
+	"parse the receiver as a node test where elements are the principal node type"
 	^ (XPathNodeTestParser
 		on: self
 		for: XPathStringNodeTestParserHandler withElementPrincipalNodeType) parse

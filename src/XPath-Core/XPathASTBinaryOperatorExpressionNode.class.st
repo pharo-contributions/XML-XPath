@@ -26,15 +26,3 @@ XPathASTBinaryOperatorExpressionNode >> isOperatorExpression [
 XPathASTBinaryOperatorExpressionNode >> operatorName [
 	self subclassResponsibility
 ]
-
-{ #category : #printing }
-XPathASTBinaryOperatorExpressionNode >> printOn: aStream [
-	aStream nextPut: $(.
-	super printOn: aStream.
-	aStream
-		space;
-		nextPutAll: self operatorName;
-		space;
-		print: self otherExpression;
-		nextPut: $).
-]

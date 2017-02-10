@@ -17,13 +17,6 @@ XPathASTPredicateNode >> isPredicate [
 	^ true
 ]
 
-{ #category : #printing }
-XPathASTPredicateNode >> printOn: aStream [
-	aStream nextPut: $[.
-	super printOn: aStream.
-	aStream nextPut: $].
-]
-
 { #category : #accessing }
 XPathASTPredicateNode >> type [
 	^ self expression type

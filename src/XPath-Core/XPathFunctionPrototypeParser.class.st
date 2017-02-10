@@ -31,27 +31,27 @@ XPathFunctionPrototypeParser >> nextArgument [
 	hasUnboundedArgument
 		ifTrue: [self errorArgumentAfterUnboundedArgument].
 
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	self nextModifierForArgument: self nextName.
 ]
 
 { #category : #parsing }
 XPathFunctionPrototypeParser >> nextFunctionName [
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	handler handleFunctionName: self nextName.
 ]
 
 { #category : #parsing }
 XPathFunctionPrototypeParser >> nextModifierForArgument: anArgument [
-	inputStream skipSeparators.
-	(inputStream peekFor: $*)
+	readStream skipSeparators.
+	(readStream peekFor: $*)
 		ifTrue: [
 			hasOptionalArgument
 				ifTrue: [self errorUnboundedArgumentAfterOptional].
 			hasUnboundedArgument := true.
 			handler handleUnboundedArgument: anArgument]
 		ifFalse: [
-			(inputStream peekFor: $?)
+			(readStream peekFor: $?)
 				ifTrue: [
 					hasOptionalArgument := true.
 					handler handleOptionalArgument: anArgument]
@@ -63,7 +63,7 @@ XPathFunctionPrototypeParser >> nextModifierForArgument: anArgument [
 
 { #category : #parsing }
 XPathFunctionPrototypeParser >> nextReturnType [
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	handler handleReturnType: self nextName.
 ]
 

@@ -14,13 +14,12 @@ XPathNodeSetComparable >> < aComparable [
 
 { #category : #comparing }
 XPathNodeSetComparable >> <= aComparable [
-	^ (aComparable greaterThanNodeSet: value)
-		or: [aComparable equalsNodeSet: value]
+	^ aComparable greaterThanOrEqualToNodeSet: value
 ]
 
 { #category : #comparing }
 XPathNodeSetComparable >> = aComparable [
-	^ aComparable equalsNodeSet: value
+	^ aComparable equalToNodeSet: value
 ]
 
 { #category : #comparing }
@@ -30,32 +29,51 @@ XPathNodeSetComparable >> > aComparable [
 
 { #category : #comparing }
 XPathNodeSetComparable >> >= aComparable [
-	^ (aComparable lessThanNodeSet: value)
-		or: [aComparable equalsNodeSet: value]
+	^ aComparable lessThanOrEqualToNodeSet: value
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> equalsBoolean: aBoolean [
+XPathNodeSetComparable >> equalToBoolean: aBoolean [
 	^ value asXPathBoolean = aBoolean
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> equalsNodeSet: aNodeSet [
-	| stringValues |
+XPathNodeSetComparable >> equalToNodeSet: aNodeSet [
+	| smallerNodeSet largerNodeSet |
 
-	stringValues := Set new: value size.
-	value do: [:each | stringValues add: each stringValue].
-	^ aNodeSet anySatisfy: [:node | stringValues includes: node stringValue].
+	"From the spec:
+		'If both objects to be compared are node-sets, then the comparison
+	will be true if and only if there is a node in the first node-set and
+	a node in the second node-set such that the result of performing the
+	comparison on the string-values of the two nodes is true.'"
+	value size < aNodeSet size
+		ifTrue: [
+			smallerNodeSet := value.
+			largerNodeSet := aNodeSet]
+		ifFalse: [
+			smallerNodeSet := aNodeSet.
+			largerNodeSet := value].
+	smallerNodeSet size > 0
+		ifTrue: [| smallerNodeSetStringValues |
+			smallerNodeSetStringValues := Set new: smallerNodeSet size.
+			smallerNodeSet do: [:each |
+				smallerNodeSetStringValues add: each stringValue].
+			largerNodeSet do: [:each |
+				(smallerNodeSetStringValues includes: each stringValue)
+					ifTrue: [^ true]]].
+	^ false.
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> equalsNumber: aNumber [
-	^ value anySatisfy: [:each | each stringValue asXPathNumber = aNumber]
+XPathNodeSetComparable >> equalToNumber: aNumber [
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber = aNumber]
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> equalsString: aString [
-	^ value anySatisfy: [:each | each stringValue = aString]
+XPathNodeSetComparable >> equalToString: aString [
+	^ value anySatisfy: [:each |
+		each stringValue = aString]
 ]
 
 { #category : #private }
@@ -65,20 +83,46 @@ XPathNodeSetComparable >> greaterThanBoolean: aBoolean [
 
 { #category : #private }
 XPathNodeSetComparable >> greaterThanNodeSet: aNodeSet [
-	| least |
-
-	aNodeSet do: [:each | | number |
-		number := each stringValue asXPathNumber.
-		(least isNil
-			or: [number < least])
-			ifTrue: [least := number]].
-	^ least notNil
-		and: [value anySatisfy: [:each | each stringValue asXPathNumber > least]].
+	^ aNodeSet minimumStringValueNumber
+		ifNil: [false]
+		ifNotNil: [:minimum |
+			value anySatisfy: [:each |
+				each stringValue asXPathNumber > minimum]]
 ]
 
 { #category : #private }
 XPathNodeSetComparable >> greaterThanNumber: aNumber [
-	^ value anySatisfy: [:each | each stringValue asXPathNumber > aNumber]
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber > aNumber]
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> greaterThanOrEqualToBoolean: aBoolean [
+	^ value asXPathBoolean asXPathNumber >= aBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> greaterThanOrEqualToNodeSet: aNodeSet [
+	^ aNodeSet minimumStringValueNumber
+		ifNil: [false]
+		ifNotNil: [:minimum |
+			value anySatisfy: [:each |
+				each stringValue asXPathNumber >= minimum]]
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> greaterThanOrEqualToNumber: aNumber [
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber >= aNumber]
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> greaterThanOrEqualToString: aString [
+	| number |
+
+	number := aString asXPathNumber.
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber >= number]
 ]
 
 { #category : #private }
@@ -86,7 +130,8 @@ XPathNodeSetComparable >> greaterThanString: aString [
 	| number |
 
 	number := aString asXPathNumber.
-	^ value anySatisfy: [:each | each stringValue asXPathNumber > number]
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber > number]
 ]
 
 { #category : #private }
@@ -96,20 +141,46 @@ XPathNodeSetComparable >> lessThanBoolean: aBoolean [
 
 { #category : #private }
 XPathNodeSetComparable >> lessThanNodeSet: aNodeSet [
-	| greatest |
-
-	aNodeSet do: [:each | | number |
-		number := each stringValue asXPathNumber.
-		(greatest isNil
-			or: [number > greatest])
-			ifTrue: [greatest := number]].
-	^ greatest notNil
-		and: [value anySatisfy: [:each | each stringValue asXPathNumber < greatest]].
+	^ aNodeSet maximumStringValueNumber
+		ifNil: [false]
+		ifNotNil: [:maximum |
+			value anySatisfy: [:each |
+				each stringValue asXPathNumber < maximum]]
 ]
 
 { #category : #private }
 XPathNodeSetComparable >> lessThanNumber: aNumber [
-	^ value anySatisfy: [:each | each stringValue asXPathNumber < aNumber]
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber < aNumber]
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> lessThanOrEqualToBoolean: aBoolean [
+	^ value asXPathBoolean asXPathNumber <= aBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> lessThanOrEqualToNodeSet: aNodeSet [
+	^ aNodeSet maximumStringValueNumber
+		ifNil: [false]
+		ifNotNil: [:maximum |
+			value anySatisfy: [:each |
+				each stringValue asXPathNumber <= maximum]]
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> lessThanOrEqualToNumber: aNumber [
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber <= aNumber]
+]
+
+{ #category : #private }
+XPathNodeSetComparable >> lessThanOrEqualToString: aString [
+	| number |
+
+	number := aString asXPathNumber.
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber <= number]
 ]
 
 { #category : #private }
@@ -117,40 +188,56 @@ XPathNodeSetComparable >> lessThanString: aString [
 	| number |
 
 	number := aString asXPathNumber.
-	^ value anySatisfy: [:each | each asXPathNumber < number]
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber < number]
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> notEqualsBoolean: aBoolean [
+XPathNodeSetComparable >> notEqualToBoolean: aBoolean [
 	^ value asXPathBoolean ~= aBoolean
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> notEqualsNodeSet: aNodeSet [
-	| stringValues |
+XPathNodeSetComparable >> notEqualToNodeSet: aNodeSet [
+	| smallerNodeSet largerNodeSet |
 
-	"should return true according to spec when aNodeSet and value each have at
-	least one node that don't have the same string-values"
-	stringValues := value collect: [:each | each stringValue].
-	aNodeSet do: [:node | | stringValue |
-		stringValue := node stringValue.
-		stringValues do: [:each |
-			each = stringValue
-				ifFalse: [^ true]]].
+	"From the spec:
+		'If both objects to be compared are node-sets, then the comparison
+	will be true if and only if there is a node in the first node-set and
+	a node in the second node-set such that the result of performing the
+	comparison on the string-values of the two nodes is true.'"
+	value size < aNodeSet size
+		ifTrue: [
+			smallerNodeSet := value.
+			largerNodeSet := aNodeSet]
+		ifFalse: [
+			smallerNodeSet := aNodeSet.
+			largerNodeSet := value].
+	smallerNodeSet size > 0
+		ifTrue: [| smallerNodeSetStringValues |
+			smallerNodeSetStringValues :=
+				smallerNodeSet collect: [:each | each stringValue].
+			largerNodeSet do: [:node | | stringValue |
+				stringValue := node stringValue.
+				smallerNodeSetStringValues do: [:each |
+					stringValue ~= each
+						ifTrue: [^ true]]]].
 	^ false.
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> notEqualsNumber: aNumber [
-	^ value anySatisfy: [:each | each stringValue asXPathNumber ~= aNumber]
+XPathNodeSetComparable >> notEqualToNumber: aNumber [
+	^ value anySatisfy: [:each |
+		each stringValue asXPathNumber ~= aNumber]
 ]
 
 { #category : #private }
-XPathNodeSetComparable >> notEqualsString: aString [
-	^ value anySatisfy: [:each | each stringValue ~= aString]
+XPathNodeSetComparable >> notEqualToString: aString [
+	^ value anySatisfy: [:each |
+		each stringValue ~= aString]
 ]
 
 { #category : #comparing }
 XPathNodeSetComparable >> ~= aComparable [
-	^ aComparable notEqualsNodeSet: value
+	^ aComparable notEqualToNodeSet: value
 ]

@@ -30,164 +30,159 @@ XPathASTExpressionNodeTestParserHandler >> handleAnyNodeTest [
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTest [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTest [
 	self startNodeTest.
-	expressionParserHandler handleAttributeTest.
+	expressionParserHandler handleAttributeNodeTest.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTestForLocalName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTestForLocalName: aLocalName [
 	self startNodeTest.
-	expressionParserHandler handleAttributeTestForLocalName: aLocalName.
+	expressionParserHandler handleAttributeNodeTestForLocalName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTestForName: aName [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTestForName: aName [
 	self startNodeTest.
-	expressionParserHandler handleAttributeTestForName: aName.
+	expressionParserHandler handleAttributeNodeTestForName: aName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTestForNamespaceURI: aURI [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI [
 	self startNodeTest.
-	expressionParserHandler handleAttributeTestForNamespaceURI: aURI.
+	expressionParserHandler handleAttributeNodeTestForNamespaceURI: aURI.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTestForNamespaceURI: aURI localName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleAttributeTestForNamespaceURI: aURI
+		handleAttributeNodeTestForNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTestForPrefix: aPrefix [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTestForPrefix: aPrefix [
 	self startNodeTest.
-	expressionParserHandler handleAttributeTestForPrefix: aPrefix.
+	expressionParserHandler handleAttributeNodeTestForPrefix: aPrefix.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleAttributeTestForPrefix: aPrefix localName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleAttributeNodeTestForPrefix: aPrefix localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleAttributeTestForPrefix: aPrefix
+		handleAttributeNodeTestForPrefix: aPrefix
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleCommentTest [
+XPathASTExpressionNodeTestParserHandler >> handleCommentNodeTest [
 	self startNodeTest.
-	expressionParserHandler handleCommentTest.
+	expressionParserHandler handleCommentNodeTest.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTest [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTest [
 	self startNodeTest.
-	expressionParserHandler handleElementTest.
+	expressionParserHandler handleElementNodeTest.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTestForLocalName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTestForLocalName: aLocalName [
 	self startNodeTest.
-	expressionParserHandler handleElementTestForLocalName: aLocalName.
+	expressionParserHandler handleElementNodeTestForLocalName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTestForName: aName [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTestForName: aName [
 	self startNodeTest.
-	expressionParserHandler handleElementTestForName: aName.
+	expressionParserHandler handleElementNodeTestForName: aName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTestForNamespaceURI: aURI [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTestForNamespaceURI: aURI [
 	self startNodeTest.
-	expressionParserHandler handleElementTestForNamespaceURI: aURI.
+	expressionParserHandler handleElementNodeTestForNamespaceURI: aURI.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTestForNamespaceURI: aURI localName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTestForNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleElementTestForNamespaceURI: aURI
+		handleElementNodeTestForNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTestForPrefix: aPrefix [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTestForPrefix: aPrefix [
 	self startNodeTest.
-	expressionParserHandler handleElementTestForPrefix: aPrefix.
+	expressionParserHandler handleElementNodeTestForPrefix: aPrefix.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleElementTestForPrefix: aPrefix localName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleElementNodeTestForPrefix: aPrefix localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleElementTestForPrefix: aPrefix
+		handleElementNodeTestForPrefix: aPrefix
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleEmptyTest [
-	self parsingResult: false
-]
-
-{ #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTest [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTest [
 	self startNodeTest.
-	expressionParserHandler handleNamespaceTest.
+	expressionParserHandler handleNamespaceNodeTest.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTestForLocalName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTestForLocalName: aLocalName [
 	self startNodeTest.
-	expressionParserHandler handleNamespaceTestForLocalName: aLocalName.
+	expressionParserHandler handleNamespaceNodeTestForLocalName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTestForName: aName [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTestForName: aName [
 	self startNodeTest.
-	expressionParserHandler handleNamespaceTestForName: aName.
+	expressionParserHandler handleNamespaceNodeTestForName: aName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTestForNamespaceURI: aURI [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI [
 	self startNodeTest.
-	expressionParserHandler handleNamespaceTestForNamespaceURI: aURI.
+	expressionParserHandler handleNamespaceNodeTestForNamespaceURI: aURI.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTestForNamespaceURI: aURI localName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleNamespaceTestForNamespaceURI: aURI
+		handleNamespaceNodeTestForNamespaceURI: aURI
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTestForPrefix: aPrefix [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix [
 	self startNodeTest.
-	expressionParserHandler handleNamespaceTestForPrefix: aPrefix.
+	expressionParserHandler handleNamespaceNodeTestForPrefix: aPrefix.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleNamespaceTestForPrefix: aPrefix localName: aLocalName [
+XPathASTExpressionNodeTestParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix localName: aLocalName [
 	self startNodeTest.
 	expressionParserHandler
-		handleNamespaceTestForPrefix: aPrefix
+		handleNamespaceNodeTestForPrefix: aPrefix
 		localName: aLocalName.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handlePITest [
+XPathASTExpressionNodeTestParserHandler >> handlePINodeTest [
 	self startNodeTest.
-	expressionParserHandler handlePITest.
+	expressionParserHandler handlePINodeTest.
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handlePITestForName: aName [
+XPathASTExpressionNodeTestParserHandler >> handlePINodeTestForName: aName [
 	self startNodeTest.
-	expressionParserHandler handlePITestForName: aName.
+	expressionParserHandler handlePINodeTestForName: aName.
 ]
 
 { #category : #handling }
@@ -196,9 +191,9 @@ XPathASTExpressionNodeTestParserHandler >> handleStartParsing [
 ]
 
 { #category : #handling }
-XPathASTExpressionNodeTestParserHandler >> handleTextTest [
+XPathASTExpressionNodeTestParserHandler >> handleTextNodeTest [
 	self startNodeTest.
-	expressionParserHandler handleTextTest.
+	expressionParserHandler handleTextNodeTest.
 ]
 
 { #category : #testing }

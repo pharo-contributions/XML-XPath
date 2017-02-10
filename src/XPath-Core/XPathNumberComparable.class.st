@@ -14,13 +14,12 @@ XPathNumberComparable >> < aComparable [
 
 { #category : #comparing }
 XPathNumberComparable >> <= aComparable [
-	^ (aComparable greaterThanNumber: value)
-		or: [aComparable equalsNumber: value]
+	^ aComparable greaterThanOrEqualToNumber: value
 ]
 
 { #category : #comparing }
 XPathNumberComparable >> = aComparable [
-	^ aComparable equalsNumber: value
+	^ aComparable equalToNumber: value
 ]
 
 { #category : #comparing }
@@ -30,27 +29,27 @@ XPathNumberComparable >> > aComparable [
 
 { #category : #comparing }
 XPathNumberComparable >> >= aComparable [
-	^ (aComparable lessThanNumber: value)
-		or: [aComparable equalsNumber: value]
+	^ aComparable lessThanOrEqualToNumber: value
 ]
 
 { #category : #private }
-XPathNumberComparable >> equalsBoolean: aBoolean [
+XPathNumberComparable >> equalToBoolean: aBoolean [
 	^ value asXPathBoolean = aBoolean
 ]
 
 { #category : #private }
-XPathNumberComparable >> equalsNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | value = each stringValue asXPathNumber]
+XPathNumberComparable >> equalToNodeSet: aNodeSet [
+	^ aNodeSet anySatisfy: [:each |
+		value = each stringValue asXPathNumber]
 ]
 
 { #category : #private }
-XPathNumberComparable >> equalsNumber: aNumber [
+XPathNumberComparable >> equalToNumber: aNumber [
 	^ value = aNumber
 ]
 
 { #category : #private }
-XPathNumberComparable >> equalsString: aString [
+XPathNumberComparable >> equalToString: aString [
 	^ value = aString asXPathNumber
 ]
 
@@ -61,12 +60,34 @@ XPathNumberComparable >> greaterThanBoolean: aBoolean [
 
 { #category : #private }
 XPathNumberComparable >> greaterThanNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | value > each stringValue asXPathNumber]
+	^ aNodeSet anySatisfy: [:each |
+		value > each stringValue asXPathNumber]
 ]
 
 { #category : #private }
 XPathNumberComparable >> greaterThanNumber: aNumber [
 	^ value > aNumber
+]
+
+{ #category : #private }
+XPathNumberComparable >> greaterThanOrEqualToBoolean: aBoolean [
+	^ value >= aBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathNumberComparable >> greaterThanOrEqualToNodeSet: aNodeSet [
+	^ aNodeSet anySatisfy: [:each |
+		value >= each stringValue asXPathNumber]
+]
+
+{ #category : #private }
+XPathNumberComparable >> greaterThanOrEqualToNumber: aNumber [
+	^ value >= aNumber
+]
+
+{ #category : #private }
+XPathNumberComparable >> greaterThanOrEqualToString: aString [
+	^ value >= aString asXPathNumber
 ]
 
 { #category : #private }
@@ -81,7 +102,8 @@ XPathNumberComparable >> lessThanBoolean: aBoolean [
 
 { #category : #private }
 XPathNumberComparable >> lessThanNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | value < each stringValue asXPathNumber]
+	^ aNodeSet anySatisfy: [:each |
+		value < each stringValue asXPathNumber]
 ]
 
 { #category : #private }
@@ -90,31 +112,53 @@ XPathNumberComparable >> lessThanNumber: aNumber [
 ]
 
 { #category : #private }
+XPathNumberComparable >> lessThanOrEqualToBoolean: aBoolean [
+	^ value <= aBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathNumberComparable >> lessThanOrEqualToNodeSet: aNodeSet [
+	^ aNodeSet anySatisfy: [:each |
+		value <= each stringValue asXPathNumber]
+]
+
+{ #category : #private }
+XPathNumberComparable >> lessThanOrEqualToNumber: aNumber [
+	^ value <= aNumber
+]
+
+{ #category : #private }
+XPathNumberComparable >> lessThanOrEqualToString: aString [
+	^ value <= aString asXPathNumber
+]
+
+{ #category : #private }
 XPathNumberComparable >> lessThanString: aString [
 	^ value < aString asXPathNumber
 ]
 
 { #category : #private }
-XPathNumberComparable >> notEqualsBoolean: aBoolean [
+XPathNumberComparable >> notEqualToBoolean: aBoolean [
 	^ value asXPathBoolean ~= aBoolean
 ]
 
 { #category : #private }
-XPathNumberComparable >> notEqualsNodeSet: aNodeSet [
-	^ aNodeSet anySatisfy: [:each | value ~= each stringValue asXPathNumber]
+XPathNumberComparable >> notEqualToNodeSet: aNodeSet [
+	^ aNodeSet anySatisfy: [:each |
+		value ~= each stringValue asXPathNumber]
 ]
 
 { #category : #private }
-XPathNumberComparable >> notEqualsNumber: aNumber [
+XPathNumberComparable >> notEqualToNumber: aNumber [
 	^ value ~= aNumber
 ]
 
 { #category : #private }
-XPathNumberComparable >> notEqualsString: aString [
+XPathNumberComparable >> notEqualToString: aString [
 	^ value ~= aString asXPathNumber
 ]
 
 { #category : #comparing }
 XPathNumberComparable >> ~= aComparable [
-	^ aComparable notEqualsNumber: value
+	^ aComparable notEqualToNumber: value
 ]

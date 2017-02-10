@@ -32,31 +32,31 @@ XPathExpressionParserHandler >> handleAttributeAxis [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTest [
+XPathExpressionParserHandler >> handleAttributeNodeTest [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTestForLocalName: aLocalName [
+XPathExpressionParserHandler >> handleAttributeNodeTestForLocalName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTestForName: aName [
+XPathExpressionParserHandler >> handleAttributeNodeTestForName: aName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTestForNamespaceURI: aURI [
+XPathExpressionParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTestForNamespaceURI: aURI localName: aLocalName [
+XPathExpressionParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTestForPrefix: aPrefix [
+XPathExpressionParserHandler >> handleAttributeNodeTestForPrefix: aPrefix [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleAttributeTestForPrefix: aPrefix localName: aLocalName [
+XPathExpressionParserHandler >> handleAttributeNodeTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #'handling - axis' }
@@ -64,7 +64,7 @@ XPathExpressionParserHandler >> handleChildAxis [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleCommentTest [
+XPathExpressionParserHandler >> handleCommentNodeTest [
 ]
 
 { #category : #'handling - axis' }
@@ -80,31 +80,31 @@ XPathExpressionParserHandler >> handleDivisionOperator [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTest [
+XPathExpressionParserHandler >> handleElementNodeTest [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTestForLocalName: aLocalName [
+XPathExpressionParserHandler >> handleElementNodeTestForLocalName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTestForName: aName [
+XPathExpressionParserHandler >> handleElementNodeTestForName: aName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTestForNamespaceURI: aURI [
+XPathExpressionParserHandler >> handleElementNodeTestForNamespaceURI: aURI [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTestForNamespaceURI: aURI localName: aLocalName [
+XPathExpressionParserHandler >> handleElementNodeTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTestForPrefix: aPrefix [
+XPathExpressionParserHandler >> handleElementNodeTestForPrefix: aPrefix [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleElementTestForPrefix: aPrefix localName: aLocalName [
+XPathExpressionParserHandler >> handleElementNodeTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #'handling - operators' }
@@ -212,31 +212,31 @@ XPathExpressionParserHandler >> handleNamespaceAxis [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTest [
+XPathExpressionParserHandler >> handleNamespaceNodeTest [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTestForLocalName: aLocalName [
+XPathExpressionParserHandler >> handleNamespaceNodeTestForLocalName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTestForName: aName [
+XPathExpressionParserHandler >> handleNamespaceNodeTestForName: aName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTestForNamespaceURI: aURI [
+XPathExpressionParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTestForNamespaceURI: aURI localName: aLocalName [
+XPathExpressionParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTestForPrefix: aPrefix [
+XPathExpressionParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleNamespaceTestForPrefix: aPrefix localName: aLocalName [
+XPathExpressionParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #'handling - operators' }
@@ -256,11 +256,11 @@ XPathExpressionParserHandler >> handleOrOperator [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handlePITest [
+XPathExpressionParserHandler >> handlePINodeTest [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handlePITestForName: aName [
+XPathExpressionParserHandler >> handlePINodeTestForName: aName [
 ]
 
 { #category : #'handling - axis' }
@@ -360,7 +360,7 @@ XPathExpressionParserHandler >> handleSubtractionOperator [
 ]
 
 { #category : #'handling - node tests' }
-XPathExpressionParserHandler >> handleTextTest [
+XPathExpressionParserHandler >> handleTextNodeTest [
 ]
 
 { #category : #'handling - operators' }

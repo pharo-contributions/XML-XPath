@@ -33,26 +33,12 @@ XPathASTStringLiteralNode >> asXPathString [
 
 { #category : #private }
 XPathASTStringLiteralNode >> defaultTypeClass [
-	^ XPathStringType
+	^ XPathStringValueType
 ]
 
 { #category : #testing }
 XPathASTStringLiteralNode >> isStringLiteral [
 	^ true
-]
-
-{ #category : #printing }
-XPathASTStringLiteralNode >> printOn: aStream [
-	| quote |
-
-	quote :=
-		(self string includes: $")
-			ifTrue: [$']
-			ifFalse: [$"].
-	aStream
-		nextPut: quote;
-		nextPutAll: self string;
-		nextPut: quote.
 ]
 
 { #category : #accessing }

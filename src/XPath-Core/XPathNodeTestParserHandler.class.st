@@ -17,105 +17,105 @@ XPathNodeTestParserHandler >> handleAnyNodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTest [
+XPathNodeTestParserHandler >> handleAttributeNodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTestForLocalName: aLocalName [
+XPathNodeTestParserHandler >> handleAttributeNodeTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTestForName: aName [
+XPathNodeTestParserHandler >> handleAttributeNodeTestForName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTestForNamespaceURI: aURI [
+XPathNodeTestParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTestForNamespaceURI: aURI localName: aLocalName [
+XPathNodeTestParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTestForPrefix: aPrefix [
+XPathNodeTestParserHandler >> handleAttributeNodeTestForPrefix: aPrefix [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleAttributeTestForPrefix: aPrefix localName: aLocalName [
+XPathNodeTestParserHandler >> handleAttributeNodeTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleCommentTest [
+XPathNodeTestParserHandler >> handleCommentNodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTest [
+XPathNodeTestParserHandler >> handleElementNodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTestForLocalName: aLocalName [
+XPathNodeTestParserHandler >> handleElementNodeTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTestForName: aName [
+XPathNodeTestParserHandler >> handleElementNodeTestForName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTestForNamespaceURI: aURI [
+XPathNodeTestParserHandler >> handleElementNodeTestForNamespaceURI: aURI [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTestForNamespaceURI: aURI localName: aLocalName [
+XPathNodeTestParserHandler >> handleElementNodeTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTestForPrefix: aPrefix [
+XPathNodeTestParserHandler >> handleElementNodeTestForPrefix: aPrefix [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleElementTestForPrefix: aPrefix localName: aLocalName [
+XPathNodeTestParserHandler >> handleElementNodeTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleEmptyTest [
+XPathNodeTestParserHandler >> handleEmptyNodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTest [
+XPathNodeTestParserHandler >> handleNamespaceNodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTestForLocalName: aLocalName [
+XPathNodeTestParserHandler >> handleNamespaceNodeTestForLocalName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTestForName: aName [
+XPathNodeTestParserHandler >> handleNamespaceNodeTestForName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTestForNamespaceURI: aURI [
+XPathNodeTestParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTestForNamespaceURI: aURI localName: aLocalName [
+XPathNodeTestParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTestForPrefix: aPrefix [
+XPathNodeTestParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleNamespaceTestForPrefix: aPrefix localName: aLocalName [
+XPathNodeTestParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix localName: aLocalName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handlePITest [
+XPathNodeTestParserHandler >> handlePINodeTest [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handlePITestForName: aName [
+XPathNodeTestParserHandler >> handlePINodeTestForName: aName [
 ]
 
 { #category : #handling }
-XPathNodeTestParserHandler >> handleTextTest [
+XPathNodeTestParserHandler >> handleTextNodeTest [
 ]

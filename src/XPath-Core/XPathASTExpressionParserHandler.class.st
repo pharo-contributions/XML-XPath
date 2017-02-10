@@ -46,46 +46,46 @@ XPathASTExpressionParserHandler >> handleAttributeAxis [
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTest [
-	self topOperatorNode nodeTest: XPathASTAttributeTestNode new
+XPathASTExpressionParserHandler >> handleAttributeNodeTest [
+	self topOperatorNode nodeTest: XPathASTAttributeNodeTestNode new
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTestForLocalName: aLocalName [
+XPathASTExpressionParserHandler >> handleAttributeNodeTestForLocalName: aLocalName [
 	self topOperatorNode nodeTest:
-		(XPathASTAttributeTestForLocalNameNode localName: aLocalName)
+		(XPathASTAttributeNodeTestForLocalNameNode localName: aLocalName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTestForName: aName [
+XPathASTExpressionParserHandler >> handleAttributeNodeTestForName: aName [
 	self topOperatorNode nodeTest:
-		(XPathASTAttributeTestForNameNode name: aName)
+		(XPathASTAttributeNodeTestForNameNode name: aName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTestForNamespaceURI: aURI [
+XPathASTExpressionParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI [
 	self topOperatorNode nodeTest:
-		(XPathASTAttributeTestForNamespaceURINode namespaceURI: aURI)
+		(XPathASTAttributeNodeTestForNamespaceURINode namespaceURI: aURI)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTestForNamespaceURI: aURI localName: aLocalName [
+XPathASTExpressionParserHandler >> handleAttributeNodeTestForNamespaceURI: aURI localName: aLocalName [
 	self topOperatorNode nodeTest:
-		(XPathASTAttributeTestForNamespaceURIAndLocalNameNode
+		(XPathASTAttributeNodeTestForNamespaceURIAndLocalNameNode
 			namespaceURI: aURI
 			localName: aLocalName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTestForPrefix: aPrefix [
+XPathASTExpressionParserHandler >> handleAttributeNodeTestForPrefix: aPrefix [
 	self topOperatorNode nodeTest:
-		(XPathASTAttributeTestForPrefixNode prefix: aPrefix)
+		(XPathASTAttributeNodeTestForPrefixNode prefix: aPrefix)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleAttributeTestForPrefix: aPrefix localName: aLocalName [
+XPathASTExpressionParserHandler >> handleAttributeNodeTestForPrefix: aPrefix localName: aLocalName [
 	self topOperatorNode nodeTest:
-		(XPathASTAttributeTestForPrefixAndLocalNameNode
+		(XPathASTAttributeNodeTestForPrefixAndLocalNameNode
 			prefix: aPrefix
 			localName: aLocalName)
 ]
@@ -96,8 +96,8 @@ XPathASTExpressionParserHandler >> handleChildAxis [
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleCommentTest [
-	self topOperatorNode nodeTest: XPathASTCommentTestNode new
+XPathASTExpressionParserHandler >> handleCommentNodeTest [
+	self topOperatorNode nodeTest: XPathASTCommentNodeTestNode new
 ]
 
 { #category : #'handling - axis' }
@@ -118,46 +118,46 @@ XPathASTExpressionParserHandler >> handleDivisionOperator [
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTest [
-	self topOperatorNode nodeTest: XPathASTElementTestNode new
+XPathASTExpressionParserHandler >> handleElementNodeTest [
+	self topOperatorNode nodeTest: XPathASTElementNodeTestNode new
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTestForLocalName: aLocalName [
+XPathASTExpressionParserHandler >> handleElementNodeTestForLocalName: aLocalName [
 	self topOperatorNode nodeTest:
-		(XPathASTElementTestForLocalNameNode localName: aLocalName)
+		(XPathASTElementNodeTestForLocalNameNode localName: aLocalName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTestForName: aName [
+XPathASTExpressionParserHandler >> handleElementNodeTestForName: aName [
 	self topOperatorNode nodeTest:
-		(XPathASTElementTestForNameNode name: aName)
+		(XPathASTElementNodeTestForNameNode name: aName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTestForNamespaceURI: aURI [
+XPathASTExpressionParserHandler >> handleElementNodeTestForNamespaceURI: aURI [
 	self topOperatorNode nodeTest:
-		(XPathASTElementTestForNamespaceURINode namespaceURI: aURI)
+		(XPathASTElementNodeTestForNamespaceURINode namespaceURI: aURI)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTestForNamespaceURI: aURI localName: aLocalName [
+XPathASTExpressionParserHandler >> handleElementNodeTestForNamespaceURI: aURI localName: aLocalName [
 	self topOperatorNode nodeTest:
-		(XPathASTElementTestForNamespaceURIAndLocalNameNode
+		(XPathASTElementNodeTestForNamespaceURIAndLocalNameNode
 			namespaceURI: aURI
 			localName: aLocalName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTestForPrefix: aPrefix [
+XPathASTExpressionParserHandler >> handleElementNodeTestForPrefix: aPrefix [
 	self topOperatorNode nodeTest:
-		(XPathASTElementTestForPrefixNode prefix: aPrefix)
+		(XPathASTElementNodeTestForPrefixNode prefix: aPrefix)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleElementTestForPrefix: aPrefix localName: aLocalName [
+XPathASTExpressionParserHandler >> handleElementNodeTestForPrefix: aPrefix localName: aLocalName [
 	self topOperatorNode nodeTest:
-		(XPathASTElementTestForPrefixAndLocalNameNode
+		(XPathASTElementNodeTestForPrefixAndLocalNameNode
 			prefix: aPrefix
 			localName: aLocalName)
 ]
@@ -311,30 +311,30 @@ XPathASTExpressionParserHandler >> handleNamespaceAxis [
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTest [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTest [
 	self topOperatorNode nodeTest: XPathASTNamespaceTestNode new
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTestForLocalName: aLocalName [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTestForLocalName: aLocalName [
 	self topOperatorNode nodeTest:
 		(XPathASTNamespaceTestForLocalNameNode localName: aLocalName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTestForName: aName [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTestForName: aName [
 	self topOperatorNode nodeTest:
 		(XPathASTNamespaceTestForNameNode name: aName)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTestForNamespaceURI: aURI [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI [
 	self topOperatorNode nodeTest:
 		(XPathASTNamespaceTestForNamespaceURINode namespaceURI: aURI)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTestForNamespaceURI: aURI localName: aLocalName [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTestForNamespaceURI: aURI localName: aLocalName [
 	self topOperatorNode nodeTest:
 		(XPathASTNamespaceTestForNamespaceURIAndLocalNameNode
 			namespaceURI: aURI
@@ -342,13 +342,13 @@ XPathASTExpressionParserHandler >> handleNamespaceTestForNamespaceURI: aURI loca
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTestForPrefix: aPrefix [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix [
 	self topOperatorNode nodeTest:
 		(XPathASTNamespaceTestForPrefixNode prefix: aPrefix)
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleNamespaceTestForPrefix: aPrefix localName: aLocalName [
+XPathASTExpressionParserHandler >> handleNamespaceNodeTestForPrefix: aPrefix localName: aLocalName [
 	self topOperatorNode nodeTest:
 		(XPathASTNamespaceTestForPrefixAndLocalNameNode
 			prefix: aPrefix
@@ -381,14 +381,14 @@ XPathASTExpressionParserHandler >> handleOrOperator [
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handlePITest [
-	self topOperatorNode nodeTest: XPathASTPITestNode new
+XPathASTExpressionParserHandler >> handlePINodeTest [
+	self topOperatorNode nodeTest: XPathASTPINodeTestNode new
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handlePITestForName: aName [
+XPathASTExpressionParserHandler >> handlePINodeTestForName: aName [
 	self topOperatorNode nodeTest:
-		(XPathASTPITestForNameNode name: aName)
+		(XPathASTPINodeTestForNameNode name: aName)
 ]
 
 { #category : #'handling - axis' }
@@ -468,8 +468,8 @@ XPathASTExpressionParserHandler >> handleSubtractionOperator [
 ]
 
 { #category : #'handling - node tests' }
-XPathASTExpressionParserHandler >> handleTextTest [
-	self topOperatorNode nodeTest: XPathASTTextTestNode new
+XPathASTExpressionParserHandler >> handleTextNodeTest [
+	self topOperatorNode nodeTest: XPathASTTextNodeTestNode new
 ]
 
 { #category : #'handling - operators' }

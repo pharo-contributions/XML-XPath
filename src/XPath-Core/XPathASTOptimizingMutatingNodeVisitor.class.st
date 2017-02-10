@@ -15,9 +15,10 @@ XPathASTOptimizingMutatingNodeVisitor >> newFunctionCallForBoolean: aBoolean [
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitAdditionExpression: anAdditionExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitAdditionExpression: anAdditionExpression.
 
+	"addition of literals can be evaluated at compile time"
 	anAdditionExpression hasNonLiteralExpression
 		ifTrue: [^ anAdditionExpression]
 		ifFalse: [
@@ -28,6 +29,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitAdditionExpression: anAdditionExpr
 
 { #category : #'visiting - steps' }
 XPathASTOptimizingMutatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfStep [
+	"traverse in post-order"
 	super visitDescendantOrSelfStep: aDescendantOrSelfStep.
 
 	(aDescendantOrSelfStep nodeTest isAnyNodeTest
@@ -74,9 +76,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantO
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitDivisionExpression: aDivisionExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitDivisionExpression: aDivisionExpression.
 
+	"division of literals can be evaluated at compile time"
 	aDivisionExpression hasNonLiteralExpression
 		ifTrue: [^ aDivisionExpression]
 		ifFalse: [
@@ -87,18 +90,18 @@ XPathASTOptimizingMutatingNodeVisitor >> visitDivisionExpression: aDivisionExpre
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitEqualsExpression: anEqualsExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitEqualsExpression: anEqualsExpression.
 
+	"equality comparisons of literals can be evaluated at compile time"
 	anEqualsExpression hasNonLiteralExpression
 		ifTrue: [
+			"predicate expressions like 'position()=10' and '10=position()'
+			can be replaced with number literals like '10' which are easier
+			to optimize"
 			(anEqualsExpression hasParent
 				and: [anEqualsExpression parent isPredicate])
 				ifTrue: [
-					"replace predicate expressions like 'position()=10'
-					and '10=position()' with '10', because position()
-					calls are inlined, and number predicates can be
-					optimized more easily"
 					anEqualsExpression expression isNumberLiteral
 						ifTrue: [
 							(anEqualsExpression otherExpression isFunctionCall
@@ -132,6 +135,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitEqualsExpression: anEqualsExpressi
 
 { #category : #'visiting - location paths' }
 XPathASTOptimizingMutatingNodeVisitor >> visitFilterExpression: aFilterExpression [
+	"traverse in post-order"
 	super visitFilterExpression: aFilterExpression.
 
 	aFilterExpression hasPredicates
@@ -143,6 +147,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitFilterExpression: aFilterExpressio
 
 { #category : #'visiting - location paths' }
 XPathASTOptimizingMutatingNodeVisitor >> visitFilterExpressionLocationPath: aFilterExpressionLocationPath [
+	"traverse in post-order"
 	super visitFilterExpressionLocationPath: aFilterExpressionLocationPath.
 
 	aFilterExpressionLocationPath hasSteps
@@ -154,6 +159,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitFilterExpressionLocationPath: aFil
 
 { #category : #'visiting - functions' }
 XPathASTOptimizingMutatingNodeVisitor >> visitFunctionCall: aFunctionCall [
+	"traverse in post-order"
 	super visitFunctionCall: aFunctionCall.
 
 	"these function calls are inlined by the translator, so we can infer their
@@ -161,19 +167,20 @@ XPathASTOptimizingMutatingNodeVisitor >> visitFunctionCall: aFunctionCall [
 	rebound at runtime with XPathContext objects, so we don't infer them"
 	(aFunctionCall isTrueFunctionCall
 		or: [aFunctionCall isFalseFunctionCall])
-		ifTrue: [aFunctionCall type: XPathBooleanType new]
+		ifTrue: [aFunctionCall type: XPathBooleanValueType new]
 		ifFalse: [
 			(aFunctionCall isPositionFunctionCall
 				or: [aFunctionCall isLastFunctionCall])
-				ifTrue: [aFunctionCall type: XPathNumberType new]].
+				ifTrue: [aFunctionCall type: XPathNumberValueType new]].
 	^ aFunctionCall.
 ]
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitGreaterThanExpression: aGreaterThanExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitGreaterThanExpression: aGreaterThanExpression.
 
+	"greater than comparisons of literals can be evaluated at compile time"
 	aGreaterThanExpression hasNonLiteralExpression
 		ifTrue: [^ aGreaterThanExpression]
 		ifFalse: [
@@ -184,9 +191,11 @@ XPathASTOptimizingMutatingNodeVisitor >> visitGreaterThanExpression: aGreaterTha
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitGreaterThanOrEqualToExpression: aGreaterThanOrEqualToExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitGreaterThanOrEqualToExpression: aGreaterThanOrEqualToExpression.
 
+	"greater than or equal to comparisons of literals can be evaluated at
+	compile time"
 	aGreaterThanOrEqualToExpression hasNonLiteralExpression
 		ifTrue: [^ aGreaterThanOrEqualToExpression]
 		ifFalse: [
@@ -197,9 +206,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitGreaterThanOrEqualToExpression: aG
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitLessThanExpression: aLessThanExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitLessThanExpression: aLessThanExpression.
 
+	"less than comparisons of literals can be evaluated at compile time"
 	aLessThanExpression hasNonLiteralExpression
 		ifTrue: [^ aLessThanExpression]
 		ifFalse: [
@@ -210,9 +220,11 @@ XPathASTOptimizingMutatingNodeVisitor >> visitLessThanExpression: aLessThanExpre
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitLessThanOrEqualToExpression: aLessThanOrEqualToExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitLessThanOrEqualToExpression: aLessThanOrEqualToExpression.
 
+	"less than or equal to comparisons of literals can be evaluated at
+	compile time"
 	aLessThanOrEqualToExpression hasNonLiteralExpression
 		ifTrue: [^ aLessThanOrEqualToExpression]
 		ifFalse: [
@@ -223,9 +235,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitLessThanOrEqualToExpression: aLess
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitModulusExpression: aModulusExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitModulusExpression: aModulusExpression.
 
+	"the modulus of literals can be evaluated at compile time"
 	aModulusExpression hasNonLiteralExpression
 		ifTrue: [^ aModulusExpression]
 		ifFalse: [
@@ -236,9 +249,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitModulusExpression: aModulusExpress
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitMultiplicationExpression: aMultiplicationExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitMultiplicationExpression: aMultiplicationExpression.
 
+	"multiplication of literals can be evaluated at compile time"
 	aMultiplicationExpression hasNonLiteralExpression
 		ifTrue: [^ aMultiplicationExpression]
 		ifFalse: [
@@ -249,9 +263,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitMultiplicationExpression: aMultipl
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitNegationExpression: aNegationExpression [
-	"visit the operand first to traverse bottom-up"
+	"traverse in post-order"
 	super visitNegationExpression: aNegationExpression.
 
+	"the negation of a literal can be evaluated at compile time"
 	aNegationExpression hasNonLiteralExpression
 		ifTrue: [^ aNegationExpression]
 		ifFalse: [
@@ -261,9 +276,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitNegationExpression: aNegationExpre
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitNotEqualsExpression: anNotEqualsExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitNotEqualsExpression: anNotEqualsExpression.
 
+	"inequality comparisons of literals can be evaluated at compile time"
 	anNotEqualsExpression hasNonLiteralExpression
 		ifTrue: [^ anNotEqualsExpression]
 		ifFalse: [
@@ -283,6 +299,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitNotEqualsExpression: anNotEqualsEx
 
 { #category : #'visiting - predicates' }
 XPathASTOptimizingMutatingNodeVisitor >> visitPredicate: aPredicate [
+	"traverse in post-order"
 	super visitPredicate: aPredicate.
 
 	"a predicate that is just [true()] can be ignored if it's not first"
@@ -295,6 +312,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitPredicate: aPredicate [
 
 { #category : #'visiting - steps' }
 XPathASTOptimizingMutatingNodeVisitor >> visitSelfStep: aSelfStep [
+	"traverse in post-order"
 	super visitSelfStep: aSelfStep.
 
 	"'self::node()' or '.' can be eliminated if it's not the first step
@@ -309,9 +327,10 @@ XPathASTOptimizingMutatingNodeVisitor >> visitSelfStep: aSelfStep [
 
 { #category : #'visiting - operators' }
 XPathASTOptimizingMutatingNodeVisitor >> visitSubtractionExpression: aSubtractionExpression [
-	"visit operands first to traverse bottom-up"
+	"traverse in post-order"
 	super visitSubtractionExpression: aSubtractionExpression.
 
+	"subtraction of literals can be evaluated at compile time"
 	aSubtractionExpression hasNonLiteralExpression
 		ifTrue: [^ aSubtractionExpression]
 		ifFalse: [

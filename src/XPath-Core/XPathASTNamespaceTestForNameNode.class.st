@@ -17,11 +17,11 @@ XPathASTNamespaceTestForNameNode class >> name: aName [
 
 { #category : #visiting }
 XPathASTNamespaceTestForNameNode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitNamespaceTestForName: self
+	^ aNodeVisitor visitNamespaceNodeTestForName: self
 ]
 
 { #category : #testing }
-XPathASTNamespaceTestForNameNode >> isNamespaceTestForName [
+XPathASTNamespaceTestForNameNode >> isNamespaceNodeTestForName [
 	^ true
 ]
 
@@ -33,9 +33,4 @@ XPathASTNamespaceTestForNameNode >> name [
 { #category : #accessing }
 XPathASTNamespaceTestForNameNode >> name: aName [
 	name := aName
-]
-
-{ #category : #printing }
-XPathASTNamespaceTestForNameNode >> printTypeTestArgumentsOn: aStream [
-	aStream nextPutAll: self name
 ]

@@ -39,35 +39,35 @@ XPathSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet ancestorAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) ancestorAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) ancestorAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			ancestorAxisSelect: nodeTestBlock
+			ancestorAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet ancestorAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			ancestorAxis: nodeTestBlock
+			ancestorAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			ancestorAxis: nodeTestBlock
+			ancestorAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -75,35 +75,35 @@ XPathSortOrder >> on: aNodeSet ancestorAxis: aNodeTestStringOrBlock predicates: 
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet ancestorOrSelfAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) ancestorOrSelfAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) ancestorOrSelfAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			ancestorOrSelfAxisSelect: nodeTestBlock
+			ancestorOrSelfAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet ancestorOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			ancestorOrSelfAxis: nodeTestBlock
+			ancestorOrSelfAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			ancestorOrSelfAxis: nodeTestBlock
+			ancestorOrSelfAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -111,35 +111,35 @@ XPathSortOrder >> on: aNodeSet ancestorOrSelfAxis: aNodeTestStringOrBlock predic
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy attributeAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
-	copy := (aNodeSet at: 1) attributeAxis: nodeTestBlock.
+	attributeAxisNodeTest := aNodeTestStringOrBlock asXPathAttributeAxisNodeTest.
+	copy := (aNodeSet at: 1) attributeAxis: attributeAxisNodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			attributeAxisSelect: nodeTestBlock
+			attributeAxisSelect: attributeAxisNodeTest
 			into: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy attributeAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
+	attributeAxisNodeTest := aNodeTestStringOrBlock asXPathAttributeAxisNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			attributeAxis: nodeTestBlock
+			attributeAxis: attributeAxisNodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			attributeAxis: nodeTestBlock
+			attributeAxis: attributeAxisNodeTest
 			predicates: aPredicateCollection)
 				addAllTo: copy].
 	^ copy.
@@ -147,35 +147,35 @@ XPathSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock predicates:
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet childAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) childAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) childAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			childAxisSelect: nodeTestBlock
+			childAxisSelect: nodeTest
 			into: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet childAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			childAxis: nodeTestBlock
+			childAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			childAxis: nodeTestBlock
+			childAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllTo: copy].
 	^ copy.
@@ -183,35 +183,35 @@ XPathSortOrder >> on: aNodeSet childAxis: aNodeTestStringOrBlock predicates: aPr
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet descendantAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) descendantAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) descendantAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			descendantAxisSelect: nodeTestBlock
+			descendantAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet descendantAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			descendantAxis: nodeTestBlock
+			descendantAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			descendantAxis: nodeTestBlock
+			descendantAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -219,35 +219,35 @@ XPathSortOrder >> on: aNodeSet descendantAxis: aNodeTestStringOrBlock predicates
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet descendantOrSelfAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) descendantOrSelfAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) descendantOrSelfAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			descendantOrSelfAxisSelect: nodeTestBlock
+			descendantOrSelfAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet descendantOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			descendantOrSelfAxis: nodeTestBlock
+			descendantOrSelfAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			descendantOrSelfAxis: nodeTestBlock
+			descendantOrSelfAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -255,35 +255,35 @@ XPathSortOrder >> on: aNodeSet descendantOrSelfAxis: aNodeTestStringOrBlock pred
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet followingAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) followingAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) followingAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			followingAxisSelect: nodeTestBlock
+			followingAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet followingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			followingAxis: nodeTestBlock
+			followingAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			followingAxis: nodeTestBlock
+			followingAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -291,35 +291,35 @@ XPathSortOrder >> on: aNodeSet followingAxis: aNodeTestStringOrBlock predicates:
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet followingSiblingAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) followingSiblingAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) followingSiblingAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			followingSiblingAxisSelect: nodeTestBlock
+			followingSiblingAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet followingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			followingSiblingAxis: nodeTestBlock
+			followingSiblingAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			followingSiblingAxis: nodeTestBlock
+			followingSiblingAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -327,35 +327,35 @@ XPathSortOrder >> on: aNodeSet followingSiblingAxis: aNodeTestStringOrBlock pred
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy namespaceAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
-	copy := (aNodeSet at: 1) namespaceAxis: nodeTestBlock.
+	namespaceAxisNodeTest := aNodeTestStringOrBlock asXPathNamespaceAxisNodeTest.
+	copy := (aNodeSet at: 1) namespaceAxis: namespaceAxisNodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			namespaceAxisSelect: nodeTestBlock
+			namespaceAxisSelect: namespaceAxisNodeTest
 			into: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy namespaceAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
+	namespaceAxisNodeTest := aNodeTestStringOrBlock asXPathNamespaceAxisNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			namespaceAxis: nodeTestBlock
+			namespaceAxis: namespaceAxisNodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			namespaceAxis: nodeTestBlock
+			namespaceAxis: namespaceAxisNodeTest
 			predicates: aPredicateCollection)
 				addAllTo: copy].
 	^ copy.
@@ -363,16 +363,16 @@ XPathSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock predicates:
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet parentAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	copy := aNodeSet copyEmpty.
 	aNodeSet size > 0
 		ifFalse: [^ copy].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	1 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			parentAxisSelect: nodeTestBlock
+			parentAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
@@ -387,35 +387,35 @@ XPathSortOrder >> on: aNodeSet parentAxis: aNodeTestStringOrBlock predicates: aP
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet precedingAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) precedingAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) precedingAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			precedingAxisSelect: nodeTestBlock
+			precedingAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet precedingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			precedingAxis: nodeTestBlock
+			precedingAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			precedingAxis: nodeTestBlock
+			precedingAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -423,35 +423,35 @@ XPathSortOrder >> on: aNodeSet precedingAxis: aNodeTestStringOrBlock predicates:
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet precedingSiblingAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
-	copy := (aNodeSet at: 1) precedingSiblingAxis: nodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
+	copy := (aNodeSet at: 1) precedingSiblingAxis: nodeTest.
 	2 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			precedingSiblingAxisSelect: nodeTestBlock
+			precedingSiblingAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	^ copy.
 ]
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet precedingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	copy :=
 		(aNodeSet at: 1)
-			precedingSiblingAxis: nodeTestBlock
+			precedingSiblingAxis: nodeTest
 			predicates: aPredicateCollection.
 	2 to: aNodeSet size do: [:i |
 		((aNodeSet at: i)
-			precedingSiblingAxis: nodeTestBlock
+			precedingSiblingAxis: nodeTest
 			predicates: aPredicateCollection)
 				addAllIfNotPresentTo: copy].
 	^ copy.
@@ -459,16 +459,16 @@ XPathSortOrder >> on: aNodeSet precedingSiblingAxis: aNodeTestStringOrBlock pred
 
 { #category : #enumerating }
 XPathSortOrder >> on: aNodeSet selfAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	copy := aNodeSet copyEmpty.
 	aNodeSet size > 0
 		ifFalse: [^ copy].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	1 to: aNodeSet size do: [:i |
 		(aNodeSet at: i)
-			selfAxisSelect: nodeTestBlock
+			selfAxisSelect: nodeTest
 			into: copy].
 	^ copy.
 ]

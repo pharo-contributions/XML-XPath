@@ -27,8 +27,10 @@ XPathSubstringFunction >> function [
 		and: [start <= string size
 			and: [end >= 1]])
 		ifTrue: [
-			"must convert these to integers, because #copyFrom:to: doesn't take
-			floats, and the #min:/#max: will eliminate +/- infinity"
+			"the #xPathRounded calls got rid of any fraciton part, but
+			integer flots still must be converted to integers because
+			#copyFrom:to: won't take integer floats, and the #min:/#max:
+			eliminate +/- infinity"
 			^ string
 				copyFrom: (start max: 1) asInteger
 				to: (end min: string size) asInteger]

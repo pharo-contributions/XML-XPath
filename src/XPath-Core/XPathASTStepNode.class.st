@@ -92,7 +92,7 @@ XPathASTStepNode >> nodeTest [
 
 { #category : #accessing }
 XPathASTStepNode >> nodeTest: aNode [
-	nodeTest := aNode
+	nodeTest := self beParentOf: aNode
 ]
 
 { #category : #accessing }
@@ -111,16 +111,9 @@ XPathASTStepNode >> predicatesDo: aBlock [
 		ifNotNil: [predicates do: aBlock]
 ]
 
-{ #category : #printing }
-XPathASTStepNode >> printOn: aStream [
-	aStream
-		nextPutAll: self axisName;
-		nextPutAll: '::';
-		print: self nodeTest.
-	self hasPredicates
-		ifTrue: [
-			self predicatesDo: [:each |
-				each printOn: aStream]].
+{ #category : #accessing }
+XPathASTStepNode >> principalNodeType [
+	^ XPathElementNodeType new
 ]
 
 { #category : #removing }

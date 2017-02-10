@@ -110,44 +110,44 @@ XPathASTNodeVisitor >> visitArgument: aNode [
 	^ self visitNodeWithExpression: aNode
 ]
 
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitAttributeNodeTest: anAttributeNodeTest [
+	^ self visitNodeTest: anAttributeNodeTest
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitAttributeNodeTestForLocalName: anAttributeNodeTestForLocalName [
+	^ self visitNodeTest: anAttributeNodeTestForLocalName
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitAttributeNodeTestForName: anAttributeTestForName [
+	^ self visitNodeTest: anAttributeTestForName
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitAttributeNodeTestForNamespaceURI: anAttributeNodeTestForNamespaceURI [
+	^ self visitNodeTest: anAttributeNodeTestForNamespaceURI
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitAttributeNodeTestForNamespaceURIAndLocalName: anAttributeNodeTestForNamespaceURIAndLocalName [
+	^ self visitNodeTest: anAttributeNodeTestForNamespaceURIAndLocalName
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitAttributeNodeTestForPrefix: anAttributeNodeTestForPrefix [
+	^ self visitNodeTest: anAttributeNodeTestForPrefix
+]
+
 { #category : #'visiting - steps' }
 XPathASTNodeVisitor >> visitAttributeStep: anAttributeStep [
 	^ self visitStep: anAttributeStep
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTest: anAttributeTest [
-	^ self visitNodeTest: anAttributeTest
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTestForLocalName: anAttributeTestForLocalName [
-	^ self visitNodeTest: anAttributeTestForLocalName
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTestForName: anAttributeTestForName [
-	^ self visitNodeTest: anAttributeTestForName
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTestForNamespaceURI: anAttributeTestForNamespaceURI [
-	^ self visitNodeTest: anAttributeTestForNamespaceURI
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTestForNamespaceURIAndLocalName: anAttributeTestForNamespaceURIAndLocalName [
-	^ self visitNodeTest: anAttributeTestForNamespaceURIAndLocalName
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTestForPrefix: anAttributeTestForPrefix [
-	^ self visitNodeTest: anAttributeTestForPrefix
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitAttributeTestForPrefixAndLocalName: anAttributeTestForPrefixAndLocalName [
-	^ self visitNodeTest: anAttributeTestForPrefixAndLocalName
+XPathASTNodeVisitor >> visitAttributeTestForPrefixAndLocalName: anAttributeNodeTestForPrefixAndLocalName [
+	^ self visitNodeTest: anAttributeNodeTestForPrefixAndLocalName
 ]
 
 { #category : #'visiting - operators' }
@@ -161,8 +161,8 @@ XPathASTNodeVisitor >> visitChildStep: aChildStep [
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitCommentTest: aCommentTest [
-	^ self visitNodeTest: aCommentTest
+XPathASTNodeVisitor >> visitCommentNodeTest: aCommentNodeTest [
+	^ self visitNodeTest: aCommentNodeTest
 ]
 
 { #category : #'visiting - steps' }
@@ -181,38 +181,38 @@ XPathASTNodeVisitor >> visitDivisionExpression: aDivisionExpression [
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTest: anElementTest [
-	^ self visitNodeTest: anElementTest
+XPathASTNodeVisitor >> visitElementNodeTest: anElementNodeTest [
+	^ self visitNodeTest: anElementNodeTest
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTestForLocalName: anElementTestForLocalName [
-	^ self visitNodeTest: anElementTestForLocalName
+XPathASTNodeVisitor >> visitElementNodeTestForLocalName: anElementNodeTestForLocalName [
+	^ self visitNodeTest: anElementNodeTestForLocalName
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTestForName: anElementTestForName [
-	^ self visitNodeTest: anElementTestForName
+XPathASTNodeVisitor >> visitElementNodeTestForName: anElementNodeTestForName [
+	^ self visitNodeTest: anElementNodeTestForName
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTestForNamespaceURI: anElementTestForNamespaceURI [
-	^ self visitNodeTest: anElementTestForNamespaceURI
+XPathASTNodeVisitor >> visitElementNodeTestForNamespaceURI: anElementNodeTestForNamespaceURI [
+	^ self visitNodeTest: anElementNodeTestForNamespaceURI
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTestForNamespaceURIAndLocalName: anElementTestForNamespaceURIAndLocalName [
-	^ self visitNodeTest: anElementTestForNamespaceURIAndLocalName
+XPathASTNodeVisitor >> visitElementNodeTestForNamespaceURIAndLocalName: anElementNodeTestForNamespaceURIAndLocalName [
+	^ self visitNodeTest: anElementNodeTestForNamespaceURIAndLocalName
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTestForPrefix: anElementTestForPrefix [
-	^ self visitNodeTest: anElementTestForPrefix
+XPathASTNodeVisitor >> visitElementNodeTestForPrefix: anElementNodeTestForPrefix [
+	^ self visitNodeTest: anElementNodeTestForPrefix
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitElementTestForPrefixAndLocalName: anElementTestForPrefixAndLocalName [
-	^ self visitNodeTest: anElementTestForPrefixAndLocalName
+XPathASTNodeVisitor >> visitElementNodeTestForPrefixAndLocalName: anElementNodeTestForPrefixAndLocalName [
+	^ self visitNodeTest: anElementNodeTestForPrefixAndLocalName
 ]
 
 { #category : #'visiting - operators' }
@@ -317,44 +317,44 @@ XPathASTNodeVisitor >> visitMultiplicationExpression: aMultiplicationExpression 
 	^ self visitBinaryOperatorExpression: aMultiplicationExpression
 ]
 
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTest: aNamespaceNodeTest [
+	^ self visitNodeTest: aNamespaceNodeTest
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTestForLocalName: aNamespaceNodeTestForLocalName [
+	^ self visitNodeTest: aNamespaceNodeTestForLocalName
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTestForName: aNamespaceNodeTestForName [
+	^ self visitNodeTest: aNamespaceNodeTestForName
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTestForNamespaceURI: aNamespaceNodeTestForNamespaceURI [
+	^ self visitNodeTest: aNamespaceNodeTestForNamespaceURI
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTestForNamespaceURIAndLocalName: aNamespaceNodeTestForNamespaceURIAndLocalName [
+	^ self visitNodeTest: aNamespaceNodeTestForNamespaceURIAndLocalName
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTestForPrefix: aNamespaceNodeTestForPrefix [
+	^ self visitNodeTest: aNamespaceNodeTestForPrefix
+]
+
+{ #category : #'visiting - node tests' }
+XPathASTNodeVisitor >> visitNamespaceNodeTestForPrefixAndLocalName: aNamespaceTestForPrefixAndLocalName [
+	^ self visitNodeTest: aNamespaceTestForPrefixAndLocalName
+]
+
 { #category : #'visiting - steps' }
 XPathASTNodeVisitor >> visitNamespaceStep: aNamespaceStep [
 	^ self visitStep: aNamespaceStep
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTest: aNamespaceTest [
-	^ self visitNodeTest: aNamespaceTest
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTestForLocalName: aNamespaceTestForLocalName [
-	^ self visitNodeTest: aNamespaceTestForLocalName
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTestForName: aNamespaceTestForName [
-	^ self visitNodeTest: aNamespaceTestForName
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTestForNamespaceURI: aNamespaceTestForNamespaceURI [
-	^ self visitNodeTest: aNamespaceTestForNamespaceURI
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTestForNamespaceURIAndLocalName: aNamespaceTestForNamespaceURIAndLocalName [
-	^ self visitNodeTest: aNamespaceTestForNamespaceURIAndLocalName
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTestForPrefix: aNamespaceTestForPrefix [
-	^ self visitNodeTest: aNamespaceTestForPrefix
-]
-
-{ #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitNamespaceTestForPrefixAndLocalName: aNamespaceTestForPrefixAndLocalName [
-	^ self visitNodeTest: aNamespaceTestForPrefixAndLocalName
 ]
 
 { #category : #'visiting - operators' }
@@ -401,13 +401,13 @@ XPathASTNodeVisitor >> visitOrExpression: anOrExpression [
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitPITest: aPITest [
-	^ self visitNodeTest: aPITest
+XPathASTNodeVisitor >> visitPINodeTest: aPINodeTest [
+	^ self visitNodeTest: aPINodeTest
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitPITestForName: aPITestForName [
-	^ self visitNodeTest: aPITestForName
+XPathASTNodeVisitor >> visitPINodeTestForName: aPINodeTestForName [
+	^ self visitNodeTest: aPINodeTestForName
 ]
 
 { #category : #'visiting - steps' }
@@ -457,8 +457,8 @@ XPathASTNodeVisitor >> visitSubtractionExpression: aSubtractionExpression [
 ]
 
 { #category : #'visiting - node tests' }
-XPathASTNodeVisitor >> visitTextTest: aTextTest [
-	^ self visitNodeTest: aTextTest
+XPathASTNodeVisitor >> visitTextNodeTest: aTextNodeTest [
+	^ self visitNodeTest: aTextNodeTest
 ]
 
 { #category : #'visiting - operators' }

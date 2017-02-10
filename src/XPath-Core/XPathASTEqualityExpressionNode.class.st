@@ -9,7 +9,7 @@ Class {
 
 { #category : #private }
 XPathASTEqualityExpressionNode >> defaultTypeClass [
-	^ XPathBooleanType
+	^ XPathBooleanValueType
 ]
 
 { #category : #testing }

@@ -24,35 +24,35 @@ XPathReverseDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy attributeAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
-	copy := (aNodeSet at: aNodeSet size) attributeAxis: nodeTestBlock.
+	attributeAxisNodeTest := aNodeTestStringOrBlock asXPathAttributeAxisNodeTest.
+	copy := (aNodeSet at: aNodeSet size) attributeAxis: attributeAxisNodeTest.
 	aNodeSet size - 1 to: 1 by: -1 do: [:i |
 		(aNodeSet at: i)
-			attributeAxisSelect: nodeTestBlock
+			attributeAxisSelect: attributeAxisNodeTest
 			into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy attributeAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathAttributeNodeTestBlock.
+	attributeAxisNodeTest := aNodeTestStringOrBlock asXPathAttributeAxisNodeTest.
 	copy :=
 		(aNodeSet at: aNodeSet size)
-			attributeAxis: nodeTestBlock
+			attributeAxis: attributeAxisNodeTest
 			predicates: aPredicateCollection.
 	aNodeSet size - 1 to: 1 by: -1 do: [:i |
 		((aNodeSet at: i)
-			attributeAxis: nodeTestBlock
+			attributeAxis: attributeAxisNodeTest
 			predicates: aPredicateCollection)
 				addAllTo: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
@@ -60,35 +60,35 @@ XPathReverseDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBl
 
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy namespaceAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
-	copy := (aNodeSet at: aNodeSet size) namespaceAxis: nodeTestBlock.
+	namespaceAxisNodeTest := aNodeTestStringOrBlock asXPathNamespaceAxisNodeTest.
+	copy := (aNodeSet at: aNodeSet size) namespaceAxis: namespaceAxisNodeTest.
 	aNodeSet size - 1 to: 1 by: -1 do: [:i |
 		(aNodeSet at: i)
-			namespaceAxisSelect: nodeTestBlock
+			namespaceAxisSelect: namespaceAxisNodeTest
 			into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	| copy nodeTestBlock |
+	| copy namespaceAxisNodeTest |
 
 	aNodeSet size > 0
 		ifFalse: [^ aNodeSet copyEmpty].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock.
+	namespaceAxisNodeTest := aNodeTestStringOrBlock asXPathNamespaceAxisNodeTest.
 	copy :=
 		(aNodeSet at: aNodeSet size)
-			namespaceAxis: nodeTestBlock
+			namespaceAxis: namespaceAxisNodeTest
 			predicates: aPredicateCollection.
 	aNodeSet size - 1 to: 1 by: -1 do: [:i |
 		((aNodeSet at: i)
-			namespaceAxis: nodeTestBlock
+			namespaceAxis: namespaceAxisNodeTest
 			predicates: aPredicateCollection)
 				addAllTo: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
@@ -96,16 +96,16 @@ XPathReverseDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBl
 
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> on: aNodeSet parentAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	copy := aNodeSet copyEmpty.
 	aNodeSet size > 0
 		ifFalse: [^ copy].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	aNodeSet size to: 1 by: -1 do: [:i |
 		(aNodeSet at: i)
-			parentAxisSelect: nodeTestBlock
+			parentAxisSelect: nodeTest
 			ifNotPresentInto: copy].
 	"parent is a document order axis according to the spec"
 	^ copy sortOrder: XPathDocumentSortOrder new.
@@ -113,16 +113,16 @@ XPathReverseDocumentSortOrder >> on: aNodeSet parentAxis: aNodeTestStringOrBlock
 
 { #category : #enumerating }
 XPathReverseDocumentSortOrder >> on: aNodeSet selfAxis: aNodeTestStringOrBlock [
-	| copy nodeTestBlock |
+	| copy nodeTest |
 
 	copy := aNodeSet copyEmpty.
 	aNodeSet size > 0
 		ifFalse: [^ copy].
 
-	nodeTestBlock := aNodeTestStringOrBlock asXPathNodeTestBlock.
+	nodeTest := aNodeTestStringOrBlock asXPathNodeTest.
 	aNodeSet size to: 1 by: -1 do: [:i |
 		(aNodeSet at: i)
-			selfAxisSelect: nodeTestBlock
+			selfAxisSelect: nodeTest
 			into: copy].
 	^ copy sortOrder: XPathDocumentSortOrder new.
 ]

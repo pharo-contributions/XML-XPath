@@ -17,11 +17,11 @@ XPathASTNamespaceTestForPrefixNode class >> prefix: aPrefix [
 
 { #category : #visiting }
 XPathASTNamespaceTestForPrefixNode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitNamespaceTestForPrefix: self
+	^ aNodeVisitor visitNamespaceNodeTestForPrefix: self
 ]
 
 { #category : #testing }
-XPathASTNamespaceTestForPrefixNode >> isNamespaceTestForPrefix [
+XPathASTNamespaceTestForPrefixNode >> isNamespaceNodeTestForPrefix [
 	^ true
 ]
 
@@ -33,11 +33,4 @@ XPathASTNamespaceTestForPrefixNode >> prefix [
 { #category : #accessing }
 XPathASTNamespaceTestForPrefixNode >> prefix: aPrefix [
 	prefix := aPrefix
-]
-
-{ #category : #printing }
-XPathASTNamespaceTestForPrefixNode >> printTypeTestArgumentsOn: aStream [
-	aStream
-		nextPutAll: self prefix;
-		nextPutAll: ':*'
 ]

@@ -49,7 +49,7 @@ XPathNodeTestParser >> nextAttributeTest [
 { #category : #parsing }
 XPathNodeTestParser >> nextCommentTest [
 	self nextEndArgumentList.
-	context handleCommentTestWith: handler.
+	context handleCommentNodeTestWith: handler.
 ]
 
 { #category : #parsing }
@@ -62,7 +62,7 @@ XPathNodeTestParser >> nextElementTest [
 
 { #category : #parsing }
 XPathNodeTestParser >> nextEmptyTest [
-	context handleEmptyTestWith: handler
+	context handleEmptyNodeTestWith: handler
 ]
 
 { #category : #parsing }
@@ -77,15 +77,15 @@ XPathNodeTestParser >> nextNamespaceTest [
 XPathNodeTestParser >> nextPITest [
 	| name |
 
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	name :=
 		(self nextStringLiteralOptional: true)
 			ifNil: [self nextNCNameOptional: true].
 	name
-		ifNil: [context handlePITestWith: handler]
+		ifNil: [context handlePINodeTestWith: handler]
 		ifNotNil: [
 			context
-				handlePITestForName: name
+				handlePINodeTestForName: name
 				with: handler].
 	self nextEndArgumentList.
 ]
@@ -93,7 +93,7 @@ XPathNodeTestParser >> nextPITest [
 { #category : #parsing }
 XPathNodeTestParser >> nextTextTest [
 	self nextEndArgumentList.
-	context handleTextTestWith: handler.
+	context handleTextNodeTestWith: handler.
 ]
 
 { #category : #parsing }
@@ -106,17 +106,17 @@ XPathNodeTestParser >> parseInput [
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForExpandedNameTest: aName [
 	(aName = 'Q'
-		and: [inputStream peekFor: ${])
+		and: [readStream peekFor: ${])
 		ifTrue: [| uri |
 			uri := self expectUpTo: $}.
-			(inputStream peekFor: $*)
+			(readStream peekFor: $*)
 				ifTrue: [
 					context
-						handleTestForNamespaceURI: uri
+						handleNodeTestForNamespaceURI: uri
 						with: handler]
 				ifFalse: [
 					context
-						handleTestForNamespaceURI: uri
+						handleNodeTestForNamespaceURI: uri
 						localName: self nextNCName
 						with: handler].
 			^ true]
@@ -125,8 +125,8 @@ XPathNodeTestParser >> peekForExpandedNameTest: aName [
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNameTestOrNoteTypeTest: aLocalName [
-	inputStream skipSeparators.
-	(inputStream peekFor: $:)
+	readStream skipSeparators.
+	(readStream peekFor: $:)
 		ifTrue: [^ false]. ": after spaces; axis specifier"
 
 	(isParsingNodeTypeTest not
@@ -134,16 +134,16 @@ XPathNodeTestParser >> peekForNameTestOrNoteTypeTest: aLocalName [
 		ifTrue: [^ self peekForNodeTypeTest: aLocalName]
 		ifFalse: [
 			context
-				handleTestForName: aLocalName
+				handleNodeTestForName: aLocalName
 				with: handler.
 			^ true].
 ]
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNameTestStartingWith: anNcName [
-	(inputStream peekFor: $:)
+	(readStream peekFor: $:)
 		ifTrue: [
-			inputStream peek == $: ":: axis specifier"
+			readStream peek == $: ":: axis specifier"
 				ifTrue: [^ false]
 				ifFalse: [^ self peekForQualifiedNameTestWithPrefix: anNcName]]
 		ifFalse: [
@@ -153,8 +153,8 @@ XPathNodeTestParser >> peekForNameTestStartingWith: anNcName [
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNodeTest [
-	inputStream skipSeparators.
-	(inputStream atEnd not
+	readStream skipSeparators.
+	(readStream atEnd not
 		and: [self peekForWildCardNameTest
 			or: [self peekForNonWildCardNameTest]])
 		ifTrue: [^ true]
@@ -181,14 +181,14 @@ XPathNodeTestParser >> peekForNodeTypeTest: aNodeTypeOrFunctionName [
 XPathNodeTestParser >> peekForNonWildCardNameTest [
 	| startPosition ncName |
 
-	startPosition := inputStream position.
+	startPosition := readStream position.
 	((ncName := self nextNCNameOptional: true) notNil
 		and: [self peekForNameTestStartingWith: ncName])
 		ifTrue: [^ true]
 		ifFalse: [
 			ncName
 				ifNotNil: [
-					inputStream
+					readStream
 						pushBackNCName: ncName
 						position: startPosition].
 			^ false].
@@ -196,10 +196,10 @@ XPathNodeTestParser >> peekForNonWildCardNameTest [
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForQualifiedNameTestWithPrefix: aPrefix [
-	(inputStream peekFor: $*)
+	(readStream peekFor: $*)
 		ifTrue: [
 			context
-				handleTestForPrefix: aPrefix
+				handleNodeTestForPrefix: aPrefix
 				with: handler.
 			^ true]
 		ifFalse: [| localName |
@@ -208,7 +208,7 @@ XPathNodeTestParser >> peekForQualifiedNameTestWithPrefix: aPrefix [
 				ifTrue: [^ false]
 				ifFalse: [
 					context
-						handleTestForPrefix: aPrefix
+						handleNodeTestForPrefix: aPrefix
 						localName: localName
 						with: handler.
 					^ true]].
@@ -216,23 +216,23 @@ XPathNodeTestParser >> peekForQualifiedNameTestWithPrefix: aPrefix [
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForStartArgumentList [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $(.
+	readStream skipSeparators.
+	^ readStream peekFor: $(.
 ]
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForWildCardNameTest [
-	(inputStream peekFor: $*)
+	(readStream peekFor: $*)
 		ifFalse: [^ false].
 
-	(inputStream peekFor: $:)
+	(readStream peekFor: $:)
 		ifTrue: [
-			(inputStream peekFor: $*)
-				ifTrue: [context handleWildcardTestWith: handler]
+			(readStream peekFor: $*)
+				ifTrue: [context handleWildcardNodeTestWith: handler]
 				ifFalse: [
 					context
-						handleTestForLocalName: self nextNCName
+						handleNodeTestForLocalName: self nextNCName
 						with: handler]]
-		ifFalse: [context handleWildcardTestWith: handler].
+		ifFalse: [context handleWildcardNodeTestWith: handler].
 	^ true.
 ]

@@ -9,7 +9,7 @@ Class {
 
 { #category : #private }
 XPathASTRelationalExpressionNode >> defaultTypeClass [
-	^ XPathBooleanType
+	^ XPathBooleanValueType
 ]
 
 { #category : #testing }

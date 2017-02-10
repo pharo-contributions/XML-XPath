@@ -73,7 +73,7 @@ XPathTypedFunctionPrototypeParserHandler >> handleStartParsing [
 	argumentTypes := OrderedCollection new.
 
 	typesByName := Dictionary new.
-	XPathType allSubclassesDo: [:each | | type |
+	XPathObjectValueType withAllSubclassesDo: [:each | | type |
 		type := each new.
 		typesByName
 			at: type name

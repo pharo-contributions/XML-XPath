@@ -9,7 +9,7 @@ Class {
 
 { #category : #private }
 XPathASTAdditiveExpressionNode >> defaultTypeClass [
-	^ XPathNumberType
+	^ XPathNumberValueType
 ]
 
 { #category : #testing }

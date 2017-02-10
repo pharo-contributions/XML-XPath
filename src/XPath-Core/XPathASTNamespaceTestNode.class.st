@@ -9,26 +9,15 @@ Class {
 
 { #category : #visiting }
 XPathASTNamespaceTestNode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitNamespaceTest: self
+	^ aNodeVisitor visitNamespaceNodeTest: self
 ]
 
 { #category : #testing }
-XPathASTNamespaceTestNode >> isNamespaceTest [
+XPathASTNamespaceTestNode >> isNamespaceNodeTest [
 	^ true
 ]
 
-{ #category : #testing }
-XPathASTNamespaceTestNode >> omitTypeTestWhenPrinting [
-	^ self hasParent
-		and: [self parent isNamespaceStep]
-]
-
-{ #category : #printing }
-XPathASTNamespaceTestNode >> printTypeTestArgumentsOn: aStream [
-	aStream nextPut: $*
-]
-
 { #category : #accessing }
-XPathASTNamespaceTestNode >> typeName [
-	^ 'namespace'
+XPathASTNamespaceTestNode >> nodeType [
+	^ XPathNamespaceNodeType new
 ]

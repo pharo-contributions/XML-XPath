@@ -8,6 +8,6 @@ Class {
 }
 
 { #category : #handling }
-XPathNodeTestParserNamespaceTypeTestContext >> handleEmptyTestWith: aHandler [
-	aHandler handleNamespaceTest
+XPathNodeTestParserNamespaceTypeTestContext >> handleEmptyNodeTestWith: aHandler [
+	aHandler handleNamespaceNodeTest
 ]

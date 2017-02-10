@@ -8,40 +8,40 @@ Class {
 }
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForLocalName: aLocalName with: aHandler [
-	aHandler handleAttributeTestForLocalName: aLocalName
+XPathNodeTestParserAttributeContext >> handleNodeTestForLocalName: aLocalName with: aHandler [
+	aHandler handleAttributeNodeTestForLocalName: aLocalName
 ]
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForName: aName with: aHandler [
-	aHandler handleAttributeTestForName: aName
+XPathNodeTestParserAttributeContext >> handleNodeTestForName: aName with: aHandler [
+	aHandler handleAttributeNodeTestForName: aName
 ]
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
+XPathNodeTestParserAttributeContext >> handleNodeTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
 	aHandler
-		handleAttributeTestForNamespaceURI: aURI
+		handleAttributeNodeTestForNamespaceURI: aURI
 		localName: aLocalName
 ]
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForNamespaceURI: aURI with: aHandler [
-	aHandler handleAttributeTestForNamespaceURI: aURI
+XPathNodeTestParserAttributeContext >> handleNodeTestForNamespaceURI: aURI with: aHandler [
+	aHandler handleAttributeNodeTestForNamespaceURI: aURI
 ]
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForPrefix: aPrefix localName: aLocalName with: aHandler [
+XPathNodeTestParserAttributeContext >> handleNodeTestForPrefix: aPrefix localName: aLocalName with: aHandler [
 	aHandler
-		handleAttributeTestForPrefix: aPrefix
+		handleAttributeNodeTestForPrefix: aPrefix
 		localName: aLocalName
 ]
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleTestForPrefix: aPrefix with: aHandler [
-	aHandler handleAttributeTestForPrefix: aPrefix
+XPathNodeTestParserAttributeContext >> handleNodeTestForPrefix: aPrefix with: aHandler [
+	aHandler handleAttributeNodeTestForPrefix: aPrefix
 ]
 
 { #category : #handling }
-XPathNodeTestParserAttributeContext >> handleWildcardTestWith: aHandler [
-	aHandler handleAttributeTest
+XPathNodeTestParserAttributeContext >> handleWildcardNodeTestWith: aHandler [
+	aHandler handleAttributeNodeTest
 ]

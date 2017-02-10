@@ -14,13 +14,12 @@ XPathBooleanComparable >> < aComparable [
 
 { #category : #comparing }
 XPathBooleanComparable >> <= aComparable [
-	^ (aComparable greaterThanBoolean: value)
-		or: [aComparable equalsBoolean: value]
+	^ aComparable greaterThanOrEqualToBoolean: value
 ]
 
 { #category : #comparing }
 XPathBooleanComparable >> = aComparable [
-	^ aComparable equalsBoolean: value
+	^ aComparable equalToBoolean: value
 ]
 
 { #category : #comparing }
@@ -30,27 +29,26 @@ XPathBooleanComparable >> > aComparable [
 
 { #category : #comparing }
 XPathBooleanComparable >> >= aComparable [
-	^ (aComparable lessThanBoolean: value)
-		or: [aComparable equalsBoolean: value]
+	^ aComparable lessThanOrEqualToBoolean: value
 ]
 
 { #category : #private }
-XPathBooleanComparable >> equalsBoolean: aBoolean [
+XPathBooleanComparable >> equalToBoolean: aBoolean [
 	^ value = aBoolean
 ]
 
 { #category : #private }
-XPathBooleanComparable >> equalsNodeSet: aNodeSet [
+XPathBooleanComparable >> equalToNodeSet: aNodeSet [
 	^ value = aNodeSet asXPathBoolean
 ]
 
 { #category : #private }
-XPathBooleanComparable >> equalsNumber: aNumber [
+XPathBooleanComparable >> equalToNumber: aNumber [
 	^ value = aNumber asXPathBoolean
 ]
 
 { #category : #private }
-XPathBooleanComparable >> equalsString: aString [
+XPathBooleanComparable >> equalToString: aString [
 	^ value = aString asXPathBoolean
 ]
 
@@ -67,6 +65,26 @@ XPathBooleanComparable >> greaterThanNodeSet: aNodeSet [
 { #category : #private }
 XPathBooleanComparable >> greaterThanNumber: aNumber [
 	^ value asXPathNumber > aNumber asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> greaterThanOrEqualToBoolean: aBoolean [
+	^ value asXPathNumber >= aBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> greaterThanOrEqualToNodeSet: aNodeSet [
+	^ value asXPathNumber >= aNodeSet asXPathBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> greaterThanOrEqualToNumber: aNumber [
+	^ value asXPathNumber >= aNumber asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> greaterThanOrEqualToString: aString [
+	^ value asXPathNumber >= aString asXPathNumber
 ]
 
 { #category : #private }
@@ -90,31 +108,51 @@ XPathBooleanComparable >> lessThanNumber: aNumber [
 ]
 
 { #category : #private }
+XPathBooleanComparable >> lessThanOrEqualToBoolean: aBoolean [
+	^ value asXPathNumber <= aBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> lessThanOrEqualToNodeSet: aNodeSet [
+	^ value asXPathNumber <= aNodeSet asXPathBoolean asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> lessThanOrEqualToNumber: aNumber [
+	^ value asXPathNumber <= aNumber asXPathNumber
+]
+
+{ #category : #private }
+XPathBooleanComparable >> lessThanOrEqualToString: aString [
+	^ value asXPathNumber <= aString asXPathNumber
+]
+
+{ #category : #private }
 XPathBooleanComparable >> lessThanString: aString [
 	^ value asXPathNumber < aString asXPathNumber
 ]
 
 { #category : #private }
-XPathBooleanComparable >> notEqualsBoolean: aBoolean [
+XPathBooleanComparable >> notEqualToBoolean: aBoolean [
 	^ value ~= aBoolean
 ]
 
 { #category : #private }
-XPathBooleanComparable >> notEqualsNodeSet: aNodeSet [
+XPathBooleanComparable >> notEqualToNodeSet: aNodeSet [
 	^ value ~= aNodeSet asXPathBoolean
 ]
 
 { #category : #private }
-XPathBooleanComparable >> notEqualsNumber: aNumber [
+XPathBooleanComparable >> notEqualToNumber: aNumber [
 	^ value ~= aNumber asXPathBoolean
 ]
 
 { #category : #private }
-XPathBooleanComparable >> notEqualsString: aString [
+XPathBooleanComparable >> notEqualToString: aString [
 	^ value ~= aString asXPathBoolean
 ]
 
 { #category : #comparing }
 XPathBooleanComparable >> ~= aComparable [
-	^ aComparable notEqualsBoolean: value
+	^ aComparable notEqualToBoolean: value
 ]

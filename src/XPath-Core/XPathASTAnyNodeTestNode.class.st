@@ -18,6 +18,6 @@ XPathASTAnyNodeTestNode >> isAnyNodeTest [
 ]
 
 { #category : #accessing }
-XPathASTAnyNodeTestNode >> typeName [
-	^ 'node'
+XPathASTAnyNodeTestNode >> nodeType [
+	^ XPathNodeType new
 ]

@@ -68,30 +68,56 @@ XMLNode >> allNodesReverseDo: aBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> ancestorAxis: aNodeTestStringOrBlock [
 	^ (self
-		ancestorAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		ancestorAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathReverseDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> ancestorAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self ancestorAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				ancestorAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathReverseDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self ancestorAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> ancestorAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNode >> ancestorAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self ancestorNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> ancestorAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self ancestorNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> ancestorAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> ancestorAxisSelect: aNodeTest into: aNodeSet [
 	self ancestorNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -99,35 +125,56 @@ XMLNode >> ancestorAxisSelect: aNodeTestBlock into: aNodeSet [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> ancestorOrSelfAxis: aNodeTestStringOrBlock [
 	^ (self
-		ancestorOrSelfAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		ancestorOrSelfAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathReverseDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> ancestorOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self ancestorOrSelfAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				ancestorOrSelfAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathReverseDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self ancestorOrSelfAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> ancestorOrSelfAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
-	((aNodeSet includes: self) not
-		and: [aNodeTestBlock value: self])
-		ifTrue: [aNodeSet addLast: self].
-	self ancestorNodesDo: [:each |
+XMLNode >> ancestorOrSelfAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self withAncestorNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> ancestorOrSelfAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
+	self withAncestorNodesDo: [:each|
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> ancestorOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
-	(aNodeTestBlock value: self)
-		ifTrue: [aNodeSet addLast: self].
-	self ancestorNodesDo: [:each |
-		(aNodeTestBlock value: each)
+XMLNode >> ancestorOrSelfAxisSelect: aNodeTest into: aNodeSet [
+	self withAncestorNodesDo: [:each |
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -175,90 +222,154 @@ XMLNode >> asXPathUnionable [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> attributeAxis: aNodeTestStringOrBlock [
 	^ (self
-		attributeAxisSelect: aNodeTestStringOrBlock asXPathAttributeNodeTestBlock
+		attributeAxisSelect: aNodeTestStringOrBlock asXPathAttributeAxisNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self attributeAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				attributeAxisSelect:
+					aNodeTestStringOrBlock asXPathAttributeAxisNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self attributeAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> attributeAxisSelect: anAttributeNodeTestBlock into: aNodeSet [
+XMLNode >> attributeAxisSelect: anAttributeNodeTest at: aPosition into: aNodeSet [
+	^ aNodeSet
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> attributeAxisSelect: anAttributeNodeTest into: aNodeSet [
 	^ aNodeSet
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> childAxis: aNodeTestStringOrBlock [
 	^ (self
-		childAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		childAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> childAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self childAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				childAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self childAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> childAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> childAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	^ aNodeSet
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> childAxisSelect: aNodeTest into: aNodeSet [
 	^ aNodeSet
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> descendantAxis: aNodeTestStringOrBlock [
 	^ (self
-		descendantAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		descendantAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> descendantAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self descendantAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				descendantAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self descendantAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNode >> descendantAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	^ aNodeSet
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> descendantAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> descendantAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
+	^ aNodeSet
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> descendantAxisSelect: aNodeTest into: aNodeSet [
 	^ aNodeSet
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> descendantOrSelfAxis: aNodeTestStringOrBlock [
 	^ (self
-		descendantOrSelfAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		descendantOrSelfAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> descendantOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self descendantOrSelfAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				descendantOrSelfAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self descendantOrSelfAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> descendantOrSelfAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
-	((aNodeSet includes: self) not
-		and: [aNodeTestBlock value: self])
+XMLNode >> descendantOrSelfAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	(aPosition = 1
+		and: [aNodeTest value: self])
 		ifTrue: [aNodeSet addLast: self].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> descendantOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
-	(aNodeTestBlock value: self)
+XMLNode >> descendantOrSelfAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
+	((aNodeSet includes: self) not
+		and: [aNodeTest value: self])
+		ifTrue: [aNodeSet addLast: self].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> descendantOrSelfAxisSelect: aNodeTest into: aNodeSet [
+	(aNodeTest value: self)
 		ifTrue: [aNodeSet addLast: self].
 	^ aNodeSet.
 ]
@@ -266,30 +377,56 @@ XMLNode >> descendantOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> followingAxis: aNodeTestStringOrBlock [
 	^ (self
-		followingAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		followingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> followingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self followingAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				followingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self followingAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> followingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNode >> followingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self followingNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> followingAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self followingNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> followingAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> followingAxisSelect: aNodeTest into: aNodeSet [
 	self followingNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -310,30 +447,56 @@ XMLNode >> followingNodesDo: aBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> followingSiblingAxis: aNodeTestStringOrBlock [
 	^ (self
-		followingSiblingAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		followingSiblingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> followingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self followingSiblingAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				followingSiblingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self followingSiblingAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> followingSiblingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNode >> followingSiblingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self followingSiblingNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> followingSiblingAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self followingSiblingNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> followingSiblingAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> followingSiblingAxisSelect: aNodeTest into: aNodeSet [
 	self followingSiblingNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -370,7 +533,7 @@ XMLNode >> matches: aNodeTestBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> namespaceAxis: aNodeTestStringOrBlock [
 	^ (self
-		namespaceAxisSelect: aNodeTestStringOrBlock asXPathNamespaceNodeTestBlock
+		namespaceAxisSelect: aNodeTestStringOrBlock asXPathNamespaceAxisNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
@@ -382,7 +545,7 @@ XMLNode >> namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollectio
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> namespaceAxisSelect: aNamespaceNodeTestBlock into: aNodeSet [
+XMLNode >> namespaceAxisSelect: aNamespaceNodeTest into: aNodeSet [
 	^ aNodeSet
 ]
 
@@ -394,7 +557,7 @@ XMLNode >> nodeSetClass [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> parentAxis: aNodeTestStringOrBlock [
 	^ (self
-		parentAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		parentAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			"the spec says this is a forawrd axis"
 			sortOrder: XPathDocumentSortOrder new
@@ -402,23 +565,44 @@ XMLNode >> parentAxis: aNodeTestStringOrBlock [
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> parentAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self parentAxis: aNodeTestStringOrBlock)
-		filterEachInSeparateContextWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				parentAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					"the spec says this is a forawrd axis"
+					sortOrder: XPathDocumentSortOrder new;
+					filterEachInSeparateContextWithAll: aPredicateCollection
+						startingAt: 2]
+		ifFalse: [
+			^ (self parentAxis: aNodeTestStringOrBlock)
+				filterEachInSeparateContextWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> parentAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
-	(self hasParent
-		and: [(aNodeSet includes: self parent) not
-			and: [aNodeTestBlock value: self parent]])
+XMLNode >> parentAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	(aPosition = 1
+		and: [self hasParent
+			and: [aNodeTest value: self parent]])
 		ifTrue: [aNodeSet addLast: self parent].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> parentAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> parentAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	(self hasParent
-		and: [aNodeTestBlock value: self parent])
+		and: [(aNodeSet includes: self parent) not
+			and: [aNodeTest value: self parent]])
+		ifTrue: [aNodeSet addLast: self parent].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> parentAxisSelect: aNodeTest into: aNodeSet [
+	(self hasParent
+		and: [aNodeTest value: self parent])
 		ifTrue: [aNodeSet addLast: self parent].
 	^ aNodeSet.
 ]
@@ -426,30 +610,56 @@ XMLNode >> parentAxisSelect: aNodeTestBlock into: aNodeSet [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> precedingAxis: aNodeTestStringOrBlock [
 	^ (self
-		precedingAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		precedingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathReverseDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> precedingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self precedingAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				precedingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathReverseDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self precedingAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> precedingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNode >> precedingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self precedingNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> precedingAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self precedingNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> precedingAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> precedingAxisSelect: aNodeTest into: aNodeSet [
 	self precedingNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -470,30 +680,56 @@ XMLNode >> precedingNodesDo: aBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> precedingSiblingAxis: aNodeTestStringOrBlock [
 	^ (self
-		precedingSiblingAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		precedingSiblingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathReverseDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> precedingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self precedingSiblingAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				precedingSiblingAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathReverseDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self precedingSiblingAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> precedingSiblingAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNode >> precedingSiblingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self precedingSiblingNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> precedingSiblingAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self precedingSiblingNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> precedingSiblingAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNode >> precedingSiblingAxisSelect: aNodeTest into: aNodeSet [
 	self precedingSiblingNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
@@ -514,20 +750,39 @@ XMLNode >> precedingSiblingNodesDo: aBlock [
 { #category : #'*XPath-Core-enumerating - axis' }
 XMLNode >> selfAxis: aNodeTestStringOrBlock [
 	^ (self
-		selfAxisSelect: aNodeTestStringOrBlock asXPathNodeTestBlock
+		selfAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
 		into: self nodeSetClass new)
 			sortOrder: XPathDocumentSortOrder new
 ]
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> selfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self selfAxis: aNodeTestStringOrBlock)
-		filterEachInSeparateContextWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				selfAxisSelect: aNodeTestStringOrBlock asXPathNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterEachInSeparateContextWithAll: aPredicateCollection
+						startingAt: 2]
+		ifFalse: [
+			^ (self selfAxis: aNodeTestStringOrBlock)
+				filterEachInSeparateContextWithAll: aPredicateCollection]
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNode >> selfAxisSelect: aNodeTestBlock into: aNodeSet [
-	(aNodeTestBlock value: self)
+XMLNode >> selfAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	(aPosition = 1
+		and: [aNodeTest value: self])
+		ifTrue: [aNodeSet addLast: self].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> selfAxisSelect: aNodeTest into: aNodeSet [
+	(aNodeTest value: self)
 		ifTrue: [aNodeSet addLast: self].
 	^ aNodeSet.
 ]
@@ -536,6 +791,12 @@ XMLNode >> selfAxisSelect: aNodeTestBlock into: aNodeSet [
 XMLNode >> stringValue [
 	"returns XPath node string-value"
 	 ^ ''
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> withAncestorNodesDo: aBlock [
+	aBlock value: self.
+	self ancestorNodesDo: aBlock.
 ]
 
 { #category : #'*XPath-Core-evaluating' }

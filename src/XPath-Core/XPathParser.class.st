@@ -6,7 +6,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'handler',
-		'inputStream',
+		'readStream',
 		'writeStream'
 	],
 	#category : #'XPath-Core-Parsers'
@@ -24,8 +24,8 @@ XPathParser >> endParsing [
 	handler handleEndParsing.
 	handler mustBeAtEndAfterParsing
 		ifTrue: [	
-			inputStream skipSeparators.
-			inputStream atEnd
+			readStream skipSeparators.
+			readStream atEnd
 				ifFalse: [self errorExpectedAtEnd]].
 ]
 
@@ -63,7 +63,7 @@ XPathParser >> errorExpectedStringLiteral [
 XPathParser >> expectNext: aCharacter [
 	| nextChar |
 
-	((nextChar := inputStream next) == aCharacter)
+	((nextChar := readStream next) == aCharacter)
 		ifFalse: [
 			self
 				errorExpectedLiteral: aCharacter
@@ -74,9 +74,9 @@ XPathParser >> expectNext: aCharacter [
 { #category : #private }
 XPathParser >> expectUpTo: aCharacter [
 	writeStream reset.
-	[inputStream atEnd
-		or: [inputStream peek = aCharacter]]
-		whileFalse: [writeStream nextPut: inputStream next].
+	[readStream atEnd
+		or: [readStream peek = aCharacter]]
+		whileFalse: [writeStream nextPut: readStream next].
 	self expectNext: aCharacter.
 	^ writeStream contents.
 ]
@@ -84,11 +84,6 @@ XPathParser >> expectUpTo: aCharacter [
 { #category : #accessing }
 XPathParser >> handler [
 	^ handler
-]
-
-{ #category : #accessing }
-XPathParser >> inputStream [
-	^ inputStream
 ]
 
 { #category : #parsing }
@@ -118,7 +113,7 @@ XPathParser >> nextEmptyArgumentList [
 
 { #category : #parsing }
 XPathParser >> nextEndArgumentList [
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	self expectNext: $).
 ]
 
@@ -131,7 +126,7 @@ XPathParser >> nextNCName [
 XPathParser >> nextNCNameOptional: aBoolean [
 	| ncName |
 
-	(ncName := inputStream nextNCName)
+	(ncName := readStream nextNCName)
 		ifNil: [
 			aBoolean
 				ifFalse: [self errorExpectedName]].
@@ -147,7 +142,7 @@ XPathParser >> nextName [
 XPathParser >> nextNameOptional: aBoolean [
 	| name |
 
-	(name := inputStream nextName)
+	(name := readStream nextName)
 		ifNil: [
 			aBoolean
 				ifFalse: [self errorExpectedName]].
@@ -156,7 +151,7 @@ XPathParser >> nextNameOptional: aBoolean [
 
 { #category : #parsing }
 XPathParser >> nextStartArgumentList [
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	self expectNext: $(.
 ]
 
@@ -167,9 +162,9 @@ XPathParser >> nextStringLiteral [
 
 { #category : #parsing }
 XPathParser >> nextStringLiteralOptional: aBoolean [
-	(inputStream peek == $"
-		or: [inputStream peek == $'])
-		ifTrue: [^ self expectUpTo: inputStream next]
+	(readStream peek == $"
+		or: [readStream peek == $'])
+		ifTrue: [^ self expectUpTo: readStream next]
 		ifFalse: [
 			aBoolean
 				ifFalse: [self errorExpectedStringLiteral].
@@ -178,7 +173,7 @@ XPathParser >> nextStringLiteralOptional: aBoolean [
 
 { #category : #initialization }
 XPathParser >> on: aStringOrStream for: aHandler [
-	inputStream :=
+	readStream :=
 		(aStringOrStream isStream
 			ifTrue: [aStringOrStream asXPathReadStreamAdapter]
 			ifFalse: [aStringOrStream readStream asXPathReadStreamAdapter]).
@@ -197,7 +192,7 @@ XPathParser >> parse [
 		on: XPathException
 		do: [:error |
 			error hasPosition
-				ifFalse: [error position: inputStream position].
+				ifFalse: [error position: readStream position].
 			error pass].
 	^ handler parsingResult.
 ]
@@ -209,14 +204,14 @@ XPathParser >> parseInput [
 
 { #category : #'parsing - peeking' }
 XPathParser >> peekForArgumentSeparator [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $,.
+	readStream skipSeparators.
+	^ readStream peekFor: $,.
 ]
 
 { #category : #'parsing - peeking' }
 XPathParser >> peekForEndArgumentList [
-	inputStream skipSeparators.
-	^ inputStream peekFor: $).
+	readStream skipSeparators.
+	^ readStream peekFor: $).
 ]
 
 { #category : #printing }
@@ -228,6 +223,11 @@ XPathParser >> printOn: aStream [
 				nextPut: $(;
 				print: handler;
 				nextPut: $)].
+]
+
+{ #category : #accessing }
+XPathParser >> readStream [
+	^ readStream
 ]
 
 { #category : #parsing }

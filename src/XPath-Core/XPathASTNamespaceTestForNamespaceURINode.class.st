@@ -17,11 +17,11 @@ XPathASTNamespaceTestForNamespaceURINode class >> namespaceURI: aURI [
 
 { #category : #visiting }
 XPathASTNamespaceTestForNamespaceURINode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitNamespaceTestForNamespaceURI: self
+	^ aNodeVisitor visitNamespaceNodeTestForNamespaceURI: self
 ]
 
 { #category : #testing }
-XPathASTNamespaceTestForNamespaceURINode >> isNamespaceTestForNamespaceURI [
+XPathASTNamespaceTestForNamespaceURINode >> isNamespaceNodeTestForNamespaceURI [
 	^ true
 ]
 
@@ -33,10 +33,4 @@ XPathASTNamespaceTestForNamespaceURINode >> namespaceURI [
 { #category : #accessing }
 XPathASTNamespaceTestForNamespaceURINode >> namespaceURI: aURI [
 	namespaceURI := aURI
-]
-
-{ #category : #printing }
-XPathASTNamespaceTestForNamespaceURINode >> printTypeTestArgumentsOn: aStream [
-	aStream nextPutAll:
-		('*' expandWithXMLNamespaceURI: self namespaceURI)
 ]

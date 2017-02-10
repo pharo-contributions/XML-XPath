@@ -78,31 +78,23 @@ XPathContext >> addFunction: aFunction [
 { #category : #private }
 XPathContext >> attributeTestForPrefix: aPrefix [
 	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isAttribute
-					and: [node namespaceURI = namespaceURI]]]
+		ifTrue: [
+			^ XPathAttributeNodeTestForNamespaceURI namespaceURI:
+				(self resolvePrefixReference: aPrefix)]
 		ifFalse: [
-			^ [:node |
-				node isAttribute
-					and: [node prefix = aPrefix]]]
+			^ XPathAttributeNodeTestForPrefix prefix: aPrefix]
 ]
 
 { #category : #private }
 XPathContext >> attributeTestForPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isAttribute
-					and: [node localName = aLocalName
-						and: [node namespaceURI = namespaceURI]]]]
-		ifFalse: [| name |
-			name := aLocalName qualifyWithXMLPrefix: aPrefix.
-			^ [:node |
-				node isAttribute
-					and: [node name = name]]]
+		ifTrue: [
+			^ XPathAttributeNodeTestForNamespaceURIAndLocalName
+				namespaceURI: (self resolvePrefixReference: aPrefix)
+				localName: aLocalName]
+		ifFalse: [
+			^ XPathAttributeNodeTestForName name:
+				(aLocalName qualifyWithXMLPrefix: aPrefix)]
 ]
 
 { #category : #private }
@@ -126,31 +118,23 @@ XPathContext >> declarePrefix: aPrefix uri: aURI [
 { #category : #private }
 XPathContext >> elementTestForPrefix: aPrefix [
 	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isElement
-					and: [node namespaceURI = namespaceURI]]]
+		ifTrue: [
+			^ XPathElementNodeTestForNamespaceURI namespaceURI:
+				(self resolvePrefixReference: aPrefix)]
 		ifFalse: [
-			^ [:node |
-				node isElement
-					and: [node prefix = aPrefix]]]
+			^ XPathElementNodeTestForPrefix prefix: aPrefix]
 ]
 
 { #category : #private }
 XPathContext >> elementTestForPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isElement
-					and: [node localName = aLocalName
-						and: [node namespaceURI = namespaceURI]]]]
-		ifFalse: [| name |
-			name := aLocalName qualifyWithXMLPrefix: aPrefix.
-			^ [:node |
-				node isElement
-					and: [node name = name]]]
+		ifTrue: [
+			^ XPathElementNodeTestForNamespaceURIAndLocalName
+				namespaceURI: (self resolvePrefixReference: aPrefix)
+				localName: aLocalName]
+		ifFalse: [
+			^ XPathElementNodeTestForName name:
+				(aLocalName qualifyWithXMLPrefix: aPrefix)]
 ]
 
 { #category : #private }
@@ -245,31 +229,23 @@ XPathContext >> namespaceScope [
 { #category : #private }
 XPathContext >> namespaceTestForPrefix: aPrefix [
 	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isNamespace
-					and: [node namespaceURI = namespaceURI]]]
+		ifTrue: [
+			^ XPathNamespaceTestForNamespaceURI namespaceURI:
+				(self resolvePrefixReference: aPrefix)]
 		ifFalse: [
-			^ [:node |
-				node isNamespace
-					and: [node prefix = aPrefix]]]
+			^ XPathNamespaceTestForPrefix prefix: aPrefix]
 ]
 
 { #category : #private }
 XPathContext >> namespaceTestForPrefix: aPrefix localName: aLocalName [
 	self hasNamespaces
-		ifTrue: [| namespaceURI |
-			namespaceURI := self resolvePrefixReference: aPrefix.
-			^ [:node |
-				node isNamespace
-					and: [node localName = aLocalName
-						and: [node namespaceURI = namespaceURI]]]]
-		ifFalse: [| name |
-			name := aLocalName qualifyWithXMLPrefix: aPrefix.
-			^ [:node |
-				node isNamespace
-					and: [node name = name]]]
+		ifTrue: [
+			^ XPathNamespaceTestForNamespaceURIAndLocalName
+				namespaceURI: (self resolvePrefixReference: aPrefix)
+				localName: aLocalName]
+		ifFalse: [
+			^ XPathNamespaceTestForName name:
+				(aLocalName qualifyWithXMLPrefix: aPrefix)]
 ]
 
 { #category : #removing }

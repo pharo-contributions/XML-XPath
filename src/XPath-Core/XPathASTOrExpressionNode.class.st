@@ -14,7 +14,7 @@ XPathASTOrExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 
 { #category : #private }
 XPathASTOrExpressionNode >> defaultTypeClass [
-	^ XPathBooleanType
+	^ XPathBooleanValueType
 ]
 
 { #category : #testing }

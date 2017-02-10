@@ -12,16 +12,17 @@ Class {
 
 { #category : #'instance creation' }
 XPathASTNamespaceTestForPrefixAndLocalNameNode class >> prefix: aPrefix localName: aLocalName [
-	^ (self prefix: aPrefix) localName: aLocalName
+	^ (self prefix: aPrefix)
+		localName: aLocalName
 ]
 
 { #category : #visiting }
 XPathASTNamespaceTestForPrefixAndLocalNameNode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitNamespaceTestForPrefixAndLocalName: self
+	^ aNodeVisitor visitNamespaceNodeTestForPrefixAndLocalName: self
 ]
 
 { #category : #testing }
-XPathASTNamespaceTestForPrefixAndLocalNameNode >> isNamespaceTestForPrefixAndLocalName [
+XPathASTNamespaceTestForPrefixAndLocalNameNode >> isNamespaceNodeTestForPrefixAndLocalName [
 	^ true
 ]
 
@@ -33,12 +34,4 @@ XPathASTNamespaceTestForPrefixAndLocalNameNode >> localName [
 { #category : #accessing }
 XPathASTNamespaceTestForPrefixAndLocalNameNode >> localName: aLocalName [
 	localName := aLocalName
-]
-
-{ #category : #printing }
-XPathASTNamespaceTestForPrefixAndLocalNameNode >> printTypeTestArgumentsOn: aStream [
-	aStream
-		nextPutAll: self prefix;
-		nextPut: $:;
-		nextPutAll: self localName
 ]

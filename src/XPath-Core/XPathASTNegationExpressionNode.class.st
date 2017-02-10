@@ -14,7 +14,7 @@ XPathASTNegationExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 
 { #category : #private }
 XPathASTNegationExpressionNode >> defaultTypeClass [
-	^ XPathNumberType
+	^ XPathNumberValueType
 ]
 
 { #category : #testing }

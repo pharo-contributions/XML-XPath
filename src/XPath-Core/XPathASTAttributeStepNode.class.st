@@ -26,3 +26,8 @@ XPathASTAttributeStepNode >> isAttributeStep [
 XPathASTAttributeStepNode >> isForwardAxisStep [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTAttributeStepNode >> principalNodeType [
+	^ XPathAttributeNodeType new
+]

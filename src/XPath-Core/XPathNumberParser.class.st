@@ -19,19 +19,19 @@ XPathNumberParser >> errorExpectedIntegerPart [
 
 { #category : #parsing }
 XPathNumberParser >> nextFractionPartOptional: aBoolean [
-	(inputStream atEnd not
-		and: [inputStream peek isDigit])
+	(readStream atEnd not
+		and: [readStream peek isDigit])
 		ifTrue: [| base fractionPart |
 			base := 10.
 			fractionPart :=
-				(inputStream next asciiValue - $0 asciiValue) / base.
-			[inputStream atEnd not
-				and: [inputStream peek isDigit]]
+				(readStream next asciiValue - $0 asciiValue) / base.
+			[readStream atEnd not
+				and: [readStream peek isDigit]]
 				whileTrue: [
 					base := base * 10.
 					fractionPart :=
 						fractionPart +
-							((inputStream next asciiValue - $0 asciiValue) / base)].
+							((readStream next asciiValue - $0 asciiValue) / base)].
 			handler handleFractionPart: fractionPart]
 		ifFalse: [
 			aBoolean
@@ -43,39 +43,39 @@ XPathNumberParser >> nextFractionPartOptional: aBoolean [
 XPathNumberParser >> nextIntegerPart [
 	| integerPart |
 
-	(inputStream atEnd not
-		and: [inputStream peek isDigit])
+	(readStream atEnd not
+		and: [readStream peek isDigit])
 		ifFalse: [self errorExpectedIntegerPart].
-	integerPart := inputStream next asciiValue - $0 asciiValue.
-	[inputStream atEnd not
-		and: [inputStream peek isDigit]]
+	integerPart := readStream next asciiValue - $0 asciiValue.
+	[readStream atEnd not
+		and: [readStream peek isDigit]]
 		whileTrue: [
 			integerPart :=
 				(integerPart * 10) +
-					(inputStream next asciiValue - $0 asciiValue)].
+					(readStream next asciiValue - $0 asciiValue)].
 	handler handleIntegerPart: integerPart.
 ]
 
 { #category : #parsing }
 XPathNumberParser >> parseInput [
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	self peekForSign.
-	(inputStream peekFor: $.)
+	(readStream peekFor: $.)
 		ifTrue: [
 			handler handleIntegerPart: 0.
 			self nextFractionPartOptional: false]
 		ifFalse: [
 			self nextIntegerPart.
-			(inputStream peekFor: $.)
+			(readStream peekFor: $.)
 				ifTrue: [self nextFractionPartOptional: true]
 				ifFalse: [handler handleFractionPart: 0]].
 ]
 
 { #category : #parsing }
 XPathNumberParser >> peekForSign [
-	(inputStream peekFor: $-)
+	(readStream peekFor: $-)
 		ifTrue: [handler handleNegativeSign]
 		ifFalse: [
-			inputStream peekFor: $+.
+			readStream peekFor: $+.
 			handler handlePositiveSign]
 ]

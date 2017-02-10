@@ -33,7 +33,7 @@ XPathASTNumberLiteralNode >> asXPathString [
 
 { #category : #private }
 XPathASTNumberLiteralNode >> defaultTypeClass [
-	^ XPathNumberType
+	^ XPathNumberValueType
 ]
 
 { #category : #testing }
@@ -50,29 +50,4 @@ XPathASTNumberLiteralNode >> number [
 XPathASTNumberLiteralNode >> number: aNumber [
 	number := aNumber.
 	xPathString := nil.
-]
-
-{ #category : #printing }
-XPathASTNumberLiteralNode >> printOn: aStream [
-	self number isNaN
-		ifTrue: [
-			aStream nextPutAll: '(0 div 0)'.
-			^ self].
-	self number isInfinite
-		ifTrue: [
-			self number negative
-				ifTrue: [aStream nextPutAll: '(-1 div 0)']
-				ifFalse: [aStream nextPutAll: '(1 div 0)'].
-			^ self].
-	self number isZero
-		ifTrue: [
-			self number isXPathNegativeZero
-				ifTrue: [aStream nextPutAll: '-0.0']
-				ifFalse: [aStream nextPutAll: '0.0'].
-			^ self].
-
-	"otherwise, this is enough to get an acceptable integer or limited
-	decimal (if the #fractionPart is non-zero) representation that an
-	XPathExpressionParser or XPathNumberParser will understand"
-	aStream nextPutAll: self asXPathString.
 ]

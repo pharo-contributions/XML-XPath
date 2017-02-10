@@ -1,5 +1,7 @@
 "
-This is an abstract base class for XPath types. Subclasses must implement the #name method to return a printable type name, #isTypeOf: to return true if the argument is of the receiver type, and #newFrom: to return the argument converted to the receiver type.
+This is an abstract base class for XPath types. Subclasses must implement the #name method to return a printable type name.
+
+Instances of subclasses are immutable and shared.
 "
 Class {
 	#name : #XPathType,
@@ -23,7 +25,7 @@ XPathType class >> new [
 { #category : #comparing }
 XPathType >> = anObject [
 	^ self == anObject
-		or: [self class == anObject class]
+		or: [self species == anObject species]
 ]
 
 { #category : #comparing }
@@ -31,18 +33,8 @@ XPathType >> hash [
 	^ self class hash
 ]
 
-{ #category : #testing }
-XPathType >> isTypeOf: anObject [
-	self subclassResponsibility
-]
-
 { #category : #accessing }
 XPathType >> name [
-	self subclassResponsibility
-]
-
-{ #category : #'instance creation' }
-XPathType >> newFrom: anObject [
 	self subclassResponsibility
 ]
 

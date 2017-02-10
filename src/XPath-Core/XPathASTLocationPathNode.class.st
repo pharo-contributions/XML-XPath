@@ -27,7 +27,7 @@ XPathASTLocationPathNode >> addStep: aStep [
 
 { #category : #private }
 XPathASTLocationPathNode >> defaultTypeClass [
-	^ XPathNodeSetType
+	^ XPathNodeSetValueType
 ]
 
 { #category : #testing }
@@ -39,15 +39,6 @@ XPathASTLocationPathNode >> hasSteps [
 { #category : #testing }
 XPathASTLocationPathNode >> isLocationPath [
 	^ true
-]
-
-{ #category : #printing }
-XPathASTLocationPathNode >> printOn: aStream [
-	self hasSteps
-		ifTrue: [
-			self steps
-				do: [:each | each printOn: aStream]
-				separatedBy: [aStream nextPut: $/]]
 ]
 
 { #category : #removing }

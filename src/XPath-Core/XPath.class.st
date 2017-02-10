@@ -27,71 +27,84 @@ Class {
 	#name : #XPath,
 	#superclass : #Object,
 	#instVars : [
-		'xPathSource',
-		'compiledXPath'
+		'compiledExpression',
+		'expressionSource'
 	],
 	#classInstVars : [
-		'compiledXPathCache'
+		'compiledExpressionCacheEnabled',
+		'compiledExpressionCache'
 	],
 	#category : #'XPath-Core'
 }
 
 { #category : #clearing }
-XPath class >> clearCompiledXPathCache [
-	"self clearCompiledXPathCache"
-	compiledXPathCache
-		ifNotNil: [compiledXPathCache clear]
+XPath class >> clearCompiledExpressionCache [
+	"self clearCompiledExpressionCache"
+	compiledExpressionCache
+		ifNotNil: [compiledExpressionCache clear]
 ]
 
 { #category : #private }
-XPath class >> compiledXPathCache [
-	^ compiledXPathCache
-		ifNil: [compiledXPathCache := XMLKeyValueCache maxSize: 512]
+XPath class >> compiledExpressionCache [
+	^ compiledExpressionCache
+		ifNil: [compiledExpressionCache := XMLKeyValueCache maxSize: 512]
 ]
 
 { #category : #accessing }
-XPath class >> compiledXPathCacheAt: anXPathSourceString [
-	^ self compiledXPathCache
-		at: anXPathSourceString
+XPath class >> compiledExpressionCacheAt: anExpressionSourceString [
+	^ self compiledExpressionCache
+		at: anExpressionSourceString
 		ifAbsent: [nil]
 ]
 
 { #category : #accessing }
-XPath class >> compiledXPathCacheAt: anXPathSourceString ifAbsent: aBlock [
-	^ self compiledXPathCache
-		at: anXPathSourceString
+XPath class >> compiledExpressionCacheAt: anExpressionSourceString ifAbsent: aBlock [
+	^ self compiledExpressionCache
+		at: anExpressionSourceString
 		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
-XPath class >> compiledXPathCacheAt: anXPathSourceString ifAbsentPut: aBlock [
-	^ self compiledXPathCache
-		at: anXPathSourceString
+XPath class >> compiledExpressionCacheAt: anExpressionSourceString ifAbsentPut: aBlock [
+	^ self compiledExpressionCache
+		at: anExpressionSourceString
 		ifAbsentPut: aBlock
 ]
 
 { #category : #accessing }
-XPath class >> compiledXPathCacheAt: anXPathSourceString put: aCompiledXPath [
-	^ self compiledXPathCache
-		at: anXPathSourceString
+XPath class >> compiledExpressionCacheAt: anExpressionSourceString put: aCompiledXPath [
+	^ self compiledExpressionCache
+		at: anExpressionSourceString
 		put: aCompiledXPath
 ]
 
+{ #category : #testing }
+XPath class >> compiledExpressionCacheEnabled [
+	^ compiledExpressionCacheEnabled
+		ifNil: [compiledExpressionCacheEnabled := true]
+]
+
+{ #category : #accessing }
+XPath class >> compiledExpressionCacheEnabled: aBoolean [
+	compiledExpressionCacheEnabled := aBoolean
+]
+
 { #category : #'instance creation' }
-XPath class >> for: anXPathSourceString [
-	^ self new xPathSource: anXPathSourceString
+XPath class >> for: anExpressionSourceString [
+	^ self new expressionSource: anExpressionSourceString
 
 ]
 
 { #category : #evaluating }
-XPath class >> for: anXPathSourceString in: aNode [
-	^ (self for: anXPathSourceString) in: aNode
+XPath class >> for: anExpressionSourceString in: aNode [
+	^ (self for: anExpressionSourceString)
+		in: aNode
 
 ]
 
 { #category : #evaluating }
-XPath class >> for: anXPathSourceString in: aNode context: aContext [
-	^ (self for: anXPathSourceString)
+XPath class >> for: anExpressionSourceString in: aNode context: aContext [
+	^ (self for: anExpressionSourceString)
 		in: aNode
 		context: aContext
 ]
@@ -100,17 +113,17 @@ XPath class >> for: anXPathSourceString in: aNode context: aContext [
 XPath class >> initialize [
 	"self initialize"
 
-	self clearCompiledXPathCache
+	self clearCompiledExpressionCache
 ]
 
 { #category : #accessing }
-XPath class >> maxCachedCompiledXPaths [
-	^ self compiledXPathCache maxSize
+XPath class >> maxCachedCompiledExpressions [
+	^ self compiledExpressionCache maxSize
 ]
 
 { #category : #accessing }
-XPath class >> maxCachedCompiledXPaths: anInteger [
-	self compiledXPathCache maxSize: anInteger
+XPath class >> maxCachedCompiledExpressions: anInteger [
+	self compiledExpressionCache maxSize: anInteger
 ]
 
 { #category : #converting }
@@ -119,38 +132,44 @@ XPath >> asXPath [
 ]
 
 { #category : #compiling }
-XPath >> compile [
-	self compileWith: self compilerClass new
+XPath >> compileExpression [
+	self compileExpressionWith: self compilerClass new
 ]
 
 { #category : #compiling }
-XPath >> compileWith: anXPathCompiler [
-	compiledXPath := anXPathCompiler compile: self xPathSource.
-	self class
-		compiledXPathCacheAt: self xPathSource
-		put: compiledXPath.
+XPath >> compileExpressionWith: anExpressionCompiler [
+	compiledExpression :=
+		anExpressionCompiler compile: self expressionSource.
+	self class compiledExpressionCacheEnabled
+		ifTrue: [
+			self class
+				compiledExpressionCacheAt: self expressionSource
+				put: compiledExpression].
 ]
 
 { #category : #accessing }
-XPath >> compiledXPath [
-	^ compiledXPath
-		ifNil: [
-			"avoid #compiledXPathCacheAt:ifAbsent: and
-			#compiledXPathCacheAt:ifAbsentPut: here so the cache isn't locked
-			during compilation, which could stall other processes"
-			(self class compiledXPathCacheAt: self xPathSource)
-				ifNil: [self compile]
-				ifNotNil: [:cachedCompiledXPath |
-					compiledXPath := cachedCompiledXPath].
-			compiledXPath]
+XPath >> compiledExpression [
+	^ compiledExpression
+		ifNil: [| cachedCompiledXPath |
+			(self class compiledExpressionCacheEnabled
+				and: [
+					"avoid #compiledXPathCacheAt:ifAbsent: and
+					#compiledXPathCacheAt:ifAbsentPut: here so the cache isn't
+					locked during compilation, which could stall other processes"
+					(cachedCompiledXPath :=
+						self class compiledExpressionCacheAt:
+							self expressionSource) notNil])
+				ifTrue: [compiledExpression := cachedCompiledXPath]
+				ifFalse: [self compileExpression].
+			compiledExpression]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XPath >> compilerClass [
-	^ XPathCompiler
+	^ XPathExpressionCompiler
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XPath >> contextClass [
 	^ XPathContext
 ]
@@ -159,6 +178,17 @@ XPath >> contextClass [
 XPath >> evaluate [
 	"used to evaluate expressions that don't use a context node"
 	^ self in: nil
+]
+
+{ #category : #accessing }
+XPath >> expressionSource [
+	^ expressionSource
+]
+
+{ #category : #accessing }
+XPath >> expressionSource: anExpressionSourceString [
+	expressionSource := anExpressionSourceString.
+	compiledExpression := nil.
 ]
 
 { #category : #evaluating }
@@ -171,10 +201,9 @@ XPath >> in: aNode [
 
 { #category : #evaluating }
 XPath >> in: aNode context: aContext [
-	"evaluate for aNode with aContext controlling evaluation"
-	^ self compiledXPath
-		value: aNode
-		value: aContext
+	^ self compiledExpression
+		evaluateInNode: aNode
+		withContext: aContext
 ]
 
 { #category : #printing }
@@ -182,16 +211,6 @@ XPath >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		print: self xPathSource;
+		print: self expressionSource;
 		nextPut: $).
-]
-
-{ #category : #accessing }
-XPath >> xPathSource [
-	^ xPathSource
-]
-
-{ #category : #accessing }
-XPath >> xPathSource: anXPathSourceString [
-	xPathSource := anXPathSourceString
 ]

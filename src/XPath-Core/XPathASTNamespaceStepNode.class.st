@@ -26,3 +26,8 @@ XPathASTNamespaceStepNode >> isForwardAxisStep [
 XPathASTNamespaceStepNode >> isNamespaceStep [
 	^ true
 ]
+
+{ #category : #accessing }
+XPathASTNamespaceStepNode >> principalNodeType [
+	^ XPathNamespaceNodeType new
+]

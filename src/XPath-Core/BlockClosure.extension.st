@@ -1,16 +1,16 @@
 Extension { #name : #BlockClosure }
 
 { #category : #'*XPath-Core-converting' }
-BlockClosure >> asXPathAttributeNodeTestBlock [
+BlockClosure >> asXPathAttributeAxisNodeTest [
 	^ self
 ]
 
 { #category : #'*XPath-Core-converting' }
-BlockClosure >> asXPathNamespaceNodeTestBlock [
+BlockClosure >> asXPathNamespaceAxisNodeTest [
 	^ self
 ]
 
 { #category : #'*XPath-Core-converting' }
-BlockClosure >> asXPathNodeTestBlock [
-	^ self
+BlockClosure >> asXPathNodeTest [
+	^ XPathBlockNodeTest block: self
 ]

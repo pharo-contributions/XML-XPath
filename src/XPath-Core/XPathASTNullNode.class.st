@@ -35,11 +35,6 @@ XPathASTNullNode >> parent [
 XPathASTNullNode >> parent: aNode [
 ]
 
-{ #category : #printing }
-XPathASTNullNode >> printOn: aStream [
-	aStream nextPutAll: '"null"'
-]
-
 { #category : #accessing }
 XPathASTNullNode >> type: aType [
 ]

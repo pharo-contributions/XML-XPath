@@ -1,5 +1,7 @@
 "
 This is a base class for XPath AST nodes. It has testing messages, messages to access the parent, and a stub node visitor accepting method.
+
+XPath ASTs can be printed as XPath source using #printOn: or #asString.
 "
 Class {
 	#name : #XPathASTNode,
@@ -58,6 +60,12 @@ XPathASTNode >> acceptNodeVisitor: aNodeVisitor [
 	^ self
 ]
 
+{ #category : #converting }
+XPathASTNode >> asString [
+	"for compatibility with GS where Object>>#asString isn't defined"
+	^ self printString
+]
+
 { #category : #private }
 XPathASTNode >> beParentOf: aNode [
 	aNode parent: self.
@@ -72,7 +80,7 @@ XPathASTNode >> beParentOfAll: aNodeCollection [
 
 { #category : #private }
 XPathASTNode >> defaultTypeClass [
-	^ XPathObjectType
+	^ XPathObjectValueType
 ]
 
 { #category : #testing }
@@ -122,42 +130,42 @@ XPathASTNode >> isArgument [
 ]
 
 { #category : #testing }
+XPathASTNode >> isAttributeNodeTest [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isAttributeNodeTestForLocalName [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isAttributeNodeTestForName [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isAttributeNodeTestForNamespaceURI [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isAttributeNodeTestForNamespaceURIAndLocalName [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isAttributeNodeTestForPrefix [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isAttributeNodeTestForPrefixAndLocalName [
+	^ false
+]
+
+{ #category : #testing }
 XPathASTNode >> isAttributeStep [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTest [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTestForLocalName [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTestForName [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTestForNamespaceURI [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTestForNamespaceURIAndLocalName [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTestForPrefix [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isAttributeTestForPrefixAndLocalName [
 	^ false
 ]
 
@@ -172,7 +180,7 @@ XPathASTNode >> isChildStep [
 ]
 
 { #category : #testing }
-XPathASTNode >> isCommentTest [
+XPathASTNode >> isCommentNodeTest [
 	^ false
 ]
 
@@ -192,37 +200,37 @@ XPathASTNode >> isDivisionExpression [
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTest [
+XPathASTNode >> isElementNodeTest [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTestForLocalName [
+XPathASTNode >> isElementNodeTestForLocalName [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTestForName [
+XPathASTNode >> isElementNodeTestForName [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTestForNamespaceURI [
+XPathASTNode >> isElementNodeTestForNamespaceURI [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTestForNamespaceURIAndLocalName [
+XPathASTNode >> isElementNodeTestForNamespaceURIAndLocalName [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTestForPrefix [
+XPathASTNode >> isElementNodeTestForPrefix [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isElementTestForPrefixAndLocalName [
+XPathASTNode >> isElementNodeTestForPrefixAndLocalName [
 	^ false
 ]
 
@@ -317,42 +325,42 @@ XPathASTNode >> isMultiplicativeExpression [
 ]
 
 { #category : #testing }
+XPathASTNode >> isNamespaceNodeTest [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isNamespaceNodeTestForLocalName [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isNamespaceNodeTestForName [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isNamespaceNodeTestForNamespaceURI [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isNamespaceNodeTestForNamespaceURIAndLocalName [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isNamespaceNodeTestForPrefix [
+	^ false
+]
+
+{ #category : #testing }
+XPathASTNode >> isNamespaceNodeTestForPrefixAndLocalName [
+	^ false
+]
+
+{ #category : #testing }
 XPathASTNode >> isNamespaceStep [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTest [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTestForLocalName [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTestForName [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTestForNamespaceURI [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTestForNamespaceURIAndLocalName [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTestForPrefix [
-	^ false
-]
-
-{ #category : #testing }
-XPathASTNode >> isNamespaceTestForPrefixAndLocalName [
 	^ false
 ]
 
@@ -402,12 +410,12 @@ XPathASTNode >> isOrExpression [
 ]
 
 { #category : #testing }
-XPathASTNode >> isPITest [
+XPathASTNode >> isPINodeTest [
 	^ false
 ]
 
 { #category : #testing }
-XPathASTNode >> isPITestForName [
+XPathASTNode >> isPINodeTestForName [
 	^ false
 ]
 
@@ -462,7 +470,7 @@ XPathASTNode >> isSubtractionExpression [
 ]
 
 { #category : #testing }
-XPathASTNode >> isTextTest [
+XPathASTNode >> isTextNodeTest [
 	^ false
 ]
 
@@ -489,6 +497,12 @@ XPathASTNode >> parent [
 { #category : #accessing }
 XPathASTNode >> parent: aParent [
 	parent := aParent
+]
+
+{ #category : #printing }
+XPathASTNode >> printOn: aStream [
+	(XPathASTSourceWritingNodeVisitor on: aStream)
+		visitNode: self
 ]
 
 { #category : #accessing }

@@ -90,11 +90,11 @@ XPathNodeSet >> \ aNodeSet [
 
 { #category : #private }
 XPathNodeSet >> addAllIfNotPresentTo: aCollection [
-	"this inverts addAll: because addAll: uses do: because its arg may not
-	be a SequenceableCollection and may not understand to:do:, but to:do:
-	is needed for speed, and an includes: test avoids adding an already
-	present element to the end of a node set which requires left shifting
-	everything after it by one"
+	"this inverts #addAll: because #addAll: uses #do: instead of #to:do:
+	because it accepts non-SequenceableCollection arguments, and also
+	does an #includes: test to avoid adding an already present node to
+	the end of a node set, which whould left shift everything after
+	its old position by one"
 	1 to: self size do: [:i | | node |
 		node := self at: i.
 		(aCollection includes: node)
@@ -103,10 +103,10 @@ XPathNodeSet >> addAllIfNotPresentTo: aCollection [
 
 { #category : #private }
 XPathNodeSet >> addAllTo: aCollection [
-	"this inverts addAll: because addAll: uses do: because its arg may not
-	be a SequenceableCollection and may not understand to:do:, but to:do:
-	is needed for speed"
-	1 to: self size do: [:i | aCollection addLast: (self at: i)]
+	"this inverts #addAll: because #addAll: uses #do: instead of #to:do:
+	because it accepts non-SequenceableCollection arguments"
+	1 to: self size do: [:i |
+		aCollection addLast: (self at: i)]
 ]
 
 { #category : #private }
@@ -346,20 +346,21 @@ XPathNodeSet >> filterEachInSeparateContextWith: aThreeArgumentBlockOrNumber [
 
 	aThreeArgumentBlockOrNumber isNumber
 		ifTrue: [
-			aThreeArgumentBlockOrNumber rounded = 1
-				ifTrue: [copy := self]
-				ifFalse: [copy := self copyEmpty]]
+			copy :=
+				aThreeArgumentBlockOrNumber asXPathNodeSetPosition = 1
+					ifTrue: [self copy]
+					ifFalse: [self copyEmpty]]
 		ifFalse: [
 			copy := self copyEmpty.
 			1 to: self size do: [:i | | node result |
 				node := self at: i.
 				(result :=
 					aThreeArgumentBlockOrNumber
-						value: node
-						value: 1
-						value: 1) isNumber
+						value: node "context node"
+						value: 1 "context position"
+						value: 1) isNumber "context size"
 						ifTrue: [
-							result rounded = 1
+							result asXPathNodeSetPosition = 1
 								ifTrue: [copy addLast: node]]
 						ifFalse: [
 							result asXPathBoolean
@@ -370,11 +371,17 @@ XPathNodeSet >> filterEachInSeparateContextWith: aThreeArgumentBlockOrNumber [
 
 { #category : #private }
 XPathNodeSet >> filterEachInSeparateContextWithAll: aFilterCollection [
+	^ self
+		filterEachInSeparateContextWithAll: aFilterCollection
+		startingAt: 1
+]
+
+{ #category : #private }
+XPathNodeSet >> filterEachInSeparateContextWithAll: aFilterCollection startingAt: anIndex [
 	| filteredNodeSet |
 
 	filteredNodeSet := self.
-	"to:do: for speed"
-	1 to: aFilterCollection size do: [:i |
+	anIndex to: aFilterCollection size do: [:i |
 		filteredNodeSet isEmpty
 			ifTrue: [^ filteredNodeSet].
 		filteredNodeSet :=
@@ -390,21 +397,20 @@ XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
 	copy := self copyEmpty.
 	aThreeArgumentBlockOrNumber isNumber
 		ifTrue: [
-			copy addLast:
-				(self
-					at: aThreeArgumentBlockOrNumber rounded
-					ifAbsent: [^ copy])]
+			(self at: aThreeArgumentBlockOrNumber asXPathNodeSetPosition)
+				ifNotNil: [:node |
+					copy addLast: node]]
 		ifFalse: [| contextSize |
 			contextSize := self size.
 			1 to: contextSize do: [:i | | node result |
 				node := self at: i.
 				(result :=
 					aThreeArgumentBlockOrNumber
-						value: node
-						value: i
+						value: node "context node"
+						value: i "context position"
 						value: contextSize) isNumber
 					ifTrue: [
-						result rounded = i
+						result asXPathNodeSetPosition = i
 							ifTrue: [copy addLast: node]]
 					ifFalse: [
 						result asXPathBoolean
@@ -415,11 +421,17 @@ XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
 
 { #category : #private }
 XPathNodeSet >> filterWithAll: aFilterCollection [
+	^ self
+		filterWithAll: aFilterCollection
+		startingAt: 1
+]
+
+{ #category : #private }
+XPathNodeSet >> filterWithAll: aFilterCollection startingAt: anIndex [
 	| filteredNodeSet |
 
 	filteredNodeSet := self.
-	"to:do: for speed"
-	1 to: aFilterCollection size do: [:i |
+	anIndex to: aFilterCollection size do: [:i |
 		filteredNodeSet isEmpty
 			ifTrue: [^ filteredNodeSet].
 		filteredNodeSet :=
@@ -470,6 +482,34 @@ XPathNodeSet >> includes: aNode [
 { #category : #enumerating }
 XPathNodeSet >> intersection: aNodeSet [
 	^ (self select: [:each | aNodeSet includes: each]) sort
+]
+
+{ #category : #private }
+XPathNodeSet >> maximumStringValueNumber [
+	| maximum |
+
+	self do: [:each | | number |
+		number := each stringValue asXPathNumber.
+		maximum
+			ifNil: [maximum := number]
+			ifNotNil: [
+				number > maximum
+					ifTrue: [maximum := number]]].
+	^ maximum.
+]
+
+{ #category : #private }
+XPathNodeSet >> minimumStringValueNumber [
+	| minimum |
+
+	self do: [:each | | number |
+		number := each stringValue asXPathNumber.
+		minimum
+			ifNil: [minimum := number]
+			ifNotNil: [
+				number < minimum
+					ifTrue: [minimum := number]]].
+	^ minimum.
 ]
 
 { #category : #'enumerating - axis' }

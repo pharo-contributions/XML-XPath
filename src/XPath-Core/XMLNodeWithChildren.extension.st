@@ -8,48 +8,105 @@ XMLNodeWithChildren >> allNodesReverseDo: aBlock [
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNodeWithChildren >> childAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNodeWithChildren >> childAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	(aPosition > 0
+		and: [self hasChildren
+			and: [self nodes size >= aPosition]])
+		ifFalse: [^ aNodeSet].
+
+	aNodeTest isAnyNodeTest
+		ifTrue: [
+			aNodeSet addLast:
+				(self nodes at: aPosition)]
+		ifFalse: [| totalMatched nodeList |
+			totalMatched := 0.
+			"use to:do: with direct access for speed"
+			nodeList := self nodes.
+			1 to: nodeList size do: [:i | | node |
+				node := nodeList at: i.
+				((aNodeTest value: node)
+					and: [(totalMatched := totalMatched + 1) = aPosition])
+					ifTrue: [
+						aNodeSet addLast: node.
+						^ aNodeSet]]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> childAxisSelect: aNodeTest into: aNodeSet [
 	self hasChildren
 		ifTrue: [| nodeList |
 			"use to:do: with direct access for speed"
 			nodeList := self nodes.
 			1 to: nodeList size do: [:i | | node |
 				node := nodeList at: i.
-				(aNodeTestBlock value: node)
+				(aNodeTest value: node)
 					ifTrue: [aNodeSet addLast: node]]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNodeWithChildren >> descendantAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self descendantNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> descendantAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self descendantNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNodeWithChildren >> descendantAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNodeWithChildren >> descendantAxisSelect: aNodeTest into: aNodeSet [
 	self descendantNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNodeWithChildren >> descendantOrSelfAxisSelect: aNodeTestBlock ifNotPresentInto: aNodeSet [
+XMLNodeWithChildren >> descendantOrSelfAxisSelect: aNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	aPosition > 0
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self allNodesDo: [:each |
+		((aNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> descendantOrSelfAxisSelect: aNodeTest ifNotPresentInto: aNodeSet [
 	self allNodesDo: [:each |
 		((aNodeSet includes: each) not
-			and: [aNodeTestBlock value: each])
+			and: [aNodeTest value: each])
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }
-XMLNodeWithChildren >> descendantOrSelfAxisSelect: aNodeTestBlock into: aNodeSet [
+XMLNodeWithChildren >> descendantOrSelfAxisSelect: aNodeTest into: aNodeSet [
 	self allNodesDo: [:each |
-		(aNodeTestBlock value: each)
+		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
 ]

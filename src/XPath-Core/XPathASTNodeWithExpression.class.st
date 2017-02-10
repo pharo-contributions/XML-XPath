@@ -49,8 +49,3 @@ XPathASTNodeWithExpression >> hasNumberLiteralExpression [
 XPathASTNodeWithExpression >> isNodeWithExpression [
 	^ true
 ]
-
-{ #category : #printing }
-XPathASTNodeWithExpression >> printOn: aStream [
-	self expression printOn: aStream
-]

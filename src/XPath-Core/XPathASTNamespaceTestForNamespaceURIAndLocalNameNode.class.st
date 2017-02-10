@@ -12,16 +12,17 @@ Class {
 
 { #category : #'instance creation' }
 XPathASTNamespaceTestForNamespaceURIAndLocalNameNode class >> namespaceURI: aURI localName: aLocalName [
-	^ (self namespaceURI: aURI) localName: aLocalName
+	^ (self namespaceURI: aURI)
+		localName: aLocalName
 ]
 
 { #category : #visiting }
 XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitNamespaceTestForNamespaceURIAndLocalName: self
+	^ aNodeVisitor visitNamespaceNodeTestForNamespaceURIAndLocalName: self
 ]
 
 { #category : #testing }
-XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> isNamespaceTestForNamespaceURIAndLocalName [
+XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> isNamespaceNodeTestForNamespaceURIAndLocalName [
 	^ true
 ]
 
@@ -33,10 +34,4 @@ XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> localName [
 { #category : #accessing }
 XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> localName: aLocalName [
 	localName := aLocalName
-]
-
-{ #category : #printing }
-XPathASTNamespaceTestForNamespaceURIAndLocalNameNode >> printTypeTestArgumentsOn: aStream [
-	aStream nextPutAll:
-		(self localName expandWithXMLNamespaceURI: self namespaceURI)
 ]

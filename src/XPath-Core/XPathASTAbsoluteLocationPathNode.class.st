@@ -16,9 +16,3 @@ XPathASTAbsoluteLocationPathNode >> acceptNodeVisitor: aNodeVisitor [
 XPathASTAbsoluteLocationPathNode >> isAbsoluteLocationPath [
 	^ true
 ]
-
-{ #category : #printing }
-XPathASTAbsoluteLocationPathNode >> printOn: aStream [
-	aStream nextPut: $/.
-	super printOn: aStream.
-]

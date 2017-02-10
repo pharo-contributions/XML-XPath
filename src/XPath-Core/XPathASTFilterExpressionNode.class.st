@@ -28,7 +28,7 @@ XPathASTFilterExpressionNode >> addPredicate: aPredicate [
 
 { #category : #private }
 XPathASTFilterExpressionNode >> defaultTypeClass [
-	^ XPathNodeSetType
+	^ XPathNodeSetValueType
 ]
 
 { #category : #testing }
@@ -61,18 +61,6 @@ XPathASTFilterExpressionNode >> predicates: aPredicateCollection [
 XPathASTFilterExpressionNode >> predicatesDo: aBlock [
 	predicates
 		ifNotNil: [predicates do: aBlock]
-]
-
-{ #category : #printing }
-XPathASTFilterExpressionNode >> printOn: aStream [
-	self hasPredicates
-		ifTrue: [
-			aStream nextPut: $(.
-			super printOn: aStream.
-			aStream nextPut: $).
-			self predicatesDo: [:each |
-				each printOn: aStream]]
-		ifFalse: [super printOn: aStream]
 ]
 
 { #category : #removing }

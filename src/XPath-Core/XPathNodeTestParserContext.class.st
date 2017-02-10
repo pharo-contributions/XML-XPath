@@ -28,62 +28,62 @@ XPathNodeTestParserContext >> handleAnyNodeTestWith: aHandler [
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleCommentTestWith: aHandler [
-	aHandler handleCommentTest
+XPathNodeTestParserContext >> handleCommentNodeTestWith: aHandler [
+	aHandler handleCommentNodeTest
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleEmptyTestWith: aHandler [
-	aHandler handleEmptyTest
+XPathNodeTestParserContext >> handleEmptyNodeTestWith: aHandler [
+	aHandler handleEmptyNodeTest
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handlePITestForName: aName with: aHandler [
-	aHandler handlePITestForName: aName
-]
-
-{ #category : #handling }
-XPathNodeTestParserContext >> handlePITestWith: aHandler [
-	aHandler handlePITest
-]
-
-{ #category : #handling }
-XPathNodeTestParserContext >> handleTestForLocalName: aLocalName with: aHandler [
+XPathNodeTestParserContext >> handleNodeTestForLocalName: aLocalName with: aHandler [
 	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForName: aName with: aHandler [
+XPathNodeTestParserContext >> handleNodeTestForName: aName with: aHandler [
 	self subclassResponsibility
 
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
+XPathNodeTestParserContext >> handleNodeTestForNamespaceURI: aURI localName: aLocalName with: aHandler [
 	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForNamespaceURI: aURI with: aHandler [
+XPathNodeTestParserContext >> handleNodeTestForNamespaceURI: aURI with: aHandler [
 	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForPrefix: aPrefix localName: aLocalName with: aHandler [
+XPathNodeTestParserContext >> handleNodeTestForPrefix: aPrefix localName: aLocalName with: aHandler [
 	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTestForPrefix: aPrefix with: aHandler [
+XPathNodeTestParserContext >> handleNodeTestForPrefix: aPrefix with: aHandler [
 	self subclassResponsibility
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleTextTestWith: aHandler [
-	aHandler handleTextTest
+XPathNodeTestParserContext >> handlePINodeTestForName: aName with: aHandler [
+	aHandler handlePINodeTestForName: aName
 ]
 
 { #category : #handling }
-XPathNodeTestParserContext >> handleWildcardTestWith: aHandler [
+XPathNodeTestParserContext >> handlePINodeTestWith: aHandler [
+	aHandler handlePINodeTest
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleTextNodeTestWith: aHandler [
+	aHandler handleTextNodeTest
+]
+
+{ #category : #handling }
+XPathNodeTestParserContext >> handleWildcardNodeTestWith: aHandler [
 	self subclassResponsibility
 ]

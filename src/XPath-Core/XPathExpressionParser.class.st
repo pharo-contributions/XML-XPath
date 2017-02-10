@@ -13,7 +13,7 @@ Class {
 
 { #category : #testing }
 XPathExpressionParser >> atDigit [
-	inputStream peek
+	readStream peek
 		ifNil: [^ false]
 		ifNotNil: [:nextChar | ^ nextChar isDigit]
 ]
@@ -69,9 +69,9 @@ XPathExpressionParser >> nextArgument [
 { #category : #parsing }
 XPathExpressionParser >> nextDigitsOnWriteStream [
 	"first digit"
-	writeStream nextPut: inputStream next.
+	writeStream nextPut: readStream next.
 	[self atDigit]
-		whileTrue: [writeStream nextPut: inputStream next].
+		whileTrue: [writeStream nextPut: readStream next].
 ]
 
 { #category : #parsing }
@@ -144,7 +144,7 @@ XPathExpressionParser >> nextPredicateBody [
 
 { #category : #parsing }
 XPathExpressionParser >> nextPrimaryExpression [
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	(self peekForVariableReference
 		or: [self peekForParenthesizedExpression
 			or: [self peekForStringLiteral
@@ -184,7 +184,7 @@ XPathExpressionParser >> parseInput [
 	currentAxis := XPathAxis new.
 	nodeTestParser :=
 		XPathNodeTestParser
-			on: inputStream
+			on: readStream
 			for:
 				(XPathASTExpressionNodeTestParserHandler
 					currentAxis: currentAxis
@@ -194,7 +194,7 @@ XPathExpressionParser >> parseInput [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbbreviatedAxis [
-	(inputStream peekFor: $@)
+	(readStream peekFor: $@)
 		ifTrue: [
 			currentAxis axisSpecifier: 'attribute'.
 			^ true]
@@ -203,7 +203,7 @@ XPathExpressionParser >> peekForAbbreviatedAxis [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbbreviatedDescendantStep [
-	(inputStream peekFor: $/)
+	(readStream peekFor: $/)
 		ifFalse: [^ false].
 
 	currentAxis axisSpecifier: 'descendant-or-self'.
@@ -215,15 +215,15 @@ XPathExpressionParser >> peekForAbbreviatedDescendantStep [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAbbreviatedStep [
-	(inputStream peekFor: $.)
+	(readStream peekFor: $.)
 		ifFalse: [^ false].
 	self atDigit
 		ifTrue: [
 			"a float literal, not a . or .. step"
-			inputStream skipBack.
+			readStream skipBack.
 			^ false].
 
-	(inputStream peekFor: $.)
+	(readStream peekFor: $.)
 		ifTrue: [currentAxis axisSpecifier: 'parent']
 		ifFalse: [currentAxis axisSpecifier: 'self'].
 	"abbreviated steps cannot have filters"
@@ -263,12 +263,12 @@ XPathExpressionParser >> peekForAdditionalSteps [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAdditiveOperator [
-	inputStream skipSeparators.
-	(inputStream peekFor: $+)
+	readStream skipSeparators.
+	(readStream peekFor: $+)
 		ifTrue: [
 			handler handleAdditionOperator.
 			^ true].
-	(inputStream peekFor: $-)
+	(readStream peekFor: $-)
 		ifTrue: [
 			handler handleSubtractionOperator.
 			^ true].
@@ -277,7 +277,7 @@ XPathExpressionParser >> peekForAdditiveOperator [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForAndOperator [
-	^ inputStream
+	^ readStream
 		skipSeparators;
 		nextMatchAll: 'and'
 ]
@@ -288,14 +288,14 @@ XPathExpressionParser >> peekForAxis [
 
 	self peekForAbbreviatedAxis
 		ifTrue: [^ true].
-	startPosition := inputStream position.
+	startPosition := readStream position.
 	(ncName := self nextNCNameOptional: true)
 		ifNil: [^ false].
-	inputStream skipSeparators.
-	((inputStream peekFor: $:)
-		and: [inputStream peekFor: $:])
+	readStream skipSeparators.
+	((readStream peekFor: $:)
+		and: [readStream peekFor: $:])
 		ifFalse: [
-			inputStream
+			readStream
 				pushBackNCName: ncName
 				position: startPosition.
 			^ false].
@@ -305,19 +305,19 @@ XPathExpressionParser >> peekForAxis [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForEndPredicate [
-	^ inputStream
+	^ readStream
 		skipSeparators;
 		peekFor: $]
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForEqualityOperator [
-	inputStream skipSeparators.
-	(inputStream nextMatchAll: '!=')
+	readStream skipSeparators.
+	(readStream nextMatchAll: '!=')
 		ifTrue: [
 			handler handleNotEqualsOperator.
 			^ true].
-	(inputStream peekFor: $=)
+	(readStream peekFor: $=)
 		ifTrue: [
 			handler handleEqualsOperator.
 			^ true].
@@ -332,25 +332,25 @@ XPathExpressionParser >> peekForLocationPathExpression [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForLocationPathSeparator [
-	^ inputStream
+	^ readStream
 		skipSeparators;
 		peekFor: $/
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForMultiplicativeOperator [
-	inputStream skipSeparators.
-	inputStream atEnd
+	readStream skipSeparators.
+	readStream atEnd
 		ifTrue: [^ false].
-	(inputStream peekFor: $*)
+	(readStream peekFor: $*)
 		ifTrue: [
 			handler handleMultiplicationOperator.
 			^ true].
-	(inputStream nextMatchAll: 'div')
+	(readStream nextMatchAll: 'div')
 		ifTrue: [
 			handler handleDivisionOperator.
 			^ true].
-	(inputStream nextMatchAll: 'mod')
+	(readStream nextMatchAll: 'mod')
 		ifTrue: [
 			handler handleModulusOperator.
 			^ true].
@@ -359,7 +359,7 @@ XPathExpressionParser >> peekForMultiplicativeOperator [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForNegationOperator [
-	^ inputStream
+	^ readStream
 		skipSeparators;
 		peekFor: $-
 ]
@@ -368,43 +368,43 @@ XPathExpressionParser >> peekForNegationOperator [
 XPathExpressionParser >> peekForNumber [
 	| startPosition |
 
-	startPosition := inputStream position.
+	startPosition := readStream position.
 	writeStream reset.
 	self atDigit
 		ifTrue: [
 			self nextDigitsOnWriteStream.
-			(inputStream peekFor: $.)
+			(readStream peekFor: $.)
 				ifTrue: [
 					writeStream nextPut: $..
 					self atDigit
 						ifTrue: [self nextDigitsOnWriteStream]].
 			handler handleNumberLiteral: writeStream contents.
 			^ true].
-	((inputStream peekFor: $.)
+	((readStream peekFor: $.)
 		and: [self atDigit])
 		ifTrue: [
 			writeStream nextPut: $..
 			self nextDigitsOnWriteStream.
 			handler handleNumberLiteral: writeStream contents.
 			^ true].
-	inputStream position: startPosition.
+	readStream position: startPosition.
 	^ false.
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForOrOperator [
-	^ inputStream
+	^ readStream
 		skipSeparators;
 		nextMatchAll: 'or'
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForParenthesizedExpression [
-	(inputStream peekFor: $()
+	(readStream peekFor: $()
 		ifFalse: [^ false].
 
 	self nextOrExpression.
-	inputStream skipSeparators.
+	readStream skipSeparators.
 	self expectNext: $).
 	^ true.
 
@@ -432,16 +432,16 @@ XPathExpressionParser >> peekForPredicates [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForRelationalOperator [
-	inputStream skipSeparators.
-	(inputStream peekFor: $<)
+	readStream skipSeparators.
+	(readStream peekFor: $<)
 		ifTrue: [
-			(inputStream peekFor: $=)
+			(readStream peekFor: $=)
 				ifTrue: [handler handleLessThanOrEqualToOperator]
 				ifFalse: [handler handleLessThanOperator].
 			^ true].
-	(inputStream peekFor: $>)
+	(readStream peekFor: $>)
 		ifTrue: [
-			(inputStream peekFor: $=)
+			(readStream peekFor: $=)
 				ifTrue: [handler handleGreaterThanOrEqualToOperator]
 				ifFalse: [handler handleGreaterThanOperator].
 			^ true].
@@ -464,15 +464,15 @@ XPathExpressionParser >> peekForRelativeLocationPath [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForStartPredicate [
-	^ inputStream
+	^ readStream
 		skipSeparators;
 		peekFor: $[
 ]
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForStep [
-	inputStream skipSeparators.
-	inputStream atEnd
+	readStream skipSeparators.
+	readStream atEnd
 		ifTrue: [^ false].
 
 	self peekForAbbreviatedStep
@@ -502,8 +502,8 @@ XPathExpressionParser >> peekForStringLiteral [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForUnionOperator [
-	inputStream skipSeparators.
-	(inputStream peekFor: $|)
+	readStream skipSeparators.
+	(readStream peekFor: $|)
 		ifTrue: [
 			handler handleUnionOperator.
 			^ true]
@@ -512,7 +512,7 @@ XPathExpressionParser >> peekForUnionOperator [
 
 { #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForVariableReference [
-	(inputStream peekFor: $$)
+	(readStream peekFor: $$)
 		ifTrue: [
 			handler handleVariableReference: self nextName.
 			^ true]

@@ -40,23 +40,28 @@ XPathComparable >> >= aComparable [
 	self subclassResponsibility
 ]
 
+{ #category : #converting }
+XPathComparable >> asXPathComparable [
+	^ self
+]
+
 { #category : #private }
-XPathComparable >> equalsBoolean: aBoolean [
+XPathComparable >> equalToBoolean: aBoolean [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> equalsNodeSet: aNodeSet [
+XPathComparable >> equalToNodeSet: aNodeSet [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> equalsNumber: aNumber [
+XPathComparable >> equalToNumber: aNumber [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> equalsString: aString [
+XPathComparable >> equalToString: aString [
 	self subclassResponsibility
 ]
 
@@ -72,6 +77,26 @@ XPathComparable >> greaterThanNodeSet: aNodeSet [
 
 { #category : #private }
 XPathComparable >> greaterThanNumber: aNumber [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> greaterThanOrEqualToBoolean: aBoolean [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> greaterThanOrEqualToNodeSet: aNodeSet [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> greaterThanOrEqualToNumber: aNumber [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> greaterThanOrEqualToString: aString [
 	self subclassResponsibility
 ]
 
@@ -96,27 +121,47 @@ XPathComparable >> lessThanNumber: aNumber [
 ]
 
 { #category : #private }
+XPathComparable >> lessThanOrEqualToBoolean: aBoolean [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> lessThanOrEqualToNodeSet: aNodeSet [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> lessThanOrEqualToNumber: aNumber [
+	self subclassResponsibility
+]
+
+{ #category : #private }
+XPathComparable >> lessThanOrEqualToString: aString [
+	self subclassResponsibility
+]
+
+{ #category : #private }
 XPathComparable >> lessThanString: aString [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> notEqualsBoolean: aBoolean [
+XPathComparable >> notEqualToBoolean: aBoolean [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> notEqualsNodeSet: aNodeSet [
+XPathComparable >> notEqualToNodeSet: aNodeSet [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> notEqualsNumber: aNumber [
+XPathComparable >> notEqualToNumber: aNumber [
 	self subclassResponsibility
 ]
 
 { #category : #private }
-XPathComparable >> notEqualsString: aString [
+XPathComparable >> notEqualToString: aString [
 	self subclassResponsibility
 ]
 
@@ -132,6 +177,11 @@ XPathComparable >> printOn: aStream [
 { #category : #initialization }
 XPathComparable >> setValue: anObject [
 	value := anObject
+]
+
+{ #category : #accessing }
+XPathComparable >> value [
+	^ value
 ]
 
 { #category : #comparing }

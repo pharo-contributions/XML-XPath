@@ -14,7 +14,7 @@ XPathASTUnionExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 
 { #category : #private }
 XPathASTUnionExpressionNode >> defaultTypeClass [
-	^ XPathNodeSetType
+	^ XPathNodeSetValueType
 ]
 
 { #category : #testing }
