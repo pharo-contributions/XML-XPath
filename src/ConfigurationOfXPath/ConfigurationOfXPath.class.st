@@ -1648,7 +1648,7 @@ ConfigurationOfXPath >> version188: spec [
 
 { #category : #versions }
 ConfigurationOfXPath >> version189: spec [ 
-        <version: '1.8.9' imports: #('1.8.3-baseline')>
+        <version: '1.8.9' imports: #('1.8.9-baseline')>
 
         spec for: #common do: [
                 spec blessing: #release.
