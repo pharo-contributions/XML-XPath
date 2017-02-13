@@ -10,8 +10,8 @@ XPathBooleanComparableTest class >> isAbstract [
 ]
 
 { #category : #accessing }
-XPathBooleanComparableTest >> comparableClass [
-	^ XPathBooleanComparable
+XPathBooleanComparableTest >> defaultComparable [
+	^ self comparableTrueValue
 ]
 
 { #category : #tests }
@@ -522,9 +522,4 @@ XPathBooleanComparableTest >> testNotEqualToString [
 	self deny:
 		self comparableFalseValue ~=
 			self comparableEmptyStringValue.
-]
-
-{ #category : #accessing }
-XPathBooleanComparableTest >> valueForComparable [
-	^ true
 ]

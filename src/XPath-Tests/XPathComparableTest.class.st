@@ -18,11 +18,6 @@ XPathComparableTest class >> shouldInheritSelectors [
 ]
 
 { #category : #accessing }
-XPathComparableTest >> comparableClass [
-	self subclassResponsibility
-]
-
-{ #category : #accessing }
 XPathComparableTest >> comparableDisjointNumberStringValue [
 	^ self disjointNumberValues first asString asXPathComparable
 ]
@@ -152,6 +147,11 @@ XPathComparableTest >> comparableZeroValue [
 ]
 
 { #category : #accessing }
+XPathComparableTest >> defaultComparable [
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
 XPathComparableTest >> disjointNumberValues [
 	^ #(5 6 7 8)
 ]
@@ -180,13 +180,6 @@ XPathComparableTest >> stringValues [
 XPathComparableTest >> testAsXPathComparable [
 	| comparable |
 
-	comparable := self valueForComparable asXPathComparable.
-	self
-		assert: comparable class == self comparableClass;
-		assert: comparable asXPathComparable == comparable.
-]
-
-{ #category : #accessing }
-XPathComparableTest >> valueForComparable [
-	self subclassResponsibility
+	comparable := self defaultComparable.
+	self assert: comparable asXPathComparable == comparable.
 ]

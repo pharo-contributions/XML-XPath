@@ -10,8 +10,8 @@ XPathNumberComparableTest class >> isAbstract [
 ]
 
 { #category : #accessing }
-XPathNumberComparableTest >> comparableClass [
-	^ XPathNumberComparable
+XPathNumberComparableTest >> defaultComparable [
+	^ self comparableNumberValue
 ]
 
 { #category : #tests }
@@ -534,9 +534,4 @@ XPathNumberComparableTest >> testNotEqualToString [
 	self assert:
 		self comparableNumberValue ~=
 			self comparableEmptyStringValue.
-]
-
-{ #category : #accessing }
-XPathNumberComparableTest >> valueForComparable [
-	^ 0
 ]

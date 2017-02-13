@@ -14,6 +14,16 @@ XPathStringTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathStringTest >> testAsXPathComparable [
+	| comparable |
+
+	comparable := 'test' asXPathComparable.
+	self
+		assert: comparable class == XPathStringComparable;
+		assert: comparable value = 'test'.
+]
+
+{ #category : #tests }
 XPathStringTest >> testAsXPathNodeSet [
 	self
 		should: ['test' asXPathNodeSet]

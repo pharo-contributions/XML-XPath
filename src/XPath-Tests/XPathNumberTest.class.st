@@ -17,6 +17,16 @@ XPathNumberTest >> testAsXPathBoolean [
 ]
 
 { #category : #tests }
+XPathNumberTest >> testAsXPathComparable [
+	| comparable |
+
+	comparable := 1 asXPathComparable.
+	self
+		assert: comparable class == XPathNumberComparable;
+		assert: comparable value = 1.
+]
+
+{ #category : #tests }
 XPathNumberTest >> testAsXPathNodeSet [
 	self
 		should: [1.0 asXPathNodeSet]

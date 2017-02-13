@@ -417,7 +417,12 @@ XPathNodeSetTest >> testAsXPathBoolean [
 
 { #category : #tests }
 XPathNodeSetTest >> testAsXPathComparable [
-	self assert: self emptyList asXPathComparable class == XPathNodeSetComparable
+	| comparable |
+
+	comparable := self listWithItems asXPathComparable.
+	self
+		assert: comparable class == XPathNodeSetComparable;
+		assert: comparable value = self listWithItems.
 ]
 
 { #category : #tests }

@@ -10,8 +10,8 @@ XPathNodeSetComparableTest class >> isAbstract [
 ]
 
 { #category : #accessing }
-XPathNodeSetComparableTest >> comparableClass [
-	^ XPathNodeSetComparable
+XPathNodeSetComparableTest >> defaultComparable [
+	^ self comparableNodeSetWithStringValues
 ]
 
 { #category : #tests }
@@ -704,9 +704,4 @@ XPathNodeSetComparableTest >> testNotEqualToString [
 	self deny:
 		self comparableEmptyNodeSet ~=
 			self comparableEmptyStringValue.
-]
-
-{ #category : #accessing }
-XPathNodeSetComparableTest >> valueForComparable [
-	^ self nodeSetClass new
 ]
