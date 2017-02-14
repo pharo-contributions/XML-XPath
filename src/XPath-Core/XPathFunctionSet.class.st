@@ -143,7 +143,7 @@ XPathFunctionSet >> functionsByName [
 
 { #category : #comparing }
 XPathFunctionSet >> hash [
-	^ functionsByName hash
+	^ self species hash bitXor: functionsByName hash
 ]
 
 { #category : #testing }
@@ -161,6 +161,12 @@ XPathFunctionSet >> includesFunctionNamed: aName [
 { #category : #initialization }
 XPathFunctionSet >> initialize: aCapacity [
 	functionsByName := Dictionary new: aCapacity
+]
+
+{ #category : #testing }
+XPathFunctionSet >> isEmpty [
+	"Squeak's Collection>>#isEmpty is inefficient"
+	^ self size = 0
 ]
 
 { #category : #copying }

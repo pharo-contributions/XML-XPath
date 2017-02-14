@@ -30,7 +30,7 @@ XPathType >> = anObject [
 
 { #category : #comparing }
 XPathType >> hash [
-	^ self class hash
+	^ self species hash
 ]
 
 { #category : #accessing }

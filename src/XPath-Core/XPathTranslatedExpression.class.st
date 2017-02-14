@@ -28,7 +28,7 @@ XPathTranslatedExpression >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;
-		nextPutAll: self sourceCode;
+		print: self sourceCode;
 		nextPut: $).
 ]
 

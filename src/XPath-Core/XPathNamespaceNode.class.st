@@ -1,5 +1,5 @@
 "
-This class models an element namespace prefix and URI mapping as a DOM node for compatibility with the XPath standard.
+This class models an element namespace prefix and URI mapping as a DOM node for compatibility with the XPath standard. Namespace nodes are equal only if they have the same name, namespace URI, and belong to the same element.
 "
 Class {
 	#name : #XPathNamespaceNode,
@@ -77,7 +77,8 @@ XPathNamespaceNode >> hasPrefix [
 
 { #category : #comparing }
 XPathNamespaceNode >> hash [
-	^ self name hash bitXor: self uri hash
+	^ (self species hash bitXor: self name hash)
+		bitXor: self uri hash
 ]
 
 { #category : #testing }

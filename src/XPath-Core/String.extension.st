@@ -1,6 +1,13 @@
 Extension { #name : #String }
 
 { #category : #'*XPath-Core-converting' }
+String >> ?? aPredicateOrPredicateCollection [
+	^ XPathNodeTestWithPredicates
+		nodeTest: self
+		predicates: aPredicateOrPredicateCollection
+]
+
+{ #category : #'*XPath-Core-converting' }
 String >> asXPath [
 	^ XPath for: self
 ]

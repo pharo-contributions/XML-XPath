@@ -1,17 +1,29 @@
 Extension { #name : #XMLNodeWithElements }
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNodeWithElements >> / aStringOrBlockOrNodeTestWithFilters [
+XMLNodeWithElements >> / aStringOrBlockOrNodeTestWithPredicates [
 	"redefined here to prevent a conflicting method from the Pastell project
 	from shadowing the inherited implementation if Pastell was installed"
-	^ self childAxis: aStringOrBlockOrNodeTestWithFilters
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				childAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self childAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNodeWithElements >> // aStringOrBlockOrNodeTestWithFilters [
+XMLNodeWithElements >> // aStringOrBlockOrNodeTestWithPredicates [
 	"redefined here to prevent a conflicting method from the Pastell project
 	from shadowing the inherited implementation if Pastell was installed"
-	^ self descendantAxis: aStringOrBlockOrNodeTestWithFilters
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				descendantAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self descendantAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-accessing' }

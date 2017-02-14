@@ -17,18 +17,36 @@ XPathNodeSet class >> new [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> % aNodeTestStringOrBlock [
-	^ self parentAxis: aNodeTestStringOrBlock
+XPathNodeSet >> % aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				parentAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self parentAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> %% aNodeTestStringOrBlock [
-	^ self ancestorAxis: aNodeTestStringOrBlock
+XPathNodeSet >> %% aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				ancestorAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self ancestorAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> %%~ aNodeTestStringOrBlock [
-	^ self ancestorOrSelfAxis: aNodeTestStringOrBlock
+XPathNodeSet >> %%~ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #enumerating }
@@ -38,48 +56,109 @@ XPathNodeSet >> & aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> / aNodeTestStringOrBlock [
-	^ self childAxis: aNodeTestStringOrBlock
+XPathNodeSet >> / aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				childAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self childAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> // aNodeTestStringOrBlock [
-	^ self descendantAxis: aNodeTestStringOrBlock
+XPathNodeSet >> // aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				descendantAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self descendantAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> //~ aNodeTestStringOrBlock [
-	^ self descendantOrSelfAxis: aNodeTestStringOrBlock
+XPathNodeSet >> //~ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				descendantOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self descendantOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> << aNodeTestStringOrBlock [
-	^ self precedingAxis: aNodeTestStringOrBlock
+XPathNodeSet >> << aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				precedingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self precedingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> <<< aNodeTestStringOrBlock [
-	^ self precedingSiblingAxis: aNodeTestStringOrBlock
+XPathNodeSet >> <<< aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> >> aNodeTestStringOrBlock [
-	^ self followingAxis: aNodeTestStringOrBlock
+XPathNodeSet >> >> aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				followingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self followingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> >>> aNodeTestStringOrBlock [
-	^ self followingSiblingAxis: aNodeTestStringOrBlock
+XPathNodeSet >> >>> aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]
+]
+
+{ #category : #enumerating }
+XPathNodeSet >> ?? aPredicateOrPredicateCollection [
+	^ aPredicateOrPredicateCollection isCollection
+		ifTrue: [self sorted filterWithAll: aPredicateOrPredicateCollection]
+		ifFalse: [self sorted filterWith: aPredicateOrPredicateCollection]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> @ aNodeTestStringOrBlock [
-	^ self attributeAxis: aNodeTestStringOrBlock
+XPathNodeSet >> @ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				attributeAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self attributeAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> @@ aNodeTestStringOrBlock [
-	^ self namespaceAxis: aNodeTestStringOrBlock
+XPathNodeSet >> @@ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				namespaceAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self namespaceAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #enumerating }
@@ -356,9 +435,9 @@ XPathNodeSet >> filterEachInSeparateContextWith: aThreeArgumentBlockOrNumber [
 				node := self at: i.
 				(result :=
 					aThreeArgumentBlockOrNumber
-						value: node "context node"
-						value: 1 "context position"
-						value: 1) isNumber "context size"
+						cull: node "context node"
+						cull: 1 "context position"
+						cull: 1) isNumber "context size"
 						ifTrue: [
 							result asXPathNodeSetPosition = 1
 								ifTrue: [copy addLast: node]]
@@ -406,9 +485,9 @@ XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
 				node := self at: i.
 				(result :=
 					aThreeArgumentBlockOrNumber
-						value: node "context node"
-						value: i "context position"
-						value: contextSize) isNumber
+						cull: node "context node"
+						cull: i "context position"
+						cull: contextSize) isNumber
 					ifTrue: [
 						result asXPathNodeSetPosition = i
 							ifTrue: [copy addLast: node]]

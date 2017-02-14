@@ -1,63 +1,135 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> % aNodeTestStringOrBlock [
-	^ self parentAxis: aNodeTestStringOrBlock
+XMLNode >> % aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				parentAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self parentAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> %% aNodeTestStringOrBlock [
-	^ self ancestorAxis: aNodeTestStringOrBlock
+XMLNode >> %% aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				ancestorAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self ancestorAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> %%~ aNodeTestStringOrBlock [
-	^ self ancestorOrSelfAxis: aNodeTestStringOrBlock
+XMLNode >> %%~ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> / aNodeTestStringOrBlock [
-	^ self childAxis: aNodeTestStringOrBlock
+XMLNode >> / aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				childAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self childAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> // aNodeTestStringOrBlock [
-	^ self descendantAxis: aNodeTestStringOrBlock
+XMLNode >> // aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				descendantAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self descendantAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> //~ aNodeTestStringOrBlock [
-	^ self descendantOrSelfAxis: aNodeTestStringOrBlock
+XMLNode >> //~ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				descendantOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self descendantOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> << aNodeTestStringOrBlock [
-	^ self precedingAxis: aNodeTestStringOrBlock
+XMLNode >> << aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				precedingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self precedingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> <<< aNodeTestStringOrBlock [
-	^ self precedingSiblingAxis: aNodeTestStringOrBlock
+XMLNode >> <<< aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> >> aNodeTestStringOrBlock [
-	^ self followingAxis: aNodeTestStringOrBlock
+XMLNode >> >> aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				followingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self followingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> >>> aNodeTestStringOrBlock [
-	^ self followingSiblingAxis: aNodeTestStringOrBlock
+XMLNode >> >>> aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> @ aNodeTestStringOrBlock [
-	^ self attributeAxis: aNodeTestStringOrBlock
+XMLNode >> @ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				attributeAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self attributeAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating - axis' }
-XMLNode >> @@ aNodeTestStringOrBlock [
-	^ self namespaceAxis: aNodeTestStringOrBlock
+XMLNode >> @@ aStringOrBlockOrNodeTestWithPredicates [
+	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				namespaceAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self namespaceAxis: aStringOrBlockOrNodeTestWithPredicates]
 ]
 
 { #category : #'*XPath-Core-enumerating' }
