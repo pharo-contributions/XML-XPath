@@ -1,6 +1,13 @@
 Extension { #name : #CharacterCollection }
 
 { #category : #'*XPath-GemstoneCompatibility' }
+CharacterCollection >> ?? aPredicateOrPredicateCollection [
+	^ XPathNodeTestWithPredicates
+		nodeTest: self
+		predicates: aPredicateOrPredicateCollection
+]
+
+{ #category : #'*XPath-GemstoneCompatibility' }
 CharacterCollection >> asXPath [
 	^ XPath for: self
 ]
