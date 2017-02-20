@@ -262,12 +262,18 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisPositionPredicate 
 		"selects the first para child of the context node"
 		self
 			assertNodeSet: (node xPath: 'para[1]')
-			hasNodes: (paras ifNotEmpty: [Array with: paras first]).
+			hasNodes:
+				(paras size > 0
+					ifTrue: [Array with: paras first]
+					ifFalse: [#()]).
 
 		"selects the last para child of the context node"
 		self
 			assertNodeSet: (node xPath: 'para[last()]')
-			hasNodes: (paras ifNotEmpty: [Array with: paras last]).
+			hasNodes:
+				(paras size > 0
+					ifTrue: [Array with: paras last]
+					ifFalse: [#()]).
 
 		"selects the last but one para child of the context node"
 		self
@@ -609,12 +615,18 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisPositionPredicat
 		"selects the first para child of the context node"
 		self
 			assertNodeSet: (node xPath: 'child::para[position()=1]')
-			hasNodes: (paras ifNotEmpty: [Array with: paras first]).
+			hasNodes:
+				(paras size > 0
+					ifTrue: [Array with: paras first]
+					ifFalse: [#()]).
 
 		"selects the last para child of the context node"
 		self
 			assertNodeSet: (node xPath: 'child::para[position()=last()]')
-			hasNodes: (paras ifNotEmpty: [Array with: paras last]).
+			hasNodes:
+				(paras size > 0
+					ifTrue: [Array with: paras last]
+					ifFalse: [#()]).
 
 		"selects the last but one para child of the context node"
 		self
@@ -676,7 +688,10 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisSelfPredicate [
 			assertNodeSet:
 				(node xPath:
 					'child::*[self::chapter or self::appendix][position()=last()]')
-			hasNodes: (elements ifNotEmpty: [Array with: elements last])]
+			hasNodes:
+				(elements size > 0
+					ifTrue: [Array with: elements last]
+					ifFalse: [#()])]
 ]
 
 { #category : #tests }
