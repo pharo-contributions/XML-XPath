@@ -1721,6 +1721,6 @@ ConfigurationOfXPath >> version191: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.104'.
-			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.87'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.88'.
                 ].
 ]
