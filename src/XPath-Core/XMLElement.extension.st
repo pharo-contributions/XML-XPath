@@ -1,6 +1,16 @@
 Extension { #name : #XMLElement }
 
 { #category : #'*XPath-Core-private' }
+XMLElement >> attributeAxisAnySatisfy: anAttributeNodeTest [
+	self hasAttributes
+		ifTrue: [
+			^ anAttributeNodeTest isAttributeNodeTestForName
+				ifTrue: [self includesAttribute: anAttributeNodeTest name]
+				ifFalse: [self attributeNodes anySatisfy: anAttributeNodeTest]]
+		ifFalse: [^ false]
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLElement >> attributeAxisSelect: anAttributeNodeTest at: aPosition into: aNodeSet [
 	(aPosition > 0
 		and: [self hasAttributes
@@ -71,6 +81,29 @@ XMLElement >> hasExpandedName [
 XMLElement >> hasNamespaceNodes [
 	"elements have at least one node for the default xml namespace"
 	^ self usesNamespaces
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLElement >> namespaceAxisAnySatisfy: aNamespaceNodeTest [
+	^ self hasNamespaces
+		and: [self namespaceNodes anySatisfy: aNamespaceNodeTest]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLElement >> namespaceAxisSelect: aNamespaceNodeTest at: aPosition into: aNodeSet [
+	| totalMatched |
+
+	(self hasNamespaces
+		and: [aPosition > 0])
+		ifFalse: [^ aNodeSet].
+	totalMatched := 0.
+	self namespaceNodesDo: [:each |
+		((aNamespaceNodeTest value: each)
+			and: [(totalMatched := totalMatched + 1) = aPosition])
+			ifTrue: [
+				aNodeSet addLast: each.
+				^ aNodeSet]].
+	^ aNodeSet.
 ]
 
 { #category : #'*XPath-Core-private' }

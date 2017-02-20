@@ -8,6 +8,12 @@ XMLNodeWithChildren >> allNodesReverseDo: aBlock [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> childAxisAnySatisfy: aNodeTest [
+	^ self hasChildren
+		and: [self nodes anySatisfy: aNodeTest]
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNodeWithChildren >> childAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	(aPosition > 0
 		and: [self hasChildren
@@ -46,6 +52,14 @@ XMLNodeWithChildren >> childAxisSelect: aNodeTest into: aNodeSet [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> descendantAxisAnySatisfy: aNodeTest [
+	self descendantNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNodeWithChildren >> descendantAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -76,6 +90,14 @@ XMLNodeWithChildren >> descendantAxisSelect: aNodeTest into: aNodeSet [
 		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNodeWithChildren >> descendantOrSelfAxisAnySatisfy: aNodeTest [
+	self allNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
 ]
 
 { #category : #'*XPath-Core-private' }

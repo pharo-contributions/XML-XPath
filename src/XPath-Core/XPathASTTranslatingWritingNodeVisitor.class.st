@@ -113,31 +113,31 @@ XPathASTTranslatingWritingNodeVisitor >> emitBinaryEqualityExpression: aBinaryEx
 
 { #category : #private }
 XPathASTTranslatingWritingNodeVisitor >> emitBinaryRelationalExpression: aBinaryExpression withOperator: aSelectorString [
-	| needsComparableConversions |
+	| omitComparableConversions |
 
-	"If either subexpression is of node set type, then comparable
-	conversions are still needed. Otherwise, converting non-numbers to
-	numbers is enough."
-	needsComparableConversions :=
-		aBinaryExpression expression type isNodeSetValueType
-			or: [aBinaryExpression otherExpression type isNodeSetValueType].
+	"if neither subexpression is of node set type, then comparable
+	conversions aren't needed, and converting non-numbers to numbers
+	is enough."
+	omitComparableConversions :=
+		aBinaryExpression expression type isNodeSetValueType not
+			and: [aBinaryExpression otherExpression type isNodeSetValueType not].
 
 	self emit: $(.
 	aBinaryExpression expression acceptNodeVisitor: self.
-	needsComparableConversions
-		ifTrue: [self emitComparableConversion]
-		ifFalse: [
+	omitComparableConversions
+		ifTrue: [
 			aBinaryExpression expression type isNumberValueType
-				ifFalse: [self emitNumberConversion]].
+				ifFalse: [self emitNumberConversion]]
+		ifFalse: [self emitComparableConversion].
 	self
 		emitSpace;
 		emitAll: aSelectorString.
 	aBinaryExpression otherExpression acceptNodeVisitor: self.
-	needsComparableConversions
-		ifTrue: [self emitComparableConversion]
-		ifFalse: [
+	omitComparableConversions
+		ifTrue: [
 			aBinaryExpression otherExpression type isNumberValueType
-				ifFalse: [self emitNumberConversion]].
+				ifFalse: [self emitNumberConversion]]
+		ifFalse: [self emitComparableConversion].
 	self emit: $).
 	^ aBinaryExpression.
 ]
@@ -389,13 +389,21 @@ XPathASTTranslatingWritingNodeVisitor >> visitAdditionExpression: anAdditionExpr
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitAncestorOrSelfStep: anAncestorOrSelfStep [
-	self emitAll: ' ancestorOrSelfAxis:'.
+	(self peekStep isNull
+		and: [anAncestorOrSelfStep hasPredicates not
+			and: [anAncestorOrSelfStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' ancestorOrSelfAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' ancestorOrSelfAxis:'].
 	^ super visitAncestorOrSelfStep: anAncestorOrSelfStep.
 ]
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitAncestorStep: anAncestorStep [
-	self emitAll: ' ancestorAxis:'.
+	(self peekStep isNull
+		and: [anAncestorStep hasPredicates not
+			and: [anAncestorStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' ancestorAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' ancestorAxis:'].
 	^ super visitAncestorStep: anAncestorStep.
 ]
 
@@ -473,30 +481,12 @@ XPathASTTranslatingWritingNodeVisitor >> visitAttributeNodeTestForPrefix: anAttr
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitAttributeStep: anAttributeStep [
-	(anAttributeStep isRelativeOrAbsoluteLocationPathStep
+	(self peekStep isNull
 		and: [anAttributeStep hasPredicates not
-			and: [anAttributeStep isSoleStep
-				and: [anAttributeStep isPredicateLocationPathStep]]])
-		ifTrue: [
-			self
-				emitAll: ' isElement and:[';
-				emitAll: self locationPathRootVariable;
-				emitAll: ' hasAttributes and:[';
-				emitAll: self locationPathRootVariable.
-			anAttributeStep nodeTest isAttributeNodeTestForName
-				ifTrue: [
-					"can use a direct lookup here"
-					self
-						emitAll: ' includesAttribute:';
-						emitQuotedString: anAttributeStep nodeTest name]
-				ifFalse: [
-					self emitAll: ' attributeNodes anySatisfy:'.
-					anAttributeStep nodeTest acceptNodeVisitor: self].
-			self emitAll: ']])'.
-			^ anAttributeStep]
-		ifFalse: [
-			self emitAll: ' attributeAxis:'.
-			^ super visitAttributeStep: anAttributeStep]
+			and: [anAttributeStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' attributeAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' attributeAxis:'].
+	^ super visitAttributeStep: anAttributeStep.
 ]
 
 { #category : #'visiting - node tests' }
@@ -515,21 +505,12 @@ XPathASTTranslatingWritingNodeVisitor >> visitAttributeTestForPrefixAndLocalName
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitChildStep: aChildStep [
-	(aChildStep isRelativeOrAbsoluteLocationPathStep
+	(self peekStep isNull
 		and: [aChildStep hasPredicates not
-			and: [aChildStep isSoleStep
-				and: [aChildStep isPredicateLocationPathStep]]])
-		ifTrue: [
-			self
-				emitAll: ' hasChildren and:[';
-				emitAll: self locationPathRootVariable;
-				emitAll: ' nodes anySatisfy:'.
-			aChildStep nodeTest acceptNodeVisitor: self.
-			self emitAll: '])'.
-			^ aChildStep]
-		ifFalse: [
-			self emitAll: ' childAxis:'.
-			^ super visitChildStep: aChildStep]
+			and: [aChildStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' childAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' childAxis:'].
+	^ super visitChildStep: aChildStep.
 ]
 
 { #category : #'visiting - node tests' }
@@ -540,34 +521,22 @@ XPathASTTranslatingWritingNodeVisitor >> visitCommentNodeTest: aCommentNodeTest 
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfStep [
-	(aDescendantOrSelfStep isRelativeOrAbsoluteLocationPathStep
+	(self peekStep isNull
 		and: [aDescendantOrSelfStep hasPredicates not
-			and: [aDescendantOrSelfStep isSoleStep
-				and: [aDescendantOrSelfStep isPredicateLocationPathStep]]])
-		ifTrue: [
-			self emitAll: ' allNodesDetect:'.
-			aDescendantOrSelfStep nodeTest acceptNodeVisitor: self.
-			self emitAll: ') notNil'.
-			^ aDescendantOrSelfStep]
-		ifFalse: [
-			self emitAll: ' descendantOrSelfAxis:'.
-			^ super visitDescendantOrSelfStep: aDescendantOrSelfStep].
+			and: [aDescendantOrSelfStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' descendantOrSelfAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' descendantOrSelfAxis:'].
+	^ super visitDescendantOrSelfStep: aDescendantOrSelfStep.
 ]
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitDescendantStep: aDescendantStep [
-	(aDescendantStep isRelativeOrAbsoluteLocationPathStep
+	(self peekStep isNull
 		and: [aDescendantStep hasPredicates not
-			and: [aDescendantStep isSoleStep
-				and: [aDescendantStep isPredicateLocationPathStep]]])
-		ifTrue: [
-			self emitAll: ' descendantNodesDetect:'.
-			aDescendantStep nodeTest acceptNodeVisitor: self.
-			self emitAll: ') notNil'.
-			^ aDescendantStep]
-		ifFalse: [
-			self emitAll: ' descendantAxis:'.
-			^ super visitDescendantStep: aDescendantStep]
+			and: [aDescendantStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' descendantAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' descendantAxis:'].
+	^ super visitDescendantStep: aDescendantStep.
 ]
 
 { #category : #'visiting - operators' }
@@ -685,9 +654,10 @@ XPathASTTranslatingWritingNodeVisitor >> visitFilterExpressionLocationPath: aFil
 XPathASTTranslatingWritingNodeVisitor >> visitFilterable: aFilterable [
 	aFilterable hasPredicates
 		ifTrue: [
-			aFilterable isFilterExpression
-				ifTrue: [self emitAll: ' asXPathFilterable filterWithAll: {']
-				ifFalse: [self emitAll: ' predicates: {'].
+			self emitAll:
+				(aFilterable isFilterExpression
+					ifTrue: [' asXPathFilterExpressionPredicateRoot filterWithAll:{']
+					ifFalse: [' predicates:{']).
 			super visitFilterable: aFilterable.
 			self emit: $}]
 		ifFalse: [super visitFilterable: aFilterable].
@@ -696,13 +666,21 @@ XPathASTTranslatingWritingNodeVisitor >> visitFilterable: aFilterable [
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitFollowingSiblingStep: aFollowingSiblingStep [
-	self emitAll: ' followingSiblingAxis:'.
+	(self peekStep isNull
+		and: [aFollowingSiblingStep hasPredicates not
+			and: [aFollowingSiblingStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' followingSiblingAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' followingSiblingAxis:'].
 	^ super visitFollowingSiblingStep: aFollowingSiblingStep.
 ]
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitFollowingStep: aFollowingStep [
-	self emitAll: ' followingAxis:'.
+	(self peekStep isNull
+		and: [aFollowingStep hasPredicates not
+			and: [aFollowingStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' followingAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' followingAxis:'].
 	^ super visitFollowingStep: aFollowingStep.
 ]
 
@@ -839,7 +817,11 @@ XPathASTTranslatingWritingNodeVisitor >> visitNamespaceNodeTestForPrefixAndLocal
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitNamespaceStep: aNamespaceStep [
-	self emitAll: ' namespaceAxis:'.
+	(self peekStep isNull
+		and: [aNamespaceStep hasPredicates not
+			and: [aNamespaceStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' namespaceAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' namespaceAxis:'].
 	^ super visitNamespaceStep: aNamespaceStep.
 ]
 
@@ -878,11 +860,11 @@ XPathASTTranslatingWritingNodeVisitor >> visitNotEqualsExpression: aNotEqualsExp
 XPathASTTranslatingWritingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
 	| number |
 
-	"don't use #asXPathString here, because we don't want the XPath string
-	representation, but its self-evaluating Smalltalk representation, so NaN
-	is rendered as something like 'Float nan' and not 'NaN', and don't just
-	use #asString because older implementations aren't self-evaluating for
-	nan and inifinity"
+	"can't just use #asXPathString here because we don't want the XPath string
+	representation, but a self-evaluating Smalltalk representation, so NaN
+	is rendered like 'Float nan' and not 'NaN', and can't just use #asString
+	either because older implementations aren't self-evaluating for NaN and
+	inifinity"
 	(number := aNumberLiteral number) isNaN
 		ifTrue: [self emitNumberLiteral: 'Float nan']
 		ifFalse: [
@@ -898,7 +880,9 @@ XPathASTTranslatingWritingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
 								ifTrue: [
 									self emitNumberLiteral: 'Float xPathNegativeZero']
 								ifFalse: [self emitNumberLiteral: '0.0']]
-						ifFalse: [self emitNumberLiteral: number asString]]].
+						ifFalse: [
+							"#asString should be OK for all others"
+							self emitNumberLiteral: number asString]]].
 	^ aNumberLiteral.
 ]
 
@@ -924,32 +908,31 @@ XPathASTTranslatingWritingNodeVisitor >> visitPINodeTestForName: aPINodeTestForN
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitParentStep: aParentStep [
-	(aParentStep isRelativeOrAbsoluteLocationPathStep
+	(self peekStep isNull
 		and: [aParentStep hasPredicates not
-			and: [aParentStep isSoleStep
-				and: [aParentStep isPredicateLocationPathStep]]])
-		ifTrue: [
-			self emitAll: ' hasParent and:['.
-			aParentStep nodeTest acceptNodeVisitor: self.
-			self
-				emitAll: ' value:';
-				emitAll: self locationPathRootVariable.
-			self emitAll: ' parent])'.
-			^ aParentStep]
-		ifFalse: [
-			self emitAll: ' parentAxis:'.
-			^ super visitParentStep: aParentStep]
+			and: [aParentStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' parentAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' parentAxis:'].
+	^ super visitParentStep: aParentStep.
 ]
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitPrecedingSiblingStep: aPrecedingSiblingStep [
-	self emitAll: ' precedingSiblingAxis:'.
+	(self peekStep isNull
+		and: [aPrecedingSiblingStep hasPredicates not
+			and: [aPrecedingSiblingStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' precedingSiblingAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' precedingSiblingAxis:'].
 	^ super visitPrecedingSiblingStep: aPrecedingSiblingStep.
 ]
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitPrecedingStep: aPrecedingStep [
-	self emitAll: ' precedingAxis:'.
+	(self peekStep isNull
+		and: [aPrecedingStep hasPredicates not
+			and: [aPrecedingStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' precedingAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' precedingAxis:'].
 	^ super visitPrecedingStep: aPrecedingStep.
 ]
 
@@ -989,18 +972,12 @@ XPathASTTranslatingWritingNodeVisitor >> visitRelativeLocationPath: aRelativeLoc
 
 { #category : #'visiting - steps' }
 XPathASTTranslatingWritingNodeVisitor >> visitSelfStep: aSelfStep [
-	(aSelfStep isRelativeOrAbsoluteLocationPathStep
+	(self peekStep isNull
 		and: [aSelfStep hasPredicates not
-			and: [aSelfStep isSoleStep
-				and: [aSelfStep isPredicateLocationPathStep]]])
-		ifTrue: [
-			self emitAll: ' matches:'.
-			aSelfStep nodeTest acceptNodeVisitor: self.
-			self emit: $).
-			^ aSelfStep]
-		ifFalse: [
-			self emitAll: ' selfAxis:'.
-			^ super visitSelfStep: aSelfStep]
+			and: [aSelfStep isPredicateLocationPathStep]])
+		ifTrue: [self emitAll: ' selfAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' selfAxis:'].
+	^ super visitSelfStep: aSelfStep.
 ]
 
 { #category : #'visiting - steps' }

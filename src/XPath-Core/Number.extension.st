@@ -17,7 +17,7 @@ Number >> asXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #'*XPath-Core-converting' }
-Number >> asXPathFilterable [
+Number >> asXPathFilterExpressionPredicateRoot [
 	XPathTypeException signal: 'Cannot filter numbers'
 ]
 

@@ -36,7 +36,7 @@ String >> asXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #'*XPath-Core-converting' }
-String >> asXPathFilterable [
+String >> asXPathFilterExpressionPredicateRoot [
 	XPathTypeException signal: 'Cannot filter strings'
 ]
 

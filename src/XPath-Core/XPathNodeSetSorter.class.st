@@ -49,6 +49,12 @@ XPathNodeSetSorter >> prescanNodesForSharedParent [
 	| sharedParent |
 
 	sharedParent := nodeSetCollection first parent.
+
+	"we could breakout once sharedParent is nil (there isn't one) and
+	mustVisitNamespaces and mustVisitAttributes are both true, because
+	no more info is needed, but that's so uncommon (attributes and namespace
+	nodes in a node set and no shared parent) that it's not worth testing for
+	each iteration"
 	nodeSetCollection do: [:each |
 		each isNamespace
 			ifTrue: [mustVisitNamespaces := true]
@@ -80,10 +86,14 @@ XPathNodeSetSorter >> sortVisitingAllNodes [
 			ifTrue: [
 				(mustVisitNamespaces
 					and: [node hasNamespaceNodes])
-					ifTrue: [node namespaceNodesDo: [:each | self visitNode: each]].
+					ifTrue: [
+						node namespaceNodesDo: [:each |
+							self visitNode: each]].
 				(mustVisitAttributes
 					and: [node hasAttributes])
-					ifTrue: [node attributeNodesDo: [:each |self visitNode: each]]].
+					ifTrue: [
+						node attributeNodesDo: [:each |
+							self visitNode: each]]].
 		"can abort when every node in the node set has been visited"
 		totalSorted = nodeSetSize
 			ifTrue: [^ self]].
@@ -99,11 +109,17 @@ XPathNodeSetSorter >> sortVisitingNodesOfSharedParent: aParent [
 	namespaces and attributes (if any are in the node set) and
 	children need to be visited"
 	mustVisitNamespaces
-		ifTrue: [aParent namespaceNodesDo: [:each | self visitNode: each]].
+		ifTrue: [
+			aParent namespaceNodesDo: [:each |
+				self visitNode: each]].
 	mustVisitAttributes
-		ifTrue: [aParent attributeNodesDo: [:each | self visitNode: each]].
+		ifTrue: [
+			aParent attributeNodesDo: [:each |
+				self visitNode: each]].
 	aParent hasChildren
-		ifTrue: [aParent nodesDo: [:each | self visitNode: each]].
+		ifTrue: [
+			aParent nodesDo: [:each |
+				self visitNode: each]].
 ]
 
 { #category : #private }

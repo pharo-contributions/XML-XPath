@@ -16,7 +16,7 @@ Boolean >> asXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #'*XPath-Core-converting' }
-Boolean >> asXPathFilterable [
+Boolean >> asXPathFilterExpressionPredicateRoot [
 	XPathTypeException signal: 'Cannot filter booleans'
 ]
 

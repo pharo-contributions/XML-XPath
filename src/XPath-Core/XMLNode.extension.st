@@ -162,6 +162,14 @@ XMLNode >> ancestorAxis: aNodeTestStringOrBlock predicates: aPredicateCollection
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> ancestorAxisAnySatisfy: aNodeTest [
+	self ancestorNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> ancestorAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -219,6 +227,14 @@ XMLNode >> ancestorOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateColl
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> ancestorOrSelfAxisAnySatisfy: aNodeTest [
+	self withAncestorNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> ancestorOrSelfAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -267,7 +283,7 @@ XMLNode >> asXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #'*XPath-Core-converting' }
-XMLNode >> asXPathFilterable [
+XMLNode >> asXPathFilterExpressionPredicateRoot [
 	XPathTypeException signal: 'Cannot filter nodes'
 ]
 
@@ -317,6 +333,11 @@ XMLNode >> attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollectio
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> attributeAxisAnySatisfy: anAttributeNodeTest [
+	^ false
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> attributeAxisSelect: anAttributeNodeTest at: aPosition into: aNodeSet [
 	^ aNodeSet
 ]
@@ -351,6 +372,11 @@ XMLNode >> childAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> childAxisAnySatisfy: aNodeTest [
+	^ false
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> childAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	^ aNodeSet
 ]
@@ -382,6 +408,11 @@ XMLNode >> descendantAxis: aNodeTestStringOrBlock predicates: aPredicateCollecti
 		ifFalse: [
 			^ (self descendantAxis: aNodeTestStringOrBlock)
 				filterWithAll: aPredicateCollection]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> descendantAxisAnySatisfy: aNodeTest [
+	^ false
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -421,6 +452,11 @@ XMLNode >> descendantOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCo
 		ifFalse: [
 			^ (self descendantOrSelfAxis: aNodeTestStringOrBlock)
 				filterWithAll: aPredicateCollection]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> descendantOrSelfAxisAnySatisfy: aNodeTest [
+	^ aNodeTest value: self
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -471,6 +507,14 @@ XMLNode >> followingAxis: aNodeTestStringOrBlock predicates: aPredicateCollectio
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> followingAxisAnySatisfy: aNodeTest [
+	self followingNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> followingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -501,6 +545,18 @@ XMLNode >> followingAxisSelect: aNodeTest into: aNodeSet [
 		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-accessing' }
+XMLNode >> followingNodes [
+	"returns a node list with all following sibling or descendant nodes
+	of the receiver"
+	| following |
+
+	following := self newListForSelect.
+	self followingNodesDo: [:each |
+		following addLast: each].
+	^ following.
 ]
 
 { #category : #'*XPath-Core-enumerating' }
@@ -541,6 +597,14 @@ XMLNode >> followingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCo
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> followingSiblingAxisAnySatisfy: aNodeTest [
+	self followingSiblingNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> followingSiblingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -571,6 +635,17 @@ XMLNode >> followingSiblingAxisSelect: aNodeTest into: aNodeSet [
 		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-accessing' }
+XMLNode >> followingSiblingNodes [
+	"returns a node list with all following sibling nodes of the receiver"
+	| followingSiblings |
+
+	followingSiblings := self newListForSelect.
+	self followingSiblingNodesDo: [:each |
+		followingSiblings addLast: each].
+	^ followingSiblings.
 ]
 
 { #category : #'*XPath-Core-enumerating' }
@@ -612,8 +687,29 @@ XMLNode >> namespaceAxis: aNodeTestStringOrBlock [
 
 { #category : #'*XPath-Core-enumerating - predicate axis' }
 XMLNode >> namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
-	^ (self namespaceAxis: aNodeTestStringOrBlock)
-		filterWithAll: aPredicateCollection
+	(aPredicateCollection notEmpty
+		and: [aPredicateCollection first isNumber])
+		ifTrue: [
+			^ (self
+				namespaceAxisSelect:
+					aNodeTestStringOrBlock asXPathNamespaceAxisNodeTest
+				at: aPredicateCollection first asXPathNodeSetPosition
+				into: self nodeSetClass new)
+					sortOrder: XPathDocumentSortOrder new;
+					filterWithAll: aPredicateCollection startingAt: 2]
+		ifFalse: [
+			^ (self namespaceAxis: aNodeTestStringOrBlock)
+				filterWithAll: aPredicateCollection]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> namespaceAxisAnySatisfy: aNamespaceNodeTest [
+	^ false
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> namespaceAxisSelect: aNamespaceNodeTest at: aPosition into: aNodeSet [
+	^ aNodeSet
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -651,6 +747,12 @@ XMLNode >> parentAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 		ifFalse: [
 			^ (self parentAxis: aNodeTestStringOrBlock)
 				filterEachInSeparateContextWithAll: aPredicateCollection]
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLNode >> parentAxisAnySatisfy: aNodeTest [
+	^ self hasParent
+		and: [aNodeTest value: self parent]
 ]
 
 { #category : #'*XPath-Core-private' }
@@ -704,6 +806,14 @@ XMLNode >> precedingAxis: aNodeTestStringOrBlock predicates: aPredicateCollectio
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> precedingAxisAnySatisfy: aNodeTest [
+	self precedingNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> precedingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -734,6 +844,18 @@ XMLNode >> precedingAxisSelect: aNodeTest into: aNodeSet [
 		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-accessing' }
+XMLNode >> precedingNodes [
+	"returns a node list with all preceding sibling or descendant nodes
+	of the receiver"
+	| preceding |
+
+	preceding := self newListForSelect.
+	self precedingNodesDo: [:each |
+		preceding addLast: each].
+	^ preceding.
 ]
 
 { #category : #'*XPath-Core-enumerating' }
@@ -774,6 +896,14 @@ XMLNode >> precedingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCo
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> precedingSiblingAxisAnySatisfy: aNodeTest [
+	self precedingSiblingNodesDo: [:each |
+		(aNodeTest value: each)
+			ifTrue: [^ true]].
+	^ false.
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> precedingSiblingAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	| totalMatched |
 
@@ -804,6 +934,17 @@ XMLNode >> precedingSiblingAxisSelect: aNodeTest into: aNodeSet [
 		(aNodeTest value: each)
 			ifTrue: [aNodeSet addLast: each]].
 	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-accessing' }
+XMLNode >> precedingSiblingNodes [
+	"returns a node list with all preceding sibling nodes of the receiver"
+	| precedingSiblings |
+
+	precedingSiblings := self newListForSelect.
+	self precedingSiblingNodesDo: [:each |
+		precedingSiblings addLast: each].
+	^ precedingSiblings.
 ]
 
 { #category : #'*XPath-Core-enumerating' }
@@ -845,6 +986,11 @@ XMLNode >> selfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 ]
 
 { #category : #'*XPath-Core-private' }
+XMLNode >> selfAxisAnySatisfy: aNodeTest [
+	^ aNodeTest value: self
+]
+
+{ #category : #'*XPath-Core-private' }
 XMLNode >> selfAxisSelect: aNodeTest at: aPosition into: aNodeSet [
 	(aPosition = 1
 		and: [aNodeTest value: self])
@@ -872,13 +1018,13 @@ XMLNode >> withAncestorNodesDo: aBlock [
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-XMLNode >> xPath: anXPathOrXPathString [
-	^ anXPathOrXPathString asXPath in: self
+XMLNode >> xPath: anXPathOrXPathExpressionSourceString [
+	^ anXPathOrXPathExpressionSourceString asXPath in: self
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-XMLNode >> xPath: anXPathOrXPathString context: aContext [
-	^ anXPathOrXPathString asXPath
+XMLNode >> xPath: anXPathOrXPathExpressionSourceString context: aContext [
+	^ anXPathOrXPathExpressionSourceString asXPath
 		in: self
 		context: aContext
 ]

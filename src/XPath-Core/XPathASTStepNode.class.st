@@ -55,6 +55,8 @@ XPathASTStepNode >> isForwardAxisStep [
 
 { #category : #testing }
 XPathASTStepNode >> isPredicateLocationPathStep [
+	"returns true if the step is part of a location path that is the
+	expression of a predicate node"
 	^ self hasParent
 		and: [| locationPath |
 			(locationPath := self parent) hasParent
@@ -62,22 +64,8 @@ XPathASTStepNode >> isPredicateLocationPathStep [
 ]
 
 { #category : #testing }
-XPathASTStepNode >> isRelativeOrAbsoluteLocationPathStep [
-	^ self hasParent
-		and: [| locationPath |
-			(locationPath := self parent) isRelativeLocationPath
-				or: [locationPath isAbsoluteLocationPath]]
-]
-
-{ #category : #testing }
 XPathASTStepNode >> isReverseAxisStep [
 	^ false
-]
-
-{ #category : #testing }
-XPathASTStepNode >> isSoleStep [
-	^ self hasParent not
-		or: [self parent totalSteps = 1]
 ]
 
 { #category : #testing }
