@@ -36,7 +36,7 @@ CharacterCollection >> asXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #'*XPath-GemstoneCompatibility' }
-CharacterCollection >> asXPathFilterable [
+CharacterCollection >> asXPathFilterExpressionPredicateRoot [
 	XPathTypeException signal: 'Cannot filter strings'
 ]
 
