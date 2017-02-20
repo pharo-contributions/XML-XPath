@@ -434,11 +434,11 @@ XPathNodeSetTest >> testAsXPathFilterExpressionLocationPathRoot [
 ]
 
 { #category : #tests }
-XPathNodeSetTest >> testAsXPathFilterable [
+XPathNodeSetTest >> testAsXPathFilterExpressionPredicateRoot [
 	| list filterable |
 
 	list := self listWithItems reversed.
-	filterable := list asXPathFilterable.
+	filterable := list asXPathFilterExpressionPredicateRoot.
 	self
 		assertList: filterable copiedFrom: list equals: self listWithItems;
 		assertList: filterable hasSortOrder: XPathDocumentSortOrder.
@@ -933,6 +933,42 @@ XPathNodeSetTest >> testDifference [
 		(self listWithItems reversed \
 			(self listItems select: [:each | each isElement])) =
 				(self listWithItems reject: [:each | each isElement]).
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testFilterExpressionPositionPredicate [
+	1 to: self listItems size do: [:i | | item list filtered |
+		item := self listItems at: i.
+
+		list := self listWithItems.
+		filtered := list ?? i.
+		self
+			assertList: filtered copiedFrom: list equals: (self listClass with: item);
+			assertList: filtered hasSortOrder: XPathDocumentSortOrder.
+
+		list := self listWithItems reversed.
+		filtered := list ?? i.
+		self
+			assertList: filtered copiedFrom: list equals: (self listClass with: item);
+			assertList: filtered hasSortOrder: XPathDocumentSortOrder]
+]
+
+{ #category : #tests }
+XPathNodeSetTest >> testFilterExpressionPositionPredicates [
+	1 to: self listItems size do: [:i | | item list filtered |
+		item := self listItems at: i.
+
+		list := self listWithItems.
+		filtered := list ?? (Array with: i with: 1).
+		self
+			assertList: filtered copiedFrom: list equals: (self listClass with: item);
+			assertList: filtered hasSortOrder: XPathDocumentSortOrder.
+
+		list := self listWithItems reversed.
+		filtered := list ?? (Array with: i with: 1).
+		self
+			assertList: filtered copiedFrom: list equals: (self listClass with: item);
+			assertList: filtered hasSortOrder: XPathDocumentSortOrder]
 ]
 
 { #category : #tests }
