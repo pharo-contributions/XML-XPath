@@ -1,5 +1,5 @@
 "
-This class is a writing AST visitor that translates the AST to Smalltalk source code and an array of node test objects that can be compiled.
+This class is a writing AST visitor that translates the AST to Smalltalk source code and an array of node test objects that can be compiled. The resulting XPathTranslatedExpression object can be accessed with #translatedExpression after sending #visitNode: to the AST root.
 "
 Class {
 	#name : #XPathASTTranslatingWritingNodeVisitor,
@@ -245,7 +245,7 @@ XPathASTTranslatingWritingNodeVisitor >> emitQuotedString: aString [
 	self emit: $'.
 	"use #to:do: for speed"
 	1 to: aString size do: [:i | | nextChar |
-		"escape ' by outputting another ' before it"
+		"escape $' by outputting another $' before it"
 		(nextChar := aString at: i) == $'
 			ifTrue: [self emit: $'].
 		self emit: nextChar].

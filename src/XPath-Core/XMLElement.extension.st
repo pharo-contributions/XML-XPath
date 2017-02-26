@@ -26,18 +26,10 @@ XMLElement >> attributeAxisSelect: anAttributeNodeTest at: aPosition into: aNode
 				ifTrue: [
 					"only one attribute can have this exact name"
 					aPosition = 1
-						ifFalse: [^ aNodeSet].
-
-					"If it's an attribute test for a name, we can use this
-					to look up its node in constant time (if the node list
-					is caching). We avoid #attributeNodeAt: because it matches
-					names and local names, not names exactly, and
-					#attributeValueAt: returns the value not the node"
-					(self attributeNodes at:
-						(self attributeNodes indexOfAttribute:
-							anAttributeNodeTest name))
-						ifNotNil: [:attributeNode |
-							aNodeSet addLast: attributeNode]]
+						ifTrue: [
+							self
+								attributeAxisSelectName: anAttributeNodeTest name
+								into: aNodeSet]]
 				ifFalse: [| totalMatched |
 					totalMatched := 0.
 					self attributeNodesDo: [:each |
@@ -55,20 +47,28 @@ XMLElement >> attributeAxisSelect: anAttributeNodeTest into: aNodeSet [
 		ifTrue: [
 			anAttributeNodeTest isAttributeNodeTestForName
 				ifTrue: [
-					"If it's an attribute test for a name, we can use this
-					to look up its node in constant time (if the node list
-					is caching). We avoid #attributeNodeAt: because it matches
-					names and local names, not names exactly, and
-					#attributeValueAt: returns the value not the node"
-					(self attributeNodes at:
-						(self attributeNodes indexOfAttribute:
-							anAttributeNodeTest name))
-						ifNotNil: [:attributeNode |
-							aNodeSet addLast: attributeNode]]
+					self
+						attributeAxisSelectName: anAttributeNodeTest name
+						into: aNodeSet]
 				ifFalse: [
 					self attributeNodesDo: [:each |
 						(anAttributeNodeTest value: each)
 							ifTrue: [aNodeSet addLast: each]]]].
+	^ aNodeSet.
+]
+
+{ #category : #'*XPath-Core-private' }
+XMLElement >> attributeAxisSelectName: anAttributeName into: aNodeSet [
+	| index |
+	
+	"If it's an attribute test for a name, we can use this to look up its
+	node in constant time (if it's an XMLCachingAttirbuteList). We avoid
+	#attributeNodeAt: because it matches names and local names, not names
+	exactly, and #attributeValueAt: returns the value, not the node"
+	(index := self attributeNodes indexOfAttribute: anAttributeName) > 0
+		ifTrue: [
+			aNodeSet addLast:
+				(self attributeNodes at: index)].
 	^ aNodeSet.
 ]
 

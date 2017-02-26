@@ -131,8 +131,8 @@ XPathNamespaceNode >> uri [
 XPathNamespaceNode >> writeXMLOn: aWriter [
 	aWriter
 		writeName:
-			(self name
-				ifEmpty: ['xmlns']
-				ifNotEmpty: ['xmlns:', self name])
+			(self name isEmpty
+				ifTrue: ['xmlns']
+				ifFalse: ['xmlns:', self name])
 		escapedContentValue: self uri
 ]

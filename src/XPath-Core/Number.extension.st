@@ -28,15 +28,23 @@ Number >> asXPathNodeSet [
 
 { #category : #'*XPath-Core-converting' }
 Number >> asXPathNodeSetPosition [
-	"Do not round node set positions up or down implicitly.
-	The spec doesn't require it and LibXML2 doesn't do it."
+	"this catches literal integer predicates used with #??"
 	self isInteger
 		ifTrue: [^ self].
+
+	"Pharo/Squeak (but not GS) OrderedCollections, which XPathNodeSets
+	use internally, round float indexes down to the nearest integer, which is
+	not OK because the spec doesn't require it (and LibXML2 doesn't do it), so
+	fractional, NaN, and infinite positions all have to be converted to an
+	always out-of-bounds index"
 	(self isNaN
-		or: [self isInfinite
-			or: [self fractionPart isZero not]])
-		ifTrue: [^ 0].
-	^ self asInteger.
+		or: [self isInfinite])
+		ifFalse: [| truncated |
+			(truncated := self truncated) = self
+				ifTrue: [^ truncated]].
+
+	"always out-of-bounds"
+	^ 0.
 ]
 
 { #category : #'*XPath-Core-converting' }
@@ -103,6 +111,9 @@ Number >> hasSameXPathSignAs: aNumber [
 
 { #category : #'*XPath-Core-evaluating' }
 Number >> xPathCeiling [
+	"'The ceiling function returns the smallest (closest to negative infinity)
+	number that is not less than the argument and that is an integer.'
+	(The spec doesn't say how to handle NaN and infinity; LibXML2 returns NaN.)"
 	(self isNaN
 		or: [self isInfinite])
 		ifTrue: [^ Float nan]
@@ -128,6 +139,9 @@ Number >> xPathDivision: aDivisor [
 
 { #category : #'*XPath-Core-evaluating' }
 Number >> xPathFloor [
+	"'The floor function returns the largest (closest to positive infinity)
+	number that is not greater than the argument and that is an integer.'
+	(The spec doesn't say how to handle NaN and infinity; LibXML2 returns NaN.)"
 	(self isNaN
 		or: [self isInfinite])
 		ifTrue: [^ Float nan]

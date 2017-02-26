@@ -180,8 +180,8 @@ XPathNodeSet >> addAllIfNotPresentTo: aCollection [
 	does an #includes: test to avoid adding an already present node to
 	the end of a node set, which whould left shift everything after
 	its old position by one"
-	1 to: self size do: [:i | | node |
-		node := self at: i.
+	1 to: collection size do: [:i | | node |
+		node := collection at: i.
 		(aCollection includes: node)
 			ifFalse: [aCollection addLast: node]]
 ]
@@ -190,8 +190,8 @@ XPathNodeSet >> addAllIfNotPresentTo: aCollection [
 XPathNodeSet >> addAllTo: aCollection [
 	"this inverts #addAll: because #addAll: uses #do: instead of #to:do:
 	because it accepts non-SequenceableCollection arguments"
-	1 to: self size do: [:i |
-		aCollection addLast: (self at: i)]
+	1 to: collection size do: [:i |
+		aCollection addLast: (collection at: i)]
 ]
 
 { #category : #private }
@@ -228,6 +228,13 @@ XPathNodeSet >> afterAddingLast: aNode [
 		ifFalse: [
 			observer
 				ifNotNil: [observer addedNode: aNode]]
+]
+
+{ #category : #private }
+XPathNodeSet >> afterAddingToCopyLast: aNode [
+	self set add: aNode.
+	observer
+		ifNotNil: [observer addedNode: aNode].
 ]
 
 { #category : #private }
@@ -501,10 +508,10 @@ XPathNodeSet >> filterEachInSeparateContextWith: aThreeArgumentBlockOrNumber [
 						cull: 1) isNumber "context size"
 						ifTrue: [
 							result asXPathNodeSetPosition = 1
-								ifTrue: [copy addLast: node]]
+								ifTrue: [copy addToCopyLast: node]]
 						ifFalse: [
 							result asXPathBoolean
-								ifTrue: [copy addLast: node]]]].
+								ifTrue: [copy addToCopyLast: node]]]].
 	"filtering cannot change the sort order"
 	^ copy sortOrderFrom: self.
 ]
@@ -539,7 +546,7 @@ XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
 		ifTrue: [
 			(self at: aThreeArgumentBlockOrNumber asXPathNodeSetPosition)
 				ifNotNil: [:node |
-					copy addLast: node]]
+					copy addToCopyLast: node]]
 		ifFalse: [| contextSize |
 			contextSize := self size.
 			1 to: contextSize do: [:i | | node result |
@@ -551,10 +558,10 @@ XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
 						cull: contextSize) isNumber
 					ifTrue: [
 						result asXPathNodeSetPosition = i
-							ifTrue: [copy addLast: node]]
+							ifTrue: [copy addToCopyLast: node]]
 					ifFalse: [
 						result asXPathBoolean
-							ifTrue: [copy addLast: node]]]].
+							ifTrue: [copy addToCopyLast: node]]]].
 	"filtering cannot change the sort order"
 	^ copy sortOrderFrom: self.
 ]
