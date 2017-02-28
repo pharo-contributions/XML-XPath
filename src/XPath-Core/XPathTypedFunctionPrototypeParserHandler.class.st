@@ -107,15 +107,15 @@ XPathTypedFunctionPrototypeParserHandler >> stringClass [
 ]
 
 { #category : #accessing }
-XPathTypedFunctionPrototypeParserHandler >> typeName: aTypeName ifNone: aBlock [
-	^ typesByName
-		at: aTypeName
-		ifAbsent: aBlock
+XPathTypedFunctionPrototypeParserHandler >> typeNamed: aTypeName [
+	^ self
+		typeNamed: aTypeName
+		ifNone: [self errorUnrecognizedTypeName: aTypeName]
 ]
 
 { #category : #accessing }
-XPathTypedFunctionPrototypeParserHandler >> typeNamed: aTypeName [
-	^ self
-		typeName: aTypeName
-		ifNone: [self errorUnrecognizedTypeName: aTypeName]
+XPathTypedFunctionPrototypeParserHandler >> typeNamed: aTypeName ifNone: aBlock [
+	^ typesByName
+		at: aTypeName
+		ifAbsent: aBlock
 ]

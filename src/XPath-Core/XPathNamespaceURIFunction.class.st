@@ -16,9 +16,10 @@ XPathNamespaceURIFunction class >> prototypeSource [
 XPathNamespaceURIFunction >> function [
 	| node |
 
-	self hasArguments
-		ifTrue: [node := self firstArgument firstInDocumentOrder]
-		ifFalse: [node := self contextNode].
+	node :=
+		self hasArguments
+			ifTrue: [self firstArgument firstInDocumentOrder]
+			ifFalse: [self contextNode].
 
 	(node notNil
 		and: [node hasExpandedName])

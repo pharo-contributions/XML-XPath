@@ -14,5 +14,6 @@ XPathLangFunction class >> prototypeSource [
 
 { #category : #invoking }
 XPathLangFunction >> function [
-	^ self contextNode isInLanguage: self firstArgument
+	^ self contextNode notNil
+		and: [self contextNode isInLanguage: self firstArgument]
 ]

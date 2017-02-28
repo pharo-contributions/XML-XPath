@@ -1,8 +1,8 @@
 "
-This class holds the current axis while a step is being parsed and maps them to handler selectors and parser context classes to parse the node test that comes after.
+This class holds the current axis while a step is being parsed by an XPathExpressionParser and maps it to the correct handler selector and to a default node test parser context class (to parse any node test that comes after).
 "
 Class {
-	#name : #XPathAxis,
+	#name : #XPathExpressionParserAxis,
 	#superclass : #Object,
 	#instVars : [
 		'axisSpecifier',
@@ -19,12 +19,12 @@ Class {
 }
 
 { #category : #private }
-XPathAxis class >> axisSpecifiers [
+XPathExpressionParserAxis class >> axisSpecifiers [
 	^ AxisSpecifiers
 ]
 
 { #category : #private }
-XPathAxis class >> axisSpecifiersTemplate [
+XPathExpressionParserAxis class >> axisSpecifiersTemplate [
 	"Returns an array of arrays where each subarray has an axis name,
 	a handler selector to map it to, and the principal node type for
 	that axis, which is used to determine the parser context class
@@ -48,7 +48,7 @@ XPathAxis class >> axisSpecifiersTemplate [
 ]
 
 { #category : #'class initialization' }
-XPathAxis class >> initialize [
+XPathExpressionParserAxis class >> initialize [
 	"self initialize"
 
 	| temp |
@@ -75,12 +75,12 @@ XPathAxis class >> initialize [
 ]
 
 { #category : #accessing }
-XPathAxis >> axisSpecifier [
+XPathExpressionParserAxis >> axisSpecifier [
 	^ axisSpecifier
 ]
 
 { #category : #accessing }
-XPathAxis >> axisSpecifier: anAxisSpecifier [
+XPathExpressionParserAxis >> axisSpecifier: anAxisSpecifier [
 	anAxisSpecifier = axisSpecifier
 		ifFalse: [
 			axisSpecifier := anAxisSpecifier.
@@ -91,7 +91,7 @@ XPathAxis >> axisSpecifier: anAxisSpecifier [
 ]
 
 { #category : #changing }
-XPathAxis >> beDefaultImplicitAxis [
+XPathExpressionParserAxis >> beDefaultImplicitAxis [
 	axisSpecifier := 'child'.
 	handlerSelector := #handleChildAxis.
 	defaultNodeTestParserContextClass := XPathNodeTestParserElementContext.
@@ -101,17 +101,17 @@ XPathAxis >> beDefaultImplicitAxis [
 ]
 
 { #category : #changing }
-XPathAxis >> beFirstAxis [
+XPathExpressionParserAxis >> beFirstAxis [
 	isFirstAxis := true
 ]
 
 { #category : #changing }
-XPathAxis >> beStartOfRelativeLocationPath [
+XPathExpressionParserAxis >> beStartOfRelativeLocationPath [
 	isStartOfRelativeLocationPath := true
 ]
 
 { #category : #accessing }
-XPathAxis >> defaultNodeTestParserContextClass [
+XPathExpressionParserAxis >> defaultNodeTestParserContextClass [
 	^ defaultNodeTestParserContextClass
 		ifNil: [
 			self lookupAxisSpecifier.
@@ -119,14 +119,14 @@ XPathAxis >> defaultNodeTestParserContextClass [
 ]
 
 { #category : #private }
-XPathAxis >> errorUnrecognizedAxisSpecifier [
+XPathExpressionParserAxis >> errorUnrecognizedAxisSpecifier [
 	XPathSyntaxException
 		formatSignal: 'Unrecognized axis specifier "{1}"'
 		with: self axisSpecifier
 ]
 
 { #category : #accessing }
-XPathAxis >> handlerSelector [
+XPathExpressionParserAxis >> handlerSelector [
 	^ handlerSelector
 		ifNil: [
 			self lookupAxisSpecifier.
@@ -134,28 +134,28 @@ XPathAxis >> handlerSelector [
 ]
 
 { #category : #initialization }
-XPathAxis >> initialize [
+XPathExpressionParserAxis >> initialize [
 	super initialize.
 	self beDefaultImplicitAxis.
 ]
 
 { #category : #testing }
-XPathAxis >> isFirstAxis [
+XPathExpressionParserAxis >> isFirstAxis [
 	^ isFirstAxis
 ]
 
 { #category : #testing }
-XPathAxis >> isImplicitAxis [
+XPathExpressionParserAxis >> isImplicitAxis [
 	^ isImplicit
 ]
 
 { #category : #testing }
-XPathAxis >> isStartOfRelativeLocationPath [
+XPathExpressionParserAxis >> isStartOfRelativeLocationPath [
 	^ isStartOfRelativeLocationPath
 ]
 
 { #category : #private }
-XPathAxis >> lookupAxisSpecifier [
+XPathExpressionParserAxis >> lookupAxisSpecifier [
 	| association |
 
 	association :=
@@ -167,7 +167,7 @@ XPathAxis >> lookupAxisSpecifier [
 ]
 
 { #category : #printing }
-XPathAxis >> printOn: aStream [
+XPathExpressionParserAxis >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPut: $(;

@@ -16,9 +16,10 @@ XPathNormalizeSpaceFunction class >> prototypeSource [
 XPathNormalizeSpaceFunction >> function [
 	| string writeStream isInWhitespace normalizedSpace |
 
-	self hasArguments
-		ifTrue: [string := self firstArgument]
-		ifFalse: [string := self contextNode].
+	string :=
+		self hasArguments
+			ifTrue: [self firstArgument]
+			ifFalse: [self newContextNodeNodeSet stringValue].
 
 	"must use #writeStream instead of 'WriteStream on:' to get a 0-based
 	stream on Gemstone"

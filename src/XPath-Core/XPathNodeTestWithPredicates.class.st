@@ -44,11 +44,12 @@ XPathNodeTestWithPredicates >> predicates [
 { #category : #printing }
 XPathNodeTestWithPredicates >> printOn: aStream [
 	super printOn: aStream.
-	aStream nextPut: $(.
-	self nodeTest printOn: aStream.
-	aStream nextPutAll: '; '.
-	self predicates printOn: aStream.
-	aStream nextPut: $).
+	aStream
+		nextPut: $(;
+		print: self nodeTest;
+		nextPutAll: '; ';
+		print: self predicates;
+		nextPut: $).
 ]
 
 { #category : #initialization }

@@ -15,7 +15,7 @@ XPathStringLengthFunction class >> prototypeSource [
 
 { #category : #invoking }
 XPathStringLengthFunction >> function [
-	self hasArguments
-		ifTrue: [^ self firstArgument size]
-		ifFalse: [^ self contextNode stringValue size]
+	^ (self hasArguments
+		ifTrue: [self firstArgument]
+		ifFalse: [self contextNode ifNil: ['']]) size
 ]

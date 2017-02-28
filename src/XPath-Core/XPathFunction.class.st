@@ -239,6 +239,13 @@ XPathFunction >> name [
 ]
 
 { #category : #'instance creation' }
+XPathFunction >> newContextNodeNodeSet [
+	^ self contextNode
+		ifNil: [self newNodeSet]
+		ifNotNil: [self nodeSetClass with: self contextNode]
+]
+
+{ #category : #'instance creation' }
 XPathFunction >> newNodeSet [
 	^ self nodeSetClass new
 ]
@@ -251,9 +258,10 @@ XPathFunction >> nodeSetClass [
 { #category : #printing }
 XPathFunction >> printOn: aStream [
 	super printOn: aStream.
-	aStream nextPut: $(.
-	self prototype printOn: aStream.
-	aStream nextPut: $).
+	aStream
+		nextPut: $(;
+		print: self prototype;
+		nextPut: $).
 ]
 
 { #category : #accessing }

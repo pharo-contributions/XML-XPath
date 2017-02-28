@@ -181,7 +181,7 @@ XPathExpressionParser >> nextUnionExpression [
 
 { #category : #parsing }
 XPathExpressionParser >> parseInput [
-	currentAxis := XPathAxis new.
+	currentAxis := XPathExpressionParserAxis new.
 	nodeTestParser :=
 		XPathNodeTestParser
 			on: readStream

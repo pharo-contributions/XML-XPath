@@ -18,9 +18,10 @@ XPathSubstringFunction >> function [
 
 	string := self argumentAt: 1.
 	start := (self argumentAt: 2) xPathRounded.
-	self totalArguments > 2
-		ifTrue: [end := start + (self argumentAt: 3) xPathRounded - 1]
-		ifFalse: [end := string size].
+	end :=
+		self totalArguments > 2
+			ifTrue: [start + (self argumentAt: 3) xPathRounded - 1]
+			ifFalse: [string size].
 
 	"if either start or end are NaN, the test will fail"
 	(start <= end
