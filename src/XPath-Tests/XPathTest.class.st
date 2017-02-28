@@ -1712,7 +1712,22 @@ XPathTest >> testNormalizeSpaceFunction [
 		    two
 		    three
 		")' asXPath evaluate = 'one two three'.
-	self assert: 'normalize-space(" 	")' asXPath evaluate isEmpty.
+	self assert: 'normalize-space(" 	")' asXPath evaluate = ''.
+
+	"if the argument is omitted, use a node set with the context node"
+	self assert:
+		('normalize-space()' asXPath in:
+			'<test>
+			    one		  
+			    two
+			    three
+			</test>' parseXML) = 'one two three'.
+	self assert:
+		('normalize-space()' asXPath in: '<test> 	</test>' parseXML) = ''.
+
+	self
+		should: ['normalize-space("one","two three")' asXPath evaluate]
+		raise: XPathArgumentNumberException.
 ]
 
 { #category : #tests }
@@ -1727,6 +1742,24 @@ XPathTest >> testNotFunction [
 	self
 		should: ['not()' asXPath evaluate]
 		raise: XPathArgumentNumberException.
+]
+
+{ #category : #tests }
+XPathTest >> testNumberFunction [
+	self
+		assert: 'number("123")' asXPath evaluate = 123;
+		assert: 'number(123)' asXPath evaluate = 123;
+		assert: 'number(true())' asXPath evaluate = 1;
+		assert: 'number(false())' asXPath evaluate = 0.
+
+	"if the argument is omitted, use a node set with the context node"
+	self assert:
+		('number()' asXPath in: '<test>123</test>' parseXML) = 123.
+
+	self
+		should: ['number(1, 23)' asXPath evaluate]
+		raise: XPathArgumentNumberException.
+
 ]
 
 { #category : #tests }
@@ -3242,7 +3275,18 @@ XPathTest >> testStringFunction [
 		assert: 'string(-1 div 0)' asXPath evaluate = '-Infinity';
 		assert: 'string(0 div 0)' asXPath evaluate = 'NaN';
 		assert: 'string(0.0)' asXPath evaluate = '0';
-		assert: 'string(-0.0)' asXPath evaluate = '0'
+		assert: 'string(-0.0)' asXPath evaluate = '0';
+		assert: 'string(true())' asXPath evaluate = 'true';
+		assert: 'string(false())' asXPath evaluate = 'false'.
+
+	"if the argument is omitted, use a node set with the context node"
+	self assert:
+		('string()' asXPath in: '<test>test</test>' parseXML) = 'test'.
+
+	self
+		should: ['string("1", "23")' asXPath evaluate]
+		raise: XPathArgumentNumberException.
+
 ]
 
 { #category : #tests }
