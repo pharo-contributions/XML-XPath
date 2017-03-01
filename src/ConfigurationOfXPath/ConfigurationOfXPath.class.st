@@ -189,14 +189,14 @@ ConfigurationOfXPath >> baseline106: spec [
 ConfigurationOfXPath >> baseline10: spec [
 	<version: '1.0-baseline'>
 
-	spec for: #'common' do: [
-		spec blessing: #'baseline'.
+	spec for: #common do: [
+		spec blessing: #baseline.
 		spec repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XPath/main'.
 		spec project: 'XMLParser' with: [ 
 			spec
 				className: 'ConfigurationOfXMLParser';
 				loads: #('default');	
-				versionString: #'stable';
+				versionString: #stable;
 				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 		spec package: 'XPath-Core' with: [ spec requires: 'XMLParser' ].
 		spec package: 'XPath-Tests' with: [ spec requires: 'XPath-Core' ].
@@ -205,7 +205,7 @@ ConfigurationOfXPath >> baseline10: spec [
 		spec group: 'Core' with: #('XPath-Core').
 		spec group: 'Tests' with: #('XPath-Tests')].
 
-	spec for: #'squeakCommon' do: [
+	spec for: #squeakCommon do: [
 		spec
 			package: 'XPath-Core'
 			with: [ spec includes: 'XPath-SqueakCommonCompatibility' ].
@@ -213,13 +213,23 @@ ConfigurationOfXPath >> baseline10: spec [
 			package: 'XPath-SqueakCommonCompatibility'
 			with: [ spec requires: 'XPath-Core' ]. ].
 
-	spec for: #'gemstone' do: [
+	spec for: #gemstone do: [
 		spec
 			package: 'XPath-Core'
 			with: [ spec includes: 'XPath-GemstoneCompatibility' ].
 		spec
 			package: 'XPath-GemstoneCompatibility'
 			with: [ spec requires: 'XPath-Core' ]. ].
+
+	spec
+		for: #gt
+		do: [
+			spec
+				package: 'XPath-Core'
+				with: [ spec includes: 'XPath-GTExtensions' ].
+			spec
+				package: 'XPath-GTExtensions'
+				with: [ spec requires: 'XPath-Core' ]. ].
 ]
 
 { #category : #baselines }
@@ -599,6 +609,33 @@ ConfigurationOfXPath >> baseline192: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline194: spec [
+	<version: '1.9.4-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.1'. ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearXPathCache [
 	XPath clearCompiledExpressionCache
@@ -606,17 +643,19 @@ ConfigurationOfXPath >> clearXPathCache [
 
 { #category : #accessing }
 ConfigurationOfXPath >> customProjectAttributes [
-	 "Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
-	For more information see: http://code.google.com/p/metacello/wiki/CustomProjectAttrributes"
+	"Edit to return a collection of any custom attributes e.g. for conditional loading: Array with: #'Condition1' with: #'Condition2.
+	For more information see: http://code.google.com/p/metacello/wiki/CustomProjectAttrributes "
 
-	^ #().
+	(Smalltalk includesKey: #GTInspector)
+		ifTrue: [ ^ #(gt) ]
+		ifFalse: [ ^ #() ]
 ]
 
 { #category : #'symbolic versions' }
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '1.9.2-baseline'.
+	spec for: #'common' version: '1.9.4-baseline'.
 ]
 
 { #category : #doits }
@@ -729,7 +768,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.3'.
+	spec for: #'common' version: '1.9.4'.
 
 ]
 
@@ -1766,6 +1805,17 @@ ConfigurationOfXPath >> version193: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.107'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.90'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version194: spec [ 
+        <version: '1.9.4' imports: #('1.9.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.109'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.90'.
                 ].
 ]
