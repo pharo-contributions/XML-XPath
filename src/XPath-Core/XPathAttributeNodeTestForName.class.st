@@ -30,6 +30,15 @@ XPathAttributeNodeTestForName >> name: aName [
 	name := aName
 ]
 
+{ #category : #printing }
+XPathAttributeNodeTestForName >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self name;
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathAttributeNodeTestForName >> value: aNode [
 	^ aNode isAttribute

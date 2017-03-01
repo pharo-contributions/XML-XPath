@@ -30,6 +30,15 @@ XPathNamespaceTestForName >> name: aName [
 	name := aName
 ]
 
+{ #category : #printing }
+XPathNamespaceTestForName >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self name;
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathNamespaceTestForName >> value: aNode [
 	^ aNode isNamespace

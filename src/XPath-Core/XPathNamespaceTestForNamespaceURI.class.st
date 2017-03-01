@@ -30,6 +30,15 @@ XPathNamespaceTestForNamespaceURI >> namespaceURI: aURI [
 	namespaceURI := aURI
 ]
 
+{ #category : #printing }
+XPathNamespaceTestForNamespaceURI >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self namespaceURI;
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathNamespaceTestForNamespaceURI >> value: aNode [
 	^ aNode isNamespace

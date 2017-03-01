@@ -31,6 +31,15 @@ XPathNamespaceTestForNamespaceURIAndLocalName >> localName: aLocalName [
 	localName := aLocalName
 ]
 
+{ #category : #printing }
+XPathNamespaceTestForNamespaceURIAndLocalName >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: (self localName expandWithXMLNamespaceURI: self namespaceURI);
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathNamespaceTestForNamespaceURIAndLocalName >> value: aNode [
 	^ aNode isNamespace

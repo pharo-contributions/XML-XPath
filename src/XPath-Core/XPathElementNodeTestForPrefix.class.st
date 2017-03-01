@@ -30,6 +30,15 @@ XPathElementNodeTestForPrefix >> prefix: aPrefix [
 	prefix := aPrefix
 ]
 
+{ #category : #printing }
+XPathElementNodeTestForPrefix >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self prefix;
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathElementNodeTestForPrefix >> value: aNode [
 	^ aNode isElement

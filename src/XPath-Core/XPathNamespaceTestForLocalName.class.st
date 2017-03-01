@@ -30,6 +30,15 @@ XPathNamespaceTestForLocalName >> localName: aLocalName [
 	localName := aLocalName
 ]
 
+{ #category : #printing }
+XPathNamespaceTestForLocalName >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self localName;
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathNamespaceTestForLocalName >> value: aNode [
 	^ aNode isNamespace

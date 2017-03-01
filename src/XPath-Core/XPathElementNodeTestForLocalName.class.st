@@ -30,6 +30,15 @@ XPathElementNodeTestForLocalName >> localName: aLocalName [
 	localName := aLocalName
 ]
 
+{ #category : #printing }
+XPathElementNodeTestForLocalName >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		nextPutAll: self localName;
+		nextPut: $).
+]
+
 { #category : #evaluating }
 XPathElementNodeTestForLocalName >> value: aNode [
 	^ aNode isElement
