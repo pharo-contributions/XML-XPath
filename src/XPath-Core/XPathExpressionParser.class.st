@@ -124,12 +124,9 @@ XPathExpressionParser >> nextPathExpression [
 	handler handleStartPathExpression.
 	self peekForLocationPathExpression
 		ifFalse: [
-			self nextFilterExpression.
-			self peekForLocationPathSeparator
-				ifTrue: [
-					handler handleStartFilterExpressionLocationPath.
-					self nextAdditionalSteps.
-					handler handleEndLocationPath]].
+			self
+				nextFilterExpression;
+				peekForFilterExpressionLocationPath].
 	handler handleEndPathExpression.
 ]
 
@@ -148,7 +145,7 @@ XPathExpressionParser >> nextPrimaryExpression [
 	(self peekForVariableReference
 		or: [self peekForParenthesizedExpression
 			or: [self peekForStringLiteral
-				or: [self peekForNumber]]])
+				or: [self peekForNumberLiteral]]])
 		ifFalse: [self nextFunctionCall].
 ]
 
@@ -325,6 +322,17 @@ XPathExpressionParser >> peekForEqualityOperator [
 ]
 
 { #category : #'parsing - peeking' }
+XPathExpressionParser >> peekForFilterExpressionLocationPath [
+	self peekForLocationPathSeparator
+		ifTrue: [
+			handler handleStartFilterExpressionLocationPath.
+			self nextAdditionalSteps.
+			handler handleEndLocationPath.
+			^ true]
+		ifFalse: [^ false]
+]
+
+{ #category : #'parsing - peeking' }
 XPathExpressionParser >> peekForLocationPathExpression [
 	^ self peekForAbsoluteLocationPath
 		or: [self peekForRelativeLocationPath]
@@ -365,7 +373,12 @@ XPathExpressionParser >> peekForNegationOperator [
 ]
 
 { #category : #'parsing - peeking' }
-XPathExpressionParser >> peekForNumber [
+XPathExpressionParser >> peekForNodeTest [
+	^ nodeTestParser parse
+]
+
+{ #category : #'parsing - peeking' }
+XPathExpressionParser >> peekForNumberLiteral [
 	| startPosition |
 
 	startPosition := readStream position.
@@ -479,7 +492,7 @@ XPathExpressionParser >> peekForStep [
 		ifTrue: [^ true].
 
 	self peekForAxis.
-	nodeTestParser parse
+	self peekForNodeTest
 		ifTrue: [
 			self peekForPredicates.
 			handler handleEndStep.
