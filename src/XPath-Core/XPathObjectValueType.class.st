@@ -23,11 +23,6 @@ XPathObjectValueType >> isNumberValueType [
 ]
 
 { #category : #testing }
-XPathObjectValueType >> isObjectValueType [
-	^ true
-]
-
-{ #category : #testing }
 XPathObjectValueType >> isStringValueType [
 	^ false
 ]

@@ -1,5 +1,5 @@
 "
-This is an abstract class for XPath parsers that parse input using injectable parser handlers.
+This is an abstract class for XPath parsers that parse input using injectable parser handlers. It contains support for parsing common constructs like quoted string literals, qualified and non-qualified names, and comma-separted argument lists in parentheses.
 "
 Class {
 	#name : #XPathParser,
@@ -63,7 +63,7 @@ XPathParser >> errorExpectedStringLiteral [
 XPathParser >> expectNext: aCharacter [
 	| nextChar |
 
-	((nextChar := readStream next) == aCharacter)
+	(nextChar := readStream next) = aCharacter
 		ifFalse: [
 			self
 				errorExpectedLiteral: aCharacter

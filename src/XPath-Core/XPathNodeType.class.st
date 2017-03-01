@@ -28,11 +28,6 @@ XPathNodeType >> isNamespaceNodeType [
 ]
 
 { #category : #testing }
-XPathNodeType >> isNodeType [
-	^ true
-]
-
-{ #category : #testing }
 XPathNodeType >> isPINodeType [
 	^ false
 ]

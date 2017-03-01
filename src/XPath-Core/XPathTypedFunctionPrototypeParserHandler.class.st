@@ -21,11 +21,6 @@ XPathTypedFunctionPrototypeParserHandler >> addArgumentTypeFor: aTypeName [
 ]
 
 { #category : #private }
-XPathTypedFunctionPrototypeParserHandler >> booleanClass [
-	^ Boolean
-]
-
-{ #category : #private }
 XPathTypedFunctionPrototypeParserHandler >> errorUnrecognizedTypeName: aTypeName [
 	XPathTypeException
 		formatSignal: 'Unrecognized type name "{1}"'
@@ -87,33 +82,13 @@ XPathTypedFunctionPrototypeParserHandler >> handleUnboundedArgument: anArgument 
 ]
 
 { #category : #private }
-XPathTypedFunctionPrototypeParserHandler >> nodeSetClass [
-	^ XPathNodeSet
-]
-
-{ #category : #private }
-XPathTypedFunctionPrototypeParserHandler >> numberClass [
-	^ Number
-]
-
-{ #category : #private }
-XPathTypedFunctionPrototypeParserHandler >> objectClass [
-	^ Object
-]
-
-{ #category : #private }
-XPathTypedFunctionPrototypeParserHandler >> stringClass [
-	^ String
-]
-
-{ #category : #accessing }
 XPathTypedFunctionPrototypeParserHandler >> typeNamed: aTypeName [
 	^ self
 		typeNamed: aTypeName
 		ifNone: [self errorUnrecognizedTypeName: aTypeName]
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XPathTypedFunctionPrototypeParserHandler >> typeNamed: aTypeName ifNone: aBlock [
 	^ typesByName
 		at: aTypeName
