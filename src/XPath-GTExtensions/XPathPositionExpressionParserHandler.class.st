@@ -4,7 +4,7 @@ This class is a handler for XPathPositionExpressionParsers.
 Class {
 	#name : #XPathPositionExpressionParserHandler,
 	#superclass : #XPathExpressionParserHandler,
-	#category : #'XPath-GTExtensions'
+	#category : #'XPath-GTExtensions-Highlighting-Parsers'
 }
 
 { #category : #'handling - positions' }

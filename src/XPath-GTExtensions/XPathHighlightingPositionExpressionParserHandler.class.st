@@ -9,7 +9,7 @@ Class {
 		'expression',
 		'expressionSource'
 	],
-	#category : #'XPath-GTExtensions'
+	#category : #'XPath-GTExtensions-Highlighting-Parsers'
 }
 
 { #category : #'instance creation' }
@@ -24,6 +24,23 @@ XPathHighlightingPositionExpressionParserHandler >> asHighlightedText [
 	text := self expressionSource asText.
 	highlighter highlightText: text.
 	^ text.
+]
+
+{ #category : #converting }
+XPathHighlightingPositionExpressionParserHandler >> asHighlightedTextWithRemainderColored: aTextColor startingAt: aPosition [
+	| text |
+
+	text := self asHighlightedText.
+	highlighter
+		highlightText: text
+		withColor: aTextColor
+		startingAt: aPosition.
+	^ text.
+]
+
+{ #category : #accessing }
+XPathHighlightingPositionExpressionParserHandler >> encoding [
+	^ ''
 ]
 
 { #category : #accessing }

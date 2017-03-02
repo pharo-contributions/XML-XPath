@@ -4,7 +4,7 @@ This class is an XPath expression parser that tracks the start and end positions
 Class {
 	#name : #XPathPositionExpressionParser,
 	#superclass : #XPathExpressionParser,
-	#category : #'XPath-GTExtensions'
+	#category : #'XPath-GTExtensions-Highlighting-Parsers'
 }
 
 { #category : #accessing }

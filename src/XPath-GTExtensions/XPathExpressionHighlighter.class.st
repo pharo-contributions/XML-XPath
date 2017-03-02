@@ -22,7 +22,7 @@ Class {
 		'numberLiteralHighlight',
 		'variableReferenceHighlight'
 	],
-	#category : #'XPath-GTExtensions'
+	#category : #'XPath-GTExtensions-Highlighting'
 }
 
 { #category : #accessing }
