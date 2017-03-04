@@ -9,18 +9,18 @@ XMLNode >> gtInspectorXPathIn: composite [
 			editingMode: [
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
 					GLMXPathHighlighterTextStylerDecorator new];
-			display: [ '' ];
+			display: [''];
 			withLineNumbers: true;
 			selectionAct: [:presentation |
-				presentation selection:
-					(self xPath:
-						(presentation selectedText asString
-							ifEmpty: [presentation text asString])) ]
+				presentation selectedText asString
+					ifNotEmpty: [:source |
+						presentation selection:
+							(self xPath: source)]]
 				on: $g
 				entitled: 'Evaluated and go';
 			act: [:presentation |
 				presentation selection:
-					(self xPath: presentation text asString) ]
+					(self xPath: presentation text asString)]
 				icon: GLMUIThemeExtraIcons glamorousGo
 				on: $G
 				entitled: 'Evaluate all and go')
