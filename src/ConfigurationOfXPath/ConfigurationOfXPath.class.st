@@ -768,7 +768,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.4'.
+	spec for: #'common' version: '1.9.5'.
 
 ]
 
@@ -1816,6 +1816,17 @@ ConfigurationOfXPath >> version194: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.109'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.90'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version195: spec [ 
+        <version: '1.9.5' imports: #('1.9.4-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.110'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.90'.
                 ].
 ]
