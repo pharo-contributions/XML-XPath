@@ -1,32 +1,41 @@
 Extension { #name : #XPath }
 
 { #category : #'*XPath-GTExtensions' }
-XPath >> asHighlightedText [
-	^ (XPathPositionExpressionParser
-		on: self expressionSource
-		for:
-			(XPathHighlightingPositionExpressionParserHandler expressionSource:
-				self expressionSource))
-					parse
-]
-
-{ #category : #'*XPath-GTExtensions' }
 XPath >> gtInspectorCompiledIn: composite [
 	<gtInspectorPresentationOrder: 8>
 
 	composite pharoMethod
 		title: 'Compiled';
-		display: [self compiledExpression block method];
-		smalltalkClass: [self compiledExpression block method methodClass]
+		display: [
+			[self compiledExpression block method]
+				on: XPathException
+				do: [:error |
+					error class name asString, '
+	"', error messageText, '"']];
+		smalltalkClass: [
+			[self compiledExpression block method methodClass]
+				on: XPathException
+				do: [:error | nil]]
 ]
 
 { #category : #'*XPath-GTExtensions' }
 XPath >> gtInspectorSourceIn: composite [
 	<gtInspectorPresentationOrder: 7>
 
-	composite text 
-		title: 'Source';
-		format: #asHighlightedText
+	composite custom:
+		(GLMRubricHighlightedTextPresentation new
+			title: 'Source';
+			editingMode: [
+				GLMHighlighterTextRubEditingMode withStylerDecorator:
+					GLMXPathHighlighterTextStylerDecorator new];
+			display: [self expressionSource];
+			withLineNumbers: true;
+			act: [:presentation |
+				self expressionSource: presentation text asString.
+				presentation clearUserEdits]
+				icon: GLMUIThemeExtraIcons glamorousSave
+				on: $s
+				entitled: 'Save').
 ]
 
 { #category : #'*XPath-GTExtensions' }
@@ -35,5 +44,8 @@ XPath >> gtInspectorTestsIn: composite [
 
 	composite list
 		title: 'Tests';
-		display: [self compiledExpression nodeTests]
+		display: [
+			[self compiledExpression nodeTests]
+				on: XPathException
+				do: [:error | #()]]
 ]

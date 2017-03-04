@@ -11,10 +11,14 @@ XMLNode >> gtInspectorXPathIn: composite [
 					GLMXPathHighlighterTextStylerDecorator new];
 			display: [ '' ];
 			withLineNumbers: true;
-			selectionAct: [ :presentation | presentation selection: (self xPath: presentation selectedText) ]
+			selectionAct: [ :presentation |
+					presentation selection:
+						(self xPath: presentation selectedText asString) ]
 				on: $g
 				entitled: 'Evaluated and go';
-			act: [:presentation | presentation selection: (self xPath: presentation text) ]
+			act: [:presentation |
+					presentation selection:
+						(self xPath: presentation text asString) ]
 				icon: GLMUIThemeExtraIcons glamorousGo
 				on: $G
 				entitled: 'Evaluate all and go')
