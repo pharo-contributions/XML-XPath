@@ -136,6 +136,7 @@ XPathExpressionParserAxis >> handlerSelector [
 { #category : #initialization }
 XPathExpressionParserAxis >> initialize [
 	super initialize.
+
 	self beDefaultImplicitAxis.
 ]
 

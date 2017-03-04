@@ -10,6 +10,11 @@ Class {
 	#category : #'XPath-Core-Compilation'
 }
 
+{ #category : #compiling }
+XPathExpressionCompiler class >> compileExpression: anExpressionSourceStringOrStream [
+	^ self new compileExpression: anExpressionSourceStringOrStream
+]
+
 { #category : #accessing }
 XPathExpressionCompiler class >> systemCompilerClass [
 	^ SystemCompilerClass
@@ -29,11 +34,11 @@ XPathExpressionCompiler class >> systemCompilerClass: aClass [
 ]
 
 { #category : #compiling }
-XPathExpressionCompiler >> compile: anExpressionStringOrStream [
+XPathExpressionCompiler >> compileExpression: anExpressionSourceStringOrStream [
 	^ self compileTranslatedExpression:
 		(self translateParsedExpression:
 			(self optimizeParsedExpression:
-				(self parseExpression: anExpressionStringOrStream)))
+				(self parseExpression: anExpressionSourceStringOrStream)))
 ]
 
 { #category : #private }
@@ -57,9 +62,9 @@ XPathExpressionCompiler >> optimizerClass [
 ]
 
 { #category : #private }
-XPathExpressionCompiler >> parseExpression: anExpressionStringOrStream [
+XPathExpressionCompiler >> parseExpression: anExpressionSourceStringOrStream [
 	^ (self parserClass
-		on: anExpressionStringOrStream
+		on: anExpressionSourceStringOrStream
 		for: self parserHandlerClass new) parse
 ]
 

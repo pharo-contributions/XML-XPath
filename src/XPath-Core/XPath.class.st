@@ -165,7 +165,7 @@ XPath >> compileExpression [
 { #category : #compiling }
 XPath >> compileExpressionWith: anExpressionCompiler [
 	compiledExpression :=
-		anExpressionCompiler compile: self expressionSource.
+		anExpressionCompiler compileExpression: self expressionSource.
 	self class compiledExpressionCacheEnabled
 		ifTrue: [
 			self class
