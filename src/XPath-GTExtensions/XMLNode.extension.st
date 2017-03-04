@@ -1,9 +1,8 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XPath-GTExtensions' }
-XMLNode >> gtInspectorXPathIn: composite [
-	<gtInspectorPresentationOrder: 9>
-	composite custom:
+XMLNode >> addXPathEvaluatorToComposite: aComposite [
+	aComposite custom:
 		(GLMRubricHighlightedTextPresentation new
 			title: 'XPath';
 			editingMode: [
@@ -24,4 +23,11 @@ XMLNode >> gtInspectorXPathIn: composite [
 				icon: GLMUIThemeExtraIcons glamorousGo
 				on: $G
 				entitled: 'Evaluate all and go')
+]
+
+{ #category : #'*XPath-GTExtensions' }
+XMLNode >> gtInspectorXPathIn: aComposite [
+	<gtInspectorPresentationOrder: 9>
+
+	self addXPathEvaluatorToComposite: aComposite
 ]
