@@ -1,7 +1,12 @@
 Extension { #name : #XMLNode }
 
 { #category : #'*XPath-GTExtensions' }
-XMLNode >> addXPathEvaluatorToComposite: aComposite [
+XMLNode >> gtInspectorXPathIn: aComposite [
+	<gtInspectorPresentationOrder: 9>
+
+	self supportsXPathEvaluator
+		ifFalse: [^ self].
+
 	aComposite custom:
 		(GLMRubricHighlightedTextPresentation new
 			title: 'XPath';
@@ -22,12 +27,10 @@ XMLNode >> addXPathEvaluatorToComposite: aComposite [
 					(self xPath: presentation text asString)]
 				icon: GLMUIThemeExtraIcons glamorousGo
 				on: $G
-				entitled: 'Evaluate all and go')
+				entitled: 'Evaluate all and go').
 ]
 
 { #category : #'*XPath-GTExtensions' }
-XMLNode >> gtInspectorXPathIn: aComposite [
-	<gtInspectorPresentationOrder: 9>
-
-	self addXPathEvaluatorToComposite: aComposite
+XMLNode >> supportsXPathEvaluator [
+	^ true
 ]
