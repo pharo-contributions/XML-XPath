@@ -8,6 +8,11 @@ Class {
 }
 
 { #category : #converting }
+XPathASTLiteralNode >> asXPathBoolean [
+	self subclassResponsibility
+]
+
+{ #category : #converting }
 XPathASTLiteralNode >> asXPathNumber [
 	self subclassResponsibility
 ]

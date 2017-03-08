@@ -22,6 +22,11 @@ XPathASTStringLiteralNode >> acceptNodeVisitor: aNodeVisitor [
 ]
 
 { #category : #converting }
+XPathASTStringLiteralNode >> asXPathBoolean [
+	^ self string asXPathBoolean
+]
+
+{ #category : #converting }
 XPathASTStringLiteralNode >> asXPathNumber [
 	^ xPathNumber ifNil: [xPathNumber := self string asXPathNumber]
 ]

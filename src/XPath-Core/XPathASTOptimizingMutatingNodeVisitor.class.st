@@ -27,6 +27,20 @@ XPathASTOptimizingMutatingNodeVisitor >> visitAdditionExpression: anAdditionExpr
 					anAdditionExpression otherExpression asXPathNumber].
 ]
 
+{ #category : #'visiting - operators' }
+XPathASTOptimizingMutatingNodeVisitor >> visitAndExpression: anAndExpression [
+	"traverse in post-order"
+	super visitAndExpression: anAndExpression.
+
+	"the and of literals can be evaluated at compile time"
+	anAndExpression hasNonLiteralExpression
+		ifTrue: [^ anAndExpression]
+		ifFalse: [
+			^ self newFunctionCallForBoolean:
+				(anAndExpression expression asXPathBoolean
+					and: [anAndExpression otherExpression asXPathBoolean])]
+]
+
 { #category : #'visiting - steps' }
 XPathASTOptimizingMutatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantOrSelfStep [
 	"traverse in post-order"
@@ -295,6 +309,20 @@ XPathASTOptimizingMutatingNodeVisitor >> visitNotEqualsExpression: anNotEqualsEx
 					^ self newFunctionCallForBoolean:
 						anNotEqualsExpression expression asXPathString ~=
 							anNotEqualsExpression otherExpression asXPathString]].
+]
+
+{ #category : #'visiting - operators' }
+XPathASTOptimizingMutatingNodeVisitor >> visitOrExpression: anOrExpression [
+	"traverse in post-order"
+	super visitOrExpression: anOrExpression.
+
+	"the or of literals can be evaluated at compile time"
+	anOrExpression hasNonLiteralExpression
+		ifTrue: [^ anOrExpression]
+		ifFalse: [
+			^ self newFunctionCallForBoolean:
+				(anOrExpression expression asXPathBoolean
+					or: [anOrExpression otherExpression asXPathBoolean])]
 ]
 
 { #category : #'visiting - predicates' }

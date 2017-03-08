@@ -22,6 +22,11 @@ XPathASTNumberLiteralNode >> acceptNodeVisitor: aNodeVisitor [
 ]
 
 { #category : #converting }
+XPathASTNumberLiteralNode >> asXPathBoolean [
+	^ self number asXPathBoolean
+]
+
+{ #category : #converting }
 XPathASTNumberLiteralNode >> asXPathNumber [
 	^ self number
 ]
