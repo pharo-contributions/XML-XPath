@@ -633,7 +633,7 @@ ConfigurationOfXPath >> baseline194: spec [
 	spec for: #gt do: [
 		spec
 			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.10'. ]
+			with: 'XPath-GTExtensions-monty.12'. ]
 ]
 
 { #category : #doits }
