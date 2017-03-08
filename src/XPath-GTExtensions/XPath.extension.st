@@ -1,10 +1,10 @@
 Extension { #name : #XPath }
 
 { #category : #'*XPath-GTExtensions' }
-XPath >> gtInspectorCompiledIn: composite [
+XPath >> gtInspectorCompiledIn: aComposite [
 	<gtInspectorPresentationOrder: 8>
 
-	composite pharoMethod
+	aComposite pharoMethod
 		title: 'Compiled';
 		display: [
 			[self compiledExpression block method]
@@ -40,10 +40,10 @@ XPath >> gtInspectorSourceIn: aComposite [
 ]
 
 { #category : #'*XPath-GTExtensions' }
-XPath >> gtInspectorTestsIn: composite [
+XPath >> gtInspectorTestsIn: aComposite [
 	<gtInspectorPresentationOrder: 9>
 
-	composite list
+	aComposite list
 		title: 'Tests';
 		display: [
 			[self compiledExpression nodeTests]
