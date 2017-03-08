@@ -33,7 +33,7 @@ XPath >> gtInspectorSourceIn: composite [
 			act: [:presentation |
 				self expressionSource: presentation text asString.
 				presentation clearUserEdits]
-				icon: GLMUIThemeExtraIcons glamorousSave
+				icon: GLMUIThemeExtraIcons glamorousAccept
 				on: $s
 				entitled: 'Save').
 ]
