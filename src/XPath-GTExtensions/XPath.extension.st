@@ -19,10 +19,10 @@ XPath >> gtInspectorCompiledIn: composite [
 ]
 
 { #category : #'*XPath-GTExtensions' }
-XPath >> gtInspectorSourceIn: composite [
+XPath >> gtInspectorSourceIn: aComposite [
 	<gtInspectorPresentationOrder: 7>
 
-	composite custom:
+	aComposite custom:
 		(GLMRubricHighlightedTextPresentation new
 			title: 'Source';
 			editingMode: [
@@ -32,7 +32,8 @@ XPath >> gtInspectorSourceIn: composite [
 			withLineNumbers: true;
 			act: [:presentation |
 				self expressionSource: presentation text asString.
-				presentation clearUserEdits]
+				presentation clearUserEdits.
+				aComposite pane update]
 				icon: GLMUIThemeExtraIcons glamorousAccept
 				on: $s
 				entitled: 'Save').
