@@ -16,7 +16,7 @@ XPathASTSourceWritingNodeVisitor >> emitTypeTestFor: aNodeTest with: aBlockOrNil
 				ifNotNil: [aBlockOrNil value]]
 		ifFalse: [
 			self
-				emitAll: aNodeTest nodeType printString;
+				emitAll: aNodeTest nodeType name;
 				emit: $(.
 			aBlockOrNil
 				ifNotNil: [aBlockOrNil value].

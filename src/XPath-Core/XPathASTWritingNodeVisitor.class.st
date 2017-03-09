@@ -1,5 +1,5 @@
 "
-This is a base class for AST node visitors that output the AST using a write stream.
+This is a base class for AST node visitors that output the AST using a write stream. Instances can be created with #on: to supply a write stream or #new, which will create one, and the result of writing can be obtained with #asString or #contents. (#printString and #printOn: will truncate the output.)
 "
 Class {
 	#name : #XPathASTWritingNodeVisitor,
@@ -32,17 +32,9 @@ XPathASTWritingNodeVisitor class >> on: aStream [
 	^ self basicNew initialize on: aStream
 ]
 
-{ #category : #converting }
-XPathASTWritingNodeVisitor >> asString [
-	"returns the full, untruncated output, unlike #printString, which may
-	truncate"
-	^ self contents
-]
-
 { #category : #accessing }
 XPathASTWritingNodeVisitor >> contents [
-	"returns the full, untruncated output, unlike #printString, which may
-	truncate"
+	"returns a string of the currently written output"
 	^ stream contents
 ]
 
@@ -64,6 +56,15 @@ XPathASTWritingNodeVisitor >> emitSpace [
 { #category : #initialization }
 XPathASTWritingNodeVisitor >> on: aStream [
 	stream := aStream
+]
+
+{ #category : #printing }
+XPathASTWritingNodeVisitor >> printOn: aStream [
+	super printOn: aStream.
+	aStream
+		nextPut: $(;
+		print: self contents;
+		nextPut: $).
 ]
 
 { #category : #private }

@@ -62,8 +62,13 @@ XPathASTNode >> acceptNodeVisitor: aNodeVisitor [
 
 { #category : #converting }
 XPathASTNode >> asString [
-	"for compatibility with GS where Object>>#asString isn't defined"
-	^ self printString
+	"returns an XPath source code string for the AST capable of being
+	parsed by an XPathExpressionParser, but without potentially truncating
+	it like #printString can"
+
+	^ XPathASTSourceWritingNodeVisitor new
+		visitNode: self;
+		contents
 ]
 
 { #category : #private }
@@ -501,6 +506,12 @@ XPathASTNode >> parent: aParent [
 
 { #category : #printing }
 XPathASTNode >> printOn: aStream [
+	"Prints the full AST on aStream as unabbreviated XPath source code that can
+	be parsed by an XPathExpressionParser.
+
+	To get the source code as a string without possible truncation of the
+	output, use #asString instead of #printString."
+
 	(XPathASTSourceWritingNodeVisitor on: aStream)
 		visitNode: self
 ]
