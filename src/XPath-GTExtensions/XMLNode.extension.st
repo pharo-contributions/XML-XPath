@@ -19,12 +19,12 @@ XMLNode >> gtInspectorXPathIn: aComposite [
 				presentation selectedText asString
 					ifNotEmpty: [:source |
 						presentation selection:
-							(self xPath: source)]]
+							(self xpath: source)]]
 				on: $g
 				entitled: 'Evaluated and go';
 			act: [:presentation |
 				presentation selection:
-					(self xPath: presentation text asString)]
+					(self xpath: presentation text asString)]
 				icon: GLMUIThemeExtraIcons glamorousGo
 				on: $G
 				entitled: 'Evaluate all and go').
