@@ -59,12 +59,12 @@ XPathComparableTest >> comparableNaNValue [
 
 { #category : #accessing }
 XPathComparableTest >> comparableNegativeInfinityValue [
-	^ Float xPathNegativeInfinity asXPathComparable
+	^ Float xpathNegativeInfinity asXPathComparable
 ]
 
 { #category : #accessing }
 XPathComparableTest >> comparableNegativeZeroValue [
-	^ Float xPathNegativeZero asXPathComparable
+	^ Float xpathNegativeZero asXPathComparable
 ]
 
 { #category : #accessing }

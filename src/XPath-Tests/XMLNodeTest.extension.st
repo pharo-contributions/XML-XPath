@@ -1,8 +1,23 @@
 Extension { #name : #XMLNodeTest }
 
 { #category : #'*XPath-Tests' }
-XMLNodeTest >> assertList: aList hasSortOrder: aSortOrder [
-	self assert: (aList sortOrder class == aSortOrder)
+XMLNodeTest >> assertNodeSet: aNodeSet hasNode: aNode [
+	self
+		assertNodeSet: aNodeSet
+		hasNodes: (self nodeSetClass with: aNode)
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> assertNodeSet: aNodeSet hasNodes: aNodeCollection [
+	self
+		assert: aNodeSet size = aNodeCollection size;
+		assert: aNodeSet = (XPathNodeSet newFrom: aNodeCollection) sort;
+		assert: (aNodeSet sortOrder isKindOf: XPathDocumentSortOrder)
+]
+
+{ #category : #'*XPath-Tests' }
+XMLNodeTest >> assertNodeSet: aNodeSet hasSortOrder: aSortOrder [
+	self assert: aNodeSet sortOrder class == aSortOrder
 ]
 
 { #category : #'*XPath-Tests' }
@@ -44,21 +59,21 @@ XMLNodeTest >> testAncestorAxis [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testAncestorOrSelfAxis [
-	| node list |
+	| node result |
 
 	node := self newNode.
-	list := node %%~ 'node()'.
+	result := node %%~ 'node()'.
 	self
-		assert: list = (self nodeSetClass with: node);
-		assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
+		assertNodeSet: result
+		hasNode: node.
 
-	list := node %%~ '*'.
+	result := node %%~ '*'.
 	node isElement
 		ifTrue: [
 			self
-				assert: list = (self nodeSetClass with: node);
-				assertList: list hasSortOrder: XPathReverseDocumentSortOrder]
-		ifFalse: [self assert: list isEmpty].
+				assertNodeSet: result
+				hasNode: node]
+		ifFalse: [self assert: result isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -99,21 +114,21 @@ XMLNodeTest >> testDescendantAxis [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testDescendantOrSelfAxis [
-	| node list |
+	| node result |
 
 	node := self newNode.
-	list := node //~ 'node()'.
+	result := node //~ 'node()'.
 	self
-		assert: list = (self nodeSetClass with: node);
-		assertList: list hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNode: node.
 
-	list := node //~ '*'.
+	result := node //~ '*'.
 	node isElement
 		ifTrue: [
 			self
-				assert: list = (self nodeSetClass with: node);
-				assertList: list hasSortOrder: XPathDocumentSortOrder]
-		ifFalse: [self assert: list isEmpty].
+				assertNodeSet: result
+				hasNode: node]
+		ifFalse: [self assert: result isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -173,8 +188,8 @@ XMLNodeTest >> testIsNamespace [
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testNamespaceAxis [
 	self
-		assert: (self newNode @@ 'node()') isEmpty;
-		assert: (self newNode @@ '*') isEmpty
+		assert: (self newNode namespaceAxis: 'node()') isEmpty;
+		assert: (self newNode namespaceAxis: '*') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
@@ -230,21 +245,27 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testSelfAxis [
-	| node list |
+	| node result |
 
 	node := self newNode.
-	list := node ~ 'node()'.
+	result := node ~ 'node()'.
 	self
-		assert: list = (self nodeSetClass with: node);
-		assertList: list hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNode: node.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
-	list := node ~ '*'.
+	result := node ~ '*'.
 	node isElement
 		ifTrue: [
 			self
-				assert: list = (self nodeSetClass with: node);
-				assertList: list hasSortOrder: XPathDocumentSortOrder]
-		ifFalse: [self assert: list isEmpty].
+				assertNodeSet: result
+				hasNode: node.
+			self
+				assertNodeSet: result
+				hasSortOrder: XPathLevelDocumentSortOrder]
+		ifFalse: [self assert: result isEmpty].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -268,8 +289,8 @@ XMLNodeTest >> testXPath [
 
 	node := self newNode.
 	self
-		assert: (node xPath: '.') = (self nodeSetClass with: node);
-		assert: (node xPath: (XPath for: '.')) = (self nodeSetClass with: node).
+		assert: (node xpath: '.') = (self nodeSetClass with: node);
+		assert: (node xpath: (XPath for: '.')) = (self nodeSetClass with: node).
 ]
 
 { #category : #'*XPath-Tests' }
@@ -282,6 +303,6 @@ XMLNodeTest >> testXPathContext [
 		variableAt: 'var'
 		put: 'test'.
 	self
-		assert: (node xPath: '$var' context: context) = 'test';
-		assert: (node xPath: (XPath for: '$var') context: context) = 'test'.
+		assert: (node xpath: '$var' context: context) = 'test';
+		assert: (node xpath: (XPath for: '$var') context: context) = 'test'.
 ]

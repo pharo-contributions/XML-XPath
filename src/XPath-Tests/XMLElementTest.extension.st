@@ -10,7 +10,7 @@ XMLElementTest >> testAttributeAxis [
 	list := element @ '*'.
 	self
 		assert: list = (self nodeSetClass newFrom: element attributeNodes);
-		assertList: list hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: list hasSortOrder: XPathLevelDocumentSortOrder.
 
 	element := self newNode.
 	self assert: (element @ 'node()') isEmpty.
@@ -41,14 +41,14 @@ XMLElementTest >> testNamespaceAxis [
 
 	element := self newNode.
 	element declareNamespaces: self namespaces.
-	list := element @@ '*'.
+	list := element namespaceAxis: '*'.
 	self
 		assert: list = (self nodeSetClass newFrom: element namespaceNodes);
-		assertList: list hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: list hasSortOrder: XPathLevelDocumentSortOrder.
 
 	element := self newNode.
 	element configuration usesNamespaces: false.
-	self assert: (element @@ 'node()') isEmpty.
+	self assert: (element namespaceAxis: 'node()') isEmpty.
 ]
 
 { #category : #'*XPath-Tests' }

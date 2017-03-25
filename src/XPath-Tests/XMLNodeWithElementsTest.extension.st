@@ -7,16 +7,16 @@ XMLNodeWithElementsTest >> testAncestorAxis [
 	super testAncestorAxis.
 
 	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each | | list |
-		list := each %% 'node()'.
+	nodeWithElements allNodesDo: [:each | | result |
+		result := each %% 'node()'.
 		self
-			assert: list = each ancestorNodes;
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
+			assertNodeSet: result
+			hasNodes: each ancestorNodes.
 
-		list := each %% '*'.
+		result := each %% '*'.
 		self
-			assert: list = each ancestorElements;
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder].
+			assertNodeSet: result
+			hasNodes: each ancestorElements].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -26,17 +26,22 @@ XMLNodeWithElementsTest >> testAncestorOrSelfAxis [
 	super testAncestorOrSelfAxis.
 
 	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each | | list |
-		list := each %%~ 'node()'.
+	nodeWithElements allNodesDo: [:each | | result |
+		result := each %%~ 'node()'.
 		self
-			assert: list = (each ancestorNodes copyWithFirst: each);
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
+			assertNodeSet: result
+			hasNodes: (each ancestorNodes copyWith: each).
 
-		list := each %%~ '*'.
+		result := each %%~ '*'.
 		each isElement
-			ifTrue: [self assert: list = (each ancestorElements copyWithFirst: each)]
-			ifFalse: [self assert: list = each ancestorElements].
-		self assertList: list hasSortOrder: XPathReverseDocumentSortOrder].
+			ifTrue: [
+				self
+					assertNodeSet: result
+					hasNodes: (each ancestorElements copyWith: each)]
+			ifFalse: [
+				self
+					assertNodeSet: result
+					hasNodes: each ancestorElements]].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -48,16 +53,22 @@ XMLNodeWithElementsTest >> testChildAxis [
 	nodeWithElements := self newNodeWithElements.
 	nodeWithElements allNodesDo: [:each |
 		each hasChildren
-			ifTrue: [| list |
-				list := each / 'node()'.
+			ifTrue: [| result |
+				result := each / 'node()'.
 				self
-					assert: list = each nodes;
-					assertList: list hasSortOrder: XPathDocumentSortOrder.
+					assertNodeSet: result
+					hasNodes: each nodes.
+				self
+					assertNodeSet: result
+					hasSortOrder: XPathLevelDocumentSortOrder.
 
-				list := each / '*'.
+				result := each / '*'.
 				self
-					assert: list = each elements;
-					assertList: list hasSortOrder: XPathDocumentSortOrder.]
+					assertNodeSet: result
+					hasNodes: each elements.
+				self
+					assertNodeSet: result
+					hasSortOrder: XPathLevelDocumentSortOrder]
 			ifFalse: [
 				self
 					assert: (each / 'node()') isEmpty;
@@ -73,16 +84,16 @@ XMLNodeWithElementsTest >> testDescendantAxis [
 	nodeWithElements := self newNodeWithElements.
 	nodeWithElements allNodesDo: [:each |
 		each hasChildren
-			ifTrue: [| list |
-				list := each // 'node()'.
+			ifTrue: [| result |
+				result := each // 'node()'.
 				self
-					assert: list = each descendantNodes;
-					assertList: list hasSortOrder: XPathDocumentSortOrder.
+					assertNodeSet: result
+					hasNodes: each descendantNodes.
 
-				list := each // '*'.
+				result := each // '*'.
 				self
-					assert: list = each descendantElements;
-					assertList: list hasSortOrder: XPathDocumentSortOrder]
+					assertNodeSet: result
+					hasNodes: each descendantElements]
 			ifFalse: [
 				self
 					assert: (each // 'node()') isEmpty;
@@ -98,21 +109,31 @@ XMLNodeWithElementsTest >> testDescendantOrSelfAxis [
 	nodeWithElements := self newNodeWithElements.
 	nodeWithElements allNodesDo: [:each |
 		each hasChildren
-			ifTrue: [| list |
-				list := each //~ 'node()'.
+			ifTrue: [| result |
+				result := each //~ 'node()'.
 				self
-					assert: list = (each descendantNodes copyWithFirst: each);
-					assertList: list hasSortOrder: XPathDocumentSortOrder.
+					assertNodeSet: result
+					hasNodes: each allNodes.
 
-				list := each //~ '*'.
+				result := each //~ '*'.
 				each isElement
-					ifTrue: [self assert: list = (each descendantElements copyWithFirst: each)]
-					ifFalse: [self assert: list = each descendantElements].
-				self assertList: list hasSortOrder: XPathDocumentSortOrder]
+					ifTrue: [
+						self
+							assertNodeSet: result
+							hasNodes: each allElements]
+					ifFalse: [
+						self
+							assertNodeSet: result
+							hasNodes: each descendantElements]]
 			ifFalse: [
-				self assert: (each //~ 'node()') = (self nodeSetClass with: each).
+				self
+					assertNodeSet: (each //~ 'node()')
+					hasNode: each.
 				each isElement
-					ifTrue: [self assert: (each //~ '*') = (self nodeSetClass with: each)]
+					ifTrue: [
+						self
+							assertNodeSet: (each //~ '*')
+							hasNode: each]
 					ifFalse: [self assert: (each //~ '*') isEmpty]]].
 ]
 
@@ -123,8 +144,8 @@ XMLNodeWithElementsTest >> testFollowingAxis [
 	super testFollowingAxis.
 
 	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each | | list followingNodes |
-		list := each >> 'node()'.
+	nodeWithElements allNodesDo: [:each | | result followingNodes |
+		result := each >> 'node()'.
 		followingNodes := 
 			each hasParent
 				ifTrue: [
@@ -134,13 +155,13 @@ XMLNodeWithElementsTest >> testFollowingAxis [
 							ifFalse: [each])]
 				ifFalse: [self newNodeSet].
 		self
-			assert: list = followingNodes;
-			assertList: list hasSortOrder: XPathDocumentSortOrder.
+			assertNodeSet: result
+			hasNodes: followingNodes.
 
-		list := each >> '*'.
+		result := each >> '*'.
 		self
-			assert: list = followingNodes elements;
-			assertList: list hasSortOrder: XPathDocumentSortOrder].
+			assertNodeSet: result
+			hasNodes: followingNodes elements].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -150,20 +171,26 @@ XMLNodeWithElementsTest >> testFollowingSiblingAxis [
 	super testFollowingSiblingAxis.
 
 	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each | | list followingSiblings |
-		list := each >>> 'node()'.
+	nodeWithElements allNodesDo: [:each | | result followingSiblings |
+		result := each >>> 'node()'.
 		followingSiblings :=
 			each hasParent
 				ifTrue: [each parent nodes copyAfter: each]
 				ifFalse: [self newNodeSet].
 		self
-			assert: list = followingSiblings;
-			assertList: list hasSortOrder: XPathDocumentSortOrder.
-
-		list := each >>> '*'.
+			assertNodeSet: result
+			hasNodes: followingSiblings.
 		self
-			assert: list = followingSiblings elements;
-			assertList: list hasSortOrder: XPathDocumentSortOrder].
+			assertNodeSet: result
+			hasSortOrder: XPathLevelDocumentSortOrder.
+
+		result := each >>> '*'.
+		self
+			assertNodeSet: result
+			hasNodes: followingSiblings elements.
+		self
+			assertNodeSet: result
+			hasSortOrder: XPathLevelDocumentSortOrder].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -173,20 +200,20 @@ XMLNodeWithElementsTest >> testPrecedingAxis [
 	super testPrecedingAxis.
 
 	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each | | list precedingNodes |
-		list := each << 'node()'.
+	nodeWithElements allNodesDo: [:each | | result precedingNodes |
+		result := each << 'node()'.
 		precedingNodes :=
 			each hasParent
-				ifTrue: [(each parent descendantNodes copyUpTo: each) reversed]
+				ifTrue: [each parent descendantNodes copyUpTo: each]
 				ifFalse: [self newNodeSet].
 		self
-			assert: list = precedingNodes;
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
+			assertNodeSet: result
+			hasNodes: precedingNodes.
 
-		list := each << '*'.
+		result := each << '*'.
 		self
-			assert: list = precedingNodes elements;
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder].
+			assertNodeSet: result
+			hasNodes: precedingNodes elements].
 ]
 
 { #category : #'*XPath-Tests' }
@@ -196,18 +223,24 @@ XMLNodeWithElementsTest >> testPrecedingSiblingAxis [
 	super testPrecedingSiblingAxis.
 
 	nodeWithElements := self newNodeWithElements.
-	nodeWithElements allNodesDo: [:each | | list precedingSiblings |
-		list := each <<< 'node()'.
+	nodeWithElements allNodesDo: [:each | | result precedingSiblings |
+		result := each <<< 'node()'.
 		precedingSiblings :=
 			each hasParent
-				ifTrue: [(each parent nodes copyUpTo: each) reversed]
+				ifTrue: [each parent nodes copyUpTo: each]
 				ifFalse: [self newNodeSet].
 		self
-			assert: list = precedingSiblings;
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder.
-
-		list := each <<< '*'.
+			assertNodeSet: result
+			hasNodes: precedingSiblings.
 		self
-			assert: list = precedingSiblings elements;
-			assertList: list hasSortOrder: XPathReverseDocumentSortOrder].
+			assertNodeSet: result
+			hasSortOrder: XPathLevelDocumentSortOrder.
+
+		result := each <<< '*'.
+		self
+			assertNodeSet: result
+			hasNodes: precedingSiblings elements.
+		self
+			assertNodeSet: result
+			hasSortOrder: XPathLevelDocumentSortOrder].
 ]

@@ -12,20 +12,21 @@ Class {
 { #category : #asserting }
 XPathTest >> assertNodeSet: aNodeSet hasNode: aNode [
 	self
-		assert: aNodeSet size = 1;
-		assert: (aNodeSet includes: aNode)
+		assertNodeSet: aNodeSet
+		hasNodes: (self nodeSetClass with: aNode)
 ]
 
 { #category : #asserting }
 XPathTest >> assertNodeSet: aNodeSet hasNodes: aNodeCollection [
 	self
 		assert: aNodeSet size = aNodeCollection size;
-		assert: (aNodeCollection allSatisfy: [:each | aNodeSet includes: each])
+		assert: aNodeSet = (XPathNodeSet newFrom: aNodeCollection) sort;
+		assert: (aNodeSet sortOrder isKindOf: XPathDocumentSortOrder)
 ]
 
 { #category : #asserting }
 XPathTest >> assertNodeSet: aNodeSet hasSortOrder: aSortOrder [
-	self assert: (aNodeSet sortOrder class == aSortOrder)
+	self assert: aNodeSet sortOrder class == aSortOrder
 ]
 
 { #category : #accessing }
@@ -71,40 +72,55 @@ XPathTest >> setUp [
 
 { #category : #tests }
 XPathTest >> testAbbreviatedSteps [
-	| result |
+	| expected |
 
-	result := self nodeSetClass with: document.
 	self
-		assert: (document xPath: '.') = result;
-		assert: (document xPath: './.') = result;
-		assert: (document xPath: './..') isEmpty;
-		assert: (document xPath: '..') isEmpty;
-		assert: (document xPath: '../..') isEmpty;
-		assert: (document xPath: '/.') = result;
-		assert: (document xPath: '/./.') = result;
-		assert: (document xPath: '/./..') isEmpty;
-		assert: (document xPath: '/..') isEmpty;
-		assert: (document xPath: '/../..') isEmpty.
+		assertNodeSet: (document xpath: '.')
+		hasNode: document.
+	self
+		assertNodeSet: (document xpath: './.')
+		hasNode: document.
+	self
+		assert: (document xpath: './..') isEmpty;
+		assert: (document xpath: '..') isEmpty;
+		assert: (document xpath: '../..') isEmpty.
+	self
+		assertNodeSet: (document xpath: '/.')
+		hasNode: document.
+	self
+		assertNodeSet: (document xpath: '/./.')
+		hasNode: document.
+	self
+		assert: (document xpath: '/./..') isEmpty;
+		assert: (document xpath: '/..') isEmpty;
+		assert: (document xpath: '/../..') isEmpty.
 
-	result := document allElementsNamed: 'person'.
+	expected := document allElementsNamed: 'person'.
 	self
-		assert: (document xPath: './addressbook/./person/.') = result;
-		assert: (document xPath: '././addressbook/././person/./.') = result;
-		assert: (document xPath: './addressbook/../addressbook/person/../person') = result;
-		assert: (document xPath: './addressbook/./../addressbook/./person/./../person') = result.
+		assertNodeSet: (document xpath: './addressbook/./person/.')
+		hasNodes: expected.
+	self
+		assertNodeSet: (document xpath: '././addressbook/././person/./.')
+		hasNodes: expected.
+	self
+		assertNodeSet: (document xpath: './addressbook/../addressbook/person/../person')
+		hasNodes: expected.
+	self
+		assertNodeSet: (document xpath: './addressbook/./../addressbook/./person/./../person')
+		hasNodes: expected.
 
 	"abbreviated steps can't have predicates"
 	self
-		should: [document xPath: '.[true()]']
+		should: [document xpath: '.[true()]']
 		raise: XPathSyntaxException.
 	self
-		should: [document xPath: '..[true()]']
+		should: [document xpath: '..[true()]']
 		raise: XPathSyntaxException.
 	self
-		should: [document xPath: '/.[true()]']
+		should: [document xpath: '/.[true()]']
 		raise: XPathSyntaxException.
 	self
-		should: [document xPath: '/..[true()]']
+		should: [document xpath: '/..[true()]']
 		raise: XPathSyntaxException.
 ]
 
@@ -112,10 +128,17 @@ XPathTest >> testAbbreviatedSteps [
 XPathTest >> testAbsoluteLocationPaths [
 	document allNodesDo: [:each |
 		self
-			assert: (XPath for: '/' in: each) = (XMLNodeList with: document);
-			assert: (XPath for: '/*' in: each) = (XMLNodeList with: document root);
-			assert: (XPath for: '/self::node()' in: each) = (XMLNodeList with: document);
-			assert: (XPath for: '/addressbook/person' in: each) = (document allElementsNamed: 'person')]
+			assertNodeSet: (XPath for: '/' in: each)
+			hasNode: document.
+		self
+			assertNodeSet: (XPath for: '/*' in: each)
+			hasNode: document root.
+		self
+			assertNodeSet: (XPath for: '/self::node()' in: each)
+			hasNode: document.
+		self
+			assertNodeSet: (XPath for: '/addressbook/person' in: each)
+			hasNodes: (document allElementsNamed: 'person')]
 ]
 
 { #category : #tests }
@@ -244,7 +267,7 @@ XPathTest >> testAsXPath [
 	path := '/addressbook' asXPath.
 	self
 		assert: path class == XPath;
-		assert: (document xPath: path) = (self nodeSetClass with: document root);
+		assert: (document xpath: path) = (self nodeSetClass with: document root);
 		assert: path asXPath == path.
 ]
 
@@ -256,14 +279,23 @@ XPathTest >> testAttributeAxis [
 		XPath
 			for: 'addressbook/person/address/@city'
 			in: document.
-	self assert: result size = 4.
-	result do: [:each |
-		self
-			assert: each class == XMLAttribute;
-			assert: each name = 'city'].
-	self assert:
-		(result collect: [:each | each value]) asArray =
-			#('Los Angeles' 'New York' 'Los Angeles' 'New York').
+	expected := XMLNodeList new.
+	document root
+		elementsAt: 'person'
+		do: [:person |
+			person
+				elementsAt: 'address'
+				do: [:each |
+					(each includesAttribute: 'city')
+						ifTrue: [
+							expected addLast:
+								(each attributeNodeAt: 'city')]]].
+	self
+		assertNodeSet: result
+		hasNodes: expected.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
 	"attribute nodes don't have attributes"
 	self assert: 
@@ -271,16 +303,18 @@ XPathTest >> testAttributeAxis [
 			for: 'addressbook/person/address/@city/@city'
 			in: document) isEmpty.
 
-	expected := XMLNodeList new.
+	expected removeAll.
 	(document allElementsNamed: 'person') allButLast do: [:each |
 		expected addAll: each attributeNodes].
 	result :=
-		(document allElementsNamed: 'person') last xPath:
+		(document allElementsNamed: 'person') last xpath:
 			'preceding-sibling::node()/attribute::node()'.
-	self assert: result = expected.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
+		hasNodes: expected.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 ]
 
 { #category : #tests }
@@ -288,17 +322,16 @@ XPathTest >> testAttributeNameTest [
 	| results |
 
 	results :=
-		document xPath:
+		document xpath:
 			'addressbook/person/attribute::node()/self::attribute(employee-number)'.
 	self
-		assert: results size = 4;
-		assert:
-			results =
-				((document allElementsNamed: 'person') collect: [:each |
-					each attributeNodeAt: 'employee-number']).
+		assertNodeSet: results
+		hasNodes:
+			((document allElementsNamed: 'person') collect: [:each |
+				each attributeNodeAt: 'employee-number']).
 
 	results :=
-		document xPath:
+		document xpath:
 			'addressbook/person/attribute::node()/self::attribute(absent)'.
 	self assert: results isEmpty.
 ]
@@ -309,27 +342,27 @@ XPathTest >> testAttributePredicates [
 
 	persons := (document allElementsNamed: 'person') copyFrom: 2 to: 3.
 	self
-		assertNodeSet: (document xPath: 'addressbook/person[ @ middle-initial ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ middle-initial ]')
 		hasNodes: persons;
-		assertNodeSet: (document xPath: 'addressbook/person[ @ middle-initial and position() > 1 ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ middle-initial and position() > 1 ]')
 		hasNodes: persons;
-		assertNodeSet: (document xPath: 'addressbook/person[ @ * [ local-name() = "middle-initial" ] ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ * [ local-name() = "middle-initial" ] ]')
 		hasNodes: persons;
-		assertNodeSet: (document xPath: 'addressbook/person[ @ * [ self::attribute(middle-initial) ] ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ * [ self::attribute(middle-initial) ] ]')
 		hasNodes: persons;
 		assertNodeSet:
-			(document xPath:
+			(document xpath:
 				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() < 4 ]')
 		hasNodes: persons.
 
 	self
-		assert: (document xPath: 'addressbook/person[ @ middle-initial and position() < 2 ]') isEmpty;
+		assert: (document xpath: 'addressbook/person[ @ middle-initial and position() < 2 ]') isEmpty;
 		assert:
-			(document xPath:
+			(document xpath:
 				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() > 3 ]') isEmpty;
-		assert: (document xPath: 'addressbook/person[ @ absent ]') isEmpty;
-		assert: (document xPath: 'addressbook/person[ @ * [ self::attribute(absent) ] ]') isEmpty;
-		assert: (document xPath: 'addressbook/person[ @ * [ local-name() = "absent" ] ]') isEmpty.
+		assert: (document xpath: 'addressbook/person[ @ absent ]') isEmpty;
+		assert: (document xpath: 'addressbook/person[ @ * [ self::attribute(absent) ] ]') isEmpty;
+		assert: (document xpath: 'addressbook/person[ @ * [ local-name() = "absent" ] ]') isEmpty.
 ]
 
 { #category : #tests }
@@ -338,18 +371,18 @@ XPathTest >> testAttributePredicatesComparison [
 
 	addresses := document allElementsNamed: 'address'.
 	self
-		assertNodeSet: (document xPath: '//address[ @ number >= 344 ]')
+		assertNodeSet: (document xpath: '//address[ @ number >= 344 ]')
 		hasNodes: addresses.
 
 	addresses := addresses copyReplaceFrom: 2 to: 2 with: #().
 	self
-		assertNodeSet: (document xPath: '//address[ @ number > 344 ]')
+		assertNodeSet: (document xpath: '//address[ @ number > 344 ]')
 		hasNodes: addresses.
 
 	self
-		assertNodeSet: (document xPath: '//address[ @ number <= 344 ]')
+		assertNodeSet: (document xpath: '//address[ @ number <= 344 ]')
 		hasNode: (document allElementsNamed: 'address') second.
-	self assert: (document xPath: '//address[ @ number < 344 ]') isEmpty.
+	self assert: (document xpath: '//address[ @ number < 344 ]') isEmpty.
 ]
 
 { #category : #tests }
@@ -358,22 +391,22 @@ XPathTest >> testAttributePredicatesEquals [
 
 	person := (document allElementsNamed: 'person') first.
 	self
-		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number = "A0000" ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ employee-number = "A0000" ]')
 		hasNode: person;
-		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number = ''A0000'' ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ employee-number = ''A0000'' ]')
 		hasNode: person;
 		assertNodeSet:
-			(document xPath: 'addressbook/person[ @ employee-number = "A0000" and position() = 1]')
+			(document xpath: 'addressbook/person[ @ employee-number = "A0000" and position() = 1]')
 		hasNode: person.
 	self assert:
-		(document xPath:
+		(document xpath:
 			'addressbook/person[ @ employee-number = ''A0000'' and position() > 1]') isEmpty.
 
 	self
-		assertNodeSet: (document xPath: '//address[ @ number = 344 ]')
+		assertNodeSet: (document xpath: '//address[ @ number = 344 ]')
 		hasNode: (document allElementsNamed: 'address') second.
 	self assert:
-		(document xPath: '//address[ @ number = 1 ]') isEmpty.
+		(document xpath: '//address[ @ number = 1 ]') isEmpty.
 ]
 
 { #category : #tests }
@@ -382,87 +415,106 @@ XPathTest >> testAttributePredicatesNotEquals [
 
 	persons := (document allElementsNamed: 'person') allButFirst.
 	self
-		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number != "A0000" ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ employee-number != "A0000" ]')
 		hasNodes: persons;
-		assertNodeSet: (document xPath: 'addressbook/person[ @ employee-number != ''A0000'' ]')
+		assertNodeSet: (document xpath: 'addressbook/person[ @ employee-number != ''A0000'' ]')
 		hasNodes: persons;
 		assertNodeSet:
-			(document xPath: 'addressbook/person[ @ employee-number != "A0000"  and position() > 1]')
+			(document xpath: 'addressbook/person[ @ employee-number != "A0000"  and position() > 1]')
 		hasNodes: persons.
 	self assert:
-		(document xPath:
+		(document xpath:
 			'addressbook/person[ @ employee-number != ''A0000'' and position() = 1]') isEmpty.
 
 	addresses := document allElementsNamed: 'address'.
 	self
-		assertNodeSet: (document xPath: '//address[ @ number != 1 ]')
+		assertNodeSet: (document xpath: '//address[ @ number != 1 ]')
 		hasNodes: addresses.
 	addresses := addresses copyReplaceFrom: 2 to: 2 with: #().
 	self
-		assertNodeSet: (document xPath: '//address[ @ number != 344 ]')
+		assertNodeSet: (document xpath: '//address[ @ number != 344 ]')
 		hasNodes: addresses.
 ]
 
 { #category : #tests }
 XPathTest >> testAttributeTypeTest [
-	| results |
+	| expected |
 
-	results := XMLNodeList new.
+	expected := XMLNodeList new.
 	document allNodesDo: [:each |
 		each isElement
-			ifTrue: [results addAll: each attributeNodes]
+			ifTrue: [expected addAll: each attributeNodes]
 			ifFalse: [
 				each isStringNode
-					ifTrue: [results addLast: each]]].
-	self assert: (document xPath: '//attribute::* | //text()') = results.
-	self assert:
-		(document xPath: '(//attribute::* | //text())/ self :: attribute()') =
-			(results select: [:each | each isAttribute]).
+					ifTrue: [expected addLast: each]]].
+	self
+		assertNodeSet: (document xpath: '//attribute::* | //text()')
+		hasNodes: expected.
+	
+	expected := expected select: [:each | each isAttribute].
+	self
+		assertNodeSet:
+			(document xpath: '(//attribute::* | //text())/ self :: attribute()')
+		hasNodes: expected.
 ]
 
 { #category : #tests }
 XPathTest >> testChildAxis [
-	| nodes |
+	| children result |
 
-	nodes := document allElementsNamed: 'person'.
+	children := document allElementsNamed: 'person'.
+	result :=
+		XPath
+			for: 'child::addressbook/child::person'
+			in: document.
 	self
-		assertNodeSet:
-			(XPath
-				for: 'child::addressbook/child::person'
-				in: document)
-		hasNodes: nodes.
-
-	nodes removeAll.
-	document allElementsNamed: 'person' do: [:each | nodes addAll: each nodes].
+		assertNodeSet: result
+		hasNodes: children.
 	self
-		assertNodeSet:
-			(XPath
-				for: '/addressbook/person/node()'
-				in: document)
-		hasNodes: nodes.
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
-	nodes := document root nodes copy.
+	children removeAll.
+	document
+		allElementsNamed: 'person'
+		do: [:each |
+			children addAll: each nodes].
+	result :=
+		XPath
+			for: '/addressbook/person/node()'
+			in: document.
+	self
+		assertNodeSet: result
+		hasNodes: children.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
+
+	children := document root nodes copy.
 	(document allElementsNamed: 'person') third nodesDo: [:each |
 		each hasChildren
-			ifTrue: [nodes addAll: each nodes]].
+			ifTrue: [children addAll: each nodes]].
+	result :=
+		XPath
+			for: '(/addressbook | //person[3]/*)/node()'
+			in: document.
 	self
-		assertNodeSet:
-			(XPath
-				for: '(/addressbook | //person[3]/*)/node()'
-				in: document)
-		hasNodes: nodes.
+		assertNodeSet: result
+		hasNodes: children.
 ]
 
 { #category : #tests }
 XPathTest >> testCommentTypeTest [
 	| comments |
 
-	comments := document xPath: '//comment()'.
+	comments := document allNodesSelect: [:each | each isComment].
 	self
-		assert: comments size = 2;
-		assert: comments = (document allNodesSelect: [:each | each isComment]);
-		assert: (document xPath: '//comment()/self::comment()') = comments;
-		assert: (document xPath: '//comment()/comment()') isEmpty.
+		assertNodeSet: (document xpath: '//comment()')
+		hasNodes: comments.
+	self
+		assertNodeSet: (document xpath: '//comment()/self::comment()')
+		hasNodes: comments.
+	self assert: (document xpath: '//comment()/comment()') isEmpty.
 ]
 
 { #category : #tests }
@@ -589,74 +641,75 @@ XPathTest >> testDocumentOrderLosing [
 	| expected result |
 
 	expected := document allNodesSelect: [:each | each hasChildren].
-	result := document xPath: 'descendant::node()/ancestor::node()'.
+	result := document xpath: 'descendant::node()/ancestor::node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected := document allNodes.
-	result := document xPath: 'descendant::node()/ancestor-or-self::node()'.
+	result := document xpath: 'descendant::node()/ancestor-or-self::node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
-	expected := document root descendantNodesSelect: [:each | each previousNode isNil].
-	result := document xPath: 'descendant::node()/descendant::node()[1]'.
+	expected :=
+		document root descendantNodesSelect: [:each |
+			each previousNode isNil].
+	result := document xpath: 'descendant::node()/descendant::node()[1]'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	document descendantNodesDo: [:each |
 		each hasChildren
 			ifTrue: [expected add: each firstNode]].
-	result := document xPath: 'descendant::node()/descendant-or-self::node()[2]'.
+	result := document xpath: 'descendant::node()/descendant-or-self::node()[2]'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected := document root descendantNodesSelect: [:each | each hasParent].
-	result := document xPath: 'descendant::node()/node()'.
+	result := document xpath: 'descendant::node()/node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected := self newNodeSet.
 	document descendantNodesDo: [:node |
 		node followingSiblingNodesDo: [:each |
 			expected addIfNotPresent: each]].
-	result := document xPath: 'descendant::node()/following-sibling::node()'.
+	result := document xpath: 'descendant::node()/following-sibling::node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	document descendantNodesDo: [:node |
 		node followingNodesDo: [:each |
 			expected addIfNotPresent: each]].
-	result := document xPath: '/descendant::node()/following::node()'.
+	result := document xpath: '/descendant::node()/following::node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	document descendantNodesDo: [:node |
 		node precedingSiblingNodesDo: [:each |
 			expected addIfNotPresent: each]].
-	result := document xPath: 'descendant::node()/preceding-sibling::node()'.
+	result := document xpath: 'descendant::node()/preceding-sibling::node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
-
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	document descendantNodesDo: [:node |
 		node precedingNodesDo: [:each |
 			expected addIfNotPresent: each]].
-	result := document xPath: 'descendant::node()/preceding::node()'.
+	result := document xpath: 'descendant::node()/preceding::node()'.
 	self
-		assertNodeSet: result hasNodes: expected;
-		assertNodeSet: result hasSortOrder: XPathUnknownSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 ]
 
 { #category : #tests }
@@ -664,30 +717,30 @@ XPathTest >> testDocumentOrderPreserving [
 	| expected result |
 
 	expected := document allNodesSelect: [:each | each hasChildren].
-	result := document xPath: 'descendant::node()/parent::node()[true()]'.
+	result := document xpath: 'descendant::node()/parent::node()[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected := document allNodes allButFirst.
-	result := document xPath: 'descendant::node()/self::node()[true()]'.
+	result := document xpath: 'descendant::node()/self::node()[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	document allElementsDo: [:each | expected addAll: each attributeNodes].
-	result := document xPath: 'descendant::*/@*[true()]'.
+	result := document xpath: 'descendant::*/@*[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	namespacedDocument allElementsDo: [:each | expected addAll: each namespaceNodes].
-	result := namespacedDocument xPath: 'descendant::*/namespace::*[true()]'.
+	result := namespacedDocument xpath: 'descendant::*/namespace::*[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 ]
 
 { #category : #tests }
@@ -757,30 +810,30 @@ XPathTest >> testElementDoubleWildcard [
 XPathTest >> testElementExpandedNameTest [
 	self
 		assertNodeSet:
-			(namespacedDocument xPath: 'element( Q{bookNS}addressbook ) / element( Q{personNS}person )')
+			(namespacedDocument xpath: 'element( Q{bookNS}addressbook ) / element( Q{personNS}person )')
 		hasNodes: (namespacedDocument allElementsNamed: 'person').
-	self assert: (namespacedDocument xPath: 'element(Q{undeclared}addressbook)') isEmpty.
+	self assert: (namespacedDocument xpath: 'element(Q{undeclared}addressbook)') isEmpty.
 
 	self
-		should: [namespacedDocument xPath: 'element(Q{bookNS} addressbook)']
+		should: [namespacedDocument xpath: 'element(Q{bookNS} addressbook)']
 		raise: XPathSyntaxException.
 	self
-		should: [namespacedDocument xPath: 'element(Q {bookNS}addressbook)']
+		should: [namespacedDocument xpath: 'element(Q {bookNS}addressbook)']
 		raise: XPathSyntaxException.
 ]
 
 { #category : #tests }
 XPathTest >> testElementExpandedNameWildcardTest [
 	self
-		assertNodeSet: (namespacedDocument xPath: 'element( Q{bookNS}* ) / element( Q{personNS}* )')
+		assertNodeSet: (namespacedDocument xpath: 'element( Q{bookNS}* ) / element( Q{personNS}* )')
 		hasNodes: (namespacedDocument allElementsNamed: 'person').
-	self assert: (namespacedDocument xPath: 'element(Q{undeclared}*)') isEmpty.
+	self assert: (namespacedDocument xpath: 'element(Q{undeclared}*)') isEmpty.
 
 	self
-		should: [namespacedDocument xPath: 'element(Q{bookNS} *)']
+		should: [namespacedDocument xpath: 'element(Q{bookNS} *)']
 		raise: XPathSyntaxException.
 	self
-		should: [namespacedDocument xPath: 'element(Q {bookNS}*)']
+		should: [namespacedDocument xpath: 'element(Q {bookNS}*)']
 		raise: XPathSyntaxException.
 ]
 
@@ -794,9 +847,9 @@ XPathTest >> testElementLocalNameWildcardTest [
 			with: 'one' -> 'bookNS'
 			with: 'two' -> 'personNS'.
 	self
-		assertNodeSet: (namespacedDocument xPath: 'element(book:*)/element(ps:*)')
+		assertNodeSet: (namespacedDocument xpath: 'element(book:*)/element(ps:*)')
 		hasNodes: persons.
-	self assert: (namespacedDocument xPath: 'element(book:*)/element(undeclared:*)') isEmpty.
+	self assert: (namespacedDocument xpath: 'element(book:*)/element(undeclared:*)') isEmpty.
 	self
 		assertNodeSet:
 			(XPath
@@ -821,10 +874,10 @@ XPathTest >> testElementLocalNameWildcardTest [
 { #category : #tests }
 XPathTest >> testElementNameTest [
 	self
-		assertNodeSet: (document xPath: 'element(addressbook)/element(person)')
+		assertNodeSet: (document xpath: 'element(addressbook)/element(person)')
 		hasNodes: (document allElementsNamed: 'person').
 	self assert:
-		(namespacedDocument xPath: 'element(addressbook)/element(person)') isEmpty.
+		(namespacedDocument xpath: 'element(addressbook)/element(person)') isEmpty.
 ]
 
 { #category : #tests }
@@ -833,9 +886,9 @@ XPathTest >> testElementPrefixWildcardTest [
 
 	persons := namespacedDocument allElementsNamed: 'person'.
 	self
-		assertNodeSet: (namespacedDocument xPath: 'element(*:addressbook)/element(*:person)')
+		assertNodeSet: (namespacedDocument xpath: 'element(*:addressbook)/element(*:person)')
 		hasNodes: persons.
-	self assert: (namespacedDocument xPath: 'element(*:addressbook)/element(*:contaxt-info)') isEmpty.
+	self assert: (namespacedDocument xpath: 'element(*:addressbook)/element(*:contaxt-info)') isEmpty.
 	self
 		assertNodeSet:
 			(XPath
@@ -862,11 +915,11 @@ XPathTest >> testElementQualfiedNameTest [
 			with: 'two' -> 'personNS'.
 	self
 		assertNodeSet:
-			(namespacedDocument xPath:
+			(namespacedDocument xpath:
 				'element(book:addressbook)/element(ps:person)')
 		hasNodes: persons.
 	self assert:
-		(namespacedDocument xPath:
+		(namespacedDocument xpath:
 			'element(book:addressbook)/element(undeclared:person)') isEmpty.
 	self
 		assertNodeSet:
@@ -902,10 +955,10 @@ XPathTest >> testElementQualfiedNameTest [
 { #category : #tests }
 XPathTest >> testElementTypeTest [
 	self
-		assertNodeSet: (document xPath: '//element()')
+		assertNodeSet: (document xpath: '//element()')
 		hasNodes: document allElements.
 	self
-		assertNodeSet: (document xPath: '//node()/self::element()')
+		assertNodeSet: (document xpath: '//node()/self::element()')
 		hasNodes: document allElements
 ]
 
@@ -913,15 +966,15 @@ XPathTest >> testElementTypeTest [
 XPathTest >> testExpandedNameTest [
 	self
 		assertNodeSet:
-			(namespacedDocument xPath: 'Q{bookNS}addressbook/Q{personNS}person')
+			(namespacedDocument xpath: 'Q{bookNS}addressbook/Q{personNS}person')
 		hasNodes: (namespacedDocument allElementsNamed: 'person').
-	self assert: (namespacedDocument xPath: 'Q{undeclared}addressbook') isEmpty.
+	self assert: (namespacedDocument xpath: 'Q{undeclared}addressbook') isEmpty.
 
 	self
-		should: [namespacedDocument xPath: 'Q{bookNS} addressbook']
+		should: [namespacedDocument xpath: 'Q{bookNS} addressbook']
 		raise: XPathSyntaxException.
 	self
-		should: [namespacedDocument xPath: 'Q {bookNS}addressbook']
+		should: [namespacedDocument xpath: 'Q {bookNS}addressbook']
 		raise: XPathSyntaxException.
 ]
 
@@ -960,17 +1013,17 @@ XPathTest >> testFalseFunction [
 XPathTest >> testFileterExpressionPredicates [
 	self
 		assertNodeSet:
-			(document xPath: '(./addressbook/*)[position() <= 3 and position() > 1]')
+			(document xpath: '(./addressbook/*)[position() <= 3 and position() > 1]')
 		hasNodes: ((document allElementsNamed: 'person') copyFrom: 2 to: 3).
 	self
-		assertNodeSet: (document xPath: '(addressbook/*)[true()] / address')
+		assertNodeSet: (document xpath: '(addressbook/*)[true()] / address')
 		hasNodes: (document allElementsNamed: 'address').
 	self
 		assertNodeSet:
-			(document xPath: '(addressbook)[true()] // email')
+			(document xpath: '(addressbook)[true()] // email')
 		hasNodes: (document allElementsNamed: 'email').
 	self
-		assertNodeSet: (document xPath: '(//person[position()>1])[position()<=2]')
+		assertNodeSet: (document xpath: '(//person[position()>1])[position()<=2]')
 		hasNodes: ((document allElementsNamed: 'person') copyFrom: 2 to: 3).
 ]
 
@@ -1101,7 +1154,7 @@ XPathTest >> testFunctions [
 
 { #category : #tests }
 XPathTest >> testIDFunction [
-	| dtdWithIDs contentWithIDs documentWithIDs idElements |
+	| dtdWithIDs contentWithIDs contentWithIDsAndUndeclaredAttributes documentWithIDs idElements |
 
 	dtdWithIDs :=
 		'<!DOCTYPE one [
@@ -1129,7 +1182,18 @@ XPathTest >> testIDFunction [
 				<four id4="fourth">
 					<five id="non-id">first</five>
 					<six id2="non-id">third</six>
-					<seven id4="non=id">non-id</seven>
+					<seven id4="non-id">non-id</seven>
+				</four>
+			</three>
+		</one>'.
+	contentWithIDsAndUndeclaredAttributes := '
+		<one id="first">
+			<two/>
+			<three xml:id="third" id3="non-id">
+				<four id4="fourth">
+					<five id="non-id">first</five>
+					<six id2="non-id">third</six>
+					<seven id4="non-id" undeclared="non-id">non-id</seven>
 				</four>
 			</three>
 		</one>'.
@@ -1137,40 +1201,43 @@ XPathTest >> testIDFunction [
 	#(true false) do: [:isValidating |
 		documentWithIDs :=
 			XMLDOMParser
-				parse: dtdWithIDs, contentWithIDs
+				parse:
+					(isValidating
+						ifTrue: [dtdWithIDs, contentWithIDs]
+						ifFalse: [dtdWithIDs, contentWithIDsAndUndeclaredAttributes])
 				usingNamespaces: true
 				validation: isValidating.
 		idElements :=
 			documentWithIDs allElementsSelect: [:each |
 				each isNamedAny: #('one' 'three')].
 		self
-			assertNodeSet: (documentWithIDs xPath: 'id("  first  third  non-id  ")')
+			assertNodeSet: (documentWithIDs xpath: 'id("   third  first non-id  ")')
 			hasNodes: idElements.
 		self
-			assertNodeSet: (documentWithIDs xPath: 'id("first third non-id")')
+			assertNodeSet: (documentWithIDs xpath: 'id("first third non-id")')
 			hasNodes: idElements.
 		self
-			assertNodeSet: (documentWithIDs xPath: 'id(//*)')
+			assertNodeSet: (documentWithIDs xpath: 'id(//*)')
 			hasNodes: idElements].
 
 	"xml:id attributes should always be recognized, even without a DTD"
 	#(true false) do: [:isValidating |
 		documentWithIDs :=
 			XMLDOMParser
-				parse: contentWithIDs
+				parse: contentWithIDsAndUndeclaredAttributes
 				usingNamespaces: true
 				validation: isValidating.
 		idElements :=
 			documentWithIDs allElementsSelect: [:each |
 				each isNamedAny: #('three')].
 		self
-			assertNodeSet: (documentWithIDs xPath: 'id("  first  third  non-id  ")')
+			assertNodeSet: (documentWithIDs xpath: 'id("  third  first  non-id  ")')
 			hasNodes: idElements.
 		self
-			assertNodeSet: (documentWithIDs xPath: 'id("first third non-id")')
+			assertNodeSet: (documentWithIDs xpath: 'id("first third non-id")')
 			hasNodes: idElements.
 		self
-			assertNodeSet: (documentWithIDs xPath: 'id(//*)')
+			assertNodeSet: (documentWithIDs xpath: 'id(//*)')
 			hasNodes: idElements].
 ]
 
@@ -1198,7 +1265,7 @@ XPathTest >> testInvalidFilterExpressionRootType [
 		'(1)/addressbook' '("string")/addressbook' '(true())/addressbook')
 		do: [:each |
 			self
-				should: [document xPath: each]
+				should: [document xpath: each]
 				raise: XPathTypeException]
 ]
 
@@ -1224,7 +1291,7 @@ XPathTest >> testInvalidUnionExpressionType [
 		'//person | true()' 'true() | //person'
 		'//person | "string"' '"string" | //person') do: [:each |
 		self
-			should: [document xPath: each]
+			should: [document xpath: each]
 			raise: XPathTypeException].
 ]
 
@@ -1258,12 +1325,12 @@ XPathTest >> testLangFunction [
 			</doc>'.
 	self
 		assertNodeSet:
-			(docWithLangElements xPath: '/descendant-or-self::*[lang("en")]')
+			(docWithLangElements xpath: '/descendant-or-self::*[lang("en")]')
 		hasNodes:
 			docWithLangElements root descendantElements.
 	self
 		assertNodeSet:
-			(docWithLangElements xPath: '/descendant-or-self::*[lang("en-us")]')
+			(docWithLangElements xpath: '/descendant-or-self::*[lang("en-us")]')
 		hasNodes:
 			(XMLNodeList with: docWithLangElements descendantElements last).
 ]
@@ -1329,9 +1396,9 @@ XPathTest >> testLocalNameWildcardTest [
 			with: 'one' -> 'bookNS'
 			with: 'two' -> 'personNS'.
 	self
-		assertNodeSet: (namespacedDocument xPath: 'book:*/ps:*')
+		assertNodeSet: (namespacedDocument xpath: 'book:*/ps:*')
 		hasNodes: persons.
-	self assert: (namespacedDocument xPath: 'book:*/undeclared:*') isEmpty.
+	self assert: (namespacedDocument xpath: 'book:*/undeclared:*') isEmpty.
 	self
 		assertNodeSet:
 			(XPath
@@ -1358,28 +1425,28 @@ XPathTest >> testLocalNameWildcardTest [
 XPathTest >> testLocationPathPredicates [
 	self
 		assertNodeSet:
-			(document xPath: '/descendant::home-phone[1][2 - 1][position() = 1]')
+			(document xpath: '/descendant::home-phone[1][2 - 1][position() = 1]')
 		hasNodes:
 			(XMLNodeList with: (document allElementsNamed: 'home-phone') first).
 	self assert:
-		(document xPath: '/descendant::home-phone[1][position() + 1]') isEmpty.
+		(document xpath: '/descendant::home-phone[1][position() + 1]') isEmpty.
 
 	self
 		assertNodeSet:
-			(document xPath: '//home-phone[1][1 + 0][position() = 1]')
+			(document xpath: '//home-phone[1][1 + 0][position() = 1]')
 		hasNodes:
 			(document allElementsNamed: 'home-phone') allButLast.
 	self
 		assertNodeSet:
-			(document xPath: '//home-phone[1 + 1][1][position() = 1]')
+			(document xpath: '//home-phone[1 + 1][1][position() = 1]')
 		hasNodes:
 			(XMLNodeList with: (document allElementsNamed: 'home-phone') third).
 	self assert:
-		(document xPath: '//home-phone[position() = 1][1 + 1]') isEmpty.
+		(document xpath: '//home-phone[position() = 1][1 + 1]') isEmpty.
 
 	self
 		assertNodeSet:
-			(document xPath: '/descendant::home-phone[2][1 + 0][position() = 1]')
+			(document xpath: '/descendant::home-phone[2][1 + 0][position() = 1]')
 		hasNodes:
 			(XMLNodeList with: (document allElementsNamed: 'home-phone') second).
 ]
@@ -1452,7 +1519,7 @@ XPathTest >> testModulus [
 				in: nil
 				context:
 					(XPathContext new
-						variableAt: 'var' put: Float xPathNegativeZero;
+						variableAt: 'var' put: Float xpathNegativeZero;
 						yourself)) isNaN].
 ]
 
@@ -1505,19 +1572,19 @@ XPathTest >> testNamespaceAxis [
 			add: (XPathNamespaceNode element: each name: 'ps' uri: 'personNS')].
 	self assert: nodes size = (namespacedDocument allElements size * 4).
 	self
-		assertNodeSet: (namespacedDocument xPath: '//namespace::*')
+		assertNodeSet: (namespacedDocument xpath: '//namespace::*')
 		hasNodes: nodes.
 	self
-		assertNodeSet: (namespacedDocument xPath: '//namespace::book')
+		assertNodeSet: (namespacedDocument xpath: '//namespace::book')
 		hasNodes: (nodes select: [:each | each name ='book']).
 
 	"namespace nodes can't be prefixed or namespaced themselves:"
 	self
-		assert: (namespacedDocument xPath: '//namespace::book:*') isEmpty;
-		assert: (namespacedDocument xPath: '//namespace::book/namespace::book') isEmpty.
+		assert: (namespacedDocument xpath: '//namespace::book:*') isEmpty;
+		assert: (namespacedDocument xpath: '//namespace::book/namespace::book') isEmpty.
 
 	self
-		assertNodeSet: (document xPath: '//namespace::*')
+		assertNodeSet: (document xpath: '//namespace::*')
 		hasNodes:
 			(document allElementsCollect: [:each |
 				XPathNamespaceNode withXMLNamespaceOnElement: each]).
@@ -1526,10 +1593,10 @@ XPathTest >> testNamespaceAxis [
 { #category : #tests }
 XPathTest >> testNamespaceNameTest [
 	self
-		assertNodeSet: (document xPath: '//namespace::namespace( xml )')
+		assertNodeSet: (document xpath: '//namespace::namespace( xml )')
 		hasNodes: (document allElements collect: [:each | each namespaceNodes first]).
 
-	self assert: (document xPath: '//namespace::namespace( undeclared )') isEmpty.
+	self assert: (document xpath: '//namespace::namespace( undeclared )') isEmpty.
 ]
 
 { #category : #tests }
@@ -1545,11 +1612,11 @@ XPathTest >> testNamespaceTypeTest [
 					ifTrue: [results addLast: each]]].
 	self
 		assertNodeSet:
-			(namespacedDocument xPath: '//namespace::node() | //text()')
+			(namespacedDocument xpath: '//namespace::node() | //text()')
 		hasNodes: results.
 	self
 		assertNodeSet:
-			(namespacedDocument xPath:
+			(namespacedDocument xpath:
 				'(//namespace::node() | //text())/ self :: namespace()')
 		hasNodes: (results select: [:each | each isNamespace]).
 ]
@@ -1557,12 +1624,12 @@ XPathTest >> testNamespaceTypeTest [
 { #category : #tests }
 XPathTest >> testNamespaceURIFunction [
 	self
-		assert: (document xPath: 'namespace-uri(/*)') isEmpty;
-		assert: (document root xPath: 'namespace-uri()') isEmpty;
-		assert: (document xPath: 'namespace-uri(/*/*)') isEmpty;
-		assert: (namespacedDocument xPath: 'namespace-uri(/*)') = 'bookNS';
-		assert: (namespacedDocument root xPath: 'namespace-uri()') = 'bookNS';
-		assert: (namespacedDocument xPath: 'namespace-uri(/*/*)') = 'personNS'
+		assert: (document xpath: 'namespace-uri(/*)') isEmpty;
+		assert: (document root xpath: 'namespace-uri()') isEmpty;
+		assert: (document xpath: 'namespace-uri(/*/*)') isEmpty;
+		assert: (namespacedDocument xpath: 'namespace-uri(/*)') = 'bookNS';
+		assert: (namespacedDocument root xpath: 'namespace-uri()') = 'bookNS';
+		assert: (namespacedDocument xpath: 'namespace-uri(/*/*)') = 'personNS'
 ]
 
 { #category : #tests }
@@ -1574,9 +1641,9 @@ XPathTest >> testNegation [
 		assert: '-1.0' asXPath evaluate = -1.0;
 		assert: '--1.0' asXPath evaluate = 1.0;
 		assert: '---1.0' asXPath evaluate = -1.0;
-		assert: '-(1 div 0)' asXPath evaluate = Float xPathNegativeInfinity;
+		assert: '-(1 div 0)' asXPath evaluate = Float xpathNegativeInfinity;
 		assert: '--(1 div 0)' asXPath evaluate = Float infinity;
-		assert: '---(1 div 0)' asXPath evaluate = Float xPathNegativeInfinity;
+		assert: '---(1 div 0)' asXPath evaluate = Float xpathNegativeInfinity;
 		assert: '-"test"' asXPath evaluate isNaN;
 		assert: '--"test"' asXPath evaluate isNaN;
 		assert: '---"test"' asXPath evaluate isNaN
@@ -1592,7 +1659,7 @@ XPathTest >> testNestedFunctionCalls [
 { #category : #tests }
 XPathTest >> testNodeSetAndBooleanComparing [
 	self assert:
-		('<list><a>not-empty</a></list>' parseXML xPath:
+		('<list><a>not-empty</a></list>' parseXML xpath:
 			'list/b < true()
 				and list/b <= true()
 				and list/a > false()
@@ -1614,7 +1681,7 @@ XPathTest >> testNodeSetAndBooleanComparing [
 { #category : #tests }
 XPathTest >> testNodeSetAndNonNodeSetEquality [
 	self assert:
-		('<list><a>1</a><a>two</a></list>' parseXML xPath:
+		('<list><a>1</a><a>two</a></list>' parseXML xpath:
 			'list/a = 1.0
 				and 1.0 = list/a
 				and not(list/a = 2.0)
@@ -1632,7 +1699,7 @@ XPathTest >> testNodeSetAndNonNodeSetEquality [
 { #category : #tests }
 XPathTest >> testNodeSetAndNonNodeSetInequality [
 	self assert:
-		('<list><a>1</a><b>two</b></list>' parseXML xPath:
+		('<list><a>1</a><b>two</b></list>' parseXML xpath:
 			'list/a != 2.0
 				and 2.0 != list/a
 				and not(list/a != 1.0)
@@ -1650,7 +1717,7 @@ XPathTest >> testNodeSetAndNonNodeSetInequality [
 { #category : #tests }
 XPathTest >> testNodeSetAndNumberComparing [
 	self assert:
-		('<list><a>1</a><a>2</a></list>' parseXML xPath:
+		('<list><a>1</a><a>2</a></list>' parseXML xpath:
 			'list/a < 2
 				and list/a <= 1
 				and list/a > 1
@@ -1676,7 +1743,7 @@ XPathTest >> testNodeSetComparing [
 			<a>1</a><a>2</a><a>3</a>
 			<b>0</b>
 			<c>4</c>
-		</list>' parseXML xPath:
+		</list>' parseXML xpath:
 			'list/a < list/a
 				and list/a <= list/a
 				and list/a > list/a
@@ -1697,7 +1764,7 @@ XPathTest >> testNodeSetEquality [
 		('<list>
 			<a>one</a><a>two</a><a>three</a>
 			<b>four</b>
-		</list>' parseXML xPath:
+		</list>' parseXML xpath:
 			'list/a = list/a
 				and list/a != list/a
 				and not(list/b = list/a)
@@ -1741,8 +1808,8 @@ XPathTest >> testNotFunction [
 		assert: 'not(false())' asXPath evaluate;
 		deny: 'not(1) or not("1")' asXPath evaluate;
 		assert: 'not(0) and not("")' asXPath evaluate;
-		deny: (document xPath: 'not(/node())');
-		assert: (document xPath: 'not(/text())').
+		deny: (document xpath: 'not(/node())');
+		assert: (document xpath: 'not(/text())').
 	self
 		should: ['not()' asXPath evaluate]
 		raise: XPathArgumentNumberException.
@@ -1797,10 +1864,10 @@ XPathTest >> testOptimizedAttributeAxis [
 
 	attributes := (document findElementNamed: 'person') attributeNodes.
 	self
-		assertNodeSet: (document xPath: 'addressbook/person[1]/@node()')
+		assertNodeSet: (document xpath: 'addressbook/person[1]/@node()')
 		hasNodes: attributes.
 	self
-		assertNodeSet: (document xPath: 'addressbook/person[1]/@*')
+		assertNodeSet: (document xpath: 'addressbook/person[1]/@*')
 		hasNodes: attributes.
 ]
 
@@ -1811,61 +1878,49 @@ XPathTest >> testOptimizedAttributeAxisWithPositionPredicate [
 	attributes :=
 		(document allElementsNamed: 'person')
 			collect: [:each | each attributeNodes first].
-	result := document xPath: '//person/@employee-number[1]'.
+	result := document xpath: '//person/@employee-number[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: attributes.
+	result := document xpath: '//person/@employee-number[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: attributes.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person/@employee-number[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: attributes.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//person/@employee-number[0]') isEmpty;
-		assert: (document xPath: '//person/@employee-number[1.2]') isEmpty;
-		assert: (document xPath: '//person/@employee-number[1][2]') isEmpty.
+		assert: (document xpath: '//person/@employee-number[0]') isEmpty;
+		assert: (document xpath: '//person/@employee-number[1.2]') isEmpty;
+		assert: (document xpath: '//person/@employee-number[1][2]') isEmpty.
 
 	attributes :=
 		(document allElementsNamed: 'person')
 			collect: [:each | each attributeNodes second].
-	result := document xPath: '//person/@*[2]'.
+	result := document xpath: '//person/@*[2]'.
+	self
+		assertNodeSet: result
+		hasNodes: attributes.
+	result := document xpath: '//person/@*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: attributes.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person/@*[2.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: attributes.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//person/@*[0]') isEmpty;
-		assert: (document xPath: '//person/@*[2.2]') isEmpty;
-		assert: (document xPath: '//person/@*[2][2]') isEmpty.
+		assert: (document xpath: '//person/@*[0]') isEmpty;
+		assert: (document xpath: '//person/@*[2.2]') isEmpty;
+		assert: (document xpath: '//person/@*[2][2]') isEmpty.
 
 	attributes :=
 		(document allElementsNamed: 'person') first attributeNodes.
 	result :=
-		document xPath:
+		document xpath:
 			'addressbook/person[1]/@*[', attributes size asString, ']'.
 	self
 		assertNodeSet: result
 		hasNodes: (XMLNodeList with: attributes last).
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
 	result :=
-		document xPath:
+		document xpath:
 			'addressbook/person[1]/@*[', (attributes size + 1) asString, ']'.
 	self assert: result isEmpty.
 ]
@@ -1877,46 +1932,46 @@ XPathTest >> testOptimizedChildAxisWithPositionPredicate [
 	children :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') first.
-	result := document xPath: 'addressbook/person[1]'.
+	result := document xpath: 'addressbook/person[1]'.
 	self
 		assertNodeSet: result
 		hasNodes: children.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: 'addressbook/person[1.0][1]'.
+		hasSortOrder: XPathLevelDocumentSortOrder.
+	result := document xpath: 'addressbook/person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: children.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 	self
-		assert: (document xPath: 'addressbook/person[0]') isEmpty;
-		assert: (document xPath: 'addressbook/person[1.2]') isEmpty;
-		assert: (document xPath: 'addressbook/person[1][2]') isEmpty.
+		assert: (document xpath: 'addressbook/person[0]') isEmpty;
+		assert: (document xpath: 'addressbook/person[1.2]') isEmpty;
+		assert: (document xpath: 'addressbook/person[1][2]') isEmpty.
 
 	children :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') second.
-	result := document xPath: 'addressbook/*[2]'.
+	result := document xpath: 'addressbook/*[2]'.
 	self
 		assertNodeSet: result
 		hasNodes: children.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: 'addressbook/*[2.0][1]'.
+		hasSortOrder: XPathLevelDocumentSortOrder.
+	result := document xpath: 'addressbook/*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: children.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 	self
-		assert: (document xPath: 'addressbook/*[0]') isEmpty;
-		assert: (document xPath: 'addressbook/*[2.2]') isEmpty;
-		assert: (document xPath: 'addressbook/*[2][2]') isEmpty.
+		assert: (document xpath: 'addressbook/*[0]') isEmpty;
+		assert: (document xpath: 'addressbook/*[2.2]') isEmpty;
+		assert: (document xpath: 'addressbook/*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -1926,46 +1981,34 @@ XPathTest >> testOptimizedDescendantAxisWithPositionPredicate [
 	descendants :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') first.
-	result := document xPath: 'descendant::person[1]'.
+	result := document xpath: 'descendant::person[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: descendants.
+	result := document xpath: 'descendant::person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: descendants.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: 'descendant::person[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: descendants.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: 'descendant::person[0]') isEmpty;
-		assert: (document xPath: 'descendant::person[1.2]') isEmpty;
-		assert: (document xPath: 'descendant::person[1][2]') isEmpty.
+		assert: (document xpath: 'descendant::person[0]') isEmpty;
+		assert: (document xpath: 'descendant::person[1.2]') isEmpty;
+		assert: (document xpath: 'descendant::person[1][2]') isEmpty.
 
 	descendants :=
 		XMLNodeList with:
 			document descendantElements second.
-	result := document xPath: 'descendant::*[2]'.
+	result := document xpath: 'descendant::*[2]'.
+	self
+		assertNodeSet: result
+		hasNodes: descendants.
+	result := document xpath: 'descendant::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: descendants.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: 'descendant::*[2.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: descendants.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: 'descendant::*[0]') isEmpty;
-		assert: (document xPath: 'descendant::*[2.2]') isEmpty;
-		assert: (document xPath: 'descendant::*[2][2]') isEmpty.
+		assert: (document xpath: 'descendant::*[0]') isEmpty;
+		assert: (document xpath: 'descendant::*[2.2]') isEmpty;
+		assert: (document xpath: 'descendant::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -1975,46 +2018,34 @@ XPathTest >> testOptimizedDescendantOrSelfAxisWithPositionPredicate [
 	nodes :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') first.
-	result := document xPath: 'descendant-or-self::person[1]'.
+	result := document xpath: 'descendant-or-self::person[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: nodes.
+	result := document xpath: 'descendant-or-self::person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: nodes.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: 'descendant-or-self::person[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: nodes.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: 'descendant-or-self::person[0]') isEmpty;
-		assert: (document xPath: 'descendant-or-self::person[1.2]') isEmpty;
-		assert: (document xPath: 'descendant-or-self::person[1][2]') isEmpty.
+		assert: (document xpath: 'descendant-or-self::person[0]') isEmpty;
+		assert: (document xpath: 'descendant-or-self::person[1.2]') isEmpty;
+		assert: (document xpath: 'descendant-or-self::person[1][2]') isEmpty.
 
 	nodes :=
 		XMLNodeList with:
 			document allElements second.
-	result := document xPath: 'descendant-or-self::*[2]'.
+	result := document xpath: 'descendant-or-self::*[2]'.
+	self
+		assertNodeSet: result
+		hasNodes: nodes.
+	result := document xpath: 'descendant-or-self::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: nodes.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: 'descendant-or-self::*[2.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: nodes.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: 'descendant-or-self::*[0]') isEmpty;
-		assert: (document xPath: 'descendant-or-self::*[2.2]') isEmpty;
-		assert: (document xPath: 'descendant-or-self::*[2][2]') isEmpty.
+		assert: (document xpath: 'descendant-or-self::*[0]') isEmpty;
+		assert: (document xpath: 'descendant-or-self::*[2.2]') isEmpty;
+		assert: (document xpath: 'descendant-or-self::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2024,46 +2055,34 @@ XPathTest >> testOptimizedFollowingAxisWithPositionPredicate [
 	following :=
 		XMLNodeList with:
 			(document allElementsNamed: 'address') second.
-	result := document xPath: '//person[1]/following::address[1]'.
+	result := document xpath: '//person[1]/following::address[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: following.
+	result := document xpath: '//person[1]/following::address[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: following.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person[1]/following::address[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: following.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//person[1]/following::address[0]') isEmpty;
-		assert: (document xPath: '//person[1]/following::address[1.2]') isEmpty;
-		assert: (document xPath: '//person[1]/following::address[1][2]') isEmpty.
+		assert: (document xpath: '//person[1]/following::address[0]') isEmpty;
+		assert: (document xpath: '//person[1]/following::address[1.2]') isEmpty;
+		assert: (document xpath: '//person[1]/following::address[1][2]') isEmpty.
 
 	following :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') second firstElement.
-	result := document xPath: '//person[1]/following::*[2]'.
+	result := document xpath: '//person[1]/following::*[2]'.
+	self
+		assertNodeSet: result
+		hasNodes: following.
+	result := document xpath: '//person[1]/following::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: following.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person[1]/following::*[2.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: following.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//person[1]/following::*[0]') isEmpty;
-		assert: (document xPath: '//person[1]/following::*[2.2]') isEmpty;
-		assert: (document xPath: '//person[1]/following::*[2][2]') isEmpty.
+		assert: (document xpath: '//person[1]/following::*[0]') isEmpty;
+		assert: (document xpath: '//person[1]/following::*[2.2]') isEmpty;
+		assert: (document xpath: '//person[1]/following::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2073,47 +2092,47 @@ XPathTest >> testOptimizedFollowingSiblingAxisWithPositionPredicate [
 	followingSiblings :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') second.
-	result := document xPath: '//person[1]/following-sibling::person[1]'.
+	result := document xpath: '//person[1]/following-sibling::person[1]'.
 	self
 		assertNodeSet: result
 		hasNodes: followingSiblings.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person[1]/following-sibling::person[1.0][1]'.
+		hasSortOrder: XPathLevelDocumentSortOrder.
+	result := document xpath: '//person[1]/following-sibling::person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: followingSiblings.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 	self
-		assert: (document xPath: '//person[1]/following-sibling::address[1]') isEmpty;
-		assert: (document xPath: '//person[1]/following-sibling::person[0]') isEmpty;
-		assert: (document xPath: '//person[1]/following-sibling::person[1.2]') isEmpty;
-		assert: (document xPath: '//person[1]/following-sibling::person[1][2]') isEmpty.
+		assert: (document xpath: '//person[1]/following-sibling::address[1]') isEmpty;
+		assert: (document xpath: '//person[1]/following-sibling::person[0]') isEmpty;
+		assert: (document xpath: '//person[1]/following-sibling::person[1.2]') isEmpty;
+		assert: (document xpath: '//person[1]/following-sibling::person[1][2]') isEmpty.
 
 	followingSiblings :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') third.
-	result := document xPath: '//person[1]/following-sibling::*[2]'.
+	result := document xpath: '//person[1]/following-sibling::*[2]'.
 	self
 		assertNodeSet: result
 		hasNodes: followingSiblings.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person[1]/following-sibling::*[2.0][1]'.
+		hasSortOrder: XPathLevelDocumentSortOrder.
+	result := document xpath: '//person[1]/following-sibling::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: followingSiblings.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 	self
-		assert: (document xPath: '//person[1]/following-sibling::*[0]') isEmpty;
-		assert: (document xPath: '//person[1]/following-sibling::*[2.2]') isEmpty;
-		assert: (document xPath: '//person[1]/following-sibling::*[2][2]') isEmpty.
+		assert: (document xpath: '//person[1]/following-sibling::*[0]') isEmpty;
+		assert: (document xpath: '//person[1]/following-sibling::*[2.2]') isEmpty;
+		assert: (document xpath: '//person[1]/following-sibling::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2124,46 +2143,34 @@ XPathTest >> testOptimizedNamespaceAxisWithPositionPredicate [
 		(namespacedDocument allElementsNamed: 'person')
 			collect: [:element |
 				element namespaceNodes detect: [:each | each name = 'ps']].
-	result := namespacedDocument xPath: '//ps:person/namespace::ps[1]'.
+	result := namespacedDocument xpath: '//ps:person/namespace::ps[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: namespaces.
+	result := namespacedDocument xpath: '//ps:person/namespace::ps[1]'.
 	self
 		assertNodeSet: result
 		hasNodes: namespaces.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := namespacedDocument xPath: '//ps:person/namespace::ps[1]'.
-	self
-		assertNodeSet: result
-		hasNodes: namespaces.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (namespacedDocument xPath: '//ps:person/namespace::ps[0]') isEmpty;
-		assert: (namespacedDocument xPath: '//ps:person/namespace::ps[1.2]') isEmpty;
-		assert: (namespacedDocument xPath: '//ps:person/namespace::ps[1][2]') isEmpty.
+		assert: (namespacedDocument xpath: '//ps:person/namespace::ps[0]') isEmpty;
+		assert: (namespacedDocument xpath: '//ps:person/namespace::ps[1.2]') isEmpty;
+		assert: (namespacedDocument xpath: '//ps:person/namespace::ps[1][2]') isEmpty.
 
 	namespaces :=
 		(namespacedDocument allElementsNamed: 'person')
 			collect: [:each | each namespaceNodes second].
-	result := namespacedDocument xPath: '//ps:person/namespace::*[2]'.
+	result := namespacedDocument xpath: '//ps:person/namespace::*[2]'.
+	self
+		assertNodeSet: result
+		hasNodes: namespaces.
+	result := namespacedDocument xpath: '//ps:person/namespace::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: namespaces.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := namespacedDocument xPath: '//ps:person/namespace::*[2.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: namespaces.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (namespacedDocument xPath: '//ps:person/namespace::*[0]') isEmpty;
-		assert: (namespacedDocument xPath: '//ps:person/namespace::*[2.2]') isEmpty;
-		assert: (namespacedDocument xPath: '//ps:person/namespace::*[2][2]') isEmpty.
+		assert: (namespacedDocument xpath: '//ps:person/namespace::*[0]') isEmpty;
+		assert: (namespacedDocument xpath: '//ps:person/namespace::*[2.2]') isEmpty;
+		assert: (namespacedDocument xpath: '//ps:person/namespace::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2171,43 +2178,31 @@ XPathTest >> testOptimizedParentAxisWithPositionPredicate [
 	| result parents |
 
 	parents := document allElementsNamed: 'person'.
-	result := document xPath: '//address/parent::person[1]'.
+	result := document xpath: '//address/parent::person[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: parents.
+	result := document xpath: '//address/parent::person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: parents.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//address/parent::person[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: parents.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//address/parent::person[0]') isEmpty;
-		assert: (document xPath: '//address/parent::person[1.2]') isEmpty;
-		assert: (document xPath: '//address/parent::person[1][2]') isEmpty.
+		assert: (document xpath: '//address/parent::person[0]') isEmpty;
+		assert: (document xpath: '//address/parent::person[1.2]') isEmpty;
+		assert: (document xpath: '//address/parent::person[1][2]') isEmpty.
 
-	result := document xPath: '//address/parent::*[1]'.
+	result := document xpath: '//address/parent::*[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: parents.
+	result := document xpath: '//address/parent::*[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: parents.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//address/parent::*[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: parents.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//address/parent::*[0]') isEmpty;
-		assert: (document xPath: '//address/parent::*[1.2]') isEmpty;
-		assert: (document xPath: '//address/parent::*[1][2]') isEmpty.
+		assert: (document xpath: '//address/parent::*[0]') isEmpty;
+		assert: (document xpath: '//address/parent::*[1.2]') isEmpty;
+		assert: (document xpath: '//address/parent::*[1][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2217,47 +2212,35 @@ XPathTest >> testOptimizedPrecedingAxisWithPositionPredicate [
 	preceding :=
 		XMLNodeList with:
 			(document allElementsNamed: 'address') first.
-	result := document xPath: '//person[2]/preceding::address[1]'.
+	result := document xpath: '//person[2]/preceding::address[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: preceding.
+	result := document xpath: '//person[2]/preceding::address[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: preceding.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
-	result := document xPath: '//person[2]/preceding::address[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: preceding.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
-	self
-		assert: (document xPath: '//person[2]/preceding::address[0]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding::address[1.2]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding::address[1][2]') isEmpty.
+		assert: (document xpath: '//person[2]/preceding::address[0]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding::address[1.2]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding::address[1][2]') isEmpty.
 
 	preceding :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person')
 				first allElements reversed second.
-	result := document xPath: '//person[2]/preceding::*[2]'.
+	result := document xpath: '//person[2]/preceding::*[2]'.
+	self
+		assertNodeSet: result
+		hasNodes: preceding.
+	result := document xpath: '//person[2]/preceding::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: preceding.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
-	result := document xPath: '//person[2]/preceding::*[2.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: preceding.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
-	self
-		assert: (document xPath: '//person[2]/preceding::*[0]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding::*[2.2]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding::*[2][2]') isEmpty.
+		assert: (document xpath: '//person[2]/preceding::*[0]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding::*[2.2]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2267,44 +2250,44 @@ XPathTest >> testOptimizedPrecedingSiblingAxisWithPositionPredicate [
 	precedingSibling :=
 		XMLNodeList with:
 			(document allElementsNamed: 'person') first.
-	result := document xPath: '//person[2]/preceding-sibling::person[1]'.
+	result := document xpath: '//person[2]/preceding-sibling::person[1]'.
 	self
 		assertNodeSet: result
 		hasNodes: precedingSibling.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
-	result := document xPath: '//person[2]/preceding-sibling::person[1.0][1]'.
+		hasSortOrder: XPathLevelDocumentSortOrder.
+	result := document xpath: '//person[2]/preceding-sibling::person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: precedingSibling.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 	self
-		assert: (document xPath: '//person[2]/preceding-sibling::address[1]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding-sibling::person[0]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding-sibling::person[1.2]') isEmpty;
-		assert: (document xPath: '//person[2]/preceding-sibling::person[1][2]') isEmpty.
+		assert: (document xpath: '//person[2]/preceding-sibling::address[1]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding-sibling::person[0]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding-sibling::person[1.2]') isEmpty;
+		assert: (document xpath: '//person[2]/preceding-sibling::person[1][2]') isEmpty.
 
-	result := document xPath: '//person[3]/preceding-sibling::*[2]'.
+	result := document xpath: '//person[3]/preceding-sibling::*[2]'.
 	self
 		assertNodeSet: result
 		hasNodes: precedingSibling.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
-	result := document xPath: '//person[3]/preceding-sibling::*[2.0][1]'.
+		hasSortOrder: XPathLevelDocumentSortOrder.
+	result := document xpath: '//person[3]/preceding-sibling::*[2.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: precedingSibling.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathReverseDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder.
 	self
-		assert: (document xPath: '//person[3]/preceding-sibling::*[0]') isEmpty;
-		assert: (document xPath: '//person[3]/preceding-sibling::*[2.2]') isEmpty;
-		assert: (document xPath: '//person[3]/preceding-sibling::*[2][2]') isEmpty.
+		assert: (document xpath: '//person[3]/preceding-sibling::*[0]') isEmpty;
+		assert: (document xpath: '//person[3]/preceding-sibling::*[2.2]') isEmpty;
+		assert: (document xpath: '//person[3]/preceding-sibling::*[2][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2316,18 +2299,18 @@ XPathTest >> testOptimizedPredicateAttributeAxis [
 			(each isNamed: 'address')
 				and: [(each attributeAt: 'city') notEmpty]].
 	self
-		assertNodeSet: (document xPath: '//address[@city]')
+		assertNodeSet: (document xpath: '//address[@city]')
 		hasNodes: attributes.
 	self
-		assertNodeSet: (document xPath: '//address[@city[true()]]')
+		assertNodeSet: (document xpath: '//address[@city[true()]]')
 		hasNodes: attributes.
 	self
-		assertNodeSet: (document xPath: '//address[./@city]')
+		assertNodeSet: (document xpath: '//address[./@city]')
 		hasNodes: attributes.
 	self
-		assert: (document xPath: '//address[@absent]') isEmpty;
-		assert: (document xPath: '//address[@city[false()]]') isEmpty;
-		assert: (document xPath: '//address[./@absent]') isEmpty.
+		assert: (document xpath: '//address[@absent]') isEmpty;
+		assert: (document xpath: '//address[@city[false()]]') isEmpty;
+		assert: (document xpath: '//address[./@absent]') isEmpty.
 
 	attributes :=
 		document allElementsSelect: [:each |
@@ -2335,18 +2318,18 @@ XPathTest >> testOptimizedPredicateAttributeAxis [
 				and: [each hasAttributes
 					and: [(each attributeAt: 'city') = 'New York']]].
 	self
-		assertNodeSet: (document xPath: '//address[@city = "New York"]')
+		assertNodeSet: (document xpath: '//address[@city = "New York"]')
 		hasNodes: attributes.
 	self
-		assertNodeSet: (document xPath: '//address[@city[true()] = "New York"]')
+		assertNodeSet: (document xpath: '//address[@city[true()] = "New York"]')
 		hasNodes: attributes.
 	self
-		assertNodeSet: (document xPath: '//address[./@city = "New York"]')
+		assertNodeSet: (document xpath: '//address[./@city = "New York"]')
 		hasNodes: attributes.
 	self
-		assert: (document xPath: '//address[@city = "Absent"]') isEmpty;
-		assert: (document xPath: '//address[@city[false()] = "New York"]') isEmpty;
-		assert: (document xPath: '//address[./@city = "Absent"]') isEmpty.
+		assert: (document xpath: '//address[@city = "Absent"]') isEmpty;
+		assert: (document xpath: '//address[@city[false()] = "New York"]') isEmpty;
+		assert: (document xpath: '//address[./@city = "Absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2355,18 +2338,18 @@ XPathTest >> testOptimizedPredicateChildAxis [
 
 	children := document allElementsNamed: 'person'.
 	self
-		assertNodeSet: (document xPath: '//*[address]')
+		assertNodeSet: (document xpath: '//*[address]')
 		hasNodes: children.
 	self
-		assertNodeSet: (document xPath: '//*[address[true()]]')
+		assertNodeSet: (document xpath: '//*[address[true()]]')
 		hasNodes: children.
 	self
-		assertNodeSet: (document xPath: '//*[./address]')
+		assertNodeSet: (document xpath: '//*[./address]')
 		hasNodes: children.
 	self
-		assert: (document xPath: '//*[absent]') isEmpty;
-		assert: (document xPath: '//*[address[false()]]') isEmpty;
-		assert: (document xPath: '//*[./absent]') isEmpty.
+		assert: (document xpath: '//*[absent]') isEmpty;
+		assert: (document xpath: '//*[address[false()]]') isEmpty;
+		assert: (document xpath: '//*[./absent]') isEmpty.
 
 	children :=
 		textDocument allElementsSelect: [:element |
@@ -2375,18 +2358,18 @@ XPathTest >> testOptimizedPredicateChildAxis [
 					(element elementsAt: 'c') anySatisfy: [:each |
 						each stringValue = 'two']]].
 	self
-		assertNodeSet: (textDocument xPath: '//b[c = "two"]')
+		assertNodeSet: (textDocument xpath: '//b[c = "two"]')
 		hasNodes: children.
 	self
-		assertNodeSet: (textDocument xPath: '//b[c[true()] = "two"]')
+		assertNodeSet: (textDocument xpath: '//b[c[true()] = "two"]')
 		hasNodes: children.
 	self
-		assertNodeSet: (textDocument xPath: '//b[./c = "two"]')
+		assertNodeSet: (textDocument xpath: '//b[./c = "two"]')
 		hasNodes: children.
 	self
-		assert: (textDocument xPath: '//b[c = "absent"]') isEmpty;
-		assert: (textDocument xPath: '//b[c[false()] = "two"]') isEmpty;
-		assert: (textDocument xPath: '//b[./c = "absent"]') isEmpty.
+		assert: (textDocument xpath: '//b[c = "absent"]') isEmpty;
+		assert: (textDocument xpath: '//b[c[false()] = "two"]') isEmpty;
+		assert: (textDocument xpath: '//b[./c = "absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2398,18 +2381,18 @@ XPathTest >> testOptimizedPredicateDescendantAxis [
 			(element descendantElementsDetect: [:each |
 				each isNamed: 'address']) notNil].
 	self
-		assertNodeSet: (document xPath: '//*[descendant::address]')
+		assertNodeSet: (document xpath: '//*[descendant::address]')
 		hasNodes: descendants.
 	self
-		assertNodeSet: (document xPath: '//*[descendant::address[true()]]')
+		assertNodeSet: (document xpath: '//*[descendant::address[true()]]')
 		hasNodes: descendants.
 	self
-		assertNodeSet: (document xPath: '//*[./descendant::address]')
+		assertNodeSet: (document xpath: '//*[./descendant::address]')
 		hasNodes: descendants.
 	self
-		assert: (document xPath: '//*[descendant::absent]') isEmpty;
-		assert: (document xPath: '//*[descendant::address[false()]]') isEmpty;
-		assert: (document xPath: '//*[./descendant::absent]') isEmpty.
+		assert: (document xpath: '//*[descendant::absent]') isEmpty;
+		assert: (document xpath: '//*[descendant::address[false()]]') isEmpty;
+		assert: (document xpath: '//*[./descendant::absent]') isEmpty.
 
 	descendants :=
 		textDocument descendantNodesSelect: [:node |
@@ -2419,23 +2402,23 @@ XPathTest >> testOptimizedPredicateDescendantAxis [
 						each stringValue = 'two']) notNil]].
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[descendant::node() = "two"]')
+			(textDocument xpath: '//node()[descendant::node() = "two"]')
 		hasNodes: descendants.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[descendant::node()[true()] = "two"]')
+			(textDocument xpath: '//node()[descendant::node()[true()] = "two"]')
 		hasNodes: descendants.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[./descendant::node() = "two"]')
+			(textDocument xpath: '//node()[./descendant::node() = "two"]')
 		hasNodes: descendants.
 	self
 		assert:
-			(textDocument xPath: '//node()[descendant::node() = "absent"]') isEmpty;
+			(textDocument xpath: '//node()[descendant::node() = "absent"]') isEmpty;
 		assert:
-			(textDocument xPath: '//node()[descendant::node()[false()] = "two"]') isEmpty;
+			(textDocument xpath: '//node()[descendant::node()[false()] = "two"]') isEmpty;
 		assert:
-			(textDocument xPath: '//node()[./descendant::node() = "absent"]') isEmpty.
+			(textDocument xpath: '//node()[./descendant::node() = "absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2448,23 +2431,23 @@ XPathTest >> testOptimizedPredicateDescendantOrSelfAxis [
 				each isNamed: 'address']) notNil].
 	self
 		assertNodeSet:
-			(document xPath: '//*[descendant-or-self::address]')
+			(document xpath: '//*[descendant-or-self::address]')
 		hasNodes: descendants.
 	self
 		assertNodeSet:
-			(document xPath: '//*[descendant-or-self::address[true()]]')
+			(document xpath: '//*[descendant-or-self::address[true()]]')
 		hasNodes: descendants.
 	self
 		assertNodeSet:
-			(document xPath: '//*[./descendant-or-self::address]')
+			(document xpath: '//*[./descendant-or-self::address]')
 		hasNodes: descendants.
 	self
 		assert:
-			(document xPath: '//*[descendant-or-self::absent]') isEmpty;
+			(document xpath: '//*[descendant-or-self::absent]') isEmpty;
 		assert:
-			(document xPath: '//*[descendant-or-self::address[false()]]') isEmpty;
+			(document xpath: '//*[descendant-or-self::address[false()]]') isEmpty;
 		assert:
-			(document xPath: '//*[./descendant-or-self::absent]') isEmpty.
+			(document xpath: '//*[./descendant-or-self::absent]') isEmpty.
 
 	descendants :=
 		textDocument descendantNodesSelect: [:node |
@@ -2475,28 +2458,28 @@ XPathTest >> testOptimizedPredicateDescendantOrSelfAxis [
 				ifFalse: [node stringValue = 'two']].
 	self
 		assertNodeSet:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[descendant-or-self::node() = "two"]')
 		hasNodes: descendants.
 	self
 		assertNodeSet:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[descendant-or-self::node()[true()] = "two"]')
 		hasNodes: descendants.
 	self
 		assertNodeSet:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[./descendant-or-self::node() = "two"]')
 		hasNodes: descendants.
 	self
 		assert:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[descendant-or-self::node() = "absent"]') isEmpty;
 		assert:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[descendant-or-self::node()[false()] = "two"]') isEmpty;
 		assert:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[./descendant-or-self::node() = "absent"]') isEmpty.
 ]
 
@@ -2509,18 +2492,18 @@ XPathTest >> testOptimizedPredicateFollowingAxis [
 			element followingNodes anySatisfy: [:each |
 				each isElementNamed: 'address']].
 	self
-		assertNodeSet: (document xPath: '//*[following::address]')
+		assertNodeSet: (document xpath: '//*[following::address]')
 		hasNodes: following.
 	self
-		assertNodeSet: (document xPath: '//*[following::address[true()]]')
+		assertNodeSet: (document xpath: '//*[following::address[true()]]')
 		hasNodes: following.
 	self
-		assertNodeSet: (document xPath: '//*[./following::address]')
+		assertNodeSet: (document xpath: '//*[./following::address]')
 		hasNodes: following.
 	self
-		assert: (document xPath: '//*[following::absent]') isEmpty;
-		assert: (document xPath: '//*[following::node()[false()]]') isEmpty;
-		assert: (document xPath: '//*[./following::absent]') isEmpty.
+		assert: (document xpath: '//*[following::absent]') isEmpty;
+		assert: (document xpath: '//*[following::node()[false()]]') isEmpty;
+		assert: (document xpath: '//*[./following::absent]') isEmpty.
 
 	following :=
 		textDocument allNodesSelect: [:node |
@@ -2528,23 +2511,23 @@ XPathTest >> testOptimizedPredicateFollowingAxis [
 				includes: 'two'].
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[following::node() = "two"]')
+			(textDocument xpath: '//node()[following::node() = "two"]')
 		hasNodes: following.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[following::node()[true()] = "two"]')
+			(textDocument xpath: '//node()[following::node()[true()] = "two"]')
 		hasNodes: following.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[./following::node() = "two"]')
+			(textDocument xpath: '//node()[./following::node() = "two"]')
 		hasNodes: following.
 	self
 		assert:
-			(document xPath: '//node()[following::node() = "absent"]') isEmpty;
+			(document xpath: '//node()[following::node() = "absent"]') isEmpty;
 		assert:
-			(document xPath: '//node()[following::node()[false()] = "two"]') isEmpty;
+			(document xpath: '//node()[following::node()[false()] = "two"]') isEmpty;
 		assert:
-			(document xPath: '//node()[./following::node() = "absent"]') isEmpty.
+			(document xpath: '//node()[./following::node() = "absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2556,18 +2539,18 @@ XPathTest >> testOptimizedPredicateFollowingSiblingAxis [
 			element followingSiblingNodes anySatisfy: [:each |
 				each isElementNamed: 'address']].
 	self
-		assertNodeSet: (document xPath: '//*[following-sibling::address]')
+		assertNodeSet: (document xpath: '//*[following-sibling::address]')
 		hasNodes: followingSiblings.
 	self
-		assertNodeSet: (document xPath: '//*[following-sibling::address[true()]]')
+		assertNodeSet: (document xpath: '//*[following-sibling::address[true()]]')
 		hasNodes: followingSiblings.
 	self
-		assertNodeSet: (document xPath: '//*[./following-sibling::address]')
+		assertNodeSet: (document xpath: '//*[./following-sibling::address]')
 		hasNodes: followingSiblings.
 	self
-		assert: (document xPath: '//*[following-sibling::absent]') isEmpty;
-		assert: (document xPath: '//*[following-sibling::node()[false()]]') isEmpty;
-		assert: (document xPath: '//*[./following-sibling::absent]') isEmpty.
+		assert: (document xpath: '//*[following-sibling::absent]') isEmpty;
+		assert: (document xpath: '//*[following-sibling::node()[false()]]') isEmpty;
+		assert: (document xpath: '//*[./following-sibling::absent]') isEmpty.
 
 	followingSiblings :=
 		textDocument allNodesSelect: [:node |
@@ -2575,26 +2558,26 @@ XPathTest >> testOptimizedPredicateFollowingSiblingAxis [
 				includes: 'two'].
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[following-sibling::node() = "two"]')
+			(textDocument xpath: '//node()[following-sibling::node() = "two"]')
 		hasNodes: followingSiblings.
 	self
 		assertNodeSet:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[following-sibling::node()[true()] = "two"]')
 		hasNodes: followingSiblings.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[./following-sibling::node() = "two"]')
+			(textDocument xpath: '//node()[./following-sibling::node() = "two"]')
 		hasNodes: followingSiblings.
 	self
 		assert:
-			(document xPath: '//node()[following-sibling::node() = "absent"]')
+			(document xpath: '//node()[following-sibling::node() = "absent"]')
 				isEmpty;
 		assert:
-			(document xPath: '//node()[following-sibling::node()[false()] = "two"]')
+			(document xpath: '//node()[following-sibling::node()[false()] = "two"]')
 				isEmpty;
 		assert:
-			(document xPath: '//node()[./following-sibling::node() = "absent"]')
+			(document xpath: '//node()[./following-sibling::node() = "absent"]')
 				isEmpty.
 ]
 
@@ -2604,18 +2587,18 @@ XPathTest >> testOptimizedPredicateParentAxis [
 
 	parents := document allElementsNamed: 'person'.
 	self
-		assertNodeSet: (document xPath: '//*[parent::addressbook]')
+		assertNodeSet: (document xpath: '//*[parent::addressbook]')
 		hasNodes: parents.
 	self
-		assertNodeSet: (document xPath: '//*[parent::addressbook[true()]]')
+		assertNodeSet: (document xpath: '//*[parent::addressbook[true()]]')
 		hasNodes: parents.
 	self
-		assertNodeSet: (document xPath: '//*[./parent::addressbook]')
+		assertNodeSet: (document xpath: '//*[./parent::addressbook]')
 		hasNodes: parents.
 	self
-		assert: (document xPath: '//*[parent::absent]') isEmpty;
-		assert: (document xPath: '//*[parent::addressbook[false()]]') isEmpty;
-		assert: (document xPath: '//*[./parent::absent]') isEmpty.
+		assert: (document xpath: '//*[parent::absent]') isEmpty;
+		assert: (document xpath: '//*[parent::addressbook[false()]]') isEmpty;
+		assert: (document xpath: '//*[./parent::absent]') isEmpty.
 
 	parents :=
 		textDocument allNodesSelect: [:each |
@@ -2623,21 +2606,21 @@ XPathTest >> testOptimizedPredicateParentAxis [
 				and: [(each parent isElementNamed: 'c')
 					and: [each parent rawContentString = 'two']]].
 	self
-		assertNodeSet: (textDocument xPath: '//text()[parent::c = "two"]')
+		assertNodeSet: (textDocument xpath: '//text()[parent::c = "two"]')
 		hasNodes: parents.
 	self
-		assertNodeSet: (textDocument xPath: '//text()[parent::c[true()] = "two"]')
+		assertNodeSet: (textDocument xpath: '//text()[parent::c[true()] = "two"]')
 		hasNodes: parents.
 	self
-		assertNodeSet: (textDocument xPath: '//text()[./parent::c = "two"]')
+		assertNodeSet: (textDocument xpath: '//text()[./parent::c = "two"]')
 		hasNodes: parents.
 	self
 		assert:
-			(textDocument xPath: '//text()[parent::c = "absent"]') isEmpty;
+			(textDocument xpath: '//text()[parent::c = "absent"]') isEmpty;
 		assert:
-			(textDocument xPath: '//text()[parent::c[false()] = "two"]') isEmpty;
+			(textDocument xpath: '//text()[parent::c[false()] = "two"]') isEmpty;
 		assert:
-			(textDocument xPath: '//text()[./parent::c = "absent"]') isEmpty.
+			(textDocument xpath: '//text()[./parent::c = "absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2649,18 +2632,18 @@ XPathTest >> testOptimizedPredicatePrecedingAxis [
 			element precedingNodes anySatisfy: [:each |
 				each isElementNamed: 'address']].
 	self
-		assertNodeSet: (document xPath: '//*[preceding::address]')
+		assertNodeSet: (document xpath: '//*[preceding::address]')
 		hasNodes: preceding.
 	self
-		assertNodeSet: (document xPath: '//*[preceding::address[true()]]')
+		assertNodeSet: (document xpath: '//*[preceding::address[true()]]')
 		hasNodes: preceding.
 	self
-		assertNodeSet: (document xPath: '//*[./preceding::address]')
+		assertNodeSet: (document xpath: '//*[./preceding::address]')
 		hasNodes: preceding.
 	self
-		assert: (document xPath: '//*[preceding::absent]') isEmpty;
-		assert: (document xPath: '//*[preceding::node()[false()]]') isEmpty;
-		assert: (document xPath: '//*[./preceding::absent]') isEmpty.
+		assert: (document xpath: '//*[preceding::absent]') isEmpty;
+		assert: (document xpath: '//*[preceding::node()[false()]]') isEmpty;
+		assert: (document xpath: '//*[./preceding::absent]') isEmpty.
 
 	preceding :=
 		textDocument allNodesSelect: [:node |
@@ -2668,23 +2651,23 @@ XPathTest >> testOptimizedPredicatePrecedingAxis [
 				includes: 'two'].
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[preceding::node() = "two"]')
+			(textDocument xpath: '//node()[preceding::node() = "two"]')
 		hasNodes: preceding.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[preceding::node()[true()] = "two"]')
+			(textDocument xpath: '//node()[preceding::node()[true()] = "two"]')
 		hasNodes: preceding.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[./preceding::node() = "two"]')
+			(textDocument xpath: '//node()[./preceding::node() = "two"]')
 		hasNodes: preceding.
 	self
 		assert:
-			(document xPath: '//node()[preceding::node() = "absent"]') isEmpty;
+			(document xpath: '//node()[preceding::node() = "absent"]') isEmpty;
 		assert:
-			(document xPath: '//node()[preceding::node()[false()] = "two"]') isEmpty;
+			(document xpath: '//node()[preceding::node()[false()] = "two"]') isEmpty;
 		assert:
-			(document xPath: '//node()[./preceding::node() = "absent"]') isEmpty.
+			(document xpath: '//node()[./preceding::node() = "absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2696,18 +2679,18 @@ XPathTest >> testOptimizedPredicatePrecedingSiblingAxis [
 			element precedingSiblingNodes anySatisfy: [:each |
 				each isElementNamed: 'address']].
 	self
-		assertNodeSet: (document xPath: '//*[preceding-sibling::address]')
+		assertNodeSet: (document xpath: '//*[preceding-sibling::address]')
 		hasNodes: precedingSiblings.
 	self
-		assertNodeSet: (document xPath: '//*[preceding-sibling::address[true()]]')
+		assertNodeSet: (document xpath: '//*[preceding-sibling::address[true()]]')
 		hasNodes: precedingSiblings.
 	self
-		assertNodeSet: (document xPath: '//*[./preceding-sibling::address]')
+		assertNodeSet: (document xpath: '//*[./preceding-sibling::address]')
 		hasNodes: precedingSiblings.
 	self
-		assert: (document xPath: '//*[preceding-sibling::absent]') isEmpty;
-		assert: (document xPath: '//*[preceding-sibling::node()[false()]]') isEmpty;
-		assert: (document xPath: '//*[./preceding-sibling::absent]') isEmpty.
+		assert: (document xpath: '//*[preceding-sibling::absent]') isEmpty;
+		assert: (document xpath: '//*[preceding-sibling::node()[false()]]') isEmpty;
+		assert: (document xpath: '//*[./preceding-sibling::absent]') isEmpty.
 
 	precedingSiblings :=
 		textDocument allNodesSelect: [:node |
@@ -2715,26 +2698,26 @@ XPathTest >> testOptimizedPredicatePrecedingSiblingAxis [
 				includes: 'two'].
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[preceding-sibling::node() = "two"]')
+			(textDocument xpath: '//node()[preceding-sibling::node() = "two"]')
 		hasNodes: precedingSiblings.
 	self
 		assertNodeSet:
-			(textDocument xPath:
+			(textDocument xpath:
 				'//node()[preceding-sibling::node()[true()] = "two"]')
 		hasNodes: precedingSiblings.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//node()[./preceding-sibling::node() = "two"]')
+			(textDocument xpath: '//node()[./preceding-sibling::node() = "two"]')
 		hasNodes: precedingSiblings.
 	self
 		assert:
-			(document xPath: '//node()[preceding-sibling::node() = "absent"]')
+			(document xpath: '//node()[preceding-sibling::node() = "absent"]')
 				isEmpty;
 		assert:
-			(document xPath: '//node()[preceding-sibling::node()[false()] = "two"]')
+			(document xpath: '//node()[preceding-sibling::node()[false()] = "two"]')
 				isEmpty;
 		assert:
-			(document xPath: '//node()[./preceding-sibling::node() = "absent"]')
+			(document xpath: '//node()[./preceding-sibling::node() = "absent"]')
 				isEmpty.
 ]
 
@@ -2744,38 +2727,38 @@ XPathTest >> testOptimizedPredicateSelfAxis [
 
 	nodes := document allElementsNamed: 'person'.
 	self
-		assertNodeSet: (document xPath: '//*[self::person]')
+		assertNodeSet: (document xpath: '//*[self::person]')
 		hasNodes: nodes.
 	self
-		assertNodeSet: (document xPath: '//*[self::person[true()]]')
+		assertNodeSet: (document xpath: '//*[self::person[true()]]')
 		hasNodes: nodes.
 	self
-		assertNodeSet: (document xPath: '//*[./self::person]')
+		assertNodeSet: (document xpath: '//*[./self::person]')
 		hasNodes: nodes.
 	self
-		assert: (document xPath: '//*[self::absent]') isEmpty;
-		assert: (document xPath: '//*[self::person[false()]]') isEmpty;
-		assert: (document xPath: '//*[./self::absent]') isEmpty.
+		assert: (document xpath: '//*[self::absent]') isEmpty;
+		assert: (document xpath: '//*[self::person[false()]]') isEmpty;
+		assert: (document xpath: '//*[./self::absent]') isEmpty.
 
 	nodes :=
 		textDocument allNodesSelect: [:each |
 			each isStringNode: 'two'].
 	self
 		assertNodeSet:
-			(textDocument xPath: '//text()[self::text() = "two"]')
+			(textDocument xpath: '//text()[self::text() = "two"]')
 		hasNodes: nodes.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//text()[self::text()[true()] = "two"]')
+			(textDocument xpath: '//text()[self::text()[true()] = "two"]')
 		hasNodes: nodes.
 	self
 		assertNodeSet:
-			(textDocument xPath: '//text()[./self::text() = "two"]')
+			(textDocument xpath: '//text()[./self::text() = "two"]')
 		hasNodes: nodes.
 	self
-		assert: (document xPath: '//text()[self::text() = "absent"]') isEmpty;
-		assert: (document xPath: '//text()[self::text()[false()] = "two"]') isEmpty;
-		assert: (document xPath: '//text()[./self::text() = "absent"]') isEmpty.
+		assert: (document xpath: '//text()[self::text() = "absent"]') isEmpty;
+		assert: (document xpath: '//text()[self::text()[false()] = "two"]') isEmpty;
+		assert: (document xpath: '//text()[./self::text() = "absent"]') isEmpty.
 ]
 
 { #category : #tests }
@@ -2783,43 +2766,31 @@ XPathTest >> testOptimizedSelfAxisWithPositionPredicate [
 	| result nodes |
 
 	nodes := document allElementsNamed: 'person'.
-	result := document xPath: '//person/self::person[1]'.
+	result := document xpath: '//person/self::person[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: nodes.
+	result := document xpath: '//person/self::person[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: nodes.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person/self::person[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: nodes.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//person/self::person[0]') isEmpty;
-		assert: (document xPath: '//person/self::person[1.1]') isEmpty;
-		assert: (document xPath: '//person/self::person[1][2]') isEmpty.
+		assert: (document xpath: '//person/self::person[0]') isEmpty;
+		assert: (document xpath: '//person/self::person[1.1]') isEmpty;
+		assert: (document xpath: '//person/self::person[1][2]') isEmpty.
 
-	result := document xPath: '//person/self::*[1]'.
+	result := document xpath: '//person/self::*[1]'.
+	self
+		assertNodeSet: result
+		hasNodes: nodes.
+	result := document xpath: '//person/self::*[1.0][1]'.
 	self
 		assertNodeSet: result
 		hasNodes: nodes.
 	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	result := document xPath: '//person/self::*[1.0][1]'.
-	self
-		assertNodeSet: result
-		hasNodes: nodes.
-	self
-		assertNodeSet: result
-		hasSortOrder: XPathDocumentSortOrder.
-	self
-		assert: (document xPath: '//person/self::*[0]') isEmpty;
-		assert: (document xPath: '//person/self::*[1.2]') isEmpty;
-		assert: (document xPath: '//person/self::*[1][2]') isEmpty.
+		assert: (document xpath: '//person/self::*[0]') isEmpty;
+		assert: (document xpath: '//person/self::*[1.2]') isEmpty;
+		assert: (document xpath: '//person/self::*[1][2]') isEmpty.
 ]
 
 { #category : #tests }
@@ -3060,9 +3031,9 @@ XPathTest >> testPrefixWildcardTest [
 
 	persons := namespacedDocument allElementsNamed: 'person'.
 	self
-		assertNodeSet: (namespacedDocument xPath: '*:addressbook/*:person')
+		assertNodeSet: (namespacedDocument xpath: '*:addressbook/*:person')
 		hasNodes: persons.
-	self assert: (namespacedDocument xPath: '*:addressbook/*:contaxt-info') isEmpty.
+	self assert: (namespacedDocument xpath: '*:addressbook/*:contaxt-info') isEmpty.
 	self
 		assertNodeSet:
 			(XPath
@@ -3083,13 +3054,13 @@ XPathTest >> testProcessingInstructionTypeTest [
 
 	xml := '<root>before<?one two?><?three four?>after</root>' parseXML.
 	self
-		assertNodeSet: (xml xPath: '// processing-instruction ()')
+		assertNodeSet: (xml xpath: '// processing-instruction ()')
 		hasNodes: (xml root nodes copyFrom: 2 to: 3).
 	self
-		assertNodeSet: (xml xPath: '// processing-instruction ( "three" )')
+		assertNodeSet: (xml xpath: '// processing-instruction ( "three" )')
 		hasNodes: (xml root nodes copyFrom: 3 to: 3).
 	self
-		assertNodeSet: (xml xPath: '// processing-instruction ( one )')
+		assertNodeSet: (xml xpath: '// processing-instruction ( one )')
 		hasNodes: (xml root nodes copyFrom: 2 to: 2).
 ]
 
@@ -3103,8 +3074,8 @@ XPathTest >> testQualfiedNameTest [
 			with: 'one' -> 'bookNS'
 			with: 'two' -> 'personNS'.
 	self
-		assert: (namespacedDocument xPath: 'book:addressbook/ps:person') = persons;
-		assert: (namespacedDocument xPath: 'book:addressbook/undeclared:person') isEmpty.
+		assert: (namespacedDocument xpath: 'book:addressbook/ps:person') = persons;
+		assert: (namespacedDocument xpath: 'book:addressbook/undeclared:person') isEmpty.
 	self assert:
 		(XPath
 			for: 'one:addressbook/two:person'
@@ -3128,37 +3099,54 @@ XPathTest >> testQualfiedNameTest [
 XPathTest >> testReverseDocumentOrderPreserving [
 	| expected result |
 
-	expected := document allNodes last ancestorNodes reversed.
 	result :=
-		document allNodes last xPath:
-			'ancestor-or-self::node()/parent::node()[true()]'.
+		document xpath:
+			'addressbook/person[last()]/preceding-sibling::node()/parent::node()[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNode: document root.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
-	expected := document allNodes last ancestorNodes reversed.
+	expected :=
+		document root nodes copyUpTo:
+			(document allElementsNamed: 'person') last.
 	result :=
-		document allNodes last xPath:
-			'ancestor::node()/self::node()[true()]'.
+		document xpath:
+			'addressbook/person[last()]/preceding-sibling::node()/self::node()[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
 	expected removeAll.
-	document allNodes last ancestorElements reverseDo: [:each |
+	(document allElementsNamed: 'person') allButLast do: [:each |
 		expected addAll: each attributeNodes].
-	result := document allNodes last xPath: 'ancestor::*/@*[true()]'.
+	result :=
+		document xpath:
+			'addressbook/person[last()]/preceding-sibling::node()/@*[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 
 	expected removeAll.
-	document allNodes last ancestorElements reverseDo: [:each |
+	(namespacedDocument allElementsNamed: 'person') allButLast do: [:each |
 		expected addAll: each namespaceNodes].
-	result := document allNodes last xPath: 'ancestor::*/namespace::*[true()]'.
+	result :=
+		namespacedDocument xpath:
+			'book:addressbook/ps:person[last()]/preceding-sibling::node()/namespace::*[true()]'.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
+	self
+		assertNodeSet: result
+		hasSortOrder: XPathLevelDocumentSortOrder.
 ]
 
 { #category : #tests }
@@ -3194,7 +3182,7 @@ XPathTest >> testRoundFunction [
 		assert: 'round(1.1)' asXPath evaluate = 1;
 		assert: 'round(1.9)' asXPath evaluate = 2;
 		assert: 'round(1 div 0)' asXPath evaluate = Float infinity;
-		assert: 'round(-1 div 0)' asXPath evaluate = Float xPathNegativeInfinity;
+		assert: 'round(-1 div 0)' asXPath evaluate = Float xpathNegativeInfinity;
 		assert: 'round(0 div 0)' asXPath evaluate isNaN;
 		assert: 'round(0.5)' asXPath evaluate = 1;
 		assert: 'round(-0.5)' asXPath evaluate isXPathNegativeZero;
@@ -3363,7 +3351,7 @@ XPathTest >> testSubstringFunction [
 XPathTest >> testSumFunction [
 	self assert:
 		('<nums><one>1</one><two>2</two><three>3</three></nums>' parseXML
-			xPath: 'sum(/nums/*)') = 6.
+			xpath: 'sum(/nums/*)') = 6.
 	self
 		should: ['sum()' asXPath evaluate]
 		raise: XPathArgumentNumberException.
@@ -3372,15 +3360,15 @@ XPathTest >> testSumFunction [
 { #category : #tests }
 XPathTest >> testTextTypeTest [
 	self
-		assertNodeSet: (document xPath: ' //text( ) ')
+		assertNodeSet: (document xpath: ' //text( ) ')
 		hasNodes: (document allNodesSelect: [:each | each isStringNode]).
 	self
-		assertNodeSet: (document xPath: '//text()/self::text()')
+		assertNodeSet: (document xpath: '//text()/self::text()')
 		hasNodes: (document allNodesSelect: [:each | each isStringNode]).
-	self assert: (document xPath: ' //text()/text()') isEmpty.
+	self assert: (document xpath: ' //text()/text()') isEmpty.
 
 	self
-		should: [document xPath: '//text(name)']
+		should: [document xpath: '//text(name)']
 		raise: XPathSyntaxException.
 ]
 
@@ -3476,8 +3464,8 @@ XPathTest >> testUnion [
 				(addressbook/person[4]/ preceding-sibling::* [position() < 4])'
 			in: document.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	document allElementsNamed: 'person' do: [:each |
@@ -3488,11 +3476,15 @@ XPathTest >> testUnion [
 			addAll: each elements].
 	result :=
 		XPath
-			for: 'addressbook/person/@* | */person/namespace::* | addressbook/person | */person/*'
+			for:
+				'addressbook/person/@* | ',
+				'*/person/namespace::* | ',
+				'addressbook/person | ',
+				'*/person/*'
 			in: document.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 
 	expected removeAll.
 	(document allElementsNamed: 'person') first
@@ -3501,11 +3493,14 @@ XPathTest >> testUnion [
 		nodesDo: [:each | expected addLast: each].
 	result :=
 		XPath
-			for: 'addressbook/person[1]/node() | */person[1]/@* | addressbook/person[1]/namespace::*'
+			for:
+				'addressbook/person[1]/node() | ',
+				'*/person[1]/@* | ',
+				'addressbook/person[1]/namespace::*'
 			in: document.
 	self
-		assert: result = expected;
-		assertNodeSet: result hasSortOrder: XPathDocumentSortOrder.
+		assertNodeSet: result
+		hasNodes: expected.
 ]
 
 { #category : #tests }
@@ -3606,7 +3601,7 @@ XPathTest >> testZeroDivision [
 	"otherwise it should be negative"
 	#('-1 div 0' '-0.1 div 0.0' '1 div -0.0' '0.1 div -0') do: [:each |
 		"avoid #negativeInfinity for portability"
-		self assert: each asXPath evaluate = Float xPathNegativeInfinity].
+		self assert: each asXPath evaluate = Float xpathNegativeInfinity].
 ]
 
 { #category : #'source XML' }

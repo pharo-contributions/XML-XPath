@@ -99,7 +99,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedAttributeAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the name attribute of the context node"
 		self
-			assertNodeSet: (node xPath: '@name')
+			assertNodeSet: (node xpath: '@name')
 			hasNodes:
 				(node isElement
 					ifTrue: [node attributeNodes select: [:each | each isNamed: 'name']]
@@ -107,7 +107,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedAttributeAxis [
 
 		"selects all the attributes of the context node"
 		self
-			assertNodeSet: (node xPath: '@*')
+			assertNodeSet: (node xpath: '@*')
 			hasNodes:
 				(node isElement
 					ifTrue: [node attributeNodes]
@@ -119,7 +119,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the para element children of the context node"
 		self
-			assertNodeSet: (node xPath: 'para')
+			assertNodeSet: (node xpath: 'para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node elementsAt: 'para']
@@ -127,7 +127,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxis [
 
 		"selects all element children of the context node"
 		self
-			assertNodeSet: (node xPath: '*')
+			assertNodeSet: (node xpath: '*')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node elements]
@@ -135,7 +135,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxis [
 
 		"selects all text node children of the context node"
 		self
-			assertNodeSet: (node xPath: 'text()')
+			assertNodeSet: (node xpath: 'text()')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node stringNodes]
@@ -143,7 +143,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxis [
 
 		"selects all the children of the context node, whatever their node type"
 		self
-			assertNodeSet: (node xPath: 'node()')
+			assertNodeSet: (node xpath: 'node()')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node nodes]
@@ -156,7 +156,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisAttributePredicate
 		"selects all para children of the context node that have a type
 		attribute with value warning"
 		self
-			assertNodeSet: (node xPath: 'para[@type="warning"]')
+			assertNodeSet: (node xpath: 'para[@type="warning"]')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -172,7 +172,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisAttributePredicate
 		"selects the fifth para child of the context node that has a type
 		attribute with value warning"
 		self
-			assertNodeSet: (node xPath: 'para[@type=''warning''][5]')
+			assertNodeSet: (node xpath: 'para[@type=''warning''][5]')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -190,7 +190,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisChildAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects all para grandchildren of the context node"
 		self
-			assertNodeSet: (node xPath: '*/para')
+			assertNodeSet: (node xpath: '*/para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [| paras |
@@ -209,7 +209,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisChildPredicate [
 		title children with string-value equal to Introduction"
 		self
 			assertNodeSet:
-				(node xPath: 'child::chapter[child::title=''Introduction'']')
+				(node xpath: 'child::chapter[child::title=''Introduction'']')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -221,7 +221,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisChildPredicate [
 		"selects the chapter children of the context node that have one or more title children"
 		self
 			assertNodeSet:
-				(node xPath: 'child::chapter[child::title]')
+				(node xpath: 'child::chapter[child::title]')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -237,7 +237,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisDescendantAxis [
 		"selects the para element descendants of the chapter element children
 		of the context node"
 		self
-			assertNodeSet: (node xPath: 'chapter//para')
+			assertNodeSet: (node xpath: 'chapter//para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [| paras |
@@ -261,7 +261,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisPositionPredicate 
 
 		"selects the first para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'para[1]')
+			assertNodeSet: (node xpath: 'para[1]')
 			hasNodes:
 				(paras size > 0
 					ifTrue: [Array with: paras first]
@@ -269,7 +269,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisPositionPredicate 
 
 		"selects the last para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'para[last()]')
+			assertNodeSet: (node xpath: 'para[last()]')
 			hasNodes:
 				(paras size > 0
 					ifTrue: [Array with: paras last]
@@ -277,7 +277,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisPositionPredicate 
 
 		"selects the last but one para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'para[last()-1]')
+			assertNodeSet: (node xpath: 'para[last()-1]')
 			hasNodes:
 				(paras size > 1
 					ifTrue: [Array with: (paras at: paras size - 1)]
@@ -286,7 +286,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisPositionPredicate 
 		"selects all the para children of the context node other than
 		the first para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'para[position()>1]')
+			assertNodeSet: (node xpath: 'para[position()>1]')
 			hasNodes:
 				(paras size > 1
 					ifTrue: [paras allButFirst]
@@ -304,7 +304,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedChildAxisPositionPredicateA
 		"selects the fifth para child of the context node if that child
 		has a type attribute with value warning"
 		self
-			assertNodeSet: (node xPath: 'para[5][@type="warning"]')
+			assertNodeSet: (node xpath: 'para[5][@type="warning"]')
 			hasNodes:
 				((paras size >= 5
 					and: [(paras at: 5) hasAttributes
@@ -318,7 +318,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedDescendantAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the para element descendants of the context node"
 		self
-			assertNodeSet: (node xPath: './/para')
+			assertNodeSet: (node xpath: './/para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node descendantElementsNamed: 'para']
@@ -330,7 +330,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedParentAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the parent of the context node"
 		self
-			assertNodeSet: (node xPath: '..')
+			assertNodeSet: (node xpath: '..')
 			hasNodes:
 				(node hasParent
 					ifTrue: [Array with: node parent]
@@ -342,7 +342,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedParentAxisAttribute [
 	specificationDocument allNodesDo: [:node |
 		"selects the lang attribute of the parent of the context node"
 		self
-			assertNodeSet: (node xPath: '../@lang')
+			assertNodeSet: (node xpath: '../@lang')
 			hasNodes:
 				((node hasParent
 					and: [node parent isElement
@@ -368,7 +368,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedRootChildAxisChildAxisChild
 		"selects the second section of the fifth chapter of the doc
 		document element"
 		self
-			assertNodeSet: (node xPath: '/doc/chapter[5]/section[2]')
+			assertNodeSet: (node xpath: '/doc/chapter[5]/section[2]')
 			hasNodes: sections]
 ]
 
@@ -378,7 +378,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedRootDescendantAxis [
 		"para selects all the para descendants of the document root and thus
 		selects all para elements in the same document as the context node"
 		self
-			assertNodeSet: (node xPath: '//para')
+			assertNodeSet: (node xpath: '//para')
 			hasNodes: (specificationDocument descendantElementsNamed: 'para')]
 ]
 
@@ -388,7 +388,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedRootDescendantAxisChildAxis
 		"selects all the item elements in the same document as the
 		context node that have an olist parent"
 		self
-			assertNodeSet: (node xPath: '//olist/item')
+			assertNodeSet: (node xpath: '//olist/item')
 			hasNodes:
 				((specificationDocument descendantElementsNamed: 'item')
 					select: [:each |
@@ -401,7 +401,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedRootDescendantAxisPositionP
 	specificationDocument allNodesDo: [:node |
 		"selects the forty-second figure element in the document"
 		self
-			assertNodeSet: (node xPath: '//figure[42]')
+			assertNodeSet: (node xpath: '//figure[42]')
 			hasNodes:
 				(((specificationDocument descendantElementsNamed: 'figure')
 					at: 42)
@@ -414,7 +414,7 @@ XPathLocationPathSpecificationTest >> testAbbreviatedSelfAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the context node"
 		self
-			assertNodeSet: (node xPath: '.')
+			assertNodeSet: (node xpath: '.')
 			hasNode: node]
 ]
 
@@ -423,7 +423,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedAncestorAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects all div ancestors of the context node"
 		self
-			assertNodeSet: (node xPath: 'ancestor::div')
+			assertNodeSet: (node xpath: 'ancestor::div')
 			hasNodes:
 				(node ancestorElements select: [:each |
 					each isNamed: 'div'])]
@@ -435,7 +435,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedAncestorOrSelfAxis [
 		"selects the div ancestors of the context node and, if the context node is
 		a div element, the context node as well"
 		self
-			assertNodeSet: (node xPath: 'ancestor-or-self::div ')
+			assertNodeSet: (node xpath: 'ancestor-or-self::div ')
 			hasNodes:
 				((node ancestorNodes copyWith: node) select: [:each |
 					each isElementNamed: 'div'])]
@@ -446,7 +446,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedAttributeAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the name attribute of the context node"
 		self
-			assertNodeSet: (node xPath: 'attribute::name')
+			assertNodeSet: (node xpath: 'attribute::name')
 			hasNodes:
 				((node isElement
 					and: [node hasAttributes])
@@ -457,7 +457,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedAttributeAxis [
 
 		"selects all the attributes of the context node"
 		self
-			assertNodeSet: (node xPath: 'attribute::*')
+			assertNodeSet: (node xpath: 'attribute::*')
 			hasNodes:
 				(node isElement
 					ifTrue: [node attributeNodes]
@@ -469,7 +469,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the para element children of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::para')
+			assertNodeSet: (node xpath: 'child::para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node elementsAt: 'para']
@@ -477,7 +477,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxis [
 
 		"selects all element children of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::*')
+			assertNodeSet: (node xpath: 'child::*')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node elements]
@@ -485,7 +485,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxis [
 
 		"selects all text node children of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::text()')
+			assertNodeSet: (node xpath: 'child::text()')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node stringNodes]
@@ -493,7 +493,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxis [
 
 		"selects all the children of the context node, whatever their node type"
 		self
-			assertNodeSet: (node xPath: 'child::node()')
+			assertNodeSet: (node xpath: 'child::node()')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node nodes]
@@ -506,7 +506,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisAttributePredica
 		"selects all para children of the context node that have a type
 		attribute with value warning"
 		self
-			assertNodeSet: (node xPath: 'child::para[attribute::type="warning"]')
+			assertNodeSet: (node xpath: 'child::para[attribute::type="warning"]')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -523,7 +523,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisAttributePredica
 		attribute with value warning"
 		self
 			assertNodeSet:
-				(node xPath: 'child::para[attribute::type=''warning''][position()=5]')
+				(node xpath: 'child::para[attribute::type=''warning''][position()=5]')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -541,7 +541,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisChildAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects all para grandchildren of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::*/child::para')
+			assertNodeSet: (node xpath: 'child::*/child::para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [| paras |
@@ -560,7 +560,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisChildPredicate [
 		title children with string-value equal to Introduction"
 		self
 			assertNodeSet:
-				(node xPath: 'child::chapter[child::title=''Introduction'']')
+				(node xpath: 'child::chapter[child::title=''Introduction'']')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -574,7 +574,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisChildPredicate [
 		"selects the chapter children of the context node that have one or more title children"
 		self
 			assertNodeSet:
-				(node xPath: 'child::chapter[child::title]')
+				(node xpath: 'child::chapter[child::title]')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [
@@ -590,7 +590,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisDescendantAxis [
 		"selects the para element descendants of the chapter element children
 		of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::chapter/descendant::para')
+			assertNodeSet: (node xpath: 'child::chapter/descendant::para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [| paras |
@@ -614,7 +614,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisPositionPredicat
 
 		"selects the first para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::para[position()=1]')
+			assertNodeSet: (node xpath: 'child::para[position()=1]')
 			hasNodes:
 				(paras size > 0
 					ifTrue: [Array with: paras first]
@@ -622,7 +622,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisPositionPredicat
 
 		"selects the last para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::para[position()=last()]')
+			assertNodeSet: (node xpath: 'child::para[position()=last()]')
 			hasNodes:
 				(paras size > 0
 					ifTrue: [Array with: paras last]
@@ -630,7 +630,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisPositionPredicat
 
 		"selects the last but one para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::para[position()=last()-1]')
+			assertNodeSet: (node xpath: 'child::para[position()=last()-1]')
 			hasNodes:
 				(paras size > 1
 					ifTrue: [Array with: (paras at: paras size - 1)]
@@ -639,7 +639,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisPositionPredicat
 		"selects all the para children of the context node other than
 		the first para child of the context node"
 		self
-			assertNodeSet: (node xPath: 'child::para[position()>1]')
+			assertNodeSet: (node xpath: 'child::para[position()>1]')
 			hasNodes:
 				(paras size > 1
 					ifTrue: [paras allButFirst]
@@ -658,7 +658,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisPositionPredicat
 		has a type attribute with value warning"
 		self
 			assertNodeSet:
-				(node xPath: 'child::para[position()=5][attribute::type="warning"]')
+				(node xpath: 'child::para[position()=5][attribute::type="warning"]')
 			hasNodes:
 				((paras size >= 5
 					and: [(paras at: 5) hasAttributes
@@ -680,13 +680,13 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedChildAxisSelfPredicate [
 		"selects the chapter and appendix children of the context node"
 		self
 			assertNodeSet:
-				(node xPath: 'child::*[self::chapter or self::appendix]')
+				(node xpath: 'child::*[self::chapter or self::appendix]')
 			hasNodes: elements.
 
 		"selects the last chapter or appendix child of the context node"
 		self
 			assertNodeSet:
-				(node xPath:
+				(node xpath:
 					'child::*[self::chapter or self::appendix][position()=last()]')
 			hasNodes:
 				(elements size > 0
@@ -699,7 +699,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedDescendantAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the para element descendants of the context node"
 		self
-			assertNodeSet: (node xPath: 'descendant::para')
+			assertNodeSet: (node xpath: 'descendant::para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node descendantElementsNamed: 'para']
@@ -712,7 +712,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedDescendantOrSelfAxis [
 		"selects the para element descendants of the context node and, if
 		the context node is a para element, the context node as well"
 		self
-			assertNodeSet: (node xPath: 'descendant-or-self::para')
+			assertNodeSet: (node xpath: 'descendant-or-self::para')
 			hasNodes:
 				(node canHaveChildren
 					ifTrue: [node allElementsNamed: 'para']
@@ -730,7 +730,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedFollowingSiblingAxisPosit
 
 		"selects the next chapter sibling of the context node"
 		self
-			assertNodeSet: (node xPath: 'following-sibling::chapter[position()=1]')
+			assertNodeSet: (node xpath: 'following-sibling::chapter[position()=1]')
 			hasNodes: chapters]
 ]
 
@@ -745,7 +745,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedPrecedingSiblingAxisPosit
 
 		"selects the next chapter sibling of the context node"
 		self
-			assertNodeSet: (node xPath: 'preceding-sibling::chapter[position()=1]')
+			assertNodeSet: (node xpath: 'preceding-sibling::chapter[position()=1]')
 			hasNodes: chapters]
 ]
 
@@ -754,7 +754,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedRootAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects the document root (which is always the parent of the document element)"
 		self
-			assertNodeSet: (node xPath: '/')
+			assertNodeSet: (node xpath: '/')
 			hasNodes: (Array with: specificationDocument)]
 ]
 
@@ -774,7 +774,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedRootChildAxisChildAxisChi
 		document element"
 		self
 			assertNodeSet:
-				(node xPath:
+				(node xpath:
 					'/child::doc/child::chapter[position()=5]/child::section[position()=2]')
 			hasNodes: sections]
 ]
@@ -784,7 +784,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedRootDescendantAxis [
 	specificationDocument allNodesDo: [:node |
 		"selects all the para elements in the same document as the context node"
 		self
-			assertNodeSet: (node xPath: '/descendant::para')
+			assertNodeSet: (node xpath: '/descendant::para')
 			hasNodes: (specificationDocument descendantElementsNamed: 'para')]
 ]
 
@@ -794,7 +794,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedRootDescendantAxisChildAx
 		"selects all the item elements that have an olist parent and that
 		are in the same document as the context node"
 		self
-			assertNodeSet: (node xPath: '/descendant::olist/child::item')
+			assertNodeSet: (node xpath: '/descendant::olist/child::item')
 			hasNodes:
 				((specificationDocument descendantElementsNamed: 'item')
 					select: [:each |
@@ -807,7 +807,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedRootDescendantAxisPositio
 	specificationDocument allNodesDo: [:node |
 		"selects the forty-second figure element in the document"
 		self
-			assertNodeSet: (node xPath: '/descendant::figure[position()=42]')
+			assertNodeSet: (node xpath: '/descendant::figure[position()=42]')
 			hasNodes:
 				(((specificationDocument descendantElementsNamed: 'figure')
 					at: 42)
@@ -820,7 +820,7 @@ XPathLocationPathSpecificationTest >> testUnabbreviatedSelfAxis [
 	specificationDocument allNodesDo: [:node | | result |
 		"selects the context node if it is a para element, and otherwise
 		selects nothing"
-		result := node xPath: 'self::para'.
+		result := node xpath: 'self::para'.
 		(node isElementNamed: 'para')
 			ifTrue: [
 				self
