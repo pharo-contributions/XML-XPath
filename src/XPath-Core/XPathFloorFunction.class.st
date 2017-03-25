@@ -14,5 +14,5 @@ XPathFloorFunction class >> prototypeSource [
 
 { #category : #invoking }
 XPathFloorFunction >> function [
-	^ self firstArgument xPathFloor
+	^ self firstArgument xpathFloor
 ]

@@ -41,6 +41,12 @@ XPathASTLocationPathNode >> isLocationPath [
 	^ true
 ]
 
+{ #category : #testing }
+XPathASTLocationPathNode >> isPredicateLocationPath [
+	^ self hasParent
+		and: [self parent isPredicate]
+]
+
 { #category : #removing }
 XPathASTLocationPathNode >> removeStep: aStep [
 	^ self steps remove: aStep

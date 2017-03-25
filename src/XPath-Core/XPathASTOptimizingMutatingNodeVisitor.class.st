@@ -101,7 +101,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitDivisionExpression: aDivisionExpre
 		ifTrue: [^ aDivisionExpression]
 		ifFalse: [
 			^ XPathASTNumberLiteralNode number:
-				(aDivisionExpression expression asXPathNumber xPathDivision:
+				(aDivisionExpression expression asXPathNumber xpathDivision:
 					aDivisionExpression otherExpression asXPathNumber)].
 ]
 
@@ -260,7 +260,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitModulusExpression: aModulusExpress
 		ifTrue: [^ aModulusExpression]
 		ifFalse: [
 			^ XPathASTNumberLiteralNode number:
-				(aModulusExpression expression asXPathNumber xPathModulus:
+				(aModulusExpression expression asXPathNumber xpathModulus:
 					aModulusExpression otherExpression asXPathNumber)]
 ]
 

@@ -47,6 +47,12 @@ XPathASTFilterExpressionLocationPathNode >> isLocationPath [
 	^ true
 ]
 
+{ #category : #testing }
+XPathASTFilterExpressionLocationPathNode >> isPredicateLocationPath [
+	^ self hasParent
+		and: [self parent isPredicate]
+]
+
 { #category : #removing }
 XPathASTFilterExpressionLocationPathNode >> removeStep: aStep [
 	^ self steps remove: aStep

@@ -110,7 +110,7 @@ Number >> hasSameXPathSignAs: aNumber [
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-Number >> xPathCeiling [
+Number >> xpathCeiling [
 	"'The ceiling function returns the smallest (closest to negative infinity)
 	number that is not less than the argument and that is an integer.'
 	(The spec doesn't say how to handle NaN and infinity; LibXML2 returns NaN.)"
@@ -121,7 +121,7 @@ Number >> xPathCeiling [
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-Number >> xPathDivision: aDivisor [
+Number >> xpathDivision: aDivisor [
 	self isNaN
 		ifTrue: [^ self].
 
@@ -132,13 +132,13 @@ Number >> xPathDivision: aDivisor [
 			"if the signs are different, the result should be negative infinity"
 			(self hasSameXPathSignAs: aDivisor)
 				ifTrue: [^ Float infinity]
-				ifFalse: [^ Float xPathNegativeInfinity]].
+				ifFalse: [^ Float xpathNegativeInfinity]].
 
 	^ self / aDivisor.
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-Number >> xPathFloor [
+Number >> xpathFloor [
 	"'The floor function returns the largest (closest to positive infinity)
 	number that is not greater than the argument and that is an integer.'
 	(The spec doesn't say how to handle NaN and infinity; LibXML2 returns NaN.)"
@@ -149,19 +149,19 @@ Number >> xPathFloor [
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-Number >> xPathModulus: aDivisor [
+Number >> xpathModulus: aDivisor [
 	| modulus |
 
 	"XPath modulus must take the sign of the receiver unlike #// which
 	takes the sign of the argument"
-	modulus := self - ((self xPathDivision: aDivisor) xPathFloor * aDivisor).
+	modulus := self - ((self xpathDivision: aDivisor) xpathFloor * aDivisor).
 	(modulus hasSameXPathSignAs: self)
 		ifTrue: [^ modulus]
 		ifFalse: [^ modulus negated].
 ]
 
 { #category : #'*XPath-Core-evaluating' }
-Number >> xPathRounded [
+Number >> xpathRounded [
 	| rounded |
 
 	(self isNaN
@@ -169,8 +169,8 @@ Number >> xPathRounded [
 			or: [self isInfinite]])
 		ifTrue: [^ self].
 
-	((rounded := (self + 0.5) xPathFloor) isZero
+	((rounded := (self + 0.5) xpathFloor) isZero
 		and: [self negative])
-		ifTrue: [^ Float xPathNegativeZero]
+		ifTrue: [^ Float xpathNegativeZero]
 		ifFalse: [^ rounded].
 ]

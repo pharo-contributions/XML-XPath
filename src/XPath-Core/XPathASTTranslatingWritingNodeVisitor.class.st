@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'contextBlockVariables',
 		'contextBlockIndex',
-		'locationPathRootVariable',
 		'nodeTests'
 	],
 	#classVars : [
@@ -223,6 +222,11 @@ XPathASTTranslatingWritingNodeVisitor >> emitInlinedTrueFunctionCall: aFunctionC
 ]
 
 { #category : #private }
+XPathASTTranslatingWritingNodeVisitor >> emitNodeSetSort [
+	self emitAll: ' sort'
+]
+
+{ #category : #private }
 XPathASTTranslatingWritingNodeVisitor >> emitNumberConversion [
 	self emitAll: ' asXPathNumber'
 ]
@@ -348,11 +352,6 @@ XPathASTTranslatingWritingNodeVisitor >> initialize [
 ]
 
 { #category : #private }
-XPathASTTranslatingWritingNodeVisitor >> locationPathRootVariable [
-	^ locationPathRootVariable
-]
-
-{ #category : #private }
 XPathASTTranslatingWritingNodeVisitor >> nodeTestsVariable [
 	^ 't'
 ]
@@ -366,17 +365,15 @@ XPathASTTranslatingWritingNodeVisitor >> translatedExpression [
 
 { #category : #'visiting - location paths' }
 XPathASTTranslatingWritingNodeVisitor >> visitAbsoluteLocationPath: anAbsoluteLocationPath [
-	| oldLocationPathRootVariable |
-
-	oldLocationPathRootVariable := locationPathRootVariable.
-	locationPathRootVariable := self documentRootVariable.
 	self
 		emit: $(;
 		emitStartGroupingsForLocationPath: anAbsoluteLocationPath;
 		emitInitializingDocumentRootVariableReference.
 	super visitAbsoluteLocationPath: anAbsoluteLocationPath.
 	self emit: $).
-	locationPathRootVariable := oldLocationPathRootVariable.
+	(anAbsoluteLocationPath hasSteps
+		and: [anAbsoluteLocationPath isPredicateLocationPath not])
+		ifTrue: [self emitNodeSetSort].
 	^ anAbsoluteLocationPath.
 ]
 
@@ -543,7 +540,7 @@ XPathASTTranslatingWritingNodeVisitor >> visitDescendantStep: aDescendantStep [
 XPathASTTranslatingWritingNodeVisitor >> visitDivisionExpression: aDivisionExpression [
 	^ self
 		emitBinaryArithmeticExpression: aDivisionExpression
-		withOperator: 'xPathDivision:'
+		withOperator: 'xpathDivision:'
 ]
 
 { #category : #'visiting - node tests' }
@@ -647,6 +644,9 @@ XPathASTTranslatingWritingNodeVisitor >> visitFilterExpressionLocationPath: aFil
 		emitAll: ' asXPathFilterExpressionLocationPathRoot';
 		visitLocationPath: aFilterExpressionLocationPath;
 		emit: $).
+	(aFilterExpressionLocationPath hasSteps
+		and: [aFilterExpressionLocationPath isPredicateLocationPath not])
+		ifTrue: [self emitNodeSetSort].
 	^ aFilterExpressionLocationPath.
 ]
 
@@ -739,7 +739,7 @@ XPathASTTranslatingWritingNodeVisitor >> visitLessThanOrEqualToExpression: aLess
 XPathASTTranslatingWritingNodeVisitor >> visitModulusExpression: aModulusExpression [
 	^ self
 		emitBinaryArithmeticExpression: aModulusExpression
-		withOperator: 'xPathModulus:'
+		withOperator: 'xpathModulus:'
 ]
 
 { #category : #'visiting - operators' }
@@ -871,14 +871,14 @@ XPathASTTranslatingWritingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
 			number isInfinite
 				ifTrue: [
 					number negative
-						ifTrue: [self emitNumberLiteral: 'Float xPathNegativeInfinity']
+						ifTrue: [self emitNumberLiteral: 'Float xpathNegativeInfinity']
 						ifFalse: [self emitNumberLiteral: 'Float infinity']]
 				ifFalse: [
 					number isZero
 						ifTrue: [
 							number isXPathNegativeZero
 								ifTrue: [
-									self emitNumberLiteral: 'Float xPathNegativeZero']
+									self emitNumberLiteral: 'Float xpathNegativeZero']
 								ifFalse: [self emitNumberLiteral: '0.0']]
 						ifFalse: [
 							"#asString should be OK for all others"
@@ -956,17 +956,16 @@ XPathASTTranslatingWritingNodeVisitor >> visitPredicate: aPredicate [
 
 { #category : #'visiting - location paths' }
 XPathASTTranslatingWritingNodeVisitor >> visitRelativeLocationPath: aRelativeLocationPath [
-	| oldLocationPathRootVariable |
-
-	oldLocationPathRootVariable := locationPathRootVariable.
-	locationPathRootVariable := self contextNodeVariable.
 	self
 		emit: $(;
 		emitStartGroupingsForLocationPath: aRelativeLocationPath;
 		emitAll: self contextNodeVariable.
 	super visitRelativeLocationPath: aRelativeLocationPath.
-	self emit: $).
-	locationPathRootVariable := oldLocationPathRootVariable.
+	self
+		emit: $).
+	(aRelativeLocationPath hasSteps
+		and: [aRelativeLocationPath isPredicateLocationPath not])
+		ifTrue: [self emitNodeSetSort].
 	^ aRelativeLocationPath.
 ]
 

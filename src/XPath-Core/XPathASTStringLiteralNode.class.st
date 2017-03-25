@@ -6,7 +6,7 @@ Class {
 	#superclass : #XPathASTLiteralNode,
 	#instVars : [
 		'string',
-		'xPathNumber'
+		'xpathNumber'
 	],
 	#category : #'XPath-Core-Compilation-AST'
 }
@@ -28,7 +28,7 @@ XPathASTStringLiteralNode >> asXPathBoolean [
 
 { #category : #converting }
 XPathASTStringLiteralNode >> asXPathNumber [
-	^ xPathNumber ifNil: [xPathNumber := self string asXPathNumber]
+	^ xpathNumber ifNil: [xpathNumber := self string asXPathNumber]
 ]
 
 { #category : #converting }
@@ -54,5 +54,5 @@ XPathASTStringLiteralNode >> string [
 { #category : #accessing }
 XPathASTStringLiteralNode >> string: aString [
 	string := aString.
-	xPathNumber := nil.
+	xpathNumber := nil.
 ]

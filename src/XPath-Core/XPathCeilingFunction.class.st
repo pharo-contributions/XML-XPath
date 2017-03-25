@@ -14,5 +14,5 @@ XPathCeilingFunction class >> prototypeSource [
 
 { #category : #invoking }
 XPathCeilingFunction >> function [
-	^ self firstArgument xPathCeiling
+	^ self firstArgument xpathCeiling
 ]

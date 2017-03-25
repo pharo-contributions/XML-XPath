@@ -1,5 +1,5 @@
 "
-This class is an ordered node list that has no duplicates.
+This class implements XPath node sets to store the results of XPath location path expressions. Location path expresssion produce node seets in document order, regardless of the direction (forward or reverse) of the final step axis.
 "
 Class {
 	#name : #XPathNodeSet,
@@ -18,35 +18,35 @@ XPathNodeSet class >> new [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> % aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				parentAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self parentAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self parentAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> %% aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				ancestorAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self ancestorAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self ancestorAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> %%~ aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self ancestorOrSelfAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #enumerating }
@@ -57,13 +57,13 @@ XPathNodeSet >> & aNodeSet [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> / aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				childAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self childAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self childAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
@@ -90,52 +90,53 @@ XPathNodeSet >> //~ aStringOrBlockOrNodeTestWithPredicates [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> << aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				precedingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self precedingAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self precedingAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> <<< aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self precedingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> >> aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				followingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self followingAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self followingAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> >>> aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self followingSiblingAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #enumerating }
 XPathNodeSet >> ?? aPredicateOrPredicateCollection [
 	"?? filters an entire resulting node set like a filter expression, so
-	all predicate positions are relative to document order"
+	all predicate positions are relative to the document order of the nodes"
+
 	^ aPredicateOrPredicateCollection isCollection
 		ifTrue: [
 			self asXPathFilterExpressionPredicateRoot
@@ -147,24 +148,22 @@ XPathNodeSet >> ?? aPredicateOrPredicateCollection [
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> @ aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
 		ifTrue: [
 			self
 				attributeAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
 				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
 		ifFalse: [
-			self attributeAxis: aStringOrBlockOrNodeTestWithPredicates]
+			self attributeAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]
 
 { #category : #'enumerating - axis' }
 XPathNodeSet >> @@ aStringOrBlockOrNodeTestWithPredicates [
-	^ aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
-		ifTrue: [
-			self
-				namespaceAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
-				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
-		ifFalse: [
-			self namespaceAxis: aStringOrBlockOrNodeTestWithPredicates]
+	"Returns an ordered list of all attribute value strings of all matching
+	attributes from all elements of the receiver or an empty list if there
+	aren't any."
+
+	^ (self @ aStringOrBlockOrNodeTestWithPredicates) stringValues
 ]
 
 { #category : #enumerating }
@@ -245,14 +244,20 @@ XPathNodeSet >> afterRemoving: aNode [
 		ifNotNil: [observer removedNode: aNode].
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
+XPathNodeSet >> allButLastReverseDo: aBlock [
+	collection size - 1 to: 1 by: -1 do: [:i |
+		aBlock value: (collection at: i)]
+]
+
+{ #category : #private }
 XPathNodeSet >> ancestorAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		ancestorAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> ancestorAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -262,20 +267,18 @@ XPathNodeSet >> ancestorAxis: aNodeTestStringOrBlock predicates: aPredicateColle
 
 { #category : #private }
 XPathNodeSet >> ancestorAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each ancestorAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each ancestorAxisAnySatisfy: aNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> ancestorOrSelfAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		ancestorOrSelfAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> ancestorOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -285,10 +288,15 @@ XPathNodeSet >> ancestorOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicat
 
 { #category : #private }
 XPathNodeSet >> ancestorOrSelfAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each ancestorOrSelfAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each ancestorOrSelfAxisAnySatisfy: aNodeTest]
+]
+
+{ #category : #converting }
+XPathNodeSet >> asSorted [
+	"unlike #sorted, this only returns a copy if sorting was needed"
+
+	^ self sortOrder documentOrderSorted: self
 ]
 
 { #category : #converting }
@@ -306,6 +314,7 @@ XPathNodeSet >> asXPathFilterExpressionLocationPathRoot [
 	"any node set can be used as the root of a filter expression
 	location path, like (/one)/two or '$one/two' (when $one is bound
 	to a node set)"
+
 	^ self
 ]
 
@@ -315,7 +324,8 @@ XPathNodeSet >> asXPathFilterExpressionPredicateRoot [
 	expression, like '(/one)[two]' or '$one[two]' (when $one is bound to
 	a node set), but it must be sorted so predicate positions are relative to
 	document order"
-	^ self sorted
+
+	^ self asSorted
 ]
 
 { #category : #converting }
@@ -340,14 +350,14 @@ XPathNodeSet >> asXPathUnionable [
 	^ self
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> attributeAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		attributeAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> attributeAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -357,20 +367,18 @@ XPathNodeSet >> attributeAxis: aNodeTestStringOrBlock predicates: aPredicateColl
 
 { #category : #private }
 XPathNodeSet >> attributeAxisAnySatisfy: anAttributeNodeTest [
-	self do: [:each |
-		(each attributeAxisAnySatisfy: anAttributeNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each attributeAxisAnySatisfy: anAttributeNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> childAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		childAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> childAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -380,28 +388,26 @@ XPathNodeSet >> childAxis: aNodeTestStringOrBlock predicates: aPredicateCollecti
 
 { #category : #private }
 XPathNodeSet >> childAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each childAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each childAxisAnySatisfy: aNodeTest]
 ]
 
 { #category : #copying }
 XPathNodeSet >> copy [
 	"copies that don't add or replace keep sort order"
-	^ super copy sortOrderFrom: self
+	^ super copy sortOrder: self sortOrder
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyAfter: anObject [
 	"copies that don't add or replace keep sort order"
-	^ (super copyAfter: anObject) sortOrderFrom: self
+	^ (super copyAfter: anObject) sortOrder: self sortOrder
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyAfterLast: anObject [
 	"copies that don't add or replace keep sort order"
-	^ (super copyAfterLast: anObject) sortOrderFrom: self
+	^ (super copyAfterLast: anObject) sortOrder: self sortOrder
 ]
 
 { #category : #copying }
@@ -409,41 +415,41 @@ XPathNodeSet >> copyFrom: aStartIndex to: anEndIndex [
 	"copies that don't add or replace keep sort order"
 	^ (super
 		copyFrom: aStartIndex
-		to: anEndIndex) sortOrderFrom: self
+		to: anEndIndex) sortOrder: self sortOrder
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyUpTo: anObject [
 	"copies that don't add or replace keep sort order"
-	^ (super copyUpTo: anObject) sortOrderFrom: self
+	^ (super copyUpTo: anObject) sortOrder: self sortOrder
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyUpToLast: anObject [
 	"copies that don't add or replace keep sort order"
-	^ (super copyUpToLast: anObject) sortOrderFrom: self
+	^ (super copyUpToLast: anObject) sortOrder: self sortOrder
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyWithout: anObject [
 	"copies that don't add or replace keep sort order"
-	^ (super copyWithout: anObject) sortOrderFrom: self
+	^ (super copyWithout: anObject) sortOrder: self sortOrder
 ]
 
 { #category : #copying }
 XPathNodeSet >> copyWithoutAll: aCollection [
 	"copies that don't add or replace keep sort order"
-	^ (super copyWithoutAll: aCollection) sortOrderFrom: self
+	^ (super copyWithoutAll: aCollection) sortOrder: self sortOrder
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> descendantAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		descendantAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> descendantAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -453,20 +459,18 @@ XPathNodeSet >> descendantAxis: aNodeTestStringOrBlock predicates: aPredicateCol
 
 { #category : #private }
 XPathNodeSet >> descendantAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each descendantAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each descendantAxisAnySatisfy: aNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> descendantOrSelfAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		descendantOrSelfAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> descendantOrSelfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -476,10 +480,8 @@ XPathNodeSet >> descendantOrSelfAxis: aNodeTestStringOrBlock predicates: aPredic
 
 { #category : #private }
 XPathNodeSet >> descendantOrSelfAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each descendantOrSelfAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each descendantOrSelfAxisAnySatisfy: aNodeTest]
 ]
 
 { #category : #enumerating }
@@ -513,7 +515,7 @@ XPathNodeSet >> filterEachInSeparateContextWith: aThreeArgumentBlockOrNumber [
 							result asXPathBoolean
 								ifTrue: [copy addToCopyLast: node]]]].
 	"filtering cannot change the sort order"
-	^ copy sortOrderFrom: self.
+	^ copy sortOrder: self sortOrder.
 ]
 
 { #category : #private }
@@ -563,7 +565,7 @@ XPathNodeSet >> filterWith: aThreeArgumentBlockOrNumber [
 						result asXPathBoolean
 							ifTrue: [copy addToCopyLast: node]]]].
 	"filtering cannot change the sort order"
-	^ copy sortOrderFrom: self.
+	^ copy sortOrder: self sortOrder.
 ]
 
 { #category : #private }
@@ -591,14 +593,14 @@ XPathNodeSet >> firstInDocumentOrder [
 	^ self sortOrder firstInDocumentOrderFrom: self
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> followingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		followingAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> followingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -608,20 +610,18 @@ XPathNodeSet >> followingAxis: aNodeTestStringOrBlock predicates: aPredicateColl
 
 { #category : #private }
 XPathNodeSet >> followingAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each followingAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each followingAxisAnySatisfy: aNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> followingSiblingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		followingSiblingAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> followingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -631,10 +631,8 @@ XPathNodeSet >> followingSiblingAxis: aNodeTestStringOrBlock predicates: aPredic
 
 { #category : #private }
 XPathNodeSet >> followingSiblingAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each followingSiblingAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each followingSiblingAxisAnySatisfy: aNodeTest]
 ]
 
 { #category : #testing }
@@ -645,6 +643,11 @@ XPathNodeSet >> includes: aNode [
 { #category : #enumerating }
 XPathNodeSet >> intersection: aNodeSet [
 	^ (self select: [:each | aNodeSet includes: each]) sort
+]
+
+{ #category : #testing }
+XPathNodeSet >> isXPathNodeSet [
+	^ true
 ]
 
 { #category : #private }
@@ -675,14 +678,14 @@ XPathNodeSet >> minimumStringValueNumber [
 	^ minimum.
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> namespaceAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		namespaceAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -692,20 +695,18 @@ XPathNodeSet >> namespaceAxis: aNodeTestStringOrBlock predicates: aPredicateColl
 
 { #category : #private }
 XPathNodeSet >> namespaceAxisAnySatisfy: aNamespaceNodeTest [
-	self do: [:each |
-		(each namespaceAxisAnySatisfy: aNamespaceNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each namespaceAxisAnySatisfy: aNamespaceNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> parentAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		parentAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> parentAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -715,20 +716,18 @@ XPathNodeSet >> parentAxis: aNodeTestStringOrBlock predicates: aPredicateCollect
 
 { #category : #private }
 XPathNodeSet >> parentAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each parentAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each parentAxisAnySatisfy: aNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> precedingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		precedingAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> precedingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -738,20 +737,18 @@ XPathNodeSet >> precedingAxis: aNodeTestStringOrBlock predicates: aPredicateColl
 
 { #category : #private }
 XPathNodeSet >> precedingAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each precedingAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each precedingAxisAnySatisfy: aNodeTest]
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> precedingSiblingAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		precedingSiblingAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> precedingSiblingAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -761,20 +758,21 @@ XPathNodeSet >> precedingSiblingAxis: aNodeTestStringOrBlock predicates: aPredic
 
 { #category : #private }
 XPathNodeSet >> precedingSiblingAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each precedingSiblingAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each precedingSiblingAxisAnySatisfy: aNodeTest]
 ]
 
 { #category : #enumerating }
 XPathNodeSet >> reject: aBlock [
-	"reject doesn't change sort order"
-	^ (super reject: aBlock) sortOrderFrom: self
+	"rejecting doesn't change sort order"
+	^ (super reject: aBlock) sortOrder: self sortOrder
 ]
 
 { #category : #private }
 XPathNodeSet >> reverseInPlace [
+	"unlike #reverse/#reversed, this sorts the receiver directly and
+	does not return a copy"
+
 	| previousSortOrder start end |
 
 	"saved because swap:with: clears the sort order"
@@ -783,7 +781,9 @@ XPathNodeSet >> reverseInPlace [
 	end := self size.
 	[start < end]
 		whileTrue: [
-			self swap: start with: end.
+			self
+				swap: start
+				with: end.
 			start := start + 1.
 			end := end - 1].
 	self sortOrder: previousSortOrder asReversedSortOrder.
@@ -796,18 +796,18 @@ XPathNodeSet >> reversed [
 
 { #category : #enumerating }
 XPathNodeSet >> select: aBlock [
-	"select doesn't change sort order"
-	^ (super select: aBlock) sortOrderFrom: self
+	"selecting doesn't change sort order"
+	^ (super select: aBlock) sortOrder: self sortOrder
 ]
 
-{ #category : #'enumerating - axis' }
+{ #category : #private }
 XPathNodeSet >> selfAxis: aNodeTestStringOrBlock [
 	^ self sortOrder
 		on: self
 		selfAxis: aNodeTestStringOrBlock
 ]
 
-{ #category : #'enumerating - predicate axis' }
+{ #category : #private }
 XPathNodeSet >> selfAxis: aNodeTestStringOrBlock predicates: aPredicateCollection [
 	^ self sortOrder
 		on: self
@@ -817,10 +817,8 @@ XPathNodeSet >> selfAxis: aNodeTestStringOrBlock predicates: aPredicateCollectio
 
 { #category : #private }
 XPathNodeSet >> selfAxisAnySatisfy: aNodeTest [
-	self do: [:each |
-		(each selfAxisAnySatisfy: aNodeTest)
-			ifTrue: [^ true]].
-	^ false.
+	^ self anySatisfy: [:each |
+		each selfAxisAnySatisfy: aNodeTest]
 ]
 
 { #category : #private }
@@ -831,6 +829,9 @@ XPathNodeSet >> set [
 
 { #category : #sorting }
 XPathNodeSet >> sort [
+	"Sorts the receiver's nodes in document order.
+	If it's already been sorted, no sorting is done."
+
 	self sortOrder documentOrderSort: self
 ]
 
@@ -849,18 +850,13 @@ XPathNodeSet >> sortOrder [
 					ifTrue: [XPathUnknownSortOrder new]
 					ifFalse: [
 						"safe for node sets with <= 1 node"
-						XPathDocumentSortOrder new]].
+						XPathLevelDocumentSortOrder new]].
 	^ sortOrder.
 ]
 
 { #category : #private }
 XPathNodeSet >> sortOrder: aSortOrder [
 	sortOrder := aSortOrder
-]
-
-{ #category : #private }
-XPathNodeSet >> sortOrderFrom: aNodeSet [
-	sortOrder := aNodeSet sortOrder
 ]
 
 { #category : #accessing }
@@ -877,8 +873,9 @@ XPathNodeSet >> stringValues [
 
 { #category : #enumerating }
 XPathNodeSet >> stringValuesDo: aBlock [
-	"enumerates XPath string-values of nodes"
-	self do: [:each | aBlock value: each stringValue]
+	"enumerates XPath string-values of nodes in document order"
+	self asSorted do: [:each |
+		aBlock value: each stringValue]
 ]
 
 { #category : #accessing }
@@ -904,6 +901,12 @@ XPathNodeSet >> | aNodeSet [
 ]
 
 { #category : #'enumerating - axis' }
-XPathNodeSet >> ~ aNodeTestStringOrBlock [
-	^ self selfAxis: aNodeTestStringOrBlock
+XPathNodeSet >> ~ aStringOrBlockOrNodeTestWithPredicates [
+	^ (aStringOrBlockOrNodeTestWithPredicates isXPathNodeTestWithPredicates
+		ifTrue: [
+			self
+				selfAxis: aStringOrBlockOrNodeTestWithPredicates nodeTest
+				predicates: aStringOrBlockOrNodeTestWithPredicates predicates]
+		ifFalse: [
+			self selfAxis: aStringOrBlockOrNodeTestWithPredicates]) sort
 ]

@@ -17,10 +17,10 @@ XPathSubstringFunction >> function [
 	| string start end |
 
 	string := self argumentAt: 1.
-	start := (self argumentAt: 2) xPathRounded.
+	start := (self argumentAt: 2) xpathRounded.
 	end :=
 		self totalArguments > 2
-			ifTrue: [start + (self argumentAt: 3) xPathRounded - 1]
+			ifTrue: [start + (self argumentAt: 3) xpathRounded - 1]
 			ifFalse: [string size].
 
 	"if either start or end are NaN, the test will fail"
@@ -28,7 +28,7 @@ XPathSubstringFunction >> function [
 		and: [start <= string size
 			and: [end >= 1]])
 		ifTrue: [
-			"the #xPathRounded calls got rid of any fraciton part, but
+			"the #xpathRounded calls got rid of any fraciton part, but
 			integer flots still must be converted to integers because
 			#copyFrom:to: won't take integer floats, and the #min:/#max:
 			eliminate +/- infinity"

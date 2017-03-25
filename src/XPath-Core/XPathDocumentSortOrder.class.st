@@ -17,6 +17,11 @@ XPathDocumentSortOrder >> documentOrderSort: aNodeSet [
 	"already in document order"
 ]
 
+{ #category : #converting }
+XPathDocumentSortOrder >> documentOrderSorted: aNodeSet [
+	^ aNodeSet
+]
+
 { #category : #accessing }
 XPathDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 	^ aNodeSet first
@@ -26,7 +31,7 @@ XPathDocumentSortOrder >> firstInDocumentOrderFrom: aNodeSet [
 XPathDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock [
 	^ (super
 		on: aNodeSet
-		attributeAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
+		attributeAxis: aNodeTestStringOrBlock) sortOrder: self
 ]
 
 { #category : #enumerating }
@@ -34,14 +39,14 @@ XPathDocumentSortOrder >> on: aNodeSet attributeAxis: aNodeTestStringOrBlock pre
 	^ (super
 		on: aNodeSet
 		attributeAxis: aNodeTestStringOrBlock
-		predicates: aPredicateCollection) sortOrderFrom: aNodeSet
+		predicates: aPredicateCollection) sortOrder: self
 ]
 
 { #category : #enumerating }
 XPathDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock [
 	^ (super
 		on: aNodeSet
-		namespaceAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
+		namespaceAxis: aNodeTestStringOrBlock) sortOrder: self
 ]
 
 { #category : #enumerating }
@@ -49,7 +54,7 @@ XPathDocumentSortOrder >> on: aNodeSet namespaceAxis: aNodeTestStringOrBlock pre
 	^ (super
 		on: aNodeSet
 		namespaceAxis: aNodeTestStringOrBlock
-		predicates: aPredicateCollection) sortOrderFrom: aNodeSet
+		predicates: aPredicateCollection) sortOrder: self
 ]
 
 { #category : #enumerating }
@@ -57,12 +62,12 @@ XPathDocumentSortOrder >> on: aNodeSet parentAxis: aNodeTestStringOrBlock [
 	"this is a document order axis according to the spec"
 	^ (super
 		on: aNodeSet
-		parentAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
+		parentAxis: aNodeTestStringOrBlock) sortOrder: self
 ]
 
 { #category : #enumerating }
 XPathDocumentSortOrder >> on: aNodeSet selfAxis: aNodeTestStringOrBlock [
 	^ (super
 		on: aNodeSet
-		selfAxis: aNodeTestStringOrBlock) sortOrderFrom: aNodeSet
+		selfAxis: aNodeTestStringOrBlock) sortOrder: self
 ]

@@ -14,5 +14,5 @@ XPathRoundFunction class >> prototypeSource [
 
 { #category : #invoking }
 XPathRoundFunction >> function [
-	^ self firstArgument xPathRounded
+	^ self firstArgument xpathRounded
 ]

@@ -13,12 +13,75 @@ XPathIDFunction class >> prototypeSource [
 ]
 
 { #category : #invoking }
+XPathIDFunction >> addElement: anElement withUndeclaredIDs: anIDSet to: aNodeSet [
+	"just look for an 'xml:id' attribute if there were no declarations"
+	anIDSet
+		remove:
+			(anElement
+				attributeAt: 'xml:id'
+				ifAbsent: [^ self])
+		ifAbsent: [^ self].
+	aNodeSet addLast: anElement.
+]
+
+{ #category : #invoking }
+XPathIDFunction >> addElement: anElement withUndeclaredOrDeclaredIDs: anIDSet to: aNodeSet declaredWith: anAttributeValidatorDictionary [
+	anElement attributeNodesDo: [:each |
+		((anAttributeValidatorDictionary
+			at: each name
+			ifAbsent: [nil])
+				ifNil: [each name = 'xml:id']
+				ifNotNil: [:attributeValidator | attributeValidator isID])
+			ifTrue: [
+				(anIDSet
+					remove: each value
+					ifAbsent: [nil])
+					ifNotNil: [
+						aNodeSet addLast: anElement.
+						^ self]]]
+]
+
+{ #category : #invoking }
+XPathIDFunction >> addElementsWithUndeclaredIDs: anIDSet in: aRootNode to: aNodeSet [
+	aRootNode allElementsDo: [:each |
+		each hasAttributes
+			ifTrue: [
+				self
+					addElement: each
+					withUndeclaredIDs: anIDSet
+					to: aNodeSet.
+				anIDSet isEmpty
+					ifTrue: [^ self]]]
+]
+
+{ #category : #invoking }
+XPathIDFunction >> addElementsWithUndeclaredOrDeclaredIDs: anIDSet in: aRootNode to: aNodeSet declaredWith: aDoctypeDefinition [
+	aRootNode allElementsDo: [:each |
+		each hasAttributes
+			ifTrue: [
+				(aDoctypeDefinition attributeValidatorsAt: each name)
+					ifNil: [
+						self
+							addElement: each
+							withUndeclaredIDs: anIDSet
+							to: aNodeSet]
+					ifNotNil: [:attributeValidators |
+						self
+							addElement: each
+							withUndeclaredOrDeclaredIDs: anIDSet
+							to: aNodeSet
+							declaredWith: attributeValidators].
+				anIDSet isEmpty
+					ifTrue: [^ self]]]
+]
+
+{ #category : #invoking }
 XPathIDFunction >> function [
-	| object ids document nodeSet |
+	| object ids nodeSet |
 
 	object := self firstArgument.
 	ids := Set new.
-	object class == self nodeSetClass
+	object isXPathNodeSet
 		ifTrue: [
 			object do: [:each |
 				self
@@ -31,14 +94,25 @@ XPathIDFunction >> function [
 
 	nodeSet := self newNodeSet.
 	(ids notEmpty
-		and: [self contextNode notNil
-			and: [(document := self contextNode document) notNil]])
-		ifTrue: [| element |
-			ids do: [:each |
-				((element := document findElementWithID: each) notNil
-					and: [(nodeSet includes: element) not])
-					ifTrue: [nodeSet addLast: element]]].
-	^ nodeSet.
+		and: [self contextNode notNil])
+		ifTrue: [| root doctypeDefinition |
+			((root := self contextNode documentRoot) isDocument
+				and: [(doctypeDefinition := root doctypeDefinition) notNil
+					and: [doctypeDefinition hasAttributeValidators]])
+				ifTrue: [
+					self
+						addElementsWithUndeclaredOrDeclaredIDs: ids
+						in: root
+						to: nodeSet
+						declaredWith: doctypeDefinition]
+				ifFalse: [
+					self
+						addElementsWithUndeclaredIDs: ids
+						in: root
+						to: nodeSet]].
+	"the elements matching the IDs are enumerated in document order, so the
+	resulting node set is in document order too"
+	^ nodeSet sortOrder: XPathDocumentSortOrder new.
 ]
 
 { #category : #private }
