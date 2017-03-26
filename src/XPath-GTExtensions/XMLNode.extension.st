@@ -16,12 +16,12 @@ XMLNode >> gtInspectorXPathIn: aComposite [
 			display: [''];
 			withLineNumbers: true;
 			selectionAct: [:presentation |
-				presentation selectedText asString
-					ifNotEmpty: [:source |
-						presentation selection:
-							(self xpath: source)]]
+				presentation selection:
+					(self xpath: 
+						(presentation selectedText asString
+							ifEmpty: [presentation text asString]))]
 				on: $g
-				entitled: 'Evaluated and go';
+				entitled: 'Evaluate and go';
 			act: [:presentation |
 				presentation selection:
 					(self xpath: presentation text asString)]
