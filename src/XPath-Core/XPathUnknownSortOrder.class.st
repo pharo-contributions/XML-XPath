@@ -17,7 +17,7 @@ XPathUnknownSortOrder >> documentOrderSort: aNodeSet [
 	(XPathNodeSetSorter on: aNodeSet) sort
 ]
 
-{ #category : #converting }
+{ #category : #sorting }
 XPathUnknownSortOrder >> documentOrderSorted: aNodeSet [
 	^ aNodeSet sorted
 ]

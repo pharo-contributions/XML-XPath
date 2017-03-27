@@ -1,5 +1,5 @@
 "
-This is a document sort order for node sets where all nodes are at the same level, meaning the nth ancestor (parent, grandparent, or other) of each node is the same.
+This is a document sort order for node sets where all nodes are at the same level, meaning they have the same number of ancestors and share one or more ancestors.
 "
 Class {
 	#name : #XPathLevelDocumentSortOrder,

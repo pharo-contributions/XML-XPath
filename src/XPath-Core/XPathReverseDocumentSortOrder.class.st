@@ -17,7 +17,7 @@ XPathReverseDocumentSortOrder >> documentOrderSort: aNodeSet [
 	aNodeSet reverseInPlace
 ]
 
-{ #category : #converting }
+{ #category : #sorting }
 XPathReverseDocumentSortOrder >> documentOrderSorted: aNodeSet [
 	^ aNodeSet reversed
 ]

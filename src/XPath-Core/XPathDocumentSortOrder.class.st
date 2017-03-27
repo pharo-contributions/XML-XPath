@@ -17,7 +17,7 @@ XPathDocumentSortOrder >> documentOrderSort: aNodeSet [
 	"already in document order"
 ]
 
-{ #category : #converting }
+{ #category : #sorting }
 XPathDocumentSortOrder >> documentOrderSorted: aNodeSet [
 	^ aNodeSet
 ]
