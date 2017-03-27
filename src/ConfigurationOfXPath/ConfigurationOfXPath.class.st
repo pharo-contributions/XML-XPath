@@ -660,7 +660,7 @@ ConfigurationOfXPath >> baseline198: spec [
 	spec for: #gt do: [
 		spec
 			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.15'. ]
+			with: 'XPath-GTExtensions-monty.16'. ]
 ]
 
 { #category : #doits }
@@ -795,7 +795,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '1.9.8'.
+	spec for: #'common' version: '1.9.9'.
 
 ]
 
@@ -1887,6 +1887,17 @@ ConfigurationOfXPath >> version198: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.113'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.92'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version199: spec [ 
+        <version: '1.9.9' imports: #('1.9.8-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.114'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.92'.
                 ].
 ]
