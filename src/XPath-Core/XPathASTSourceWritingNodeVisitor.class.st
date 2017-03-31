@@ -8,6 +8,18 @@ Class {
 }
 
 { #category : #private }
+XPathASTSourceWritingNodeVisitor >> emitAxisName: anAxisNameStringOrCharacter [
+	self
+		emitAll: anAxisNameStringOrCharacter asString;
+		emitAll: '::'
+]
+
+{ #category : #private }
+XPathASTSourceWritingNodeVisitor >> emitOperatorName: anOperatorNameStringOrCharacter [
+	self emitAll: anOperatorNameStringOrCharacter asString
+]
+
+{ #category : #private }
 XPathASTSourceWritingNodeVisitor >> emitTypeTestFor: aNodeTest with: aBlockOrNil [
 	(aNodeTest hasParent
 		and: [aNodeTest nodeType = aNodeTest parent principalNodeType])
@@ -99,7 +111,7 @@ XPathASTSourceWritingNodeVisitor >> visitBinaryOperatorExpression: aBinaryOperat
 	aBinaryOperatorExpression expression acceptNodeVisitor: self.
 	self
 		emitSpace;
-		emitAll: aBinaryOperatorExpression operatorName;
+		emitOperatorName: aBinaryOperatorExpression operatorName;
 		emitSpace.
 	aBinaryOperatorExpression otherExpression acceptNodeVisitor: self.
 	self emit: $).
@@ -314,9 +326,7 @@ XPathASTSourceWritingNodeVisitor >> visitStep: aStep [
 	(self previousStep isNull
 		and: [aStep parent isRelativeLocationPath])
 		ifFalse: [self emit: $/].
-	self
-		emitAll: aStep axisName;
-		emitAll: '::'.
+	self emitAxisName: aStep axisName.
 	super visitStep: aStep.
 	^ aStep.
 ]
@@ -341,7 +351,7 @@ XPathASTSourceWritingNodeVisitor >> visitStringLiteral: aStringLiteral [
 { #category : #'visiting - operators' }
 XPathASTSourceWritingNodeVisitor >> visitUnaryOperatorExpression: aUnaryOperatorExpression [
 	self
-		emitAll: aUnaryOperatorExpression operatorName;
+		emitOperatorName: aUnaryOperatorExpression operatorName;
 		emit: $(.
 	super visitUnaryOperatorExpression: aUnaryOperatorExpression.
 	self emit: $).
