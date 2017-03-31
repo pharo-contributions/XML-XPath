@@ -6,7 +6,6 @@ Class {
 	#superclass : #XPathPositionExpressionParserHandler,
 	#instVars : [
 		'highlighter',
-		'expression',
 		'expressionSource'
 	],
 	#category : #'XPath-GTExtensions-Highlighting-Parsers'
