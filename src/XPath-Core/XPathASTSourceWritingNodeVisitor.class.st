@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #private }
+XPathASTSourceWritingNodeVisitor >> emitArgumentSeparator [
+	self previousArgument isNull
+		ifFalse: [self emitAll: ', ']
+]
+
+{ #category : #private }
 XPathASTSourceWritingNodeVisitor >> emitAxisName: anAxisNameStringOrCharacter [
 	self
 		emitAll: anAxisNameStringOrCharacter asString;
@@ -38,8 +44,7 @@ XPathASTSourceWritingNodeVisitor >> emitTypeTestFor: aNodeTest with: aBlockOrNil
 
 { #category : #'visiting - functions' }
 XPathASTSourceWritingNodeVisitor >> visitArgument: anArgument [
-	self previousArgument isNull
-		ifFalse: [self emitAll: ', '].
+	self emitArgumentSeparator.
 	^ super visitArgument: anArgument.
 ]
 
