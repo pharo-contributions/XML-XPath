@@ -53,6 +53,11 @@ XPathHighlightingPositionExpressionParserHandler >> expressionSource: anExpressi
 ]
 
 { #category : #'handling - positions' }
+XPathHighlightingPositionExpressionParserHandler >> handleEndArgumentPosition: aPosition [
+	highlighter startFunctionCallHighlightPosition: aPosition + 1
+]
+
+{ #category : #'handling - positions' }
 XPathHighlightingPositionExpressionParserHandler >> handleEndAxisPosition: aPosition [
 	highlighter endAxisHighlightPosition: aPosition
 ]
@@ -84,7 +89,10 @@ XPathHighlightingPositionExpressionParserHandler >> handleEndParsing [
 
 { #category : #'handling - positions' }
 XPathHighlightingPositionExpressionParserHandler >> handleEndPredicatePosition: aPosition [
-	highlighter endPredicateHighlightPosition: aPosition
+	highlighter
+		decrementPredicateColorLevel;
+		startPredicateHighlightPosition: aPosition;
+		endPredicateHighlightPosition: aPosition
 ]
 
 { #category : #'handling - positions' }
@@ -95,6 +103,11 @@ XPathHighlightingPositionExpressionParserHandler >> handleEndStringLiteralPositi
 { #category : #'handling - positions' }
 XPathHighlightingPositionExpressionParserHandler >> handleEndVariableReferencePosition: aPosition [
 	highlighter endVariableReferenceHighlightPosition: aPosition
+]
+
+{ #category : #'handling - positions' }
+XPathHighlightingPositionExpressionParserHandler >> handleStartArgumentPosition: aPosition [
+	highlighter endFunctionCallHighlightPosition: aPosition - 1
 ]
 
 { #category : #'handling - positions' }
@@ -129,7 +142,10 @@ XPathHighlightingPositionExpressionParserHandler >> handleStartParsing [
 
 { #category : #'handling - positions' }
 XPathHighlightingPositionExpressionParserHandler >> handleStartPredicatePosition: aPosition [
-	highlighter startPredicateHighlightPosition: aPosition
+	highlighter
+		startPredicateHighlightPosition: aPosition;
+		endPredicateHighlightPosition: aPosition;
+		incrementPredicateColorLevel
 ]
 
 { #category : #'handling - positions' }

@@ -8,6 +8,10 @@ Class {
 }
 
 { #category : #'handling - positions' }
+XPathPositionExpressionParserHandler >> handleEndArgumentPosition: aPosition [
+]
+
+{ #category : #'handling - positions' }
 XPathPositionExpressionParserHandler >> handleEndAxisPosition: aPosition [
 ]
 
@@ -37,6 +41,10 @@ XPathPositionExpressionParserHandler >> handleEndStringLiteralPosition: aPositio
 
 { #category : #'handling - positions' }
 XPathPositionExpressionParserHandler >> handleEndVariableReferencePosition: aPosition [
+]
+
+{ #category : #'handling - positions' }
+XPathPositionExpressionParserHandler >> handleStartArgumentPosition: aPosition [
 ]
 
 { #category : #'handling - positions' }

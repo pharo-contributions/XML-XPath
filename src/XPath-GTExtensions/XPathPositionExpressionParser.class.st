@@ -13,6 +13,13 @@ XPathPositionExpressionParser >> currentPosition [
 ]
 
 { #category : #parsing }
+XPathPositionExpressionParser >> nextArgument [
+	handler handleStartArgumentPosition: self currentPosition + 1.
+	super nextArgument.
+	handler handleEndArgumentPosition: self currentPosition.
+]
+
+{ #category : #parsing }
 XPathPositionExpressionParser >> nextFunctionCall [
 	handler handleStartFunctionCallPosition: self currentPosition + 1.
 	super nextFunctionCall.

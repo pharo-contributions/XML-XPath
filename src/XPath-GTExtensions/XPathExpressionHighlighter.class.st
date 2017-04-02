@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'axisColor',
 		'nodeTestColor',
-		'predicateColor',
+		'predicateColors',
+		'predicateColorLevel',
 		'operatorColor',
 		'functionCallColor',
 		'stringLiteralColor',
@@ -33,6 +34,14 @@ XPathExpressionHighlighter >> axisColor [
 { #category : #accessing }
 XPathExpressionHighlighter >> axisColor: aTextColor [
 	axisColor := aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> decrementPredicateColorLevel [
+	(predicateColorLevel := predicateColorLevel - 1) >= 1
+		ifFalse: [
+			"wrap around to the last color"
+			predicateColorLevel := self maxPredicateColorLevel]
 ]
 
 { #category : #accessing }
@@ -106,13 +115,24 @@ XPathExpressionHighlighter >> functionCallColor: aTextColor [
 	functionCallColor := aTextColor
 ]
 
+{ #category : #accessing }
+XPathExpressionHighlighter >> incrementPredicateColorLevel [
+	(predicateColorLevel := predicateColorLevel + 1) <= self maxPredicateColorLevel
+		ifFalse: [
+			"wrap around to the first color"
+			predicateColorLevel := 1]
+]
+
 { #category : #initialization }
 XPathExpressionHighlighter >> initializeColors [
 	super initializeColors.
 	self
+		initializePredicateColors;
 		axisColor: self defaults defaultAxisColor;
 		nodeTestColor: self defaults defaultNodeTestColor;
-		predicateColor: self defaults defaultPredicateColor;
+		predicatePrimaryColor: self defaults defaultPredicatePrimaryColor;
+		predicateSecondaryColor: self defaults defaultPredicateSecondaryColor;
+		predicateTertiaryColor: self defaults defaultPredicateTertiaryColor;
 		operatorColor: self defaults defaultOperatorColor;
 		functionCallColor: self defaults defaultFunctionCallColor;
 		stringLiteralColor: self defaults defaultStringLiteralColor;
@@ -126,6 +146,17 @@ XPathExpressionHighlighter >> initializeHighlights [
 
 	predicateHighlightStack := OrderedCollection new.
 	functionCallHighlightStack := OrderedCollection new.
+]
+
+{ #category : #initialization }
+XPathExpressionHighlighter >> initializePredicateColors [
+	predicateColors := Array new: self maxPredicateColorLevel.
+	predicateColorLevel := 1.
+]
+
+{ #category : #private }
+XPathExpressionHighlighter >> maxPredicateColorLevel [
+	^ 3
 ]
 
 { #category : #accessing }
@@ -158,14 +189,45 @@ XPathExpressionHighlighter >> operatorColor: aTextColor [
 	operatorColor := aTextColor
 ]
 
-{ #category : #accessing }
+{ #category : #private }
 XPathExpressionHighlighter >> predicateColor [
-	^ predicateColor
+	^ predicateColors at: predicateColorLevel
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicateColor: aTextColor [
-	predicateColor := aTextColor
+XPathExpressionHighlighter >> predicatePrimaryColor [
+	^ predicateColors at: 1
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicatePrimaryColor: aTextColor [
+	predicateColors
+		at: 1
+		put: aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateSecondaryColor [
+	^ predicateColors at: 2
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateSecondaryColor: aTextColor [
+	predicateColors
+		at: 2
+		put: aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateTertiaryColor [
+	^ predicateColors at: 3
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateTertiaryColor: aTextColor [
+	predicateColors
+		at: 3
+		put: aTextColor
 ]
 
 { #category : #'highlighting - positions' }

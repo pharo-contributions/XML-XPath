@@ -20,6 +20,12 @@ XPathHighlightingASTSourceWritingNodeVisitor >> asHighlightedText [
 ]
 
 { #category : #private }
+XPathHighlightingASTSourceWritingNodeVisitor >> emitArgumentSeparator [
+	super emitArgumentSeparator.
+	highlighter endFunctionCallHighlightPosition: self endPosition.
+]
+
+{ #category : #private }
 XPathHighlightingASTSourceWritingNodeVisitor >> emitAxisName: anAxisNameStringOrCharacter [
 	highlighter startAxisHighlightPosition: self startPosition.
 	super emitAxisName: anAxisNameStringOrCharacter.
@@ -66,6 +72,13 @@ XPathHighlightingASTSourceWritingNodeVisitor >> startPosition [
 ]
 
 { #category : #'visiting - functions' }
+XPathHighlightingASTSourceWritingNodeVisitor >> visitArgument: anArgument [
+	super visitArgument: anArgument.
+	highlighter startFunctionCallHighlightPosition: self startPosition.
+	^ anArgument.
+]
+
+{ #category : #'visiting - functions' }
 XPathHighlightingASTSourceWritingNodeVisitor >> visitFunctionCall: aFunctionCall [
 	highlighter startFunctionCallHighlightPosition: self startPosition.
 	super visitFunctionCall: aFunctionCall.
@@ -83,9 +96,15 @@ XPathHighlightingASTSourceWritingNodeVisitor >> visitNumberLiteral: aNumberLiter
 
 { #category : #'visiting - predicates' }
 XPathHighlightingASTSourceWritingNodeVisitor >> visitPredicate: aPredicate [
-	highlighter startPredicateHighlightPosition: self startPosition.
+	highlighter
+		startPredicateHighlightPosition: self startPosition;
+		endPredicateHighlightPosition: self startPosition;
+		incrementPredicateColorLevel.
 	super visitPredicate: aPredicate.
-	highlighter endPredicateHighlightPosition: self endPosition.
+	highlighter
+		decrementPredicateColorLevel;
+		startPredicateHighlightPosition: self endPosition;
+		endPredicateHighlightPosition: self endPosition.
 	^ aPredicate.
 ]
 

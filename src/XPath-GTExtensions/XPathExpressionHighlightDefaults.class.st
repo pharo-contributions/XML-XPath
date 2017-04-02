@@ -7,7 +7,9 @@ Class {
 	#classInstVars : [
 		'defaultAxisColor',
 		'defaultNodeTestColor',
-		'defaultPredicateColor',
+		'defaultPredicatePrimaryColor',
+		'defaultPredicateSecondaryColor',
+		'defaultPredicateTertiaryColor',
 		'defaultOperatorColor',
 		'defaultFunctionCallColor',
 		'defaultStringLiteralColor',
@@ -73,14 +75,42 @@ XPathExpressionHighlightDefaults class >> defaultOperatorColor: aTextColor [
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicateColor [
-	^ defaultPredicateColor
-		ifNil: [defaultPredicateColor := self textColorForShoutProperty: #blockStart]
+XPathExpressionHighlightDefaults class >> defaultPredicatePrimaryColor [
+	^ defaultPredicatePrimaryColor
+		ifNil: [
+			defaultPredicatePrimaryColor :=
+				self textColorForShoutProperty: #blockStart1]
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicateColor: aTextColor [
-	defaultPredicateColor := aTextColor
+XPathExpressionHighlightDefaults class >> defaultPredicatePrimaryColor: aTextColor [
+	defaultPredicatePrimaryColor := aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateSecondaryColor [
+	^ defaultPredicateSecondaryColor
+		ifNil: [
+			defaultPredicateSecondaryColor :=
+				self textColorForShoutProperty: #blockStart2]
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateSecondaryColor: aTextColor [
+	defaultPredicateSecondaryColor := aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateTertiaryColor [
+	^ defaultPredicateTertiaryColor
+		ifNil: [
+			defaultPredicateTertiaryColor :=
+				self textColorForShoutProperty: #blockStart3]
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateTertiaryColor: aTextColor [
+	defaultPredicateTertiaryColor := aTextColor
 ]
 
 { #category : #accessing }
@@ -112,7 +142,9 @@ XPathExpressionHighlightDefaults class >> initialize [
 	defaultDefaultColor := nil.
 	defaultAxisColor := nil.
 	defaultNodeTestColor := nil.
-	defaultPredicateColor := nil.
+	defaultPredicatePrimaryColor := nil.
+	defaultPredicateSecondaryColor := nil.
+	defaultPredicateTertiaryColor := nil.
 	defaultOperatorColor := nil.
 	defaultFunctionCallColor := nil.
 	defaultStringLiteralColor := nil.
