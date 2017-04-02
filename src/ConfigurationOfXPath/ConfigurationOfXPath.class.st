@@ -687,7 +687,7 @@ ConfigurationOfXPath >> baseline200: spec [
 	spec for: #gt do: [
 		spec
 			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.19'. ]
+			with: 'XPath-GTExtensions-monty.20'. ]
 ]
 
 { #category : #doits }
@@ -1935,7 +1935,7 @@ ConfigurationOfXPath >> version200: spec [
 
         spec for: #common do: [
                 spec blessing: #release.
-			spec package: 'XPath-Core' with: 'XPath-Core-monty.115'.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.116'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.92'.
                 ].
 ]
