@@ -130,9 +130,12 @@ XPathExpressionHighlighter >> initializeColors [
 		initializePredicateColors;
 		axisColor: self defaults defaultAxisColor;
 		nodeTestColor: self defaults defaultNodeTestColor;
-		predicatePrimaryColor: self defaults defaultPredicatePrimaryColor;
-		predicateSecondaryColor: self defaults defaultPredicateSecondaryColor;
-		predicateTertiaryColor: self defaults defaultPredicateTertiaryColor;
+		predicateLevelOneColor: self defaults defaultPredicateLevelOneColor;
+		predicateLevelTwoColor: self defaults defaultPredicateLevelTwoColor;
+		predicateLevelThreeColor: self defaults defaultPredicateLevelThreeColor;
+		predicateLevelFourColor: self defaults defaultPredicateLevelFourColor;
+		predicateLevelFiveColor: self defaults defaultPredicateLevelFiveColor;
+		predicateLevelSixColor: self defaults defaultPredicateLevelSixColor;
 		operatorColor: self defaults defaultOperatorColor;
 		functionCallColor: self defaults defaultFunctionCallColor;
 		stringLiteralColor: self defaults defaultStringLiteralColor;
@@ -156,7 +159,7 @@ XPathExpressionHighlighter >> initializePredicateColors [
 
 { #category : #private }
 XPathExpressionHighlighter >> maxPredicateColorLevel [
-	^ 3
+	^ 6
 ]
 
 { #category : #accessing }
@@ -195,38 +198,74 @@ XPathExpressionHighlighter >> predicateColor [
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicatePrimaryColor [
+XPathExpressionHighlighter >> predicateLevelFiveColor [
+	^ predicateColors at: 5
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateLevelFiveColor: aTextColor [
+	predicateColors
+		at: 5
+		put: aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateLevelFourColor [
+	^ predicateColors at: 4
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateLevelFourColor: aTextColor [
+	predicateColors
+		at: 4
+		put: aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateLevelOneColor [
 	^ predicateColors at: 1
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicatePrimaryColor: aTextColor [
+XPathExpressionHighlighter >> predicateLevelOneColor: aTextColor [
 	predicateColors
 		at: 1
 		put: aTextColor
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicateSecondaryColor [
-	^ predicateColors at: 2
+XPathExpressionHighlighter >> predicateLevelSixColor [
+	^ predicateColors at: 6
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicateSecondaryColor: aTextColor [
+XPathExpressionHighlighter >> predicateLevelSixColor: aTextColor [
 	predicateColors
-		at: 2
+		at: 6
 		put: aTextColor
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicateTertiaryColor [
+XPathExpressionHighlighter >> predicateLevelThreeColor [
 	^ predicateColors at: 3
 ]
 
 { #category : #accessing }
-XPathExpressionHighlighter >> predicateTertiaryColor: aTextColor [
+XPathExpressionHighlighter >> predicateLevelThreeColor: aTextColor [
 	predicateColors
 		at: 3
+		put: aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateLevelTwoColor [
+	^ predicateColors at: 2
+]
+
+{ #category : #accessing }
+XPathExpressionHighlighter >> predicateLevelTwoColor: aTextColor [
+	predicateColors
+		at: 2
 		put: aTextColor
 ]
 

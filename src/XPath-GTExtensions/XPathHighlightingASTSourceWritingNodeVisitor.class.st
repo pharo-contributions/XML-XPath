@@ -33,6 +33,16 @@ XPathHighlightingASTSourceWritingNodeVisitor >> emitAxisName: anAxisNameStringOr
 ]
 
 { #category : #private }
+XPathHighlightingASTSourceWritingNodeVisitor >> emitNodeTest: aNodeTest withNameTest: aNameTestString [
+	highlighter startNodeTestHighlightPosition: self startPosition.
+	super
+		emitNodeTest: aNodeTest
+		withNameTest: aNameTestString.
+	highlighter endNodeTestHighlightPosition: self endPosition.
+	^ aNodeTest.
+]
+
+{ #category : #private }
 XPathHighlightingASTSourceWritingNodeVisitor >> emitOperatorName: anOperatorNameStringOrCharacter [
 	highlighter startOperatorHighlightPosition: self startPosition.
 	super emitOperatorName: anOperatorNameStringOrCharacter.
@@ -40,13 +50,17 @@ XPathHighlightingASTSourceWritingNodeVisitor >> emitOperatorName: anOperatorName
 ]
 
 { #category : #private }
-XPathHighlightingASTSourceWritingNodeVisitor >> emitTypeTestFor: aNodeTest with: aBlockOrNil [
-	highlighter startNodeTestHighlightPosition: self startPosition.
-	super
-		emitTypeTestFor: aNodeTest
-		with: aBlockOrNil.
-	highlighter endNodeTestHighlightPosition: self endPosition.
-	^ aNodeTest.
+XPathHighlightingASTSourceWritingNodeVisitor >> emitTypeTest: aNodeTest withNameTest: aNameTestString [
+	highlighter startFunctionCallHighlightPosition: self startPosition.
+	self
+		emitAll: aNodeTest nodeType name;
+		emit: $(.
+	highlighter endFunctionCallHighlightPosition: self endPosition.
+	self emitAll: aNameTestString.
+	highlighter startFunctionCallHighlightPosition: self startPosition.
+	self emit: $).
+	highlighter endFunctionCallHighlightPosition: self endPosition.
+	^ aNodeTest
 ]
 
 { #category : #private }

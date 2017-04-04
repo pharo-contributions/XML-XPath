@@ -26,6 +26,16 @@ XPathPositionExpressionParser >> nextFunctionCall [
 	handler handleEndFunctionCallPosition: self currentPosition.
 ]
 
+{ #category : #private }
+XPathPositionExpressionParser >> nodeTestParserClass [
+	^ XPathPositionNodeTestParser
+]
+
+{ #category : #private }
+XPathPositionExpressionParser >> nodeTestParserHandlerClass [
+	^ XPathPositionExpressionNodeTestParserHandler
+]
+
 { #category : #'parsing - peeking' }
 XPathPositionExpressionParser >> peekForAbbreviatedStep [
 	^ self
@@ -103,16 +113,6 @@ XPathPositionExpressionParser >> peekForNegationOperator [
 			handler
 				handleStartOperatorPosition: startPosition;
 				handleEndOperatorPosition: endPosition]
-]
-
-{ #category : #'parsing - peeking' }
-XPathPositionExpressionParser >> peekForNodeTest [
-	^ self
-		peekWith: [super peekForNodeTest]
-		startAndEndPositionsDo: [:startPosition :endPosition |
-			handler
-				handleStartNodeTestPosition: startPosition;
-				handleEndNodeTestPosition: endPosition]
 ]
 
 { #category : #'parsing - peeking' }

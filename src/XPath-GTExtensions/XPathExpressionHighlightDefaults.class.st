@@ -7,9 +7,12 @@ Class {
 	#classInstVars : [
 		'defaultAxisColor',
 		'defaultNodeTestColor',
-		'defaultPredicatePrimaryColor',
-		'defaultPredicateSecondaryColor',
-		'defaultPredicateTertiaryColor',
+		'defaultPredicateLevelOneColor',
+		'defaultPredicateLevelTwoColor',
+		'defaultPredicateLevelThreeColor',
+		'defaultPredicateLevelFourColor',
+		'defaultPredicateLevelFiveColor',
+		'defaultPredicateLevelSixColor',
 		'defaultOperatorColor',
 		'defaultFunctionCallColor',
 		'defaultStringLiteralColor',
@@ -75,42 +78,81 @@ XPathExpressionHighlightDefaults class >> defaultOperatorColor: aTextColor [
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicatePrimaryColor [
-	^ defaultPredicatePrimaryColor
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelFiveColor [
+	^ defaultPredicateLevelFiveColor
 		ifNil: [
-			defaultPredicatePrimaryColor :=
+			defaultPredicateLevelFiveColor :=
+				self textColorForShoutProperty: #blockStart5]
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelFiveColor: aTextColor [
+	defaultPredicateLevelFiveColor := aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelFourColor [
+	^ defaultPredicateLevelFourColor
+		ifNil: [
+			defaultPredicateLevelFourColor :=
+				self textColorForShoutProperty: #blockStart4]
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelFourColor: aTextColor [
+	defaultPredicateLevelFourColor := aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelOneColor [
+	^ defaultPredicateLevelOneColor
+		ifNil: [
+			defaultPredicateLevelOneColor :=
 				self textColorForShoutProperty: #blockStart1]
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicatePrimaryColor: aTextColor [
-	defaultPredicatePrimaryColor := aTextColor
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelOneColor: aTextColor [
+	defaultPredicateLevelOneColor := aTextColor
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicateSecondaryColor [
-	^ defaultPredicateSecondaryColor
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelSixColor [
+	^ defaultPredicateLevelSixColor
 		ifNil: [
-			defaultPredicateSecondaryColor :=
-				self textColorForShoutProperty: #blockStart2]
+			defaultPredicateLevelSixColor :=
+				self textColorForShoutProperty: #blockStart6]
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicateSecondaryColor: aTextColor [
-	defaultPredicateSecondaryColor := aTextColor
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelSixColor: aTextColor [
+	defaultPredicateLevelSixColor := aTextColor
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicateTertiaryColor [
-	^ defaultPredicateTertiaryColor
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelThreeColor [
+	^ defaultPredicateLevelThreeColor
 		ifNil: [
-			defaultPredicateTertiaryColor :=
+			defaultPredicateLevelThreeColor :=
 				self textColorForShoutProperty: #blockStart3]
 ]
 
 { #category : #accessing }
-XPathExpressionHighlightDefaults class >> defaultPredicateTertiaryColor: aTextColor [
-	defaultPredicateTertiaryColor := aTextColor
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelThreeColor: aTextColor [
+	defaultPredicateLevelThreeColor := aTextColor
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelTwoColor [
+	^ defaultPredicateLevelTwoColor
+		ifNil: [
+			defaultPredicateLevelTwoColor :=
+				self textColorForShoutProperty: #blockStart2]
+]
+
+{ #category : #accessing }
+XPathExpressionHighlightDefaults class >> defaultPredicateLevelTwoColor: aTextColor [
+	defaultPredicateLevelTwoColor := aTextColor
 ]
 
 { #category : #accessing }
@@ -142,9 +184,12 @@ XPathExpressionHighlightDefaults class >> initialize [
 	defaultDefaultColor := nil.
 	defaultAxisColor := nil.
 	defaultNodeTestColor := nil.
-	defaultPredicatePrimaryColor := nil.
-	defaultPredicateSecondaryColor := nil.
-	defaultPredicateTertiaryColor := nil.
+	defaultPredicateLevelOneColor := nil.
+	defaultPredicateLevelTwoColor := nil.
+	defaultPredicateLevelThreeColor := nil.
+	defaultPredicateLevelFourColor := nil.
+	defaultPredicateLevelFiveColor := nil.
+	defaultPredicateLevelSixColor := nil.
 	defaultOperatorColor := nil.
 	defaultFunctionCallColor := nil.
 	defaultStringLiteralColor := nil.

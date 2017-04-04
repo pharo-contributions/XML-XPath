@@ -11,9 +11,15 @@ XPathASTNode >> asHighlightedText [
 XPathASTNode >> gtInspectorSourceIn: aComposite [
 	<gtInspectorPresentationOrder: 6>
 
-	aComposite text
-		title: 'Source';
-		format: [self asHighlightedText]
+	aComposite custom:
+		(GLMXMLDisabledRubricHighlightedTextPresentation new
+			title: 'Source';
+			editingMode: [
+				GLMHighlighterTextRubEditingMode withStylerDecorator:
+					(GLMXPathDisabledHighlighterTextStylerDecorator
+						disabledText: self asHighlightedText)];
+			display: [self asHighlightedText];
+			withLineNumbers: true)
 ]
 
 { #category : #'*XPath-GTExtensions' }
