@@ -42,7 +42,7 @@ XPathNodeTestParser >> nextAnyNodeTest [
 XPathNodeTestParser >> nextAttributeTest [
 	context := XPathNodeTestParserAttributeTypeTestContext new.
 	self
-		peekForNodeTest;
+		peekForNodeTestArgument;
 		nextEndArgumentList.
 ]
 
@@ -56,7 +56,7 @@ XPathNodeTestParser >> nextCommentTest [
 XPathNodeTestParser >> nextElementTest [
 	context := XPathNodeTestParserElementTypeTestContext new.
 	self
-		peekForNodeTest;
+		peekForNodeTestArgument;
 		nextEndArgumentList.
 ]
 
@@ -69,24 +69,15 @@ XPathNodeTestParser >> nextEmptyTest [
 XPathNodeTestParser >> nextNamespaceTest [
 	context := XPathNodeTestParserNamespaceTypeTestContext new.
 	self
-		peekForNodeTest;
+		peekForNodeTestArgument;
 		nextEndArgumentList.
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> nextPITest [
-	| name |
-
-	readStream skipSeparators.
-	name :=
-		(self nextStringLiteralOptional: true)
-			ifNil: [self nextNCNameOptional: true].
-	name
-		ifNil: [context handlePINodeTestWith: handler]
-		ifNotNil: [
-			context
-				handlePINodeTestForName: name
-				with: handler].
+	self peekForPITestTarget
+		ifFalse: [
+			context handlePINodeTestWith: handler].
 	self nextEndArgumentList.
 ]
 
@@ -100,63 +91,131 @@ XPathNodeTestParser >> nextTextTest [
 XPathNodeTestParser >> parseInput [
 	context := handler defaultNodeTestParserContextClass new.
 	isParsingNodeTypeTest := false.
+
 	self peekForNodeTest.
 ]
 
 { #category : #'parsing - peeking' }
-XPathNodeTestParser >> peekForExpandedNameTest: aName [
-	(aName = 'Q'
-		and: [readStream peekFor: ${])
-		ifTrue: [| uri |
-			uri := self expectUpTo: $}.
-			(readStream peekFor: $*)
-				ifTrue: [
-					context
-						handleNodeTestForNamespaceURI: uri
-						with: handler]
-				ifFalse: [
-					context
-						handleNodeTestForNamespaceURI: uri
-						localName: self nextNCName
-						with: handler].
-			^ true]
-		ifFalse: [^ false]
-]
+XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
+	| startPosition |
 
-{ #category : #'parsing - peeking' }
-XPathNodeTestParser >> peekForNameTestOrNoteTypeTest: aLocalName [
-	readStream skipSeparators.
-	(readStream peekFor: $:)
-		ifTrue: [^ false]. ": after spaces; axis specifier"
-
-	(isParsingNodeTypeTest not
-		and: [self peekForStartArgumentList])
-		ifTrue: [^ self peekForNodeTypeTest: aLocalName]
-		ifFalse: [
-			context
-				handleNodeTestForName: aLocalName
-				with: handler.
-			^ true].
-]
-
-{ #category : #'parsing - peeking' }
-XPathNodeTestParser >> peekForNameTestStartingWith: anNcName [
+	startPosition := readStream position.
 	(readStream peekFor: $:)
 		ifTrue: [
-			readStream peek == $: ":: axis specifier"
-				ifTrue: [^ false]
-				ifFalse: [^ self peekForQualifiedNameTestWithPrefix: anNcName]]
+			readStream peek == $:
+				ifFalse: [
+					"'::' means anNCName is an axis specifier and not the start
+					of a node test, otherwise the ':' should be followed by a '*'
+					or another NCName"
+					(readStream peekFor: $*)
+						ifTrue: [
+							"a 'prefix:*' wildcard QName test"
+							context
+								handleNodeTestForPrefix: anNCName
+								with: handler.
+							^ true]
+						ifFalse: [| localName |
+							localName := self nextNCName.
+							self peekForStartArgumentList
+								ifFalse: [
+									"not a function call, so it's a 'prefix:localName'
+									QName test"
+									context
+										handleNodeTestForPrefix: anNCName
+										localName: localName
+										with: handler.
+									^ true]]]]
 		ifFalse: [
-			^ (self peekForExpandedNameTest: anNcName)
-				or: [self peekForNameTestOrNoteTypeTest: anNcName]]
+			(anNCName = 'Q'
+				and: [readStream peekFor: ${])
+				ifTrue: [| uri |
+					"either a 'Q{uri}*' wildcard test or a 'Q{uri}localName' test"
+					uri := self expectUpTo: $}.
+					(readStream peekFor: $*)
+						ifTrue: [
+							context
+								handleNodeTestForNamespaceURI: uri
+								with: handler]
+						ifFalse: [
+							context
+								handleNodeTestForNamespaceURI: uri
+								localName: self nextNCName
+								with: handler].
+					^ true]
+				ifFalse: [
+					readStream skipSeparators.
+					"whitespace can be between the axis specifier and '::' separator,
+					but not between the prefix and ':' QName separator, so any ':'
+					not matched above but matched after #skipSeparators is an '::'
+					axis separator, and anNCName is an axis specifier, not a node test"
+					(readStream peekFor: $:)
+						ifFalse: [
+							(isParsingNodeTypeTest not
+								and: [self peekForStartArgumentList])
+								ifTrue: [
+									(self peekForNodeTypeTest: anNCName)
+										ifTrue: [^ true]]
+								ifFalse: [
+									context
+										handleNodeTestForName: anNCName
+										with: handler.
+									^ true]]]].
+
+	"anNCName is either an axis specifier or the start of a
+	function call and not a node test"
+	readStream position: startPosition.
+	^ false.
 ]
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNodeTest [
+	^ self peekForNodeTestStartingWithWildCardOrNCName
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNodeTestArgument [
+	^ self peekForNodeTestStartingWithWildCardOrNCName
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNodeTestStartingWithNCName [
+	| startPosition ncName |
+
+	startPosition := readStream position.
+	(ncName := self nextNCNameOptional: true)
+		ifNil: [^ false].
+	(self peekForNameTestStartingWithNCName: ncName)
+		ifFalse: [
+			readStream
+				pushBackNCName: ncName
+				position: startPosition.
+			^ false].
+	^ true.
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNodeTestStartingWithWildCard [
+	(readStream peekFor: $*)
+		ifFalse: [^ false].
+
+	(readStream peekFor: $:)
+		ifTrue: [
+			(readStream peekFor: $*)
+				ifTrue: [context handleWildcardNodeTestWith: handler]
+				ifFalse: [
+					context
+						handleNodeTestForLocalName: self nextNCName
+						with: handler]]
+		ifFalse: [context handleWildcardNodeTestWith: handler].
+	^ true.
+]
+
+{ #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForNodeTestStartingWithWildCardOrNCName [
 	readStream skipSeparators.
 	(readStream atEnd not
-		and: [self peekForWildCardNameTest
-			or: [self peekForNonWildCardNameTest]])
+		and: [self peekForNodeTestStartingWithWildCard
+			or: [self peekForNodeTestStartingWithNCName]])
 		ifTrue: [^ true]
 		ifFalse: [
 			self nextEmptyTest.
@@ -173,66 +232,27 @@ XPathNodeTestParser >> peekForNodeTypeTest: aNodeTypeOrFunctionName [
 			ifAbsent: [^ false].
 	isParsingNodeTypeTest := true.
 	self perform: nodeTypeTestParserSelector.
-	isParsingNodeTypeTest := false.
 	^ true.
 ]
 
 { #category : #'parsing - peeking' }
-XPathNodeTestParser >> peekForNonWildCardNameTest [
-	| startPosition ncName |
+XPathNodeTestParser >> peekForPITestTarget [
+	| target |
 
-	startPosition := readStream position.
-	((ncName := self nextNCNameOptional: true) notNil
-		and: [self peekForNameTestStartingWith: ncName])
-		ifTrue: [^ true]
-		ifFalse: [
-			ncName
-				ifNotNil: [
-					readStream
-						pushBackNCName: ncName
-						position: startPosition].
-			^ false].
-]
-
-{ #category : #'parsing - peeking' }
-XPathNodeTestParser >> peekForQualifiedNameTestWithPrefix: aPrefix [
-	(readStream peekFor: $*)
-		ifTrue: [
+	readStream skipSeparators.
+	(target :=
+		(self nextStringLiteralOptional: true)
+			ifNil: [self nextNCNameOptional: true])
+		ifNil: [^ false]
+		ifNotNil: [
 			context
-				handleNodeTestForPrefix: aPrefix
+				handlePINodeTestForName: target
 				with: handler.
 			^ true]
-		ifFalse: [| localName |
-			localName := self nextNCName.
-			self peekForStartArgumentList "function"
-				ifTrue: [^ false]
-				ifFalse: [
-					context
-						handleNodeTestForPrefix: aPrefix
-						localName: localName
-						with: handler.
-					^ true]].
 ]
 
 { #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForStartArgumentList [
 	readStream skipSeparators.
 	^ readStream peekFor: $(.
-]
-
-{ #category : #'parsing - peeking' }
-XPathNodeTestParser >> peekForWildCardNameTest [
-	(readStream peekFor: $*)
-		ifFalse: [^ false].
-
-	(readStream peekFor: $:)
-		ifTrue: [
-			(readStream peekFor: $*)
-				ifTrue: [context handleWildcardNodeTestWith: handler]
-				ifFalse: [
-					context
-						handleNodeTestForLocalName: self nextNCName
-						with: handler]]
-		ifFalse: [context handleWildcardNodeTestWith: handler].
-	^ true.
 ]

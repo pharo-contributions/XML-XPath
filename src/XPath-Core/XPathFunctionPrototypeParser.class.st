@@ -71,8 +71,9 @@ XPathFunctionPrototypeParser >> nextReturnType [
 XPathFunctionPrototypeParser >> parseInput [
 	hasOptionalArgument := false.
 	hasUnboundedArgument := false.
+
 	self
 		nextReturnType;
 		nextFunctionName;
-		nextArgumentList
+		nextArgumentList.
 ]

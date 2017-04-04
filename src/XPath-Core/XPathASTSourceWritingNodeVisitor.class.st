@@ -21,24 +21,32 @@ XPathASTSourceWritingNodeVisitor >> emitAxisName: anAxisNameStringOrCharacter [
 ]
 
 { #category : #private }
+XPathASTSourceWritingNodeVisitor >> emitNodeTest: aNodeTest withNameTest: aNameTestString [
+	(aNodeTest hasParent
+		and: [aNodeTest nodeType = aNodeTest parent principalNodeType])
+		ifTrue: [
+			"if the node type of the node test is the principal node
+			type of the axis, then it's redundant and can be omitted"
+			self emitAll: aNameTestString]
+		ifFalse: [
+			self
+				emitTypeTest: aNodeTest
+				withNameTest: aNameTestString].
+	^ aNodeTest
+]
+
+{ #category : #private }
 XPathASTSourceWritingNodeVisitor >> emitOperatorName: anOperatorNameStringOrCharacter [
 	self emitAll: anOperatorNameStringOrCharacter asString
 ]
 
 { #category : #private }
-XPathASTSourceWritingNodeVisitor >> emitTypeTestFor: aNodeTest with: aBlockOrNil [
-	(aNodeTest hasParent
-		and: [aNodeTest nodeType = aNodeTest parent principalNodeType])
-		ifTrue: [
-			aBlockOrNil
-				ifNotNil: [aBlockOrNil value]]
-		ifFalse: [
-			self
-				emitAll: aNodeTest nodeType name;
-				emit: $(.
-			aBlockOrNil
-				ifNotNil: [aBlockOrNil value].
-			self emit: $)].
+XPathASTSourceWritingNodeVisitor >> emitTypeTest: aNodeTest withNameTest: aNameTestString [
+	self
+		emitAll: aNodeTest nodeType name;
+		emit: $(;
+		emitAll: aNameTestString;
+		emit: $).
 	^ aNodeTest
 ]
 
@@ -51,63 +59,58 @@ XPathASTSourceWritingNodeVisitor >> visitArgument: anArgument [
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTest: anAttributeNodeTest [
 	^ self
-		emitTypeTestFor: anAttributeNodeTest
-		with: [self emit: $*]
+		emitNodeTest: anAttributeNodeTest
+		withNameTest: '*'
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTestForLocalName: anAttributeNodeTestForLocalName [
 	^ self
-		emitTypeTestFor: anAttributeNodeTestForLocalName
-		with: [self emitAll: anAttributeNodeTestForLocalName localName]
+		emitNodeTest: anAttributeNodeTestForLocalName
+		withNameTest: anAttributeNodeTestForLocalName localName
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTestForName: anAttributeNodeTestForName [
 	^ self
-		emitTypeTestFor: anAttributeNodeTestForName
-		with: [self emitAll: anAttributeNodeTestForName name]
+		emitNodeTest: anAttributeNodeTestForName
+		withNameTest: anAttributeNodeTestForName name
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTestForNamespaceURI: anAttributeNodeTestForNamespaceURI [
 	^ self
-		emitTypeTestFor: anAttributeNodeTestForNamespaceURI
-		with: [
-			self emitAll:
-				('*' expandWithXMLNamespaceURI:
-					anAttributeNodeTestForNamespaceURI namespaceURI)]
+		emitNodeTest: anAttributeNodeTestForNamespaceURI
+		withNameTest:
+			('*' expandWithXMLNamespaceURI:
+				anAttributeNodeTestForNamespaceURI namespaceURI)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTestForNamespaceURIAndLocalName: anAttributeNodeTestForNamespaceURIAndLocalName [
 	^ self
-		emitTypeTestFor: anAttributeNodeTestForNamespaceURIAndLocalName
-		with: [
-			self emitAll:
-				(anAttributeNodeTestForNamespaceURIAndLocalName localName 
-					expandWithXMLNamespaceURI:
-						anAttributeNodeTestForNamespaceURIAndLocalName namespaceURI)]
+		emitNodeTest: anAttributeNodeTestForNamespaceURIAndLocalName
+		withNameTest:
+			(anAttributeNodeTestForNamespaceURIAndLocalName localName 
+				expandWithXMLNamespaceURI:
+					anAttributeNodeTestForNamespaceURIAndLocalName namespaceURI)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTestForPrefix: anAttributeNodeTestForPrefix [
 	^ self
-		emitTypeTestFor: anAttributeNodeTestForPrefix
-		with: [
-			self emitAll:
-				('*' qualifyWithXMLPrefix: anAttributeNodeTestForPrefix prefix)]
+		emitNodeTest: anAttributeNodeTestForPrefix
+		withNameTest: ('*' qualifyWithXMLPrefix: anAttributeNodeTestForPrefix prefix)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitAttributeNodeTestForPrefixAndLocalName: anAttributeNodeTestForPrefixAndLocalName [
 	^ self
-		emitTypeTestFor: anAttributeNodeTestForPrefixAndLocalName
-		with: [
-			self emitAll:
-				(anAttributeNodeTestForPrefixAndLocalName localName
-					qualifyWithXMLPrefix:
-						anAttributeNodeTestForPrefixAndLocalName prefix)]
+		emitNodeTest: anAttributeNodeTestForPrefixAndLocalName
+		withNameTest:
+			(anAttributeNodeTestForPrefixAndLocalName localName
+				qualifyWithXMLPrefix:
+					anAttributeNodeTestForPrefixAndLocalName prefix)
 ]
 
 { #category : #'visiting - operators' }
@@ -126,63 +129,58 @@ XPathASTSourceWritingNodeVisitor >> visitBinaryOperatorExpression: aBinaryOperat
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTest: anElementNodeTest [
 	^ self
-		emitTypeTestFor: anElementNodeTest
-		with: [self emit: $*]
+		emitNodeTest: anElementNodeTest
+		withNameTest: '*'
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTestForLocalName: anElementNodeTestForLocalName [
 	^ self
-		emitTypeTestFor: anElementNodeTestForLocalName
-		with: [self emitAll: anElementNodeTestForLocalName localName]
+		emitNodeTest: anElementNodeTestForLocalName
+		withNameTest: anElementNodeTestForLocalName localName
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTestForName: anElementNodeTestForName [
 	^ self
-		emitTypeTestFor: anElementNodeTestForName
-		with: [self emitAll: anElementNodeTestForName name]
+		emitNodeTest: anElementNodeTestForName
+		withNameTest: anElementNodeTestForName name
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTestForNamespaceURI: anElementNodeTestForNamespaceURI [
 	^ self
-		emitTypeTestFor: anElementNodeTestForNamespaceURI
-		with: [
-			self emitAll:
-				('*' expandWithXMLNamespaceURI:
-					anElementNodeTestForNamespaceURI namespaceURI)]
+		emitNodeTest: anElementNodeTestForNamespaceURI
+		withNameTest:
+			('*' expandWithXMLNamespaceURI:
+				anElementNodeTestForNamespaceURI namespaceURI)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTestForNamespaceURIAndLocalName: anElementNodeTestForNamespaceURIAndLocalName [
 	^ self
-		emitTypeTestFor: anElementNodeTestForNamespaceURIAndLocalName
-		with: [
-			self emitAll:
-				(anElementNodeTestForNamespaceURIAndLocalName localName 
-					expandWithXMLNamespaceURI:
-						anElementNodeTestForNamespaceURIAndLocalName namespaceURI)]
+		emitNodeTest: anElementNodeTestForNamespaceURIAndLocalName
+		withNameTest:
+			(anElementNodeTestForNamespaceURIAndLocalName localName 
+				expandWithXMLNamespaceURI:
+					anElementNodeTestForNamespaceURIAndLocalName namespaceURI)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTestForPrefix: anElementNodeTestForPrefix [
 	^ self
-		emitTypeTestFor: anElementNodeTestForPrefix
-		with: [
-			self emitAll:
-				('*' qualifyWithXMLPrefix: anElementNodeTestForPrefix prefix)]
+		emitNodeTest: anElementNodeTestForPrefix
+		withNameTest: ('*' qualifyWithXMLPrefix: anElementNodeTestForPrefix prefix)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitElementNodeTestForPrefixAndLocalName: anElementNodeTestForPrefixAndLocalName [
 	^ self
-		emitTypeTestFor: anElementNodeTestForPrefixAndLocalName
-		with: [
-			self emitAll:
-				(anElementNodeTestForPrefixAndLocalName localName
-					qualifyWithXMLPrefix:
-						anElementNodeTestForPrefixAndLocalName prefix)]
+		emitNodeTest: anElementNodeTestForPrefixAndLocalName
+		withNameTest:
+			(anElementNodeTestForPrefixAndLocalName localName
+				qualifyWithXMLPrefix:
+					anElementNodeTestForPrefixAndLocalName prefix)
 ]
 
 { #category : #'visiting - location paths' }
@@ -216,70 +214,65 @@ XPathASTSourceWritingNodeVisitor >> visitFunctionCall: aFunctionCall [
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTest: aNamespaceNodeTest [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTest
-		with: [self emit: $*]
+		emitNodeTest: aNamespaceNodeTest
+		withNameTest: '*'
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTestForLocalName: aNamespaceNodeTestForLocalName [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTestForLocalName
-		with: [self emitAll: aNamespaceNodeTestForLocalName localName]
+		emitNodeTest: aNamespaceNodeTestForLocalName
+		withNameTest: aNamespaceNodeTestForLocalName localName
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTestForName: aNamespaceNodeTestForName [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTestForName
-		with: [self emitAll: aNamespaceNodeTestForName name]
+		emitNodeTest: aNamespaceNodeTestForName
+		withNameTest: aNamespaceNodeTestForName name
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTestForNamespaceURI: aNamespaceNodeTestForNamespaceURI [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTestForNamespaceURI
-		with: [
-			self emitAll:
-				('*' expandWithXMLNamespaceURI:
-					aNamespaceNodeTestForNamespaceURI namespaceURI)]
+		emitNodeTest: aNamespaceNodeTestForNamespaceURI
+		withNameTest:
+			('*' expandWithXMLNamespaceURI:
+				aNamespaceNodeTestForNamespaceURI namespaceURI)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTestForNamespaceURIAndLocalName: aNamespaceNodeTestForNamespaceURIAndLocalName [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTestForNamespaceURIAndLocalName
-		with: [
-			self emitAll:
-				(aNamespaceNodeTestForNamespaceURIAndLocalName localName 
-					expandWithXMLNamespaceURI:
-						aNamespaceNodeTestForNamespaceURIAndLocalName namespaceURI)]
+		emitNodeTest: aNamespaceNodeTestForNamespaceURIAndLocalName
+		withNameTest:
+			(aNamespaceNodeTestForNamespaceURIAndLocalName localName 
+				expandWithXMLNamespaceURI:
+					aNamespaceNodeTestForNamespaceURIAndLocalName namespaceURI)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTestForPrefix: aNamespaceNodeTestForPrefix [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTestForPrefix
-		with: [
-			self emitAll:
-				('*' qualifyWithXMLPrefix: aNamespaceNodeTestForPrefix prefix)]
+		emitNodeTest: aNamespaceNodeTestForPrefix
+		withNameTest: ('*' qualifyWithXMLPrefix: aNamespaceNodeTestForPrefix prefix)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNamespaceNodeTestForPrefixAndLocalName: aNamespaceNodeTestForPrefixAndLocalName [
 	^ self
-		emitTypeTestFor: aNamespaceNodeTestForPrefixAndLocalName
-		with: [
-			self emitAll:
-				(aNamespaceNodeTestForPrefixAndLocalName localName
-					qualifyWithXMLPrefix:
-						aNamespaceNodeTestForPrefixAndLocalName prefix)]
+		emitNodeTest: aNamespaceNodeTestForPrefixAndLocalName
+		withNameTest:
+			(aNamespaceNodeTestForPrefixAndLocalName localName
+				qualifyWithXMLPrefix:
+					aNamespaceNodeTestForPrefixAndLocalName prefix)
 ]
 
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitNodeTest: aNodeTest [
 	self
-		emitTypeTestFor: aNodeTest
-		with: nil.
+		emitNodeTest: aNodeTest
+		withNameTest: ''.
 	^ super visitNodeTest: aNodeTest.
 ]
 
@@ -314,8 +307,8 @@ XPathASTSourceWritingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
 { #category : #'visiting - node tests' }
 XPathASTSourceWritingNodeVisitor >> visitPINodeTestForName: aPINodeTestForName [
 	^ self
-		emitTypeTestFor: aPINodeTestForName
-		with: [self emitAll: aPINodeTestForName name]
+		emitNodeTest: aPINodeTestForName
+		withNameTest: aPINodeTestForName name
 ]
 
 { #category : #'visiting - predicates' }
