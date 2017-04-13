@@ -2,7 +2,7 @@ Extension { #name : #XMLNode }
 
 { #category : #'*XPath-GTExtensions' }
 XMLNode >> gtInspectorXPathIn: aComposite [
-	<gtInspectorPresentationOrder: 9>
+	<gtInspectorPresentationOrder: 20>
 
 	self supportsXPathEvaluator
 		ifFalse: [^ self].
