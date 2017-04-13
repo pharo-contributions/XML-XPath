@@ -192,14 +192,20 @@ ConfigurationOfXPath >> baseline10: spec [
 	spec for: #common do: [
 		spec blessing: #baseline.
 		spec repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XPath/main'.
-		spec project: 'XMLParser' with: [ 
-			spec
-				className: 'ConfigurationOfXMLParser';
-				loads: #('default');	
-				versionString: #stable;
-				repository: 'http://www.smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+		spec
+			project: 'XMLParser'
+			with: [ 
+				spec
+					className: 'ConfigurationOfXMLParser';
+					versionString: #stable;
+					loads: #('Core');
+					repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
+		spec
+			project: 'XMLParserTests'
+			copyFrom: 'XMLParser'
+			with: [ spec loads: #('Tests') ].
 		spec package: 'XPath-Core' with: [ spec requires: 'XMLParser' ].
-		spec package: 'XPath-Tests' with: [ spec requires: 'XPath-Core' ].
+		spec package: 'XPath-Tests' with: [ spec requires: #('XPath-Core' 'XMLParserTests') ].
 
 		spec group: 'default' with: #('Core' 'Tests').
 		spec group: 'Core' with: #('XPath-Core').
@@ -717,6 +723,33 @@ ConfigurationOfXPath >> baseline201: spec [
 			with: 'XPath-GTExtensions-monty.21'. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline202: spec [
+	<version: '2.0.2-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.0.6'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.22'. ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearXPathCache [
 	XPath clearCompiledExpressionCache
@@ -736,7 +769,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.0.1-baseline'.
+	spec for: #'common' version: '2.0.2-baseline'.
 ]
 
 { #category : #doits }
@@ -849,7 +882,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.0.1'.
+	spec for: #'common' version: '2.0.2'.
 
 ]
 
@@ -1974,6 +2007,17 @@ ConfigurationOfXPath >> version201: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.117'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.92'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version202: spec [ 
+        <version: '2.0.2' imports: #('2.0.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.118'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.92'.
                 ].
 ]
