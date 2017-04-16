@@ -44,8 +44,8 @@ XPathExpressionHighlighter >> decrementPredicateColorLevel [
 			predicateColorLevel := self maxPredicateColorLevel]
 ]
 
-{ #category : #accessing }
-XPathExpressionHighlighter >> defaults [
+{ #category : #private }
+XPathExpressionHighlighter >> defaultsClass [
 	^ XPathExpressionHighlightDefaults
 ]
 
@@ -124,23 +124,24 @@ XPathExpressionHighlighter >> incrementPredicateColorLevel [
 ]
 
 { #category : #initialization }
-XPathExpressionHighlighter >> initializeColors [
-	super initializeColors.
+XPathExpressionHighlighter >> initializeColorsWithDefaults: aDefaults [
+	super initializeColorsWithDefaults: aDefaults.
+
 	self
 		initializePredicateColors;
-		axisColor: self defaults defaultAxisColor;
-		nodeTestColor: self defaults defaultNodeTestColor;
-		predicateLevelOneColor: self defaults defaultPredicateLevelOneColor;
-		predicateLevelTwoColor: self defaults defaultPredicateLevelTwoColor;
-		predicateLevelThreeColor: self defaults defaultPredicateLevelThreeColor;
-		predicateLevelFourColor: self defaults defaultPredicateLevelFourColor;
-		predicateLevelFiveColor: self defaults defaultPredicateLevelFiveColor;
-		predicateLevelSixColor: self defaults defaultPredicateLevelSixColor;
-		operatorColor: self defaults defaultOperatorColor;
-		functionCallColor: self defaults defaultFunctionCallColor;
-		stringLiteralColor: self defaults defaultStringLiteralColor;
-		numberLiteralColor: self defaults defaultNumberLiteralColor;
-		variableReferenceColor: self defaults defaultVariableReferenceColor.
+		axisColor: aDefaults axisColor;
+		nodeTestColor: aDefaults nodeTestColor;
+		predicateLevelOneColor: aDefaults predicateLevelOneColor;
+		predicateLevelTwoColor: aDefaults predicateLevelTwoColor;
+		predicateLevelThreeColor: aDefaults predicateLevelThreeColor;
+		predicateLevelFourColor: aDefaults predicateLevelFourColor;
+		predicateLevelFiveColor: aDefaults predicateLevelFiveColor;
+		predicateLevelSixColor: aDefaults predicateLevelSixColor;
+		operatorColor: aDefaults operatorColor;
+		functionCallColor: aDefaults functionCallColor;
+		stringLiteralColor: aDefaults stringLiteralColor;
+		numberLiteralColor: aDefaults numberLiteralColor;
+		variableReferenceColor: aDefaults variableReferenceColor.
 ]
 
 { #category : #initialization }
