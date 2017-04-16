@@ -26,6 +26,6 @@ GLMXPathDisabledHighlighterTextStylerDecorator >> disabledText: aStringOrText [
 ]
 
 { #category : #parsing }
-GLMXPathDisabledHighlighterTextStylerDecorator >> parse: aString onError: anError [
+GLMXPathDisabledHighlighterTextStylerDecorator >> highlightingParse: aString onError: aBlock [
 	^ self disabledText
 ]

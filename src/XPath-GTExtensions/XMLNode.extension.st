@@ -4,6 +4,8 @@ Extension { #name : #XMLNode }
 XMLNode >> gtInspectorXPathIn: aComposite [
 	<gtInspectorPresentationOrder: 20>
 
+	| currentTextStylerDecorator |
+
 	self supportsXPathEvaluator
 		ifFalse: [^ self].
 
@@ -11,26 +13,24 @@ XMLNode >> gtInspectorXPathIn: aComposite [
 		(GLMRubricHighlightedTextPresentation new
 			title: 'XPath';
 			editingMode: [
+				currentTextStylerDecorator :=
+					GLMXPathHighlighterTextStylerDecorator new.
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
-					GLMXPathHighlighterTextStylerDecorator new];
+					currentTextStylerDecorator];
 			display: [''];
 			withLineNumbers: true;
-			selectionAct: [:presentation |
-				presentation
-					selection:
-						(self xpath: 
-							(presentation selectedText asString
-								ifEmpty: [presentation text asString]));
-					clearUserEdits]
-				on: $g
-				entitled: 'Evaluate and go';
+			"the selection action was removed because it reports the
+			wrong #selectionText if the previous presentation viewed
+			was a text presentation with a selection"
 			act: [:presentation |
 				presentation
-					selection: (self xpath: presentation text asString);
+					selection:
+						(self xpath:
+							currentTextStylerDecorator text asString);
 					clearUserEdits]
 				icon: GLMUIThemeExtraIcons glamorousGo
-				on: $G
-				entitled: 'Evaluate all and go').
+				on: $g
+				entitled: 'Evaluate and go').
 ]
 
 { #category : #'*XPath-GTExtensions' }

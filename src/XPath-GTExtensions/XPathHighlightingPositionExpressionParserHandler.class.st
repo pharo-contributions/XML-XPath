@@ -26,7 +26,7 @@ XPathHighlightingPositionExpressionParserHandler >> asHighlightedText [
 ]
 
 { #category : #converting }
-XPathHighlightingPositionExpressionParserHandler >> asHighlightedTextWithRemainderColored: aTextColor startingAt: aPosition [
+XPathHighlightingPositionExpressionParserHandler >> asHighlightedTextColored: aTextColor startingAt: aPosition [
 	| text |
 
 	text := self asHighlightedText.
@@ -35,11 +35,6 @@ XPathHighlightingPositionExpressionParserHandler >> asHighlightedTextWithRemaind
 		withColor: aTextColor
 		startingAt: aPosition.
 	^ text.
-]
-
-{ #category : #accessing }
-XPathHighlightingPositionExpressionParserHandler >> encoding [
-	^ ''
 ]
 
 { #category : #accessing }
