@@ -8,6 +8,21 @@ XPathASTNode >> asHighlightedText [
 ]
 
 { #category : #'*XPath-GTExtensions' }
+XPathASTNode classSide >> gtExampleXPathASTNode [
+
+	<gtExample>
+	<label: 'addressbook/person/address/./@city'>
+
+	| path |
+	
+	path := XPath for: 'addressbook/person/address/./@city'.
+	
+	^ (XPathExpressionParser
+			on: path expressionSource
+			for: XPathASTExpressionParserHandler new) parse
+]
+
+{ #category : #'*XPath-GTExtensions' }
 XPathASTNode >> gtInspectorSourceIn: aComposite [
 	<gtInspectorPresentationOrder: 6>
 

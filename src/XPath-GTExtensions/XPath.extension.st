@@ -25,6 +25,14 @@ XPath >> errorTextFor: anError [
 ]
 
 { #category : #'*XPath-GTExtensions' }
+XPath classSide >> gtExampleXPath [
+	<gtExample>
+	<label: 'addressbook/person/address/./@city'>
+
+	^ XPath for: 'addressbook/person/address/./@city'
+]
+
+{ #category : #'*XPath-GTExtensions' }
 XPath >> gtInspectorASTIn: aComposite [
 	<gtInspectorPresentationOrder: 7>
 
