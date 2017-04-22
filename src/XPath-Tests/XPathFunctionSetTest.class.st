@@ -15,6 +15,17 @@ XPathFunctionSetTest >> absentSetElement [
 ]
 
 { #category : #accessing }
+XPathFunctionSetTest >> disjointSameNameSetElements [
+	"these functions are different from #setElements, but because they
+	are stub subclasses of them, they have the same function names"
+	^ Array
+		with: XPathOtherCeilingFunction
+		with: XPathOtherFloorFunction
+		with: XPathOtherRoundFunction
+		with: XPathOtherSumFunction
+]
+
+{ #category : #accessing }
 XPathFunctionSetTest >> disjointSetElements [
 	^ Array
 		with: XPathSubstringFunction
@@ -119,6 +130,24 @@ XPathFunctionSetTest >> testFunctionNamedIfAbsent [
 		(set
 			functionNamed: self absentSetElement prototypeName
 			ifAbsent: [self absentSetElement]) == self absentSetElement.
+]
+
+{ #category : #tests }
+XPathFunctionSetTest >> testIncludes [
+	| set |
+
+	super testIncludes.
+
+	set := self setWithElements.
+	self setElements
+		with: self disjointSameNameSetElements
+		do: [:function :sameNameFunction |
+			self deny: (set includes: sameNameFunction).
+
+			set add: sameNameFunction.
+			self
+				deny: (set includes: function);
+				assert: (set includes: sameNameFunction)].
 ]
 
 { #category : #tests }
@@ -248,4 +277,64 @@ XPathFunctionSetTest >> testPlusSet [
 		equaling:
 			(self setClass newFrom:
 				self setWithDisjointElements, self setWithElements).
+]
+
+{ #category : #tests }
+XPathFunctionSetTest >> testRemoveFunctionNamed [
+	| set |
+
+	set := self setWithElements.
+	self setElements do: [:each |
+		self
+			assert: (set removeFunctionNamed: each prototypeName) == each;
+			deny: (set includes: each).
+		self
+			should: [set removeFunctionNamed: each prototypeName]
+			raise: Error].
+	self assert: set isEmpty.
+]
+
+{ #category : #tests }
+XPathFunctionSetTest >> testRemoveFunctionNamedIfAbsent [
+	| set |
+
+	set := self setWithElements.
+	self setElements do: [:each |
+		self assert:
+			(set
+				removeFunctionNamed: each prototypeName
+				ifAbsent: [self fail]) == each.
+		self deny: (set includes: each).
+		self
+			assert:
+				(set
+					removeFunctionNamed: each prototypeName
+					ifAbsent: [self absentSetElement]) == self absentSetElement].
+	self assert: set isEmpty.
+]
+
+{ #category : #tests }
+XPathFunctionSetTest >> testRemoveIfAbsent [
+	| set |
+
+	super testRemoveIfAbsent.
+
+	set := self setWithElements.
+	self setElements
+		with: self disjointSameNameSetElements
+		do: [:function :sameNameFunction |
+			self assert:
+				(set
+					remove: sameNameFunction
+					ifAbsent: [self absentSetElement]) = self absentSetElement.
+
+			set add: sameNameFunction.
+			self assert:
+				(set
+					remove: function
+					ifAbsent: [self absentSetElement]) = self absentSetElement.
+			self assert:
+				(set
+					remove: sameNameFunction
+					ifAbsent: [self fail]) = sameNameFunction].
 ]
