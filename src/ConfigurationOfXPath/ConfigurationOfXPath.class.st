@@ -1,5 +1,11 @@
 "
-ConfigurationOfXPath load
+Loads the XPath library and related packages:
+	(ConfigurationOfXPath project version: #stable) load: #('default')
+
+The loadable groups are:
+	default - XPath, XMLParser, and XMLWriter with tests.
+	Core - XPath and XMLParser without XMLWriter  or tests.
+	CoreWithWriting - XPath, XMLParser, and XMLWriter without tests.
 "
 Class {
 	#name : #ConfigurationOfXPath,
@@ -201,14 +207,19 @@ ConfigurationOfXPath >> baseline10: spec [
 					loads: #('Core');
 					repository: 'http://smalltalkhub.com/mc/PharoExtras/XMLParser/main' ].
 		spec
+			project: 'XMLParserCoreWithWriting'
+			copyFrom: 'XMLParser'
+			with: [ spec loads: #('CoreWithWriting') ].
+		spec
 			project: 'XMLParserTests'
 			copyFrom: 'XMLParser'
 			with: [ spec loads: #('Tests') ].
 		spec package: 'XPath-Core' with: [ spec requires: 'XMLParser' ].
-		spec package: 'XPath-Tests' with: [ spec requires: #('XPath-Core' 'XMLParserTests') ].
+		spec package: 'XPath-Tests' with: [ spec requires: #('XMLParserTests' 'XPath-Core') ].
 
 		spec group: 'default' with: #('Core' 'Tests').
 		spec group: 'Core' with: #('XPath-Core').
+		spec group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core').
 		spec group: 'Tests' with: #('XPath-Tests')].
 
 	spec for: #squeakCommon do: [
@@ -230,9 +241,10 @@ ConfigurationOfXPath >> baseline10: spec [
 	spec
 		for: #gt
 		do: [
+			"the extensions require XMLWriter"
 			spec
-				package: 'XPath-Core'
-				with: [ spec includes: 'XPath-GTExtensions' ].
+				group: 'default' with: #('Core' 'Tests' 'XPath-GTExtensions');
+				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core' 'XPath-GTExtensions').
 			spec
 				package: 'XPath-GTExtensions'
 				with: [ spec requires: 'XPath-Core' ]. ].
@@ -882,7 +894,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.0.2'.
+	spec for: #'common' version: '2.0.3'.
 
 ]
 
@@ -2019,5 +2031,16 @@ ConfigurationOfXPath >> version202: spec [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.118'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.92'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version203: spec [ 
+        <version: '2.0.3' imports: #('2.0.2-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.119'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.93'.
                 ].
 ]
