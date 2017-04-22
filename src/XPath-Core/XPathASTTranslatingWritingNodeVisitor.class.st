@@ -222,8 +222,10 @@ XPathASTTranslatingWritingNodeVisitor >> emitInlinedTrueFunctionCall: aFunctionC
 ]
 
 { #category : #private }
-XPathASTTranslatingWritingNodeVisitor >> emitNodeSetSort [
-	self emitAll: ' sort'
+XPathASTTranslatingWritingNodeVisitor >> emitNodeSetSortForLocationPath: aLocationPath [
+	(aLocationPath hasSteps
+		and: [aLocationPath isPredicateLocationPath not])
+		ifTrue: [self emitAll: ' sort']
 ]
 
 { #category : #private }
@@ -370,10 +372,9 @@ XPathASTTranslatingWritingNodeVisitor >> visitAbsoluteLocationPath: anAbsoluteLo
 		emitStartGroupingsForLocationPath: anAbsoluteLocationPath;
 		emitInitializingDocumentRootVariableReference.
 	super visitAbsoluteLocationPath: anAbsoluteLocationPath.
-	self emit: $).
-	(anAbsoluteLocationPath hasSteps
-		and: [anAbsoluteLocationPath isPredicateLocationPath not])
-		ifTrue: [self emitNodeSetSort].
+	self
+		emit: $);
+		emitNodeSetSortForLocationPath: anAbsoluteLocationPath.
 	^ anAbsoluteLocationPath.
 ]
 
@@ -643,10 +644,8 @@ XPathASTTranslatingWritingNodeVisitor >> visitFilterExpressionLocationPath: aFil
 	self
 		emitAll: ' asXPathFilterExpressionLocationPathRoot';
 		visitLocationPath: aFilterExpressionLocationPath;
-		emit: $).
-	(aFilterExpressionLocationPath hasSteps
-		and: [aFilterExpressionLocationPath isPredicateLocationPath not])
-		ifTrue: [self emitNodeSetSort].
+		emit: $);
+		emitNodeSetSortForLocationPath: aFilterExpressionLocationPath.
 	^ aFilterExpressionLocationPath.
 ]
 
@@ -962,10 +961,8 @@ XPathASTTranslatingWritingNodeVisitor >> visitRelativeLocationPath: aRelativeLoc
 		emitAll: self contextNodeVariable.
 	super visitRelativeLocationPath: aRelativeLocationPath.
 	self
-		emit: $).
-	(aRelativeLocationPath hasSteps
-		and: [aRelativeLocationPath isPredicateLocationPath not])
-		ifTrue: [self emitNodeSetSort].
+		emit: $);
+		emitNodeSetSortForLocationPath: aRelativeLocationPath.
 	^ aRelativeLocationPath.
 ]
 

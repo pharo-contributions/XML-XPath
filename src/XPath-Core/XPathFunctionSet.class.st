@@ -154,8 +154,8 @@ XPathFunctionSet >> includes: aFunction [
 ]
 
 { #category : #testing }
-XPathFunctionSet >> includesFunctionNamed: aName [
-	^ functionsByName includesKey: aName
+XPathFunctionSet >> includesFunctionNamed: aFunctionName [
+	^ functionsByName includesKey: aFunctionName
 ]
 
 { #category : #initialization }
@@ -176,9 +176,12 @@ XPathFunctionSet >> postCopy [
 
 { #category : #removing }
 XPathFunctionSet >> remove: aFunction ifAbsent: aBlock [
-	^ functionsByName
-		removeKey: aFunction prototypeName
-		ifAbsent: aBlock
+	^ (self includes: aFunction)
+		ifTrue: [
+			functionsByName
+				removeKey: aFunction prototypeName
+				ifAbsent: aBlock]
+		ifFalse: [aBlock value]
 ]
 
 { #category : #removing }
@@ -187,6 +190,18 @@ XPathFunctionSet >> removeAll [
 	be safely modified while iterating it with #do:"
 
 	functionsByName removeAll
+]
+
+{ #category : #removing }
+XPathFunctionSet >> removeFunctionNamed: aFunctionName [
+	^ functionsByName removeKey: aFunctionName
+]
+
+{ #category : #removing }
+XPathFunctionSet >> removeFunctionNamed: aFunctionName ifAbsent: aBlock [
+	^ functionsByName
+		removeKey: aFunctionName
+		ifAbsent: aBlock
 ]
 
 { #category : #accessing }
