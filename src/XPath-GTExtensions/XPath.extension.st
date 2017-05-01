@@ -27,9 +27,9 @@ XPath >> errorTextFor: anError [
 { #category : #'*XPath-GTExtensions' }
 XPath classSide >> gtExampleXPath [
 	<gtExample>
-	<label: 'addressbook/person/address/./@city'>
+	<label: 'addressbook/person[1]/address/@city'>
 
-	^ XPath for: 'addressbook/person/address/./@city'
+	^ XPath for: 'addressbook/person[1]/address/@city'
 ]
 
 { #category : #'*XPath-GTExtensions' }

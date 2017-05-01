@@ -9,16 +9,11 @@ XPathASTNode >> asHighlightedText [
 
 { #category : #'*XPath-GTExtensions' }
 XPathASTNode classSide >> gtExampleXPathASTNode [
-
 	<gtExample>
-	<label: 'addressbook/person/address/./@city'>
-
-	| path |
-	
-	path := XPath for: 'addressbook/person/address/./@city'.
+	<label: 'addressbook/person[1]/address/@city'>
 	
 	^ (XPathExpressionParser
-			on: path expressionSource
+			on: 'addressbook/person[1]/address/@city'
 			for: XPathASTExpressionParserHandler new) parse
 ]
 
