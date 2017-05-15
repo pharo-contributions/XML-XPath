@@ -3,7 +3,7 @@ This is an XPath type class for string values.
 "
 Class {
 	#name : #XPathStringValueType,
-	#superclass : #XPathObjectValueType,
+	#superclass : #XPathValueType,
 	#category : #'XPath-Core-Types'
 }
 

@@ -3,7 +3,7 @@ This is an XPath type class for XPathNodeSet values.
 "
 Class {
 	#name : #XPathNodeSetValueType,
-	#superclass : #XPathObjectValueType,
+	#superclass : #XPathValueType,
 	#category : #'XPath-Core-Types'
 }
 

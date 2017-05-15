@@ -139,7 +139,8 @@ XPath class >> for: anExpressionSourceString in: aNode context: aContext [
 XPath class >> initialize [
 	"self initialize"
 
-	self clearCompiledExpressionCache
+	"reset to nil instead of just clearing to get full reinitialization"
+	compiledExpressionCache := nil
 ]
 
 { #category : #accessing }

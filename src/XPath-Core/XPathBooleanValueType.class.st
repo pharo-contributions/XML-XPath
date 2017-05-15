@@ -3,7 +3,7 @@ This is an XPath type class for 'true' and 'false' values.
 "
 Class {
 	#name : #XPathBooleanValueType,
-	#superclass : #XPathObjectValueType,
+	#superclass : #XPathValueType,
 	#category : #'XPath-Core-Types'
 }
 

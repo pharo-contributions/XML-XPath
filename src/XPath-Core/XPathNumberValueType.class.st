@@ -3,7 +3,7 @@ This is an XPath type class for Floats and instances of other Number subclasses.
 "
 Class {
 	#name : #XPathNumberValueType,
-	#superclass : #XPathObjectValueType,
+	#superclass : #XPathValueType,
 	#category : #'XPath-Core-Types'
 }
 
