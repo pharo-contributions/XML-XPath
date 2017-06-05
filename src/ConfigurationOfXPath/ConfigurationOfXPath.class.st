@@ -217,7 +217,7 @@ ConfigurationOfXPath >> baseline10: spec [
 		spec package: 'XPath-Core' with: [ spec requires: 'XMLParser' ].
 		spec package: 'XPath-Tests' with: [ spec requires: #('XMLParserTests' 'XPath-Core') ].
 
-		spec group: 'default' with: #('Core' 'Tests').
+		spec group: 'default' with: #('CoreWithWriting' 'Tests').
 		spec group: 'Core' with: #('XPath-Core').
 		spec group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core').
 		spec group: 'Tests' with: #('XPath-Tests')].
@@ -243,8 +243,8 @@ ConfigurationOfXPath >> baseline10: spec [
 		do: [
 			"the extensions require XMLWriter"
 			spec
-				group: 'default' with: #('Core' 'Tests' 'XPath-GTExtensions');
-				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core' 'XPath-GTExtensions').
+				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core' 'XPath-GTExtensions');
+				group: 'Tests' with: #('XPath-Tests' 'XPath-GTExtensions').
 			spec
 				package: 'XPath-GTExtensions'
 				with: [ spec requires: 'XPath-Core' ]. ].
