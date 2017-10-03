@@ -25,12 +25,12 @@ XPathStringNodeTestParserHandler class >> withNamespacePrincipalNodeType [
 	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserNamespaceContext
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass [
 	^ defaultNodeTestParserContextClass
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass: aClass [
 	defaultNodeTestParserContextClass := aClass
 ]

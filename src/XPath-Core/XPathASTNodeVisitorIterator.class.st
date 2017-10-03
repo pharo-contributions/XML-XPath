@@ -1,5 +1,5 @@
 "
-This class can be used to control the iteration of node collections during AST traversal. It wraps a ReadStream and supports #next and #peek (portably both return nil when #atEnd), and #atEnd, and access to the previous node visited with a non-nil/null return value.
+This class can be used to control the iteration of node collections during AST traversal. It wraps a ReadStream and supports #next and #peek (both return nil when #atEnd), and #atEnd, and access to the previous node visited that did not have a nil/null return value.
 "
 Class {
 	#name : #XPathASTNodeVisitorIterator,

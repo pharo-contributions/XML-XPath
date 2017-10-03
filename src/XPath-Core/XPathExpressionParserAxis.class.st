@@ -110,7 +110,7 @@ XPathExpressionParserAxis >> beStartOfRelativeLocationPath [
 	isStartOfRelativeLocationPath := true
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionParserAxis >> defaultNodeTestParserContextClass [
 	^ defaultNodeTestParserContextClass
 		ifNil: [

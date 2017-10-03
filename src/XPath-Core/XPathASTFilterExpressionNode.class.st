@@ -26,7 +26,7 @@ XPathASTFilterExpressionNode >> addPredicate: aPredicate [
 	^ self predicates addLast: (self beParentOf: aPredicate)
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTFilterExpressionNode >> defaultTypeClass [
 	^ XPathNodeSetValueType
 ]

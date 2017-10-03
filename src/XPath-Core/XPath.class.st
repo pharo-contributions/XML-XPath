@@ -191,12 +191,12 @@ XPath >> compiledExpression [
 			compiledExpression]
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPath >> compilerClass [
 	^ XPathExpressionCompiler
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPath >> contextClass [
 	^ XPathContext
 ]

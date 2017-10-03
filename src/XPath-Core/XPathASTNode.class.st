@@ -83,7 +83,7 @@ XPathASTNode >> beParentOfAll: aNodeCollection [
 	^ aNodeCollection.
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTNode >> defaultTypeClass [
 	^ XPathValueType
 ]

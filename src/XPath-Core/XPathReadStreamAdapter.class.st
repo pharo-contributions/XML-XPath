@@ -43,6 +43,9 @@ XPathReadStreamAdapter >> next [
 XPathReadStreamAdapter >> nextMatchAll: aString [
 	| oldPosition |
 
+	aString size > 0
+		ifFalse: [^ true].
+
 	(stream atEnd not
 		and: [stream peek = (aString at: 1)])
 		ifFalse: [^ false].
@@ -147,8 +150,8 @@ XPathReadStreamAdapter >> position [
 ]
 
 { #category : #accessing }
-XPathReadStreamAdapter >> position: aPosition [
-	stream position: aPosition
+XPathReadStreamAdapter >> position: anInteger [
+	stream position: anInteger
 ]
 
 { #category : #positioning }
@@ -174,7 +177,9 @@ XPathReadStreamAdapter >> skipBack [
 { #category : #positioning }
 XPathReadStreamAdapter >> skipSeparators [
 	"provides consistent cross-platform separator skipping with the XML set of
-	separators"
+	separators, which the XPath spec uses for whitespace too:
+		ExprWhitespace	   ::=   	S
+		S	   ::=   	(#x20 | #x9 | #xD | #xA)+"
 	[stream atEnd not
 		and: [stream peek isXMLSeparator]]
 		whileTrue: [stream next]

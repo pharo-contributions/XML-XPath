@@ -36,7 +36,7 @@ XPathASTNumberLiteralNode >> asXPathString [
 	^ xpathString ifNil: [xpathString := self number asXPathString]
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTNumberLiteralNode >> defaultTypeClass [
 	^ XPathNumberValueType
 ]

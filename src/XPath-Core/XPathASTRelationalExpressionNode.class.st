@@ -7,7 +7,7 @@ Class {
 	#category : #'XPath-Core-Compilation-AST'
 }
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTRelationalExpressionNode >> defaultTypeClass [
 	^ XPathBooleanValueType
 ]

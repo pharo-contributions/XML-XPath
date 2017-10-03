@@ -56,7 +56,7 @@ XPathExpressionCompiler >> optimizeParsedExpression: anExpressionAST [
 		visitNode: anExpressionAST
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathExpressionCompiler >> optimizerClass [
 	^ XPathASTOptimizingMutatingNodeVisitor
 ]
@@ -68,12 +68,12 @@ XPathExpressionCompiler >> parseExpression: anExpressionSourceStringOrStream [
 		for: self parserHandlerClass new) parse
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathExpressionCompiler >> parserClass [
 	^ XPathExpressionParser
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathExpressionCompiler >> parserHandlerClass [
 	^ XPathASTExpressionParserHandler
 ]
@@ -85,7 +85,7 @@ XPathExpressionCompiler >> translateParsedExpression: anExpressionAST [
 		translatedExpression
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathExpressionCompiler >> translatorClass [
 	^ XPathASTTranslatingWritingNodeVisitor
 ]

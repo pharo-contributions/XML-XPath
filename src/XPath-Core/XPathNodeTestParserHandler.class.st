@@ -7,7 +7,7 @@ Class {
 	#category : #'XPath-Core-Parsers'
 }
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathNodeTestParserHandler >> defaultNodeTestParserContextClass [
 	self subclassResponsibility
 ]

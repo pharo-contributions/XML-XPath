@@ -12,7 +12,7 @@ XPathASTOrExpressionNode >> acceptNodeVisitor: aNodeVisitor [
 	^ aNodeVisitor visitOrExpression: self
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTOrExpressionNode >> defaultTypeClass [
 	^ XPathBooleanValueType
 ]

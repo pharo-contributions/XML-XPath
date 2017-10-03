@@ -26,7 +26,7 @@ XPathASTFilterExpressionLocationPathNode >> addStep: aStep [
 	^ self steps addLast: (self beParentOf: aStep)
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTFilterExpressionLocationPathNode >> defaultTypeClass [
 	^ XPathNodeSetValueType
 ]

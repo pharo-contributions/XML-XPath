@@ -250,7 +250,7 @@ XPathFunction >> newNodeSet [
 	^ self nodeSetClass new
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathFunction >> nodeSetClass [
 	^ XPathNodeSet
 ]

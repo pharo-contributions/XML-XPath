@@ -63,6 +63,7 @@ XPathParser >> errorExpectedStringLiteral [
 XPathParser >> expectNext: aCharacter [
 	| nextChar |
 
+	"use #= for pre-SpurVM compatibility where wide chars aren't #=="
 	(nextChar := readStream next) = aCharacter
 		ifFalse: [
 			self

@@ -36,7 +36,7 @@ XPathASTStringLiteralNode >> asXPathString [
 	^ self string
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathASTStringLiteralNode >> defaultTypeClass [
 	^ XPathStringValueType
 ]

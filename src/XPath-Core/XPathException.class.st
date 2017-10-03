@@ -16,14 +16,18 @@ XPathException >> hasPosition [
 ]
 
 { #category : #accessing }
+XPathException >> messageText [
+	^ self hasPosition
+		ifTrue: [super messageText, ' (near pos. ', self position asString, ')']
+		ifFalse: [super messageText]
+]
+
+{ #category : #accessing }
 XPathException >> position [
 	^ position
 ]
 
 { #category : #accessing }
-XPathException >> position: aPosition [
-	position := aPosition.
-	self
-		messageTextAppend: aPosition
-		withDescription: 'at pos.'.
+XPathException >> position: anInteger [
+	position := anInteger
 ]
