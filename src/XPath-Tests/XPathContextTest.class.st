@@ -338,7 +338,6 @@ XPathContextTest >> testResolvePrefix [
 
 	self assert:
 		(context resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
-	
 	self assert:
 		(context resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
 ]
@@ -352,7 +351,7 @@ XPathContextTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(context
 				resolvePrefix: key
-				ifUnresolvable: [#unresolvable]) = #unresolvable.
+				ifUnresolvable: ['unresolvable']) = 'unresolvable'.
 		context
 			declarePrefix: key
 			uri: value.
@@ -365,7 +364,6 @@ XPathContextTest >> testResolvePrefixIfUnresolvable [
 		(context
 			resolvePrefix: 'xml'
 			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
-	
 	self assert:
 		(context
 			resolvePrefix: 'xmlns'

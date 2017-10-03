@@ -21,17 +21,25 @@ XPathReadStreamAdapterTest >> newStreamAdapterOn: aStream [
 
 { #category : #'instance creation' }
 XPathReadStreamAdapterTest >> newStreamAdapterOnBadQualifiedName [
-	^ self streamAdapterClass on: self badQualifiedName readStream
+	^ self streamAdapterClass on:
+		(self newStreamOn: self badQualifiedName)
 ]
 
 { #category : #'instance creation' }
 XPathReadStreamAdapterTest >> newStreamAdapterOnNCName [
-	^ self streamAdapterClass on: self ncName readStream
+	^ self streamAdapterClass on:
+		(self newStreamOn: self ncName)
 ]
 
 { #category : #'instance creation' }
 XPathReadStreamAdapterTest >> newStreamAdapterOnQualifiedName [
-	^ self streamAdapterClass on: self qualifiedName readStream
+	^ self streamAdapterClass on:
+		(self newStreamOn: self qualifiedName)
+]
+
+{ #category : #'instance creation' }
+XPathReadStreamAdapterTest >> newStreamOn: aString [
+	^ XMLExceptionRaisingReadStream on: aString
 ]
 
 { #category : #accessing }
@@ -146,6 +154,23 @@ XPathReadStreamAdapterTest >> testPeek [
 ]
 
 { #category : #tests }
+XPathReadStreamAdapterTest >> testPeekFor [
+	| adapter |
+
+	adapter := self newStreamAdapterOnQualifiedName.
+	self qualifiedName do: [:each |
+		self
+			deny: (adapter peekFor: #absent);
+			deny: (adapter peekFor: nil);
+			assert: (adapter peekFor: each);
+			deny: (adapter peekFor: #absent);
+			deny: (adapter peekFor: nil)].
+	self
+		deny: (adapter peekFor: #absent);
+		deny: (adapter peekFor: nil).
+]
+
+{ #category : #tests }
 XPathReadStreamAdapterTest >> testPeekPushedBackToken [
 	| adapter ncNamePosition ncName |
 
@@ -184,31 +209,4 @@ XPathReadStreamAdapterTest >> testPushBackNCNamePosition [
 		assert: adapter position = ncNamePosition;
 		assert: adapter nextNCName = ncName;
 		assert: adapter atEnd.
-]
-
-{ #category : #tests }
-XPathReadStreamAdapterTest >> testStreamReadingPortability [
-	| stream adapter |
-
-	stream := XMLExceptionRaisingReadStream on: self qualifiedName.
-	adapter := self newStreamAdapterOn: stream.
-	self qualifiedName do: [:each |
-		self
-			deny: adapter atEnd;
-			assert: adapter peek = each;
-			assert: adapter next = each].
-	self assert: adapter atEnd.
-	self
-		shouldnt: [
-			adapter
-				peek;
-				next]
-		raise: Error.
-	self
-		assert: adapter peek isNil;
-		assert: adapter next isNil.
-
-	self assert: stream atEnd.
-	self should: [stream peek] raise: Error.
-	self should: [stream next] raise: Error.
 ]
