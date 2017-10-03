@@ -196,67 +196,67 @@ XPathExpressionHighlightDefaults class >> resetDefaults [
 	defaultVariableReferenceColor := nil.
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> axisColor [
 	^ self class defaultAxisColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> functionCallColor [
 	^ self class defaultFunctionCallColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> nodeTestColor [
 	^ self class defaultNodeTestColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> numberLiteralColor [
 	^ self class defaultNumberLiteralColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> operatorColor [
 	^ self class defaultOperatorColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> predicateLevelFiveColor [
 	^ self class defaultPredicateLevelFiveColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> predicateLevelFourColor [
 	^ self class defaultPredicateLevelFourColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> predicateLevelOneColor [
 	^ self class defaultPredicateLevelOneColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> predicateLevelSixColor [
 	^ self class defaultPredicateLevelSixColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> predicateLevelThreeColor [
 	^ self class defaultPredicateLevelThreeColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> predicateLevelTwoColor [
 	^ self class defaultPredicateLevelTwoColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> stringLiteralColor [
 	^ self class defaultStringLiteralColor
 ]
 
-{ #category : #accessing }
+{ #category : #defaults }
 XPathExpressionHighlightDefaults >> variableReferenceColor [
 	^ self class defaultVariableReferenceColor
 ]

@@ -36,7 +36,7 @@ XPathExpressionHighlighter >> axisColor: aTextColor [
 	axisColor := aTextColor
 ]
 
-{ #category : #accessing }
+{ #category : #'highlighting - predicate levels' }
 XPathExpressionHighlighter >> decrementPredicateColorLevel [
 	(predicateColorLevel := predicateColorLevel - 1) >= 1
 		ifFalse: [
@@ -44,7 +44,7 @@ XPathExpressionHighlighter >> decrementPredicateColorLevel [
 			predicateColorLevel := self maxPredicateColorLevel]
 ]
 
-{ #category : #private }
+{ #category : #defaults }
 XPathExpressionHighlighter >> defaultsClass [
 	^ XPathExpressionHighlightDefaults
 ]
@@ -115,7 +115,7 @@ XPathExpressionHighlighter >> functionCallColor: aTextColor [
 	functionCallColor := aTextColor
 ]
 
-{ #category : #accessing }
+{ #category : #'highlighting - predicate levels' }
 XPathExpressionHighlighter >> incrementPredicateColorLevel [
 	(predicateColorLevel := predicateColorLevel + 1) <= self maxPredicateColorLevel
 		ifFalse: [
