@@ -19,8 +19,8 @@ XPathExpressionNodeTestParserHandler class >> currentAxis: anAxis expressionPars
 ]
 
 { #category : #defaults }
-XPathExpressionNodeTestParserHandler >> defaultNodeTestParserContextClass [
-	^ currentAxis defaultNodeTestParserContextClass
+XPathExpressionNodeTestParserHandler >> defaultNodeTestParserStateClass [
+	^ currentAxis defaultNodeTestParserStateClass
 ]
 
 { #category : #handling }

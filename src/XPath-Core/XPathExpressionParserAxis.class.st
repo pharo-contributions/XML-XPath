@@ -1,5 +1,5 @@
 "
-This class holds the current axis while a step is being parsed by an XPathExpressionParser and maps it to the correct handler selector and to a default node test parser context class (to parse any node test that comes after).
+This class holds the current axis while a step is being parsed by an XPathExpressionParser and maps it to the correct handler selector and to a default node test parser state class (to parse any node test that comes after).
 "
 Class {
 	#name : #XPathExpressionParserAxis,
@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'axisSpecifier',
 		'handlerSelector',
-		'defaultNodeTestParserContextClass',
+		'defaultNodeTestParserStateClass',
 		'isImplicit',
 		'isStartOfRelativeLocationPath',
 		'isFirstAxis'
@@ -27,7 +27,7 @@ XPathExpressionParserAxis class >> axisSpecifiers [
 XPathExpressionParserAxis class >> axisSpecifiersTemplate [
 	"Returns an array of arrays where each subarray has an axis name,
 	a handler selector to map it to, and the principal node type for
-	that axis, which is used to determine the parser context class
+	that axis, which is used to determine the parser state class
 	when parsing the node test after."
 
 	^ #(
@@ -57,20 +57,20 @@ XPathExpressionParserAxis class >> initialize [
 	race conditions during class reinitialization"
 	temp := Dictionary new.
 	self axisSpecifiersTemplate do: [:each |
-		| axisSpecifier handlerSelector principalNodeType parserContextClass |
+		| axisSpecifier handlerSelector principalNodeType parserStateClass |
 		axisSpecifier := each first.
 		handlerSelector := each second.
 		principalNodeType := each third.
-		parserContextClass :=
+		parserStateClass :=
 			principalNodeType = #attribute
-				ifTrue: [XPathNodeTestParserAttributeContext]
+				ifTrue: [XPathNodeTestParserAttributeState]
 				ifFalse: [
 					principalNodeType = #namespace
-						ifTrue: [XPathNodeTestParserNamespaceContext]
-						ifFalse: [XPathNodeTestParserElementContext]].
+						ifTrue: [XPathNodeTestParserNamespaceState]
+						ifFalse: [XPathNodeTestParserElementState]].
 		temp
 			at: axisSpecifier
-			put: handlerSelector -> parserContextClass].
+			put: handlerSelector -> parserStateClass].
 	AxisSpecifiers := temp.
 ]
 
@@ -85,7 +85,7 @@ XPathExpressionParserAxis >> axisSpecifier: anAxisSpecifier [
 		ifFalse: [
 			axisSpecifier := anAxisSpecifier.
 			handlerSelector := nil.
-			defaultNodeTestParserContextClass := nil].
+			defaultNodeTestParserStateClass := nil].
 	"now explicit"
 	isImplicit := false.
 ]
@@ -94,7 +94,7 @@ XPathExpressionParserAxis >> axisSpecifier: anAxisSpecifier [
 XPathExpressionParserAxis >> beDefaultImplicitAxis [
 	axisSpecifier := 'child'.
 	handlerSelector := #handleChildAxis.
-	defaultNodeTestParserContextClass := XPathNodeTestParserElementContext.
+	defaultNodeTestParserStateClass := XPathNodeTestParserElementState.
 	isImplicit := true.
 	isFirstAxis := false.
 	isStartOfRelativeLocationPath := false.
@@ -111,11 +111,11 @@ XPathExpressionParserAxis >> beStartOfRelativeLocationPath [
 ]
 
 { #category : #defaults }
-XPathExpressionParserAxis >> defaultNodeTestParserContextClass [
-	^ defaultNodeTestParserContextClass
+XPathExpressionParserAxis >> defaultNodeTestParserStateClass [
+	^ defaultNodeTestParserStateClass
 		ifNil: [
 			self lookupAxisSpecifier.
-			defaultNodeTestParserContextClass]
+			defaultNodeTestParserStateClass]
 ]
 
 { #category : #private }
@@ -164,7 +164,7 @@ XPathExpressionParserAxis >> lookupAxisSpecifier [
 			at: self axisSpecifier
 			ifAbsent: [self errorUnrecognizedAxisSpecifier].
 	handlerSelector := association key.
-	defaultNodeTestParserContextClass := association value.
+	defaultNodeTestParserStateClass := association value.
 ]
 
 { #category : #printing }

@@ -5,34 +5,34 @@ Class {
 	#name : #XPathStringNodeTestParserHandler,
 	#superclass : #XPathNodeTestParserHandler,
 	#instVars : [
-		'defaultNodeTestParserContextClass'
+		'defaultNodeTestParserStateClass'
 	],
 	#category : #'XPath-Core-Parsers'
 }
 
 { #category : #'instance creation' }
 XPathStringNodeTestParserHandler class >> withAttributePrincipalNodeType [
-	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserAttributeContext
+	^ self new defaultNodeTestParserStateClass: XPathNodeTestParserAttributeState
 ]
 
 { #category : #'instance creation' }
 XPathStringNodeTestParserHandler class >> withElementPrincipalNodeType [
-	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserElementContext
+	^ self new defaultNodeTestParserStateClass: XPathNodeTestParserElementState
 ]
 
 { #category : #'instance creation' }
 XPathStringNodeTestParserHandler class >> withNamespacePrincipalNodeType [
-	^ self new defaultNodeTestParserContextClass: XPathNodeTestParserNamespaceContext
+	^ self new defaultNodeTestParserStateClass: XPathNodeTestParserNamespaceState
 ]
 
 { #category : #defaults }
-XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass [
-	^ defaultNodeTestParserContextClass
+XPathStringNodeTestParserHandler >> defaultNodeTestParserStateClass [
+	^ defaultNodeTestParserStateClass
 ]
 
 { #category : #defaults }
-XPathStringNodeTestParserHandler >> defaultNodeTestParserContextClass: aClass [
-	defaultNodeTestParserContextClass := aClass
+XPathStringNodeTestParserHandler >> defaultNodeTestParserStateClass: aClass [
+	defaultNodeTestParserStateClass := aClass
 ]
 
 { #category : #handling }

@@ -5,7 +5,7 @@ Class {
 	#name : #XPathNodeTestParser,
 	#superclass : #XPathParser,
 	#instVars : [
-		'context',
+		'state',
 		'isParsingNodeTypeTest'
 	],
 	#classVars : [
@@ -35,12 +35,12 @@ XPathNodeTestParser class >> initialize [
 { #category : #parsing }
 XPathNodeTestParser >> nextAnyNodeTest [
 	self nextEndArgumentList.
-	context handleAnyNodeTestWith: handler.
+	state handleAnyNodeTestWith: handler.
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> nextAttributeTest [
-	context := XPathNodeTestParserAttributeTypeTestContext new.
+	state := XPathNodeTestParserAttributeTypeTestState new.
 	self
 		peekForNodeTestArgument;
 		nextEndArgumentList.
@@ -49,12 +49,12 @@ XPathNodeTestParser >> nextAttributeTest [
 { #category : #parsing }
 XPathNodeTestParser >> nextCommentTest [
 	self nextEndArgumentList.
-	context handleCommentNodeTestWith: handler.
+	state handleCommentNodeTestWith: handler.
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> nextElementTest [
-	context := XPathNodeTestParserElementTypeTestContext new.
+	state := XPathNodeTestParserElementTypeTestState new.
 	self
 		peekForNodeTestArgument;
 		nextEndArgumentList.
@@ -62,12 +62,12 @@ XPathNodeTestParser >> nextElementTest [
 
 { #category : #parsing }
 XPathNodeTestParser >> nextEmptyTest [
-	context handleEmptyNodeTestWith: handler
+	state handleEmptyNodeTestWith: handler
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> nextNamespaceTest [
-	context := XPathNodeTestParserNamespaceTypeTestContext new.
+	state := XPathNodeTestParserNamespaceTypeTestState new.
 	self
 		peekForNodeTestArgument;
 		nextEndArgumentList.
@@ -77,19 +77,19 @@ XPathNodeTestParser >> nextNamespaceTest [
 XPathNodeTestParser >> nextPITest [
 	self peekForPITestTarget
 		ifFalse: [
-			context handlePINodeTestWith: handler].
+			state handlePINodeTestWith: handler].
 	self nextEndArgumentList.
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> nextTextTest [
 	self nextEndArgumentList.
-	context handleTextNodeTestWith: handler.
+	state handleTextNodeTestWith: handler.
 ]
 
 { #category : #parsing }
 XPathNodeTestParser >> parseInput [
-	context := handler defaultNodeTestParserContextClass new.
+	state := handler defaultNodeTestParserStateClass new.
 	isParsingNodeTypeTest := false.
 
 	self peekForNodeTest.
@@ -110,7 +110,7 @@ XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
 					(readStream peekFor: $*)
 						ifTrue: [
 							"a 'prefix:*' wildcard QName test"
-							context
+							state
 								handleNodeTestForPrefix: anNCName
 								with: handler.
 							^ true]
@@ -120,7 +120,7 @@ XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
 								ifFalse: [
 									"not a function call, so it's a 'prefix:localName'
 									QName test"
-									context
+									state
 										handleNodeTestForPrefix: anNCName
 										localName: localName
 										with: handler.
@@ -133,11 +133,11 @@ XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
 					uri := self expectUpTo: $}.
 					(readStream peekFor: $*)
 						ifTrue: [
-							context
+							state
 								handleNodeTestForNamespaceURI: uri
 								with: handler]
 						ifFalse: [
-							context
+							state
 								handleNodeTestForNamespaceURI: uri
 								localName: self nextNCName
 								with: handler].
@@ -156,7 +156,7 @@ XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
 									(self peekForNodeTypeTest: anNCName)
 										ifTrue: [^ true]]
 								ifFalse: [
-									context
+									state
 										handleNodeTestForName: anNCName
 										with: handler.
 									^ true]]]].
@@ -201,12 +201,12 @@ XPathNodeTestParser >> peekForNodeTestStartingWithWildCard [
 	(readStream peekFor: $:)
 		ifTrue: [
 			(readStream peekFor: $*)
-				ifTrue: [context handleWildcardNodeTestWith: handler]
+				ifTrue: [state handleWildcardNodeTestWith: handler]
 				ifFalse: [
-					context
+					state
 						handleNodeTestForLocalName: self nextNCName
 						with: handler]]
-		ifFalse: [context handleWildcardNodeTestWith: handler].
+		ifFalse: [state handleWildcardNodeTestWith: handler].
 	^ true.
 ]
 
@@ -245,7 +245,7 @@ XPathNodeTestParser >> peekForPITestTarget [
 			ifNil: [self nextNCNameOptional: true])
 		ifNil: [^ false]
 		ifNotNil: [
-			context
+			state
 				handlePINodeTestForName: target
 				with: handler.
 			^ true]
