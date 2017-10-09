@@ -789,6 +789,33 @@ ConfigurationOfXPath >> baseline205: spec [
 			with: 'XPath-GTExtensions-monty.27'. ]
 ]
 
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline206: spec [
+	<version: '2.0.6-baseline' imports: #('1.0-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.1'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.27'. ]
+]
+
 { #category : #doits }
 ConfigurationOfXPath >> clearXPathCache [
 	XPath clearCompiledExpressionCache
@@ -822,11 +849,13 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline177 [
 	"
 
 	XPath compiledXPathCache.
-	XPathCompiler systemCompilerClass.
+	"renamed"
+	(XMLClassFinder classNamed: #XPathCompiler) systemCompilerClass.
 	XPathFunction allSubclassesDo: [:each |
 		each functionPrototype].
 	XPathContext defaultFunctions.
-	XPathNodeTestParserContext allSubclassesDo: [:each |
+	"renamed"
+	(XMLClassFinder classNamed: #XPathNodeTestParserContext) allSubclassesDo: [:each |
 		each instance].
 	XPathSortOrder allSubclassesDo: [:each |
 		each instance].
@@ -843,11 +872,13 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline180 [
 	"
 
 	XPath compiledXPathCache.
-	XPathCompiler systemCompilerClass.
+	"renamed"
+	(XMLClassFinder classNamed: #XPathCompiler) systemCompilerClass.
 	XPathFunction allSubclassesDo: [:each |
 		each prototype].
 	XPathContext defaultFunctions.
-	XPathNodeTestParserContext allSubclassesDo: [:each |
+	"renamed"
+	(XMLClassFinder classNamed: #XPathNodeTestParserContext) allSubclassesDo: [:each |
 		each instance].
 	XPathSortOrder allSubclassesDo: [:each |
 		each instance].
@@ -865,11 +896,13 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline183 [
 	"
 
 	XPath compiledXPathCache.
-	XPathCompiler systemCompilerClass.
+	"renamed"
+	(XMLClassFinder classNamed: #XPathCompiler) systemCompilerClass.
 	XPathFunction allSubclassesDo: [:each |
 		each prototype].
 	XPathContext defaultFunctions.
-	XPathNodeTestParserContext allSubclassesDo: [:each |
+	"renamed"
+	(XMLClassFinder classNamed: #XPathNodeTestParserContext) allSubclassesDo: [:each |
 		each instance].
 	XPathSortOrder allSubclassesDo: [:each |
 		each instance].
@@ -896,7 +929,34 @@ ConfigurationOfXPath >> initializeClassesForGSBaseline189 [
 	XPathExpressionCompiler systemCompilerClass.
 	XPathFunction allSubclassesDo: [:each |
 		each prototype].
-	XPathNodeTestParserContext allSubclassesDo: [:each |
+	"renamed"
+	(XMLClassFinder classNamed: #XPathNodeTestParserContext) allSubclassesDo: [:each |
+		each instance].
+	XPathSortOrder allSubclassesDo: [:each |
+		each instance].
+	XPathType allSubclassesDo: [:each |
+		each instance].
+]
+
+{ #category : #doits }
+ConfigurationOfXPath >> initializeClassesForGSBaseline206 [
+	"All lazily initialized class and class instance variables must be
+	explicitly initialized on GS during installation to prevent write
+	conflicts between Gems later on. 
+	
+	This can help identify classes that use lazy initialization:
+		ConfigurationOfXMLParser findLazyInitializedClassStateInPackage: 'XPath'
+	"
+
+	XPath
+		compiledExpressionCache;
+		compiledExpressionCacheEnabled.
+	XPathASTNullNode instance.
+	XPathContext defaultFunctions.
+	XPathExpressionCompiler systemCompilerClass.
+	XPathFunction allSubclassesDo: [:each |
+		each prototype].
+	XPathNodeTestParserState allSubclassesDo: [:each |
 		each instance].
 	XPathSortOrder allSubclassesDo: [:each |
 		each instance].
@@ -2090,6 +2150,17 @@ ConfigurationOfXPath >> version205: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.121'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.95'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version206: spec [ 
+        <version: '2.0.6' imports: #('2.0.6-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.122'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.95'.
                 ].
 ]
