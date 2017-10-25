@@ -12,7 +12,7 @@ XPathCeilingFunction class >> prototypeSource [
 	^ 'number ceiling(number)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathCeilingFunction >> function [
 	^ self firstArgument xpathCeiling
 ]

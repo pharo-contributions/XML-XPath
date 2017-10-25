@@ -12,7 +12,7 @@ XPathContainsFunction class >> prototypeSource [
 	^ 'boolean contains(string, string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathContainsFunction >> function [
 	"use findString:startingAt: for portability"
 	^ (self firstArgument

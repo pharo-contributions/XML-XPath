@@ -12,7 +12,7 @@ XPathNamespaceURIFunction class >> prototypeSource [
 	^ 'string namespace-uri(node-set?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathNamespaceURIFunction >> function [
 	| node |
 

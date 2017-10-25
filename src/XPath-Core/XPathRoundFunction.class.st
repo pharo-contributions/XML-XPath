@@ -12,7 +12,7 @@ XPathRoundFunction class >> prototypeSource [
 	^ 'number round(number)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathRoundFunction >> function [
 	^ self firstArgument xpathRounded
 ]

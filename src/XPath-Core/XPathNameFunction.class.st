@@ -12,7 +12,7 @@ XPathNameFunction class >> prototypeSource [
 	^ 'string name(node-set?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathNameFunction >> function [
 	| node |
 

@@ -12,7 +12,7 @@ XPathSubstringFunction class >> prototypeSource [
 	^ 'string substring(string, number, number?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathSubstringFunction >> function [
 	| string start end |
 

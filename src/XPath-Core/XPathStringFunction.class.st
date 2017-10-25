@@ -12,7 +12,7 @@ XPathStringFunction class >> prototypeSource [
 	^ 'string string(object?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathStringFunction >> function [
 	"From the spec: 'If the argument is omitted, it defaults to a
 	node-set with the context node as its only member.'"

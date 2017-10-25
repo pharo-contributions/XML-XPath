@@ -12,7 +12,7 @@ XPathStartsWithFunction class >> prototypeSource [
 	^ 'boolean starts-with(string, string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathStartsWithFunction >> function [
 	^ self firstArgument beginsWith: self lastArgument
 ]

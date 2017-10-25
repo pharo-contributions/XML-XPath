@@ -12,7 +12,7 @@ XPathFloorFunction class >> prototypeSource [
 	^ 'number floor(number)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathFloorFunction >> function [
 	^ self firstArgument xpathFloor
 ]

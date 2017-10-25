@@ -12,7 +12,7 @@ XPathConcatFunction class >> prototypeSource [
 	^ 'string concat(string, string, string*)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathConcatFunction >> function [
 	| writeStream |
 

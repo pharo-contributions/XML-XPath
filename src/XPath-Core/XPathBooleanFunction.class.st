@@ -12,7 +12,7 @@ XPathBooleanFunction class >> prototypeSource [
 	^ 'boolean boolean(object)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathBooleanFunction >> function [
 	^ self firstArgument
 ]

@@ -12,7 +12,7 @@ XPathTranslateFunction class >> prototypeSource [
 	^ 'string translate(string, string, string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathTranslateFunction >> function [
 	| sourceString searchString replacementString replacementMap writeStream |
 

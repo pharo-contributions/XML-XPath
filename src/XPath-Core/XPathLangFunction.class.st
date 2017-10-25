@@ -12,7 +12,7 @@ XPathLangFunction class >> prototypeSource [
 	^ 'boolean lang(string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathLangFunction >> function [
 	^ self contextNode notNil
 		and: [self contextNode isInLanguage: self firstArgument]

@@ -203,7 +203,7 @@ XPathFunction >> firstArgument [
 	^ self argumentAt: 1
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathFunction >> function [
 	self subclassResponsibility
 ]

@@ -52,10 +52,10 @@ XPathASTNodeVisitorIterator >> previousVisited [
 
 { #category : #visiting }
 XPathASTNodeVisitorIterator >> visitNextWith: aNodeVisitor [
-	| node |
-
-	((node := self next acceptNodeVisitor: aNodeVisitor) isNil
-		or: [node isNull])
-		ifTrue: [^ XPathASTNullNode new]
-		ifFalse: [^ previousVisited := node]
+	(self next acceptNodeVisitor: aNodeVisitor)
+		ifNil: [^ XPathASTNullNode new]
+		ifNotNil: [:node |
+			node isNull
+				ifFalse: [previousVisited := node].
+			^ node]
 ]

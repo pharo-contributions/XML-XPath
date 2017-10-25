@@ -337,7 +337,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitPredicate: aPredicate [
 	(self previousPredicate isNull not
 		and: [aPredicate expression isFunctionCall
 			and: [aPredicate expression isTrueFunctionCall]])
-		ifTrue: [^ nil]
+		ifTrue: [^ XPathASTNullNode new]
 		ifFalse: [^ aPredicate].
 ]
 

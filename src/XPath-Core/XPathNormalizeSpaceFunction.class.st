@@ -12,7 +12,7 @@ XPathNormalizeSpaceFunction class >> prototypeSource [
 	^ 'string normalize-space(string?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathNormalizeSpaceFunction >> function [
 	| string writeStream isInWhitespace normalizedSpace |
 

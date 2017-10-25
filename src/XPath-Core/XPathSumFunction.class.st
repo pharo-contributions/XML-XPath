@@ -12,7 +12,7 @@ XPathSumFunction class >> prototypeSource [
 	^ 'number sum(node-set)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathSumFunction >> function [
 	^ self firstArgument
 		inject: 0

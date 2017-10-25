@@ -12,7 +12,7 @@ XPathSubstringAfterFunction class >> prototypeSource [
 	^ 'string substring-after(string, string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathSubstringAfterFunction >> function [
 	| string substring indexOfSubstring |
 

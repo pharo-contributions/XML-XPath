@@ -12,7 +12,7 @@ XPathCountFunction class >> prototypeSource [
 	^ 'number count(node-set)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathCountFunction >> function [
 	^ self firstArgument size
 ]

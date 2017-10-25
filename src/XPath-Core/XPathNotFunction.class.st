@@ -12,7 +12,7 @@ XPathNotFunction class >> prototypeSource [
 	^ 'boolean not(boolean)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathNotFunction >> function [
 	^ self firstArgument not
 ]

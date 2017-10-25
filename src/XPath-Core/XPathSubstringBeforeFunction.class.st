@@ -12,7 +12,7 @@ XPathSubstringBeforeFunction class >> prototypeSource [
 	^ 'string substring-before(string, string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathSubstringBeforeFunction >> function [
 	| string indexOfSubstring |
 

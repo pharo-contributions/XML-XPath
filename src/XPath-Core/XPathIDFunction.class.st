@@ -75,7 +75,7 @@ XPathIDFunction >> addElementsWithUndeclaredOrDeclaredIDs: anIDSet in: aRootNode
 					ifTrue: [^ self]]]
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathIDFunction >> function [
 	| object ids nodeSet |
 
@@ -110,6 +110,7 @@ XPathIDFunction >> function [
 						addElementsWithUndeclaredIDs: ids
 						in: root
 						to: nodeSet]].
+
 	"the elements matching the IDs are enumerated in document order, so the
 	resulting node set is in document order too"
 	^ nodeSet sortOrder: XPathDocumentSortOrder new.

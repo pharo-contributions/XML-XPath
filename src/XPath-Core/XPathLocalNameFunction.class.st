@@ -12,7 +12,7 @@ XPathLocalNameFunction class >> prototypeSource [
 	^ 'string local-name(node-set?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathLocalNameFunction >> function [
 	| node |
 

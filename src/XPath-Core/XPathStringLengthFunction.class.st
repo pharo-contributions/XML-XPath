@@ -13,7 +13,7 @@ XPathStringLengthFunction class >> prototypeSource [
 	^ 'number string-length(string?)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathStringLengthFunction >> function [
 	^ (self hasArguments
 		ifTrue: [self firstArgument]

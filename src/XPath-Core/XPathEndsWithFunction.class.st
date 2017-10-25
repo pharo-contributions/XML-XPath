@@ -12,7 +12,7 @@ XPathEndsWithFunction class >> prototypeSource [
 	^ 'boolean ends-with(string, string)'
 ]
 
-{ #category : #invoking }
+{ #category : #implementing }
 XPathEndsWithFunction >> function [
 	^ self firstArgument endsWith: self lastArgument
 ]

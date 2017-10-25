@@ -112,7 +112,10 @@ XPath class >> compiledExpressionCacheEnabled [
 
 { #category : #accessing }
 XPath class >> compiledExpressionCacheEnabled: aBoolean [
-	compiledExpressionCacheEnabled := aBoolean
+	"This can be used to disable the XPath compiled expression cache"
+
+	(compiledExpressionCacheEnabled := aBoolean)
+		ifFalse: [self clearCompiledExpressionCache]
 ]
 
 { #category : #'instance creation' }
@@ -123,6 +126,9 @@ XPath class >> for: anExpressionSourceString [
 
 { #category : #evaluating }
 XPath class >> for: anExpressionSourceString in: aNode [
+	"Evaluates the XPath expression anExpressionSourceString with aNode
+	as the initial context node"
+
 	^ (self for: anExpressionSourceString)
 		in: aNode
 
@@ -130,6 +136,10 @@ XPath class >> for: anExpressionSourceString in: aNode [
 
 { #category : #evaluating }
 XPath class >> for: anExpressionSourceString in: aNode context: aContext [
+	"Evaluates the XPath expression anExpressionSourceString with aNode
+	as the initial context node and aContext as the controlling
+	XPathContext object"
+
 	^ (self for: anExpressionSourceString)
 		in: aNode
 		context: aContext
@@ -203,7 +213,9 @@ XPath >> contextClass [
 
 { #category : #evaluating }
 XPath >> evaluate [
-	"used to evaluate expressions that don't use a context node"
+	"Used to evaluate expressions that don't need a context node
+	(Mostly for testing)"
+
 	^ self in: nil
 ]
 
@@ -220,7 +232,8 @@ XPath >> expressionSource: anExpressionSourceString [
 
 { #category : #evaluating }
 XPath >> in: aNode [
-	"evaluate in context of aNode"
+	"Evaluates the XPath expression with aNode as the initial context node"
+
 	^ self
 		in: aNode
 		context: self contextClass new
@@ -228,6 +241,9 @@ XPath >> in: aNode [
 
 { #category : #evaluating }
 XPath >> in: aNode context: aContext [
+	"Evaluates the XPath expression with aNode as the initial context node
+	and aContext as the controlling XPathContext object"
+
 	^ self compiledExpression
 		evaluateInNode: aNode
 		withContext: aContext
