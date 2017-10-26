@@ -17,8 +17,8 @@ XPathASTMutatingNodeVisitor >> visitFilterable: aFilterable [
 			predicates := OrderedCollection new: aFilterable totalPredicates.
 			[predicateIterator atEnd]
 				whileFalse: [| predicate |
-				(predicate := predicateIterator visitNextWith: self) isNull
-					ifFalse: [predicates addLast: predicate]].
+					(predicate := predicateIterator visitNextWith: self) isNull
+						ifFalse: [predicates addLast: predicate]].
 			aFilterable predicates: predicates.
 			predicateIterator := oldPredicateIterator].
 	^ aFilterable.

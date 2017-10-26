@@ -35,7 +35,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitAndExpression: anAndExpression [
 	"traverse in post-order"
 	super visitAndExpression: anAndExpression.
 
-	"the and of literals can be evaluated at compile time"
+	"the 'and' of literals can be evaluated at compile time"
 	anAndExpression hasNonLiteralExpression
 		ifTrue: [^ anAndExpression]
 		ifFalse: [
@@ -49,44 +49,40 @@ XPathASTOptimizingMutatingNodeVisitor >> visitDescendantOrSelfStep: aDescendantO
 	"traverse in post-order"
 	super visitDescendantOrSelfStep: aDescendantOrSelfStep.
 
+	"only optimize 'descendant-or-self::node()' steps"
 	(aDescendantOrSelfStep nodeTest isAnyNodeTest
 		and: [aDescendantOrSelfStep hasPredicates not])
-		ifFalse: [^ aDescendantOrSelfStep].
+		ifTrue: [
+			"if the next step after this 'descendant-or-self::node()' step is
+			'self::node()' or an identical 'descendant-or-self::node()' step,
+			the next step is redundant"
+			[(self peekStep isDescendantOrSelfStep
+				or: [self peekStep isSelfStep])
+				and: [self peekStep nodeTest isAnyNodeTest
+					and: [self peekStep hasPredicates not]]]
+				whileTrue: [self nextStep].
 
-	"'descendant-or-self::node()/child::...' and
-	'descendant-or-self::node()/descendant::...' are
-	equivalent to ''descendant::...' if the second
-	step has no predicares"
-	((self peekStep isChildStep
-		or: [self peekStep isDescendantStep])
-		and: [self peekStep hasPredicates not])
-		ifTrue: [| replacementNode |
-			replacementNode :=
-				(XPathASTDescendantStepNode
-					nodeTest: self peekStep nodeTest
-					predicates: self peekStep predicates).
-			self nextStep.
-			^ replacementNode].
+			"'descendant-or-self::node()/self::...' and
+			'descendant-or-self::node()/descendant-or-self::...'
+			are equivalent to 'descendant-or-self::...', regardless of the
+			node test, as long as the second step also has no predicates"
+			((self peekStep isDescendantOrSelfStep
+				or: [self peekStep isSelfStep])
+				and: [self peekStep hasPredicates not])
+				ifTrue: [
+					^ XPathASTDescendantOrSelfStepNode nodeTest:
+						self nextStep nodeTest].
 
-	"'descendant-or-self::node()/self::...' and
-	'descendant-or-self::node()/descendant-or-self::...'
-	are equivalent to ''descendant-or-self::...' if
-	the second step has no predicares"
-	[(self peekStep isDescendantOrSelfStep
-		or: [self peekStep isSelfStep])
-		and: [self peekStep nodeTest isAnyNodeTest
-			and: [self peekStep hasPredicates not]]]
-		whileTrue: [self nextStep].
-	((self peekStep isDescendantOrSelfStep
-		or: [self peekStep isSelfStep])
-		and: [self peekStep hasPredicates not])
-		ifTrue: [| replacementNode |
-			replacementNode :=
-				(XPathASTDescendantOrSelfStepNode
-					nodeTest: self peekStep nodeTest
-					predicates: self peekStep predicates).
-			self nextStep.
-			^ replacementNode].
+			"'descendant-or-self::node()/child::...' and
+			'descendant-or-self::node()/descendant::...' are
+			equivalent to 'descendant::...', regardless of the node test,
+			as long as the second step also has no predicates"
+			((self peekStep isChildStep
+				or: [self peekStep isDescendantStep])
+				and: [self peekStep hasPredicates not])
+				ifTrue: [
+					^ XPathASTDescendantStepNode nodeTest:
+						self nextStep nodeTest]].
 
 	^ aDescendantOrSelfStep.
 ]
@@ -319,7 +315,7 @@ XPathASTOptimizingMutatingNodeVisitor >> visitOrExpression: anOrExpression [
 	"traverse in post-order"
 	super visitOrExpression: anOrExpression.
 
-	"the or of literals can be evaluated at compile time"
+	"the 'or' of literals can be evaluated at compile time"
 	anOrExpression hasNonLiteralExpression
 		ifTrue: [^ anOrExpression]
 		ifFalse: [
@@ -346,8 +342,8 @@ XPathASTOptimizingMutatingNodeVisitor >> visitSelfStep: aSelfStep [
 	"traverse in post-order"
 	super visitSelfStep: aSelfStep.
 
-	"'self::node()' or '.' can be eliminated if it's not the first step
-	and the previous step is a forward axis step"
+	"steps like 'self::node()' or '.' can be eliminated if they're not
+	the first step and the previous step is a forward axis step"
 	(aSelfStep nodeTest isAnyNodeTest
 		and: [aSelfStep hasPredicates not
 			and: [self previousStep isNull not
