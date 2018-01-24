@@ -1,6 +1,6 @@
 Class {
 	#name : #XPathReadStreamAdapterTest,
-	#superclass : #TestCase,
+	#superclass : #XMLReadStreamAdapterTest,
 	#category : #'XPath-Tests'
 }
 
@@ -10,13 +10,13 @@ XPathReadStreamAdapterTest >> badQualifiedName [
 ]
 
 { #category : #accessing }
-XPathReadStreamAdapterTest >> ncName [
-	^ 'localName'
+XPathReadStreamAdapterTest >> inputCollection [
+	^ self qualifiedName
 ]
 
-{ #category : #'instance creation' }
-XPathReadStreamAdapterTest >> newStreamAdapterOn: aStream [
-	^ self streamAdapterClass on: aStream
+{ #category : #accessing }
+XPathReadStreamAdapterTest >> ncName [
+	^ 'localName'
 ]
 
 { #category : #'instance creation' }
@@ -37,11 +37,6 @@ XPathReadStreamAdapterTest >> newStreamAdapterOnQualifiedName [
 		(self newStreamOn: self qualifiedName)
 ]
 
-{ #category : #'instance creation' }
-XPathReadStreamAdapterTest >> newStreamOn: aString [
-	^ XMLExceptionRaisingReadStream on: aString
-]
-
 { #category : #accessing }
 XPathReadStreamAdapterTest >> prefix [
 	^ 'prefix'
@@ -58,18 +53,8 @@ XPathReadStreamAdapterTest >> streamAdapterClass [
 ]
 
 { #category : #tests }
-XPathReadStreamAdapterTest >> testNext [
-	| adapter |
-
-	adapter := self newStreamAdapterOnQualifiedName.
-	self qualifiedName do: [:each |
-		self assert: adapter next == each].
-	self assert: adapter next isNil.
-]
-
-{ #category : #tests }
 XPathReadStreamAdapterTest >> testNextNCName [
-	| adapter |
+	| adapter badNamePosition |
 
 	adapter := self newStreamAdapterOnNCName.
 	self
@@ -81,18 +66,24 @@ XPathReadStreamAdapterTest >> testNextNCName [
 	self
 		assert: adapter nextNCName = self prefix;
 		assert: adapter nextNCName isNil;
-		assert: adapter next == $:.
+		assert: adapter next == $:;
+		assert: adapter nextNCName = self ncName;
+		assert: adapter atEnd.
 
 	adapter := self newStreamAdapterOnBadQualifiedName.
 	self
 		assert: adapter nextNCName = self prefix;
 		assert: adapter nextNCName isNil;
 		assert: adapter next == $:.
+	badNamePosition := adapter position.
+	self
+		assert: adapter nextNCName isNil;
+		assert: adapter position = badNamePosition.
 ]
 
 { #category : #tests }
 XPathReadStreamAdapterTest >> testNextName [
-	| adapter namePosition |
+	| adapter badNamePosition |
 
 	adapter := self newStreamAdapterOnNCName.
 	self
@@ -107,10 +98,10 @@ XPathReadStreamAdapterTest >> testNextName [
 		assert: adapter atEnd.
 
 	adapter := self newStreamAdapterOnBadQualifiedName.
-	namePosition := adapter position.
+	badNamePosition := adapter position.
 	self
 		assert: adapter nextName isNil;
-		assert: adapter position = namePosition.
+		assert: adapter position = badNamePosition.
 ]
 
 { #category : #tests }
@@ -143,31 +134,39 @@ XPathReadStreamAdapterTest >> testNextPushedBackToken [
 ]
 
 { #category : #tests }
-XPathReadStreamAdapterTest >> testPeek [
-	| adapter |
+XPathReadStreamAdapterTest >> testPeekForNCName [
+	| adapter badNamePosition |
 
-	adapter := self newStreamAdapterOnQualifiedName.
-	self qualifiedName do: [:each |
-		self assert: adapter peek == each.
-		adapter next].
-	self assert: adapter peek isNil.
-]
-
-{ #category : #tests }
-XPathReadStreamAdapterTest >> testPeekFor [
-	| adapter |
-
-	adapter := self newStreamAdapterOnQualifiedName.
-	self qualifiedName do: [:each |
-		self
-			deny: (adapter peekFor: #absent);
-			deny: (adapter peekFor: nil);
-			assert: (adapter peekFor: each);
-			deny: (adapter peekFor: #absent);
-			deny: (adapter peekFor: nil)].
+	adapter := self newStreamAdapterOnNCName.
 	self
-		deny: (adapter peekFor: #absent);
-		deny: (adapter peekFor: nil).
+		assert: (adapter peekForNCName: self ncName);
+		assert: adapter atEnd;
+		deny: (adapter peekForNCName: self ncName);
+		assert: adapter atEnd.
+
+	adapter := self newStreamAdapterOnQualifiedName.
+	self
+		assert: (adapter peekForNCName: self prefix);
+		assert: adapter next == $:.
+	badNamePosition := adapter position.
+	self
+		deny: (adapter peekForNCName: self prefix);
+		assert: adapter position = badNamePosition;
+		assert: (adapter peekForNCName: self ncName);
+		assert: adapter atEnd;
+		deny: (adapter peekForNCName: self ncName);
+		assert: adapter atEnd.
+
+	adapter := self newStreamAdapterOnBadQualifiedName.
+	self
+		assert: (adapter peekForNCName: self prefix);
+		assert: adapter next == $:.
+	badNamePosition := adapter position.
+	self
+		deny: (adapter peekForNCName: self prefix);
+		assert: adapter position = badNamePosition;
+		deny: (adapter peekForNCName: self ncName);
+		assert: adapter position = badNamePosition.
 ]
 
 { #category : #tests }

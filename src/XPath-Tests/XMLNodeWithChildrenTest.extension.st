@@ -9,7 +9,7 @@ XMLNodeWithChildrenTest >> testAllNodesReverseDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each allNodesReverseDo: block]
+			xmlShould: [:block | each allNodesReverseDo: block]
 			enumerate:
 				(each hasChildren
 					ifTrue: [each allNodes reversed]
@@ -46,7 +46,7 @@ XMLNodeWithChildrenTest >> testFollowingNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each followingNodesDo: block]
+			xmlShould: [:block | each followingNodesDo: block]
 			enumerate:
 				(each hasParent
 					ifTrue: [
@@ -84,7 +84,7 @@ XMLNodeWithChildrenTest >> testFollowingSiblingNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each followingSiblingNodesDo: block]
+			xmlShould: [:block | each followingSiblingNodesDo: block]
 			enumerate:
 				(each hasParent
 					ifTrue: [each parent nodes copyAfter: each]
@@ -118,7 +118,7 @@ XMLNodeWithChildrenTest >> testPrecedingNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each precedingNodesDo: block]
+			xmlShould: [:block | each precedingNodesDo: block]
 			enumerate:
 				(each hasParent
 					ifTrue: [(each parent descendantNodes copyUpTo: each) reversed]
@@ -152,7 +152,7 @@ XMLNodeWithChildrenTest >> testPrecedingSiblingNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each precedingSiblingNodesDo: block]
+			xmlShould: [:block | each precedingSiblingNodesDo: block]
 			enumerate:
 				(each hasParent
 					ifTrue: [(each parent nodes copyUpTo: each) reversed]
@@ -168,6 +168,6 @@ XMLNodeWithChildrenTest >> testWithAncestorNodesDo [
 	nodeWithNodes := self newNodeWithNodes.
 	nodeWithNodes allNodesDo: [:each |
 		self
-			should: [:block | each withAncestorNodesDo: block]
+			xmlShould: [:block | each withAncestorNodesDo: block]
 			enumerate: (each ancestorNodes copyWithFirst: each)].
 ]

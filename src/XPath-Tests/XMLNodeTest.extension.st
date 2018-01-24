@@ -46,7 +46,7 @@ XMLNodeTest >> testAllNodesReverseDo [
 
 	node := self newNode.
 	self
-		should: [:block | node allNodesReverseDo: block]
+		xmlShould: [:block | node allNodesReverseDo: block]
 		enumerate: (Array with: node).
 ]
 
@@ -149,7 +149,7 @@ XMLNodeTest >> testFollowingNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block | node followingNodesDo: block]
+		xmlShould: [:block | node followingNodesDo: block]
 		enumerate: #().
 ]
 
@@ -171,7 +171,7 @@ XMLNodeTest >> testFollowingSiblingNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block | node followingSiblingNodesDo: block]
+		xmlShould: [:block | node followingSiblingNodesDo: block]
 		enumerate: #().
 ]
 
@@ -217,7 +217,7 @@ XMLNodeTest >> testPrecedingNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block | node precedingNodesDo: block]
+		xmlShould: [:block | node precedingNodesDo: block]
 		enumerate: #().
 ]
 
@@ -239,7 +239,7 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block | node precedingSiblingNodesDo: block]
+		xmlShould: [:block | node precedingSiblingNodesDo: block]
 		enumerate: #().
 ]
 
@@ -279,7 +279,7 @@ XMLNodeTest >> testWithAncestorNodesDo [
 
 	node := self newNode.
 	self
-		should: [:block | node withAncestorNodesDo: block]
+		xmlShould: [:block | node withAncestorNodesDo: block]
 		enumerate: (Array with: node)
 ]
 
