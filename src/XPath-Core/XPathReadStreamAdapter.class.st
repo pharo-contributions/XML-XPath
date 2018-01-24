@@ -3,62 +3,17 @@ This class is an adapter for positionable read streams that wraps them to be saf
 "
 Class {
 	#name : #XPathReadStreamAdapter,
-	#superclass : #Object,
+	#superclass : #XMLReadStreamAdapter,
 	#instVars : [
-		'stream',
 		'pushedBackToken',
-		'writeStream'
+		'nameStream'
 	],
 	#category : #'XPath-Core-Streams'
 }
 
-{ #category : #'instance creation' }
-XPathReadStreamAdapter class >> on: aPositionableStream [
-	^ self new on: aPositionableStream
-]
-
 { #category : #converting }
 XPathReadStreamAdapter >> asXPathReadStreamAdapter [
 	^ self
-]
-
-{ #category : #testing }
-XPathReadStreamAdapter >> atEnd [
-	^ stream atEnd
-]
-
-{ #category : #testing }
-XPathReadStreamAdapter >> isStream [
-	^ true
-]
-
-{ #category : #accessing }
-XPathReadStreamAdapter >> next [
-	stream atEnd
-		ifTrue: [^ nil]
-		ifFalse: [^ stream next]
-]
-
-{ #category : #accessing }
-XPathReadStreamAdapter >> nextMatchAll: aString [
-	| oldPosition |
-
-	aString size > 0
-		ifFalse: [^ true].
-
-	(stream atEnd not
-		and: [stream peek = (aString at: 1)])
-		ifFalse: [^ false].
-
-	oldPosition := stream position.
-	stream next.
-	2 to: aString size do: [:i |
-		(stream atEnd not
-			and: [stream next = (aString at: i)])
-			ifFalse: [
-				stream position: oldPosition.
-				^ false]].
-	^ true.
 ]
 
 { #category : #accessing }
@@ -69,14 +24,14 @@ XPathReadStreamAdapter >> nextNCName [
 		and: [self peekPushedBackToken isNCNameToken])
 		ifTrue: [^ self nextPushedBackToken value].
 
-	writeStream reset.
 	self peek isXMLNCNameStartChar
 		ifFalse: [^ nil].
-	writeStream nextPut: self next.
-
+	nameStream
+		reset;
+		nextPut: self next.
 	[self peek isXMLNCNameChar]
-		whileTrue: [writeStream nextPut: self next].
-	^ writeStream contents.
+		whileTrue: [nameStream nextPut: self next].
+	^ nameStream contents.
 ]
 
 { #category : #accessing }
@@ -104,54 +59,43 @@ XPathReadStreamAdapter >> nextName [
 
 { #category : #accessing }
 XPathReadStreamAdapter >> nextPushedBackToken [
-	self peekPushedBackToken
-		ifNil: [^ nil]
+	^ self peekPushedBackToken
 		ifNotNil: [:token |
 			self position: self position + token value size.
-			^ token]
+			token]
 ]
 
 { #category : #initialization }
 XPathReadStreamAdapter >> on: aStream [
-	stream := aStream.
+	super on: aStream.
+
 	"must use #writeStream instead of 'WriteStream on:' to get a 0-based
 	stream on Gemstone"
-	writeStream := (String new: 32) writeStream.
+	nameStream := (String new: 32) writeStream.
 ]
 
 { #category : #accessing }
-XPathReadStreamAdapter >> peek [
-	stream atEnd
-		ifTrue: [^ nil]
-		ifFalse: [^ stream peek]
-]
+XPathReadStreamAdapter >> peekForNCName: anNCName [
+	| position ncName |
 
-{ #category : #accessing }
-XPathReadStreamAdapter >> peekFor: aCharacter [
-	(stream atEnd not
-		and: [stream peek = aCharacter])
-		ifTrue: [
-			stream next.
-			^ true]
-		ifFalse: [^ false]
+	position := self position.
+	ncName := self nextNCName
+		ifNil: [^ false].
+	ncName = anNCName
+		ifTrue: [^ true]
+		ifFalse: [
+			self
+				pushBackNCName: ncName
+				position: position.
+			^ false].
 ]
 
 { #category : #accessing }
 XPathReadStreamAdapter >> peekPushedBackToken [
-	^ (pushedBackToken notNil
+	(pushedBackToken notNil
 		and: [pushedBackToken position = self position])
 		ifTrue: [^ pushedBackToken]
 		ifFalse: [^ nil]
-]
-
-{ #category : #accessing }
-XPathReadStreamAdapter >> position [
-	^ stream position
-]
-
-{ #category : #accessing }
-XPathReadStreamAdapter >> position: anInteger [
-	stream position: anInteger
 ]
 
 { #category : #positioning }
@@ -171,7 +115,7 @@ XPathReadStreamAdapter >> pushBackToken: aPushedBackToken [
 { #category : #positioning }
 XPathReadStreamAdapter >> skipBack [
 	"does not peek like #back"
-	stream position: stream position - 1
+	self position: self position - 1
 ]
 
 { #category : #positioning }
@@ -180,7 +124,7 @@ XPathReadStreamAdapter >> skipSeparators [
 	separators, which the XPath spec uses for whitespace too:
 		ExprWhitespace	   ::=   	S
 		S	   ::=   	(#x20 | #x9 | #xD | #xA)+"
-	[stream atEnd not
-		and: [stream peek isXMLSeparator]]
-		whileTrue: [stream next]
+	[self atEnd not
+		and: [self peek isXMLSeparator]]
+		whileTrue: [self next]
 ]
