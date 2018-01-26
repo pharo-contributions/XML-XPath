@@ -18,7 +18,7 @@ XPathASTAttributeNodeTestForPrefixAndLocalNameNode class >> prefix: aPrefix loca
 
 { #category : #visiting }
 XPathASTAttributeNodeTestForPrefixAndLocalNameNode >> acceptNodeVisitor: aNodeVisitor [
-	^ aNodeVisitor visitAttributeTestForPrefixAndLocalName: self
+	^ aNodeVisitor visitAttributeNodeTestForPrefixAndLocalName: self
 ]
 
 { #category : #testing }

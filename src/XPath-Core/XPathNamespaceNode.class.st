@@ -77,8 +77,9 @@ XPathNamespaceNode >> hasPrefix [
 
 { #category : #comparing }
 XPathNamespaceNode >> hash [
-	^ (self species hash bitXor: self name hash)
-		bitXor: self uri hash
+	^ (self species hash bitXor:
+		self name hash) bitXor:
+			self uri hash
 ]
 
 { #category : #testing }

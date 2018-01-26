@@ -492,16 +492,8 @@ XPathASTTranslatingWritingNodeVisitor >> visitAttributeNodeTestForPrefix: anAttr
 	^ super visitAttributeNodeTestForPrefix: anAttributeNodeTestForPrefix.
 ]
 
-{ #category : #'visiting - steps' }
-XPathASTTranslatingWritingNodeVisitor >> visitAttributeStep: anAttributeStep [
-	(self canEmitAsPredicateStep: anAttributeStep)
-		ifTrue: [self emitAll: ' attributeAxisAnySatisfy:']
-		ifFalse: [self emitAll: ' attributeAxis:'].
-	^ super visitAttributeStep: anAttributeStep.
-]
-
 { #category : #'visiting - node tests' }
-XPathASTTranslatingWritingNodeVisitor >> visitAttributeTestForPrefixAndLocalName: anAttributeNodeTestForPrefixAndLocalName [
+XPathASTTranslatingWritingNodeVisitor >> visitAttributeNodeTestForPrefixAndLocalName: anAttributeNodeTestForPrefixAndLocalName [
 	self
 		emit: $(;
 		emitAll: self contextVariable;
@@ -510,8 +502,16 @@ XPathASTTranslatingWritingNodeVisitor >> visitAttributeTestForPrefixAndLocalName
 		emitAll: '''localName:''';
 		emitAll: anAttributeNodeTestForPrefixAndLocalName localName;
 		emitAll: ''')'.
-	^ super visitAttributeTestForPrefixAndLocalName:
+	^ super visitAttributeNodeTestForPrefixAndLocalName:
 		anAttributeNodeTestForPrefixAndLocalName.
+]
+
+{ #category : #'visiting - steps' }
+XPathASTTranslatingWritingNodeVisitor >> visitAttributeStep: anAttributeStep [
+	(self canEmitAsPredicateStep: anAttributeStep)
+		ifTrue: [self emitAll: ' attributeAxisAnySatisfy:']
+		ifFalse: [self emitAll: ' attributeAxis:'].
+	^ super visitAttributeStep: anAttributeStep.
 ]
 
 { #category : #'visiting - steps' }

@@ -208,7 +208,7 @@ XPathASTExpressionParserHandler >> handleEndMultiplicativeExpression [
 XPathASTExpressionParserHandler >> handleEndOrExpression [
 	self
 		popAnyOrExpressionNodes;
-		popOperatorNode "pop the or expression grouping null node"
+		popOperatorNode "pop the null node used for grouping"
 ]
 
 { #category : #handling }
@@ -431,6 +431,7 @@ XPathASTExpressionParserHandler >> handleStartFunctionCall: aFunctionName [
 
 { #category : #'handling - operators' }
 XPathASTExpressionParserHandler >> handleStartOrExpression [
+	"this null node is used for grouping"
 	self pushOperatorNode: XPathASTNullNode new
 ]
 

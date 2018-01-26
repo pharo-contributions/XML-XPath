@@ -41,7 +41,7 @@ XPathExpressionCompiler >> compileExpression: anExpressionSourceStringOrStream [
 				(self parseExpression: anExpressionSourceStringOrStream)))
 ]
 
-{ #category : #private }
+{ #category : #translating }
 XPathExpressionCompiler >> compileTranslatedExpression: aTranslatedExpression [
 	^ XPathCompiledExpression
 		block:
@@ -50,7 +50,7 @@ XPathExpressionCompiler >> compileTranslatedExpression: aTranslatedExpression [
 		nodeTests: aTranslatedExpression nodeTests
 ]
 
-{ #category : #private }
+{ #category : #optimizing }
 XPathExpressionCompiler >> optimizeParsedExpression: anExpressionAST [
 	^ self optimizerClass new
 		visitNode: anExpressionAST
@@ -61,7 +61,7 @@ XPathExpressionCompiler >> optimizerClass [
 	^ XPathASTOptimizingMutatingNodeVisitor
 ]
 
-{ #category : #private }
+{ #category : #parsing }
 XPathExpressionCompiler >> parseExpression: anExpressionSourceStringOrStream [
 	^ (self parserClass
 		on: anExpressionSourceStringOrStream
@@ -78,7 +78,7 @@ XPathExpressionCompiler >> parserHandlerClass [
 	^ XPathASTExpressionParserHandler
 ]
 
-{ #category : #private }
+{ #category : #translating }
 XPathExpressionCompiler >> translateParsedExpression: anExpressionAST [
 	^ self translatorClass new
 		visitNode: anExpressionAST;
