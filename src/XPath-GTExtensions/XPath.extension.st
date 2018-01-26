@@ -1,27 +1,27 @@
 Extension { #name : #XPath }
 
 { #category : #'*XPath-GTExtensions' }
-XPath >> errorTextFor: anError [
-	| errorClassName errorMessage errorText |
+XPath >> addTreeViewForASTGeneratedWith: aBlock titled: aTitle on: aComposite [
+	| ast astError |
 
-	errorClassName := anError class name asString.
-	errorMessage := anError messageText.
-	errorText :=
-		(errorClassName, '
-	', errorMessage) asText.
-	errorText
-		addAttribute: TextColor red
-		from: 1
-		to: errorText size.
-	errorText
-		addAttribute: XPathExpressionHighlightDefaults defaultDefaultColor
-		from: 1
-		to: errorClassName size.
-	errorText
-		addAttribute: TextEmphasis bold
-		from: 1
-		to: errorClassName size.
-	^ errorText.
+	ast :=
+		aBlock
+			on: XPathException
+			do: [:error |
+				astError := error.
+				nil].
+
+	aComposite tree
+		title: aTitle;
+		display: [{ast}];
+		children: [:each | each treeViewChildren];
+		format: [:each | each treeViewLabelText];
+		when: [ast notNil];
+		rootsExpanded.
+	aComposite text
+		title: aTitle;
+		format: [self styledErrorTextFor: astError];
+		when: [ast isNil].
 ]
 
 { #category : #'*XPath-GTExtensions' }
@@ -34,30 +34,14 @@ XPath classSide >> gtExampleXPath [
 
 { #category : #'*XPath-GTExtensions' }
 XPath >> gtInspectorASTIn: aComposite [
-	<gtInspectorPresentationOrder: 7>
+	<gtInspectorPresentationOrder: 6>
 
-	| ast astError |
-
-	[ast :=
-		(XPathExpressionParser
-			on: self expressionSource
-			for: XPathASTExpressionParserHandler new) parse]
-		on: XPathException
-		do: [:error |
-			ast := nil.
-			astError := error].
-
-	aComposite tree
-		title: 'AST';
-		display: [{ast}];
-		children: [:each | each treeViewChildren];
-		format: [:each | each treeViewLabelText];
-		when: [ast notNil];
-		rootsExpanded.
-	aComposite text
-		title: 'AST';
-		format: [self errorTextFor: astError];
-		when: [ast isNil].
+	self
+		addTreeViewForASTGeneratedWith: [
+			XPathExpressionCompiler new
+				parseExpression: self expressionSource]
+		titled: 'AST'
+		on: aComposite
 ]
 
 { #category : #'*XPath-GTExtensions' }
@@ -66,11 +50,12 @@ XPath >> gtInspectorCompiledIn: aComposite [
 
 	| block blockError |
 
-	[block := self compiledExpression block]
-		on: XPathException
-		do: [:error |
-			block := nil.
-			blockError := error].
+	block :=
+		[self compiledExpression block]
+			on: XPathException
+			do: [:error |
+				blockError := error.
+				nil].
 
 	aComposite pharoMethod
 		title: 'Compiled';
@@ -79,13 +64,27 @@ XPath >> gtInspectorCompiledIn: aComposite [
 		when: [block notNil].
 	aComposite text
 		title: 'Compiled';
-		format: [self errorTextFor: blockError];
+		format: [self styledErrorTextFor: blockError];
 		when: [block isNil].
 ]
 
 { #category : #'*XPath-GTExtensions' }
+XPath >> gtInspectorOptimizedASTIn: aComposite [
+	<gtInspectorPresentationOrder: 7>
+
+
+	self
+		addTreeViewForASTGeneratedWith: [| compiler |
+			compiler := XPathExpressionCompiler new.
+			compiler optimizeParsedExpression:
+				(compiler parseExpression: self expressionSource)]
+		titled: 'Optimized AST'
+		on: aComposite
+]
+
+{ #category : #'*XPath-GTExtensions' }
 XPath >> gtInspectorSourceIn: aComposite inContext: aGTInspector [
-	<gtInspectorPresentationOrder: 6>
+	<gtInspectorPresentationOrder: 5>
 
 	| currentTextStylerDecorator |
 
@@ -122,11 +121,12 @@ XPath >> gtInspectorTestsIn: aComposite [
 
 	| nodeTests nodeTestsError |
 
-	[nodeTests := self compiledExpression nodeTests]
-		on: XPathException
-		do: [:error |
-			nodeTests := nil.
-			nodeTestsError := error].
+	nodeTests :=
+		[self compiledExpression nodeTests]
+			on: XPathException
+			do: [:error |
+				nodeTestsError := error.
+				nil].
 
 	aComposite list
 		title: 'Tests';
@@ -134,6 +134,30 @@ XPath >> gtInspectorTestsIn: aComposite [
 		when: [nodeTests notNil].
 	aComposite text
 		title: 'Tests';
-		format: [self errorTextFor: nodeTestsError];
+		format: [self styledErrorTextFor: nodeTestsError];
 		when: [nodeTests isNil].
+]
+
+{ #category : #'*XPath-GTExtensions' }
+XPath >> styledErrorTextFor: anError [
+	| errorClassName errorMessage errorText |
+
+	errorClassName := anError class name asString.
+	errorMessage := anError messageText.
+	errorText :=
+		(errorClassName, '
+	', errorMessage) asText.
+	errorText
+		addAttribute: TextColor red
+		from: 1
+		to: errorText size.
+	errorText
+		addAttribute: XPathExpressionHighlightDefaults defaultDefaultColor
+		from: 1
+		to: errorClassName size.
+	errorText
+		addAttribute: TextEmphasis bold
+		from: 1
+		to: errorClassName size.
+	^ errorText.
 ]
