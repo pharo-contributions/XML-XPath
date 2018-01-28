@@ -850,7 +850,7 @@ ConfigurationOfXPath >> baseline210: spec [
 		for: #common
 		do: [ 
 			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.2.9'.
+			spec project: 'XMLParser' with: #'release-3.3'.
 			spec postLoadDoIt: #clearXPathCache. ].
 	spec for: #squeakCommon do: [
 		spec
