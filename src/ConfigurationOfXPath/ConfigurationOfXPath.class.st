@@ -172,28 +172,677 @@ ConfigurationOfXPath class >> validate [
 
 { #category : #baselines }
 ConfigurationOfXPath >> baseline101: spec [
-	<version: '1.0.1-baseline' imports: #('1.0-baseline')>
+	<version: '1.0.1-baseline' imports: #('1-master-baseline')>
 	spec for: #common do: [ spec blessing: #baseline ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.2' ]
 ]
 
 { #category : #baselines }
 ConfigurationOfXPath >> baseline105: spec [
-	<version: '1.0.5-baseline' imports: #('1.0-baseline')>
+	<version: '1.0.5-baseline' imports: #('1-master-baseline')>
 	spec for: #common do: [ spec blessing: #baseline ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.3' ]
 ]
 
 { #category : #baselines }
 ConfigurationOfXPath >> baseline106: spec [
-	<version: '1.0.6-baseline' imports: #('1.0-baseline')>
+	<version: '1.0.6-baseline' imports: #('1-master-baseline')>
 	spec for: #common do: [ spec blessing: #baseline ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.4' ]
 ]
 
 { #category : #baselines }
-ConfigurationOfXPath >> baseline10: spec [
-	<version: '1.0-baseline'>
+ConfigurationOfXPath >> baseline134: spec [
+	<version: '1.3.4-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.4' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.5' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline149: spec [
+	<version: '1.4.9-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.6' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline151: spec [
+	<version: '1.5.1-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.7' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline155: spec [
+	<version: '1.5.5-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.5' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.8' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline158: spec [
+	<version: '1.5.8-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.9' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline160: spec [
+	<version: '1.6.0-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.3' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.10' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline162: spec [
+	<version: '1.6.2-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.3' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline163: spec [
+	<version: '1.6.3-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.5' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline165: spec [
+	<version: '1.6.5-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.6.8' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline166: spec [
+	<version: '1.6.6-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.3' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline167: spec [
+	<version: '1.6.7-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.4' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline168: spec [
+	<version: '1.6.8-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.7.6' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline169: spec [
+	<version: '1.6.9-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.1' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline170: spec [
+	<version: '1.7.0-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.3' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline171: spec [
+	<version: '1.7.1-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.7' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline172: spec [
+	<version: '1.7.2-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.8.9' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline173: spec [
+	<version: '1.7.3-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline174: spec [
+	<version: '1.7.4-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.5' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline176: spec [
+	<version: '1.7.6-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.7' ].
+	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline177: spec [
+	<version: '1.7.7-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #gemstone do: [
+		spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline177. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline180: spec [
+	<version: '1.8.0-baseline' imports: #('1-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #gemstone do: [
+		spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.12'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline182: spec [
+	<version: '1.8.2-baseline' imports: #('1.8.2-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.13'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline183: spec [
+	<version: '1.8.3-baseline' imports: #('1.8.2-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8' ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.13'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline183. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline189: spec [
+	<version: '1.8.9-baseline' imports: #('1.8.2-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.14'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline190: spec [
+	<version: '1.9.0-baseline' imports: #('1.8.2-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.15'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline191: spec [
+	<version: '1.9.1-baseline' imports: #('1.8.2-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-2.9.8'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline192: spec [
+	<version: '1.9.2-baseline' imports: #('1.8.2-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline194: spec [
+	<version: '1.9.4-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.12'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline198: spec [
+	<version: '1.9.8-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.18'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline200: spec [
+	<version: '2.0.0-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.20'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline201: spec [
+	<version: '2.0.1-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.21'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline202: spec [
+	<version: '2.0.2-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.1.7'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.26'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline205: spec [
+	<version: '2.0.5-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.1.9'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.27'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline206: spec [
+	<version: '2.0.6-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.2'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.27'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline209: spec [
+	<version: '2.0.9-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.2.9'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.27'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baseline210: spec [
+	<version: '2.1.0-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.28'. ]
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baselineMaster182: spec [
+	<version: '1.8.2-master-baseline' imports: #('1-master-baseline')>
+
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-Core'
+			with: [ spec includes: 'XPath-SqueakCommonCompatibility' ].
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: [ spec requires: 'XPath-Core' ]. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baselineMaster194: spec [
+	<version: '1.9.4-master-baseline' imports: #('1.8.2-master-baseline')>
+
+	spec
+		for: #gt
+		do: [
+			"the extensions require XMLWriter"
+			spec
+				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core' 'XPath-GTExtensions');
+				group: 'Tests' with: #('XPath-Tests' 'XPath-GTExtensions').
+			spec
+				package: 'XPath-GTExtensions'
+				with: [ spec requires: 'XPath-Core' ]. ].
+]
+
+{ #category : #baselines }
+ConfigurationOfXPath >> baselineMaster1: spec [
+	<version: '1-master-baseline'>
 
 	spec for: #common do: [
 		spec blessing: #baseline.
@@ -222,14 +871,6 @@ ConfigurationOfXPath >> baseline10: spec [
 		spec group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core').
 		spec group: 'Tests' with: #('XPath-Tests')].
 
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-Core'
-			with: [ spec includes: 'XPath-SqueakCommonCompatibility' ].
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: [ spec requires: 'XPath-Core' ]. ].
-
 	spec for: #gemstone do: [
 		spec
 			package: 'XPath-Core'
@@ -237,637 +878,6 @@ ConfigurationOfXPath >> baseline10: spec [
 		spec
 			package: 'XPath-GemstoneCompatibility'
 			with: [ spec requires: 'XPath-Core' ]. ].
-
-	spec
-		for: #gt
-		do: [
-			"the extensions require XMLWriter"
-			spec
-				group: 'CoreWithWriting' with: #('XMLParserCoreWithWriting' 'XPath-Core' 'XPath-GTExtensions');
-				group: 'Tests' with: #('XPath-Tests' 'XPath-GTExtensions').
-			spec
-				package: 'XPath-GTExtensions'
-				with: [ spec requires: 'XPath-Core' ]. ].
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline134: spec [
-	<version: '1.3.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.4' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.5' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline149: spec [
-	<version: '1.4.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.5' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.6' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline151: spec [
-	<version: '1.5.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.5' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.7' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline155: spec [
-	<version: '1.5.5-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.5' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.8' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline158: spec [
-	<version: '1.5.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.9' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline160: spec [
-	<version: '1.6.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.3' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.10' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline162: spec [
-	<version: '1.6.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.3' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline163: spec [
-	<version: '1.6.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.5' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline165: spec [
-	<version: '1.6.5-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.6.8' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline166: spec [
-	<version: '1.6.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.3' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline167: spec [
-	<version: '1.6.7-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.4' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline168: spec [
-	<version: '1.6.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.7.6' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline169: spec [
-	<version: '1.6.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.1' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline170: spec [
-	<version: '1.7.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.3' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline171: spec [
-	<version: '1.7.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.7' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline172: spec [
-	<version: '1.7.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.8.9' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline173: spec [
-	<version: '1.7.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline174: spec [
-	<version: '1.7.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.5' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline176: spec [
-	<version: '1.7.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.7' ].
-	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline177: spec [
-	<version: '1.7.7-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8' ].
-	spec for: #gemstone do: [
-		spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline177. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline180: spec [
-	<version: '1.8.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8' ].
-	spec for: #gemstone do: [
-		spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.12'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline182: spec [
-	<version: '1.8.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8' ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.13'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline183: spec [
-	<version: '1.8.3-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8' ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.13'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline183. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline189: spec [
-	<version: '1.8.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.14'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline190: spec [
-	<version: '1.9.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.15'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline191: spec [
-	<version: '1.9.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-2.9.8'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline192: spec [
-	<version: '1.9.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline194: spec [
-	<version: '1.9.4-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.12'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline198: spec [
-	<version: '1.9.8-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.18'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline200: spec [
-	<version: '2.0.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.20'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline201: spec [
-	<version: '2.0.1-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.21'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline202: spec [
-	<version: '2.0.2-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.1.7'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.26'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline205: spec [
-	<version: '2.0.5-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.1.9'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline189. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.27'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline206: spec [
-	<version: '2.0.6-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.2.2'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.27'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline209: spec [
-	<version: '2.0.9-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.2.9'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.27'. ]
-]
-
-{ #category : #baselines }
-ConfigurationOfXPath >> baseline210: spec [
-	<version: '2.1.0-baseline' imports: #('1.0-baseline')>
-	spec
-		for: #common
-		do: [ 
-			spec blessing: #baseline.
-			spec project: 'XMLParser' with: #'release-3.3'.
-			spec postLoadDoIt: #clearXPathCache. ].
-	spec for: #squeakCommon do: [
-		spec
-			package: 'XPath-SqueakCommonCompatibility'
-			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
-	spec for: #gemstone do: [
-		spec
-			package: 'XPath-GemstoneCompatibility'
-			with: 'XPath-GemstoneCompatibility-monty.16'.
-
-		"force initialization of lazy-initialized class and class isnt
-		vars to avoid write conflicts on GS"
-		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
-	spec for: #gt do: [
-		spec
-			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.28'. ]
 ]
 
 { #category : #doits }
@@ -1136,20 +1146,6 @@ ConfigurationOfXPath >> version109: spec [
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.16'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.11'.
                 ].
-]
-
-{ #category : #versions }
-ConfigurationOfXPath >> version10: spec [
-	<version: '1.0' imports: #('1.0-baseline' )>
-
-	spec for: #'common' do: [
-		spec blessing: #'stable'.
-		spec description: ''.
-		spec author: 'HernanMoralesDurand'.
-
-		spec timestamp: '31/1/2014 21:15'.
-		spec package: 'XPath' with: 'XPath-HernanMoralesDurand.12'. ].
-
 ]
 
 { #category : #versions }
