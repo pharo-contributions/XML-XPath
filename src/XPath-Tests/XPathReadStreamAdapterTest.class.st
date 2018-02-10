@@ -38,6 +38,11 @@ XPathReadStreamAdapterTest >> newStreamAdapterOnQualifiedName [
 ]
 
 { #category : #accessing }
+XPathReadStreamAdapterTest >> outputCollection [
+	^ self qualifiedName
+]
+
+{ #category : #accessing }
 XPathReadStreamAdapterTest >> prefix [
 	^ 'prefix'
 ]
