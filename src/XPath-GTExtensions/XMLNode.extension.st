@@ -2,7 +2,7 @@ Extension { #name : #XMLNode }
 
 { #category : #'*XPath-GTExtensions' }
 XMLNode >> gtInspectorXPathIn: aComposite [
-	<gtInspectorPresentationOrder: 20>
+	<gtInspectorPresentationOrder: 9>
 
 	| currentTextStylerDecorator |
 
