@@ -835,7 +835,7 @@ ConfigurationOfXPath >> baseline211: spec [
 	spec for: #gt do: [
 		spec
 			package: 'XPath-GTExtensions'
-			with: 'XPath-GTExtensions-monty.28'. ]
+			with: 'XPath-GTExtensions-monty.29'. ]
 ]
 
 { #category : #baselines }
