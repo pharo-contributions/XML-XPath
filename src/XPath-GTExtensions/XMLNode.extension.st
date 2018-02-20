@@ -17,7 +17,7 @@ XMLNode >> gtInspectorXPathIn: aComposite [
 					GLMXPathHighlighterTextStylerDecorator new.
 				GLMHighlighterTextRubEditingMode withStylerDecorator:
 					currentTextStylerDecorator];
-			display: [''];
+			display: ['self::node()'];
 			withLineNumbers: true;
 			"the selection action was removed because it reports the
 			wrong #selectionText if the previous presentation viewed
