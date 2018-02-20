@@ -24,10 +24,11 @@ XMLElement >> attributeAxisSelect: anAttributeNodeTest at: aPosition into: aNode
 		ifFalse: [
 			anAttributeNodeTest isAttributeNodeTestForName
 				ifTrue: [
-					"only one attribute can have this exact name"
+					"since it's a test for a name, if the position
+					is anything other than 1, it can't match"
 					aPosition = 1
 						ifTrue: [
-							self
+							self attributeNodes
 								attributeAxisSelectName: anAttributeNodeTest name
 								into: aNodeSet]]
 				ifFalse: [| totalMatched |
@@ -47,28 +48,13 @@ XMLElement >> attributeAxisSelect: anAttributeNodeTest into: aNodeSet [
 		ifTrue: [
 			anAttributeNodeTest isAttributeNodeTestForName
 				ifTrue: [
-					self
+					self attributeNodes
 						attributeAxisSelectName: anAttributeNodeTest name
 						into: aNodeSet]
 				ifFalse: [
 					self attributeNodesDo: [:each |
 						(anAttributeNodeTest value: each)
 							ifTrue: [aNodeSet addLast: each]]]].
-	^ aNodeSet.
-]
-
-{ #category : #'*XPath-Core-private' }
-XMLElement >> attributeAxisSelectName: anAttributeName into: aNodeSet [
-	| index |
-	
-	"If it's an attribute test for a name, we can use this to look up its
-	node in constant time (if it's an XMLCachingAttirbuteList). We avoid
-	#attributeNodeAt: because it matches names and local names, not names
-	exactly, and #attributeValueAt: returns the value, not the node"
-	(index := self attributeNodes indexOfAttribute: anAttributeName) > 0
-		ifTrue: [
-			aNodeSet addLast:
-				(self attributeNodes at: index)].
 	^ aNodeSet.
 ]
 
