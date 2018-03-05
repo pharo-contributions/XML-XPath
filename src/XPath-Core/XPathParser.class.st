@@ -60,6 +60,16 @@ XPathParser >> errorExpectedStringLiteral [
 ]
 
 { #category : #private }
+XPathParser >> errorExpectedTerminatingQuote: aQuote [
+	self errorExpected:
+		'string terminating ',
+		(aQuote == $'
+			ifTrue: ['single']
+			ifFalse: ['double']),
+		' quote character'
+]
+
+{ #category : #private }
 XPathParser >> expectNext: aCharacter [
 	| nextChar |
 
@@ -70,16 +80,6 @@ XPathParser >> expectNext: aCharacter [
 				errorExpectedLiteral: aCharacter
 				butGot: nextChar].
 	^ aCharacter.
-]
-
-{ #category : #private }
-XPathParser >> expectUpTo: aCharacter [
-	writeStream reset.
-	[readStream atEnd
-		or: [readStream peek = aCharacter]]
-		whileFalse: [writeStream nextPut: readStream next].
-	self expectNext: aCharacter.
-	^ writeStream contents.
 ]
 
 { #category : #accessing }
@@ -163,9 +163,19 @@ XPathParser >> nextStringLiteral [
 
 { #category : #parsing }
 XPathParser >> nextStringLiteralOptional: aBoolean [
-	(readStream peek == $"
-		or: [readStream peek == $'])
-		ifTrue: [^ self expectUpTo: readStream next]
+	| quote |
+
+	((quote := readStream peek) == $"
+		or: [quote == $'])
+		ifTrue: [| nextChar |
+			writeStream reset.
+			readStream next.
+			[(nextChar := readStream next) == quote
+				or: [nextChar == nil]]
+				whileFalse: [writeStream nextPut: nextChar].
+			nextChar
+				ifNil: [self errorExpectedTerminatingQuote: quote].
+			^ writeStream contents]
 		ifFalse: [
 			aBoolean
 				ifFalse: [self errorExpectedStringLiteral].

@@ -32,6 +32,12 @@ XPathNodeTestParser class >> initialize [
 			yourself
 ]
 
+{ #category : #private }
+XPathNodeTestParser >> errorExpectedExpandedNameTest [
+	self errorExpected:
+		'terminating "}" for expanded name literal test, as in "Q{uri}ncName"'
+]
+
 { #category : #parsing }
 XPathNodeTestParser >> nextAnyNodeTest [
 	self nextEndArgumentList.
@@ -96,6 +102,37 @@ XPathNodeTestParser >> parseInput [
 ]
 
 { #category : #'parsing - peeking' }
+XPathNodeTestParser >> peekForExpandedNameTestStartingWithNCName: anNCName [
+	| nextChar uri |
+
+	(anNCName = 'Q'
+		and: [readStream peekFor: ${])
+		ifFalse: [^ false].
+
+	writeStream reset.
+	[(nextChar := readStream next) == $}
+		or: [nextChar == nil]]
+		whileFalse: [writeStream nextPut: nextChar].
+	nextChar
+		ifNil: [self errorExpectedExpandedNameTest].
+	uri := writeStream contents.
+
+	"either a 'Q{uri}*' wildcard test or a 'Q{uri}localName' test"
+	(readStream peekFor: $*)
+		ifTrue: [
+			state
+				handleNodeTestForNamespaceURI: uri
+				with: handler]
+		ifFalse: [
+			state
+				handleNodeTestForNamespaceURI: uri
+				localName: self nextNCName
+				with: handler].
+
+	^ true.
+]
+
+{ #category : #'parsing - peeking' }
 XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
 	| startPosition |
 
@@ -126,40 +163,27 @@ XPathNodeTestParser >> peekForNameTestStartingWithNCName: anNCName [
 										with: handler.
 									^ true]]]]
 		ifFalse: [
-			(anNCName = 'Q'
-				and: [readStream peekFor: ${])
-				ifTrue: [| uri |
-					"either a 'Q{uri}*' wildcard test or a 'Q{uri}localName' test"
-					uri := self expectUpTo: $}.
-					(readStream peekFor: $*)
-						ifTrue: [
-							state
-								handleNodeTestForNamespaceURI: uri
-								with: handler]
-						ifFalse: [
-							state
-								handleNodeTestForNamespaceURI: uri
-								localName: self nextNCName
-								with: handler].
-					^ true]
+			(self peekForExpandedNameTestStartingWithNCName: anNCName)
+				ifTrue: [ ^ true].
+
+			"whitespace can be between the axis specifier and '::' separator,
+			but not between the prefix and ':' QName separator, so any ':'
+			not matched above but matched after #skipSeparators is an '::'
+			axis separator, and anNCName is an axis specifier, not a node test"
+			(readStream
+				skipSeparators;
+				peekFor: $:)
 				ifFalse: [
-					readStream skipSeparators.
-					"whitespace can be between the axis specifier and '::' separator,
-					but not between the prefix and ':' QName separator, so any ':'
-					not matched above but matched after #skipSeparators is an '::'
-					axis separator, and anNCName is an axis specifier, not a node test"
-					(readStream peekFor: $:)
+					(isParsingNodeTypeTest not
+						and: [self peekForStartArgumentList])
+						ifTrue: [
+							(self peekForNodeTypeTest: anNCName)
+								ifTrue: [^ true]]
 						ifFalse: [
-							(isParsingNodeTypeTest not
-								and: [self peekForStartArgumentList])
-								ifTrue: [
-									(self peekForNodeTypeTest: anNCName)
-										ifTrue: [^ true]]
-								ifFalse: [
-									state
-										handleNodeTestForName: anNCName
-										with: handler.
-									^ true]]]].
+							state
+								handleNodeTestForName: anNCName
+								with: handler.
+							^ true]]].
 
 	"anNCName is either an axis specifier or the start of a
 	function call and not a node test"

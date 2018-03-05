@@ -81,10 +81,8 @@ XPathFunction class >> prototype [
 	^ prototype
 		ifNil: [
 			prototype :=
-				(XPathFunctionPrototypeParser
-					on: self prototypeSource
-					for: XPathTypedFunctionPrototypeParserHandler new)
-					parse]
+				XPathFunctionPrototype fromString:
+					self prototypeSource]
 ]
 
 { #category : #accessing }

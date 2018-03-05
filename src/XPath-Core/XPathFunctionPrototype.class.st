@@ -15,6 +15,13 @@ Class {
 }
 
 { #category : #'instance creation' }
+XPathFunctionPrototype class >> fromString: aSourceString [
+	^ (XPathFunctionPrototypeParser
+		on: aSourceString
+		for: XPathTypedFunctionPrototypeParserHandler new) parse
+]
+
+{ #category : #'instance creation' }
 XPathFunctionPrototype class >> returnType: aReturnType name: aName minArguments: aMinimum maxArguments: aMaximum argumentTypes: anArgumentTypeCollection [
 	^ self new
 		setReturnType: aReturnType
