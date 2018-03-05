@@ -866,6 +866,33 @@ ConfigurationOfXPath >> baseline212: spec [
 ]
 
 { #category : #baselines }
+ConfigurationOfXPath >> baseline213: spec [
+	<version: '2.1.3-baseline' imports: #('1.9.4-master-baseline')>
+	spec
+		for: #common
+		do: [ 
+			spec blessing: #baseline.
+			spec project: 'XMLParser' with: #'release-3.3.9'.
+			spec postLoadDoIt: #clearXPathCache. ].
+	spec for: #squeakCommon do: [
+		spec
+			package: 'XPath-SqueakCommonCompatibility'
+			with: 'XPath-SqueakCommonCompatibility-monty.1'. ].
+	spec for: #gemstone do: [
+		spec
+			package: 'XPath-GemstoneCompatibility'
+			with: 'XPath-GemstoneCompatibility-monty.16'.
+
+		"force initialization of lazy-initialized class and class isnt
+		vars to avoid write conflicts on GS"
+		spec postLoadDoIt: #initializeClassesForGSBaseline206. ].
+	spec for: #gt do: [
+		spec
+			package: 'XPath-GTExtensions'
+			with: 'XPath-GTExtensions-monty.30'. ]
+]
+
+{ #category : #baselines }
 ConfigurationOfXPath >> baselineMaster182: spec [
 	<version: '1.8.2-master-baseline' imports: #('1-master-baseline')>
 
@@ -953,7 +980,7 @@ ConfigurationOfXPath >> customProjectAttributes [
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.1.2-baseline'.
+	spec for: #'common' version: '2.1.3-baseline'.
 ]
 
 { #category : #doits }
@@ -1099,7 +1126,7 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.1.2'.
+	spec for: #'common' version: '2.1.3'.
 
 ]
 
@@ -2331,6 +2358,17 @@ ConfigurationOfXPath >> version212: spec [
         spec for: #common do: [
                 spec blessing: #release.
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.127'.
+			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.97'.
+                ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version213: spec [ 
+        <version: '2.1.3' imports: #('2.1.3-baseline')>
+
+        spec for: #common do: [
+                spec blessing: #release.
+			spec package: 'XPath-Core' with: 'XPath-Core-monty.128'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.97'.
                 ].
 ]
