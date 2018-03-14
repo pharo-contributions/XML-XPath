@@ -33,6 +33,7 @@ XPathAttributeNodeTestForPrefix >> prefix: aPrefix [
 { #category : #printing }
 XPathAttributeNodeTestForPrefix >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self prefix;

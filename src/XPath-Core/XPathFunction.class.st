@@ -254,6 +254,7 @@ XPathFunction >> nodeSetClass [
 { #category : #printing }
 XPathFunction >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: self prototype;

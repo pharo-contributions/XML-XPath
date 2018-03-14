@@ -33,6 +33,7 @@ XPathAttributeNodeTestForName >> name: aName [
 { #category : #printing }
 XPathAttributeNodeTestForName >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self name;

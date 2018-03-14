@@ -39,6 +39,7 @@ XPathCompiledExpression >> nodeTests [
 { #category : #printing }
 XPathCompiledExpression >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: self block;

@@ -33,6 +33,7 @@ XPathNamespaceTestForNamespaceURI >> namespaceURI: aURI [
 { #category : #printing }
 XPathNamespaceTestForNamespaceURI >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self namespaceURI;

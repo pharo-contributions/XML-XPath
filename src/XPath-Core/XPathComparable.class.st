@@ -168,6 +168,7 @@ XPathComparable >> notEqualToString: aString [
 { #category : #printing }
 XPathComparable >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: value;

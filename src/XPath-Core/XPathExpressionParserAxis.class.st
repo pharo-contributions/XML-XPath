@@ -170,6 +170,7 @@ XPathExpressionParserAxis >> lookupAxisSpecifier [
 { #category : #printing }
 XPathExpressionParserAxis >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		nextPutAll: self axisSpecifier;

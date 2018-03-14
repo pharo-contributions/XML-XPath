@@ -44,6 +44,7 @@ XPathNodeTestWithPredicates >> predicates [
 { #category : #printing }
 XPathNodeTestWithPredicates >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
 		print: self nodeTest;
@@ -68,5 +69,5 @@ XPathNodeTestWithPredicates >> setPredicates: aPredicateOrPredicateCollection [
 					ifTrue: [
 						"avoid #newFrom: for portability"
 						Array withAll: aPredicateOrPredicateCollection]
-					ifFalse: [Array with: aPredicateOrPredicateCollection]].
+					ifFalse: [Array with: aPredicateOrPredicateCollection]]
 ]

@@ -61,9 +61,10 @@ XPathASTWritingNodeVisitor >> on: aStream [
 { #category : #printing }
 XPathASTWritingNodeVisitor >> printOn: aStream [
 	super printOn: aStream.
+
 	aStream
 		nextPut: $(;
-		print: self contents;
+		print: stream;
 		nextPut: $).
 ]
 
