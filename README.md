@@ -9,7 +9,7 @@ An XPath library for [Pharo](http://www.pharo.org) leveraging the XML parsing ca
 ```Smalltalk
 Metacello new
 	baseline: 'XPath';
-	repository: 'github://pharo-contributions/XML-XMLParserHTML/src';
+	repository: 'github://pharo-contributions/XML-XPath/src';
 	load.
 ```
 
