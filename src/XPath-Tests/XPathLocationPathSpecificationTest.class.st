@@ -14,7 +14,7 @@ Class {
 XPathLocationPathSpecificationTest >> setUp [
 	super setUp.
 
-	specificationDocument := self specificationXML parseXML.
+	specificationDocument := self specificationXML parseXML
 ]
 
 { #category : #'source XML' }

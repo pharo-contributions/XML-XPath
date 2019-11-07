@@ -218,7 +218,7 @@ XMLNodeTest >> testPrecedingNodesDo [
 	node := self newNode.
 	self
 		xmlShould: [:block | node precedingNodesDo: block]
-		enumerate: #().
+		enumerate: #()
 ]
 
 { #category : #'*XPath-Tests' }
@@ -240,7 +240,7 @@ XMLNodeTest >> testPrecedingSiblingNodesDo [
 	node := self newNode.
 	self
 		xmlShould: [:block | node precedingSiblingNodesDo: block]
-		enumerate: #().
+		enumerate: #()
 ]
 
 { #category : #'*XPath-Tests' }
@@ -265,12 +265,12 @@ XMLNodeTest >> testSelfAxis [
 			self
 				assertNodeSet: result
 				hasSortOrder: XPathLevelDocumentSortOrder]
-		ifFalse: [self assert: result isEmpty].
+		ifFalse: [self assert: result isEmpty]
 ]
 
 { #category : #'*XPath-Tests' }
 XMLNodeTest >> testStringValue [
-	self assert: self newNode stringValue = ''
+	self assert: self newNode stringValue equals: ''
 ]
 
 { #category : #'*XPath-Tests' }
@@ -289,8 +289,8 @@ XMLNodeTest >> testXPath [
 
 	node := self newNode.
 	self
-		assert: (node xpath: '.') = (self nodeSetClass with: node);
-		assert: (node xpath: (XPath for: '.')) = (self nodeSetClass with: node).
+		assert: (node xpath: '.') equals: (self nodeSetClass with: node);
+		assert: (node xpath: (XPath for: '.')) equals: (self nodeSetClass with: node)
 ]
 
 { #category : #'*XPath-Tests' }
@@ -303,6 +303,6 @@ XMLNodeTest >> testXPathContext [
 		variableAt: 'var'
 		put: 'test'.
 	self
-		assert: (node xpath: '$var' context: context) = 'test';
-		assert: (node xpath: (XPath for: '$var') context: context) = 'test'.
+		assert: (node xpath: '$var' context: context) equals: 'test';
+		assert: (node xpath: (XPath for: '$var') context: context) equals: 'test'.
 ]

@@ -28,13 +28,13 @@ XPathBooleanTest >> testAsXPathNodeSet [
 		raise: XPathTypeException.
 	self
 		should: [false asXPathNodeSet]
-		raise: XPathTypeException.
+		raise: XPathTypeException
 ]
 
 { #category : #tests }
 XPathBooleanTest >> testAsXPathNumber [
 	self
-		assert: true asXPathNumber = 1.0;
+		assert: true asXPathNumber equals: 1.0;
 		assert: true asXPathNumber isFloat;
 		assert: false asXPathNumber isXPathPositiveZero;
 		assert: false asXPathNumber isFloat

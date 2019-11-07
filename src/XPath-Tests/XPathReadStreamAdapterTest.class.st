@@ -1,3 +1,6 @@
+"
+Unit tests for XPathReadStreamAdapter
+"
 Class {
 	#name : #XPathReadStreamAdapterTest,
 	#superclass : #XMLReadStreamAdapterTest,
@@ -63,27 +66,27 @@ XPathReadStreamAdapterTest >> testNextNCName [
 
 	adapter := self newStreamAdapterOnNCName.
 	self
-		assert: adapter nextNCName = self ncName;
+		assert: adapter nextNCName equals: self ncName;
 		assert: adapter nextNCName isNil;
 		assert: adapter atEnd.
 
 	adapter := self newStreamAdapterOnQualifiedName.
 	self
-		assert: adapter nextNCName = self prefix;
+		assert: adapter nextNCName equals: self prefix;
 		assert: adapter nextNCName isNil;
 		assert: adapter next == $:;
-		assert: adapter nextNCName = self ncName;
+		assert: adapter nextNCName equals: self ncName;
 		assert: adapter atEnd.
 
 	adapter := self newStreamAdapterOnBadQualifiedName.
 	self
-		assert: adapter nextNCName = self prefix;
+		assert: adapter nextNCName equals: self prefix;
 		assert: adapter nextNCName isNil;
 		assert: adapter next == $:.
 	badNamePosition := adapter position.
 	self
 		assert: adapter nextNCName isNil;
-		assert: adapter position = badNamePosition.
+		assert: adapter position equals: badNamePosition
 ]
 
 { #category : #tests }
@@ -92,13 +95,13 @@ XPathReadStreamAdapterTest >> testNextName [
 
 	adapter := self newStreamAdapterOnNCName.
 	self
-		assert: adapter nextName = self ncName;
+		assert: adapter nextName equals: self ncName;
 		assert: adapter nextName isNil;
 		assert: adapter atEnd.
 
 	adapter := self newStreamAdapterOnQualifiedName.
 	self
-		assert: adapter nextName = self qualifiedName;
+		assert: adapter nextName equals: self qualifiedName;
 		assert: adapter nextName isNil;
 		assert: adapter atEnd.
 
@@ -106,7 +109,7 @@ XPathReadStreamAdapterTest >> testNextName [
 	badNamePosition := adapter position.
 	self
 		assert: adapter nextName isNil;
-		assert: adapter position = badNamePosition.
+		assert: adapter position equals: badNamePosition
 ]
 
 { #category : #tests }
@@ -125,7 +128,7 @@ XPathReadStreamAdapterTest >> testNextPushedBackToken [
 		token := adapter nextPushedBackToken.
 		self
 			deny: token isNil;
-			assert: token value = ncName;
+			assert: token value equals: ncName;
 			assert: adapter nextPushedBackToken isNil;
 			assert: adapter atEnd.
 
@@ -135,7 +138,7 @@ XPathReadStreamAdapterTest >> testNextPushedBackToken [
 		"if the current position doesn't match the pushed back token position,
 		then it should return nil"
 		adapter next.
-		self assert: adapter nextPushedBackToken isNil].
+		self assert: adapter nextPushedBackToken isNil]
 ]
 
 { #category : #tests }
@@ -156,7 +159,7 @@ XPathReadStreamAdapterTest >> testPeekForNCName [
 	badNamePosition := adapter position.
 	self
 		deny: (adapter peekForNCName: self prefix);
-		assert: adapter position = badNamePosition;
+		assert: adapter position equals: badNamePosition;
 		assert: (adapter peekForNCName: self ncName);
 		assert: adapter atEnd;
 		deny: (adapter peekForNCName: self ncName);
@@ -169,9 +172,9 @@ XPathReadStreamAdapterTest >> testPeekForNCName [
 	badNamePosition := adapter position.
 	self
 		deny: (adapter peekForNCName: self prefix);
-		assert: adapter position = badNamePosition;
+		assert: adapter position equals: badNamePosition;
 		deny: (adapter peekForNCName: self ncName);
-		assert: adapter position = badNamePosition.
+		assert: adapter position equals: badNamePosition
 ]
 
 { #category : #tests }
@@ -189,13 +192,13 @@ XPathReadStreamAdapterTest >> testPeekPushedBackToken [
 			position: ncNamePosition.
 		self
 			assert: adapter peekPushedBackToken notNil;
-			assert: adapter peekPushedBackToken value = ncName;
-			assert: adapter peekPushedBackToken position = ncNamePosition.
+			assert: adapter peekPushedBackToken value equals: ncName;
+			assert: adapter peekPushedBackToken position equals: ncNamePosition.
 	
 		"if the current position doesn't match the pushed back token position,
 		then it should return nil"
 		adapter next.
-		self assert: adapter peekPushedBackToken isNil].
+		self assert: adapter peekPushedBackToken isNil]
 ]
 
 { #category : #tests }
@@ -210,7 +213,7 @@ XPathReadStreamAdapterTest >> testPushBackNCNamePosition [
 			pushBackNCName: ncName
 			position: ncNamePosition) == adapter.
 	self
-		assert: adapter position = ncNamePosition;
-		assert: adapter nextNCName = ncName;
-		assert: adapter atEnd.
+		assert: adapter position equals: ncNamePosition;
+		assert: adapter nextNCName equals: ncName;
+		assert: adapter atEnd
 ]

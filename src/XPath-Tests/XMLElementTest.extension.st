@@ -9,11 +9,11 @@ XMLElementTest >> testAttributeAxis [
 	element := self newElementWithAttributes.
 	list := element @ '*'.
 	self
-		assert: list = (self nodeSetClass newFrom: element attributeNodes);
+		assert: list equals: (self nodeSetClass newFrom: element attributeNodes);
 		assertNodeSet: list hasSortOrder: XPathLevelDocumentSortOrder.
 
 	element := self newNode.
-	self assert: (element @ 'node()') isEmpty.
+	self assert: (element @ 'node()') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
@@ -32,7 +32,7 @@ XMLElementTest >> testHasNamespaceNodes [
 	self assert: element hasNamespaceNodes.
 
 	element configuration usesNamespaces: false.
-	self deny: element hasNamespaceNodes.
+	self deny: element hasNamespaceNodes
 ]
 
 { #category : #'*XPath-Tests' }
@@ -43,12 +43,12 @@ XMLElementTest >> testNamespaceAxis [
 	element declareNamespaces: self namespaces.
 	list := element namespaceAxis: '*'.
 	self
-		assert: list = (self nodeSetClass newFrom: element namespaceNodes);
+		assert: list equals: (self nodeSetClass newFrom: element namespaceNodes);
 		assertNodeSet: list hasSortOrder: XPathLevelDocumentSortOrder.
 
 	element := self newNode.
 	element configuration usesNamespaces: false.
-	self assert: (element namespaceAxis: 'node()') isEmpty.
+	self assert: (element namespaceAxis: 'node()') isEmpty
 ]
 
 { #category : #'*XPath-Tests' }
@@ -59,7 +59,7 @@ XMLElementTest >> testNamespaceNodes [
 	nodes :=
 		XMLNodeList with:
 			(XPathNamespaceNode withXMLNamespaceOnElement: element).
-	self assert: element namespaceNodes = nodes.
+	self assert: element namespaceNodes equals: nodes.
 
 	element configuration usesNamespaces: false.
 	self assert: element namespaceNodes isEmpty.
@@ -72,11 +72,11 @@ XMLElementTest >> testNamespaceNodes [
 				element: element
 				name: prefix
 				uri: uri)].
-	self assert: element namespaceNodes = nodes.
+	self assert: element namespaceNodes equals: nodes.
 
 	element declarePrefix: 'xml' uri: XMLNamespaceScope xmlNamespaceURI.
 	nodes addLast: nodes removeFirst.
-	self assert: element namespaceNodes = nodes.
+	self assert: element namespaceNodes equals: nodes
 ]
 
 { #category : #'*XPath-Tests' }
@@ -102,7 +102,7 @@ XMLElementTest >> testNamespaceNodesDo [
 	element declarePrefix: 'xml' uri: XMLNamespaceScope xmlNamespaceURI.
 	self
 		xmlShould: [:block | element namespaceNodesDo: block]
-		enumerate: element namespaceNodes.
+		enumerate: element namespaceNodes
 ]
 
 { #category : #'*XPath-Tests' }
@@ -117,5 +117,5 @@ XMLElementTest >> testStringValue [
 					addString: 'content';
 					yourself);
 			addString: 'after';
-			yourself) stringValue = 'beforecontentafter'.
+			yourself) stringValue equals: 'beforecontentafter'
 ]

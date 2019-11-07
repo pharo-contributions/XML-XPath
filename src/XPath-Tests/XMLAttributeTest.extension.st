@@ -12,5 +12,5 @@ XMLAttributeTest >> testStringValue [
 	self assert:
 		(self nodeClass
 			name: 'name'
-			value: 'value') stringValue = 'value'
+			value: 'value') stringValue equals: 'value'
 ]

@@ -2,7 +2,7 @@ Extension { #name : #XMLPITest }
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testExpandedName [
-	self assert: self newPIWithTargetAndData expandedName = 'target'
+	self assert: self newPIWithTargetAndData expandedName equals: 'target'
 ]
 
 { #category : #'*XPath-Tests' }
@@ -22,27 +22,27 @@ XMLPITest >> testHasPrefix [
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testLocalName [
-	self assert: self newPIWithTargetAndData localName = 'target'
+	self assert: self newPIWithTargetAndData localName equals: 'target'
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testName [
-	self assert: self newPIWithTargetAndData name = 'target'
+	self assert: self newPIWithTargetAndData name equals: 'target'
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testNamespaceURI [
-	self assert: self newPIWithTargetAndData namespaceURI = ''
+	self assert: self newPIWithTargetAndData namespaceURI equals: ''
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testPrefix [
-	self assert: self newPIWithTargetAndData prefix = ''
+	self assert: self newPIWithTargetAndData prefix equals: ''
 ]
 
 { #category : #'*XPath-Tests' }
 XMLPITest >> testStringValue [
 	super testStringValue.
 
-	self assert: self newPIWithTargetAndData stringValue = 'data'.
+	self assert: self newPIWithTargetAndData stringValue equals: 'data'
 ]

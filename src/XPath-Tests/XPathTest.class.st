@@ -1,3 +1,6 @@
+"
+Unit tests for XPath
+"
 Class {
 	#name : #XPathTest,
 	#superclass : #TestCase,
@@ -121,7 +124,7 @@ XPathTest >> testAbbreviatedSteps [
 		raise: XPathSyntaxException.
 	self
 		should: [document xpath: '/..[true()]']
-		raise: XPathSyntaxException.
+		raise: XPathSyntaxException
 ]
 
 { #category : #tests }
@@ -167,7 +170,7 @@ XPathTest >> testAddFunction [
 	self assert:
 		(path
 			in: nil
-			context: context) = 2.
+			context: context) equals: 2
 ]
 
 { #category : #tests }
@@ -202,7 +205,7 @@ XPathTest >> testAncestorAxis [
 
 	self
 		assert: (XPath for: 'addressbook/ancestor::*' in: document) isEmpty;
-		assert: (XPath for: 'ancestor::node()' in: document) isEmpty.
+		assert: (XPath for: 'ancestor::node()' in: document) isEmpty
 ]
 
 { #category : #tests }
@@ -257,7 +260,7 @@ XPathTest >> testAncestorOrSelfAxis [
 		hasNode: document root.
 	self
 		assertNodeSet: (XPath for: 'ancestor-or-self::node()' in: document)
-		hasNode: document.
+		hasNode: document
 ]
 
 { #category : #tests }
@@ -267,8 +270,8 @@ XPathTest >> testAsXPath [
 	path := '/addressbook' asXPath.
 	self
 		assert: path class == XPath;
-		assert: (document xpath: path) = (self nodeSetClass with: document root);
-		assert: path asXPath == path.
+		assert: (document xpath: path) equals: (self nodeSetClass with: document root);
+		assert: path asXPath == path
 ]
 
 { #category : #tests }
@@ -314,7 +317,7 @@ XPathTest >> testAttributeAxis [
 		hasNodes: expected.
 	self
 		assertNodeSet: result
-		hasSortOrder: XPathLevelDocumentSortOrder.
+		hasSortOrder: XPathLevelDocumentSortOrder
 ]
 
 { #category : #tests }
@@ -333,7 +336,7 @@ XPathTest >> testAttributeNameTest [
 	results :=
 		document xpath:
 			'addressbook/person/attribute::node()/self::attribute(absent)'.
-	self assert: results isEmpty.
+	self assert: results isEmpty
 ]
 
 { #category : #tests }
@@ -362,7 +365,7 @@ XPathTest >> testAttributePredicates [
 				'addressbook/person[ @ * [ local-name() = "middle-initial" ] and position() > 3 ]') isEmpty;
 		assert: (document xpath: 'addressbook/person[ @ absent ]') isEmpty;
 		assert: (document xpath: 'addressbook/person[ @ * [ self::attribute(absent) ] ]') isEmpty;
-		assert: (document xpath: 'addressbook/person[ @ * [ local-name() = "absent" ] ]') isEmpty.
+		assert: (document xpath: 'addressbook/person[ @ * [ local-name() = "absent" ] ]') isEmpty
 ]
 
 { #category : #tests }
@@ -382,7 +385,7 @@ XPathTest >> testAttributePredicatesComparison [
 	self
 		assertNodeSet: (document xpath: '//address[ @ number <= 344 ]')
 		hasNode: (document allElementsNamed: 'address') second.
-	self assert: (document xpath: '//address[ @ number < 344 ]') isEmpty.
+	self assert: (document xpath: '//address[ @ number < 344 ]') isEmpty
 ]
 
 { #category : #tests }
@@ -406,7 +409,7 @@ XPathTest >> testAttributePredicatesEquals [
 		assertNodeSet: (document xpath: '//address[ @ number = 344 ]')
 		hasNode: (document allElementsNamed: 'address') second.
 	self assert:
-		(document xpath: '//address[ @ number = 1 ]') isEmpty.
+		(document xpath: '//address[ @ number = 1 ]') isEmpty
 ]
 
 { #category : #tests }
@@ -433,7 +436,7 @@ XPathTest >> testAttributePredicatesNotEquals [
 	addresses := addresses copyReplaceFrom: 2 to: 2 with: #().
 	self
 		assertNodeSet: (document xpath: '//address[ @ number != 344 ]')
-		hasNodes: addresses.
+		hasNodes: addresses
 ]
 
 { #category : #tests }
@@ -455,7 +458,7 @@ XPathTest >> testAttributeTypeTest [
 	self
 		assertNodeSet:
 			(document xpath: '(//attribute::* | //text())/ self :: attribute()')
-		hasNodes: expected.
+		hasNodes: expected
 ]
 
 { #category : #tests }
@@ -500,7 +503,7 @@ XPathTest >> testChildAxis [
 			in: document.
 	self
 		assertNodeSet: result
-		hasNodes: children.
+		hasNodes: children
 ]
 
 { #category : #tests }
@@ -514,33 +517,33 @@ XPathTest >> testCommentTypeTest [
 	self
 		assertNodeSet: (document xpath: '//comment()/self::comment()')
 		hasNodes: comments.
-	self assert: (document xpath: '//comment()/comment()') isEmpty.
+	self assert: (document xpath: '//comment()/comment()') isEmpty
 ]
 
 { #category : #tests }
 XPathTest >> testConcatFunction [
 	self
-		assert: (XPath for: 'concat("one", "two")' in: nil) = 'onetwo';
-		assert: (XPath for: 'concat("one", "two", true())' in: nil) = 'onetwotrue'.
+		assert: (XPath for: 'concat("one", "two")' in: nil) equals: 'onetwo';
+		assert: (XPath for: 'concat("one", "two", true())' in: nil) equals: 'onetwotrue'.
 	self
 		should: [XPath for: 'concat("one")' in: nil]
-		raise: XPathArgumentNumberException.
+		raise: XPathArgumentNumberException
 ]
 
 { #category : #tests }
 XPathTest >> testCountFunction [
 	self assert:
-		(XPath for: 'count(addressbook/person)' in: document) =
+		(XPath for: 'count(addressbook/person)' in: document) equals:
 			(document allElementsNamed: 'person') size.
 	self assert:
-		(XPath for: 'addressbook/person[count(@*) >= 4]' in: document) =
+		(XPath for: 'addressbook/person[count(@*) >= 4]' in: document) equals:
 			((document allElementsNamed: 'person') copyFrom: 2 to: 3).
 	self
 		should: [XPath for: 'count()' in: nil]
 		raise: XPathArgumentNumberException.
 	self
 		should: [XPath for: 'count(1)' in: nil]
-		raise: XPathTypeException.
+		raise: XPathTypeException
 ]
 
 { #category : #tests }
@@ -550,8 +553,8 @@ XPathTest >> testDescendantAxis [
 	path := XPath for: '//address/@city'.
 	results := path in: document.
 	self
-		assert: results size = 4;
-		assert: results first value = 'Los Angeles'.
+		assert: results size equals: 4;
+		assert: results first value equals: 'Los Angeles'.
 
 	path := XPath for: 'addressbook/person//address'.
 	self
@@ -590,7 +593,7 @@ XPathTest >> testDescendantAxis [
 		hasNodes: (document allNodesSelect: [:each | each isComment]).
 
 	path := XPath for: 'addressbook/descendant::comment()/descendant::node()'.
-	self assert: (path in: document) isEmpty.
+	self assert: (path in: document) isEmpty
 ]
 
 { #category : #tests }
@@ -633,7 +636,7 @@ XPathTest >> testDescendantOrSelfAxis [
 			(XPath
 				for: 'addressbook/person/contact-info/comment()/descendant-or-self::node()'
 				in: document)
-		hasNodes: (document allNodesSelect: [:each | each isComment]).
+		hasNodes: (document allNodesSelect: [:each | each isComment])
 ]
 
 { #category : #tests }
@@ -709,7 +712,7 @@ XPathTest >> testDocumentOrderLosing [
 	result := document xpath: 'descendant::node()/preceding::node()'.
 	self
 		assertNodeSet: result
-		hasNodes: expected.
+		hasNodes: expected
 ]
 
 { #category : #tests }
@@ -740,7 +743,7 @@ XPathTest >> testDocumentOrderPreserving [
 	result := namespacedDocument xpath: 'descendant::*/namespace::*[true()]'.
 	self
 		assertNodeSet: result
-		hasNodes: expected.
+		hasNodes: expected
 ]
 
 { #category : #tests }
@@ -749,8 +752,8 @@ XPathTest >> testDot [
 
 	path := XPath for: 'addressbook/person/address/./@city'.
 	results := path in: document.
-	self assert: results size = 4.
-	self assert: (results at: 1) value = 'Los Angeles'.
+	self assert: results size equals: 4.
+	self assert: (results at: 1) value equals: 'Los Angeles'
 
 ]
 
@@ -759,8 +762,8 @@ XPathTest >> testDotDot [
 	| path results |
 	path := XPath for: 'addressbook/person/address/../address/@city'.
 	results := path in: document.
-	self assert: results size = 4.
-	self assert: (results at: 1) value = 'Los Angeles'.
+	self assert: results size equals: 4.
+	self assert: (results at: 1) value equals: 'Los Angeles'
 
 ]
 
@@ -769,7 +772,7 @@ XPathTest >> testDotDotTooHigh [
 	| path results |
 	path := XPath for: 'person/address/../../../address/@city'.
 	results := path in: document.
-	self assert: results isEmpty.
+	self assert: results isEmpty
 ]
 
 { #category : #tests }
@@ -786,7 +789,7 @@ XPathTest >> testDoubleWildcard [
 				for: '*:*/*:*'
 				in: namespacedDocument
 				context: (self newContext declarePrefix: 'two' uri: 'personNS'))
-		hasNodes: (namespacedDocument allElementsNamed: 'person').
+		hasNodes: (namespacedDocument allElementsNamed: 'person')
 ]
 
 { #category : #tests }
@@ -803,7 +806,7 @@ XPathTest >> testElementDoubleWildcard [
 				for: 'element(*:*)/element(*:*)'
 				in: namespacedDocument
 				context: (self newContext declarePrefix: 'two' uri: 'personNS')) 
-		hasNodes: (namespacedDocument allElementsNamed: 'person').
+		hasNodes: (namespacedDocument allElementsNamed: 'person')
 ]
 
 { #category : #tests }
@@ -819,7 +822,7 @@ XPathTest >> testElementExpandedNameTest [
 		raise: XPathSyntaxException.
 	self
 		should: [namespacedDocument xpath: 'element(Q {bookNS}addressbook)']
-		raise: XPathSyntaxException.
+		raise: XPathSyntaxException
 ]
 
 { #category : #tests }
@@ -834,7 +837,7 @@ XPathTest >> testElementExpandedNameWildcardTest [
 		raise: XPathSyntaxException.
 	self
 		should: [namespacedDocument xpath: 'element(Q {bookNS}*)']
-		raise: XPathSyntaxException.
+		raise: XPathSyntaxException
 ]
 
 { #category : #tests }
@@ -868,7 +871,7 @@ XPathTest >> testElementLocalNameWildcardTest [
 				for: 'element(undeclared:*)'
 				in: namespacedDocument
 				context: (self contextClass namespaces: mappings))]
-		raise: XPathUndeclaredPrefixException.
+		raise: XPathUndeclaredPrefixException
 ]
 
 { #category : #tests }
@@ -877,7 +880,7 @@ XPathTest >> testElementNameTest [
 		assertNodeSet: (document xpath: 'element(addressbook)/element(person)')
 		hasNodes: (document allElementsNamed: 'person').
 	self assert:
-		(namespacedDocument xpath: 'element(addressbook)/element(person)') isEmpty.
+		(namespacedDocument xpath: 'element(addressbook)/element(person)') isEmpty
 ]
 
 { #category : #tests }
@@ -900,7 +903,7 @@ XPathTest >> testElementPrefixWildcardTest [
 		(XPath
 			for: 'element(one:addressbook)/element(*:contact-info)'
 			in: namespacedDocument
-			context: (self newContext declarePrefix: 'one' uri: 'bookNS')) isEmpty.
+			context: (self newContext declarePrefix: 'one' uri: 'bookNS')) isEmpty
 ]
 
 { #category : #tests }
@@ -949,7 +952,7 @@ XPathTest >> testElementQualfiedNameTest [
 				for: 'element(undeclared:addressbook)'
 				in: namespacedDocument
 				context: (self contextClass namespaces: mappings))]
-		raise: XPathUndeclaredPrefixException.
+		raise: XPathUndeclaredPrefixException
 ]
 
 { #category : #tests }
@@ -975,7 +978,7 @@ XPathTest >> testExpandedNameTest [
 		raise: XPathSyntaxException.
 	self
 		should: [namespacedDocument xpath: 'Q {bookNS}addressbook']
-		raise: XPathSyntaxException.
+		raise: XPathSyntaxException
 ]
 
 { #category : #tests }
@@ -983,7 +986,7 @@ XPathTest >> testExpressionSource [
 	| query compiled newCompiled |
 
 	query := 'test' asXPath.
-	self assert: query expressionSource = 'test'.
+	self assert: query expressionSource equals: 'test'.
 
 	compiled := query compiledExpression.
 	self
@@ -992,7 +995,7 @@ XPathTest >> testExpressionSource [
 
 	self
 		assert: (query expressionSource: 'test/new') == query;
-		assert: query expressionSource = 'test/new'.
+		assert: query expressionSource equals: 'test/new'.
 
 	newCompiled := query compiledExpression.
 	self
@@ -1006,7 +1009,7 @@ XPathTest >> testFalseFunction [
 	self deny: 'false()' asXPath evaluate.
 	self
 		should: ['false(1)' asXPath evaluate]
-		raise: XPathArgumentNumberException.
+		raise: XPathArgumentNumberException
 ]
 
 { #category : #tests }
@@ -1024,7 +1027,7 @@ XPathTest >> testFileterExpressionPredicates [
 		hasNodes: (document allElementsNamed: 'email').
 	self
 		assertNodeSet: (document xpath: '(//person[position()>1])[position()<=2]')
-		hasNodes: ((document allElementsNamed: 'person') copyFrom: 2 to: 3).
+		hasNodes: ((document allElementsNamed: 'person') copyFrom: 2 to: 3)
 ]
 
 { #category : #tests }
@@ -1137,7 +1140,7 @@ XPathTest >> testFollowingSiblingAxis [
 			(XPath
 				for: '(//person[1]|//person[3]/node()[1])/following-sibling::node()'
 				in: document)
-		hasNodes: siblings.
+		hasNodes: siblings
 ]
 
 { #category : #tests }
@@ -1146,10 +1149,10 @@ XPathTest >> testFunctions [
 
 	functionSet := self functionSetClass default.
 	self
-		assert: self newContext functions = functionSet;
+		assert: self newContext functions equals: functionSet;
 		deny: self newContext functions == functionSet;
 		assert: (self contextClass functions: functionSet) functions == functionSet;
-		assert: (self newContext functions: functionSet) functions == functionSet.
+		assert: (self newContext functions: functionSet) functions == functionSet
 ]
 
 { #category : #tests }
@@ -1238,7 +1241,7 @@ XPathTest >> testIDFunction [
 			hasNodes: idElements.
 		self
 			assertNodeSet: (documentWithIDs xpath: 'id(//*)')
-			hasNodes: idElements].
+			hasNodes: idElements]
 ]
 
 { #category : #tests }
@@ -1254,7 +1257,7 @@ XPathTest >> testInvalidAbbreviatedLocationPath [
 		raise: XPathSyntaxException.
 	self
 		should: ['//one/' asXPath compileExpression]
-		raise: XPathSyntaxException.
+		raise: XPathSyntaxException
 ]
 
 { #category : #tests }
@@ -1282,7 +1285,7 @@ XPathTest >> testInvalidNumberTokenizing [
 		raise: XPathSyntaxException.
 	self
 		should: ['1.2.' asXPath evaluate]
-		raise: XPathSyntaxException.
+		raise: XPathSyntaxException
 ]
 
 { #category : #tests }
@@ -1301,7 +1304,7 @@ XPathTest >> testInvalidUnionExpressionType [
 		'//person | "string"' '"string" | //person') do: [:each |
 		self
 			should: [document xpath: each]
-			raise: XPathTypeException].
+			raise: XPathTypeException]
 ]
 
 { #category : #tests }
@@ -1341,7 +1344,7 @@ XPathTest >> testLangFunction [
 		assertNodeSet:
 			(docWithLangElements xpath: '/descendant-or-self::*[lang("en-us")]')
 		hasNodes:
-			(XMLNodeList with: docWithLangElements descendantElements last).
+			(XMLNodeList with: docWithLangElements descendantElements last)
 ]
 
 { #category : #tests }
@@ -1349,11 +1352,11 @@ XPathTest >> testLastFunction [
 	| path elements |
 
 	path := XPath for: 'last()'.
-	self assert: (path in: document) = 1.
+	self assert: (path in: document) equals: 1.
 
 	path := XPath for: 'last()'.
 	elements := document allElementsNamed: 'person'.
-	elements do: [:each | self assert: (path in: each) = 1].
+	elements do: [:each | self assert: (path in: each) equals: 1].
 
 	path := XPath for: 'addressbook/person[last()]'.
 	self
@@ -1372,7 +1375,7 @@ XPathTest >> testLastFunction [
 
 	self
 		should: ['last(0)' asXPath evaluate]
-		raise: XPathException.
+		raise: XPathException
 ]
 
 { #category : #tests }
@@ -1380,7 +1383,7 @@ XPathTest >> testLocalNameFunction [
 	self assert:
 		(XPath
 			for: 'local-name(addressbook/person[1]/*[last()]/preceding::*)'
-			in: document) = 'contact-info'.
+			in: document) equals: 'contact-info'.
 	self assert:
 		(XPath
 			for: 'local-name(addressbook/absent)'
@@ -1392,7 +1395,7 @@ XPathTest >> testLocalNameFunction [
 	self assert:
 		(XPath
 			for: 'local-name()'
-			in: document root) = 'addressbook'.
+			in: document root) equals: 'addressbook'
 ]
 
 { #category : #tests }
@@ -1427,7 +1430,7 @@ XPathTest >> testLocalNameWildcardTest [
 				for: 'undeclared:*'
 				in: namespacedDocument
 				context: (self contextClass namespaces: mappings))]
-		raise: XPathUndeclaredPrefixException.
+		raise: XPathUndeclaredPrefixException
 ]
 
 { #category : #tests }
@@ -1457,7 +1460,7 @@ XPathTest >> testLocationPathPredicates [
 		assertNodeSet:
 			(document xpath: '/descendant::home-phone[2][1 + 0][position() = 1]')
 		hasNodes:
-			(XMLNodeList with: (document allElementsNamed: 'home-phone') second).
+			(XMLNodeList with: (document allElementsNamed: 'home-phone') second)
 ]
 
 { #category : #tests }
@@ -1482,7 +1485,7 @@ XPathTest >> testModulus [
 				context:
 					(XPathContext new
 						variableAt: 'var' put: 5;
-						yourself)) = 1].
+						yourself)) equals: 1].
 
 	#('-5 mod 2' '-5 mod -2' '$var mod 2' '$var mod -2') do: [:each |
 		self assert:
@@ -1491,7 +1494,7 @@ XPathTest >> testModulus [
 				context:
 					(XPathContext new
 						variableAt: 'var' put: -5;
-						yourself)) = -1].
+						yourself)) equals: -1].
 
 	#('6 mod 3' '6 mod -3' '$var mod 3' '$var mod -3') do: [:each | | result |
 		result :=
@@ -1540,11 +1543,11 @@ XPathTest >> testNameFunction [
 		addNode: (XMLElement named: 'test-two');
 		addNode: 'test-three' asXMLStringNode.
 	self
-		assert: (XPath for: 'name()' in: element) = 'test';
-		assert: (XPath for: 'name(//.)' in: element) = 'test'.
+		assert: (XPath for: 'name()' in: element) equals: 'test';
+		assert: (XPath for: 'name(//.)' in: element) equals: 'test'.
 
 	element name: 'test' namespaceURI: 'defaultNS'.
-	self assert: (XPath for: 'name()' in: element) = 'test'.
+	self assert: (XPath for: 'name()' in: element) equals: 'test'.
 	self assert:
 		(XPath
 			for: 'name()'
@@ -1552,10 +1555,10 @@ XPathTest >> testNameFunction [
 			context:
 				(self newContext
 					declarePrefix: 'one'
-					uri: 'defaultNS')) = 'test'.
+					uri: 'defaultNS')) equals: 'test'.
 
 	element name: 'prefix:test' namespaceURI: 'prefixNS'.
-	self assert: (XPath for: 'name()' in: element) = 'prefix:test'.
+	self assert: (XPath for: 'name()' in: element) equals: 'prefix:test'.
 	self assert:
 		(XPath
 			for: 'name()'
@@ -1563,9 +1566,9 @@ XPathTest >> testNameFunction [
 			context:
 				(self newContext
 					declarePrefix: 'two'
-					uri: 'prefixNS')) = 'two:test'.
+					uri: 'prefixNS')) equals: 'two:test'.
 
-	self assert: (XPath for: 'name(//text())' in: element) isEmpty.
+	self assert: (XPath for: 'name(//text())' in: element) isEmpty
 ]
 
 { #category : #tests }
@@ -1579,7 +1582,7 @@ XPathTest >> testNamespaceAxis [
 			add: (XPathNamespaceNode element: each name: '' uri: 'defaultNS');
 			add: (XPathNamespaceNode element: each name: 'book' uri: 'bookNS');
 			add: (XPathNamespaceNode element: each name: 'ps' uri: 'personNS')].
-	self assert: nodes size = (namespacedDocument allElements size * 4).
+	self assert: nodes size equals: (namespacedDocument allElements size * 4).
 	self
 		assertNodeSet: (namespacedDocument xpath: '//namespace::*')
 		hasNodes: nodes.
@@ -1596,7 +1599,7 @@ XPathTest >> testNamespaceAxis [
 		assertNodeSet: (document xpath: '//namespace::*')
 		hasNodes:
 			(document allElementsCollect: [:each |
-				XPathNamespaceNode withXMLNamespaceOnElement: each]).
+				XPathNamespaceNode withXMLNamespaceOnElement: each])
 ]
 
 { #category : #tests }
@@ -1605,7 +1608,7 @@ XPathTest >> testNamespaceNameTest [
 		assertNodeSet: (document xpath: '//namespace::namespace( xml )')
 		hasNodes: (document allElements collect: [:each | each namespaceNodes first]).
 
-	self assert: (document xpath: '//namespace::namespace( undeclared )') isEmpty.
+	self assert: (document xpath: '//namespace::namespace( undeclared )') isEmpty
 ]
 
 { #category : #tests }
@@ -1627,7 +1630,7 @@ XPathTest >> testNamespaceTypeTest [
 		assertNodeSet:
 			(namespacedDocument xpath:
 				'(//namespace::node() | //text())/ self :: namespace()')
-		hasNodes: (results select: [:each | each isNamespace]).
+		hasNodes: (results select: [:each | each isNamespace])
 ]
 
 { #category : #tests }
@@ -1636,9 +1639,9 @@ XPathTest >> testNamespaceURIFunction [
 		assert: (document xpath: 'namespace-uri(/*)') isEmpty;
 		assert: (document root xpath: 'namespace-uri()') isEmpty;
 		assert: (document xpath: 'namespace-uri(/*/*)') isEmpty;
-		assert: (namespacedDocument xpath: 'namespace-uri(/*)') = 'bookNS';
-		assert: (namespacedDocument root xpath: 'namespace-uri()') = 'bookNS';
-		assert: (namespacedDocument xpath: 'namespace-uri(/*/*)') = 'personNS'
+		assert: (namespacedDocument xpath: 'namespace-uri(/*)') equals: 'bookNS';
+		assert: (namespacedDocument root xpath: 'namespace-uri()') equals: 'bookNS';
+		assert: (namespacedDocument xpath: 'namespace-uri(/*/*)') equals: 'personNS'
 ]
 
 { #category : #tests }
@@ -1647,12 +1650,12 @@ XPathTest >> testNegation [
 		assert: '-0.0' asXPath evaluate isXPathNegativeZero;
 		assert: '--0.0' asXPath evaluate isXPathPositiveZero;
 		assert: '---0.0' asXPath evaluate isXPathNegativeZero;
-		assert: '-1.0' asXPath evaluate = -1.0;
-		assert: '--1.0' asXPath evaluate = 1.0;
-		assert: '---1.0' asXPath evaluate = -1.0;
-		assert: '-(1 div 0)' asXPath evaluate = Float xpathNegativeInfinity;
-		assert: '--(1 div 0)' asXPath evaluate = Float infinity;
-		assert: '---(1 div 0)' asXPath evaluate = Float xpathNegativeInfinity;
+		assert: '-1.0' asXPath evaluate equals: -1.0;
+		assert: '--1.0' asXPath evaluate equals: 1.0;
+		assert: '---1.0' asXPath evaluate equals: -1.0;
+		assert: '-(1 div 0)' asXPath evaluate equals: Float xpathNegativeInfinity;
+		assert: '--(1 div 0)' asXPath evaluate equals: Float infinity;
+		assert: '---(1 div 0)' asXPath evaluate equals: Float xpathNegativeInfinity;
 		assert: '-"test"' asXPath evaluate isNaN;
 		assert: '--"test"' asXPath evaluate isNaN;
 		assert: '---"test"' asXPath evaluate isNaN
@@ -1661,7 +1664,7 @@ XPathTest >> testNegation [
 { #category : #tests }
 XPathTest >> testNestedFunctionCalls [
 	self
-		assert: 'number(ceiling(3.5) + floor(1.5))' asXPath evaluate = 5;
+		assert: 'number(ceiling(3.5) + floor(1.5))' asXPath evaluate equals: 5;
 		assert: 'contains(concat(concat("one", "two"), string("three")), "two")' asXPath evaluate
 ]
 

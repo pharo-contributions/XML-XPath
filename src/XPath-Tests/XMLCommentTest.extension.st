@@ -4,5 +4,5 @@ Extension { #name : #XMLCommentTest }
 XMLCommentTest >> testStringValue [
 	super testStringValue.
 
-	self assert: (self nodeClass string: 'test') stringValue = 'test'.
+	self assert: (self nodeClass string: 'test') stringValue equals: 'test'
 ]
