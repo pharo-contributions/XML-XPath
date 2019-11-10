@@ -170,28 +170,28 @@ ConfigurationOfXPath class >> validate [
 	^ ((Smalltalk at: #MetacelloToolBox) validateConfiguration: self debug: #() recurse: false) explore
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline101: spec [
 	<version: '1.0.1-baseline' imports: #('1-master-baseline')>
 	spec for: #common do: [ spec blessing: #baseline ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.2' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline105: spec [
 	<version: '1.0.5-baseline' imports: #('1-master-baseline')>
 	spec for: #common do: [ spec blessing: #baseline ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.3' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline106: spec [
 	<version: '1.0.6-baseline' imports: #('1-master-baseline')>
 	spec for: #common do: [ spec blessing: #baseline ].
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.4' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline134: spec [
 	<version: '1.3.4-baseline' imports: #('1-master-baseline')>
 	spec
@@ -202,7 +202,7 @@ ConfigurationOfXPath >> baseline134: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.5' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline149: spec [
 	<version: '1.4.9-baseline' imports: #('1-master-baseline')>
 	spec
@@ -213,7 +213,7 @@ ConfigurationOfXPath >> baseline149: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.6' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline151: spec [
 	<version: '1.5.1-baseline' imports: #('1-master-baseline')>
 	spec
@@ -224,7 +224,7 @@ ConfigurationOfXPath >> baseline151: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.7' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline155: spec [
 	<version: '1.5.5-baseline' imports: #('1-master-baseline')>
 	spec
@@ -235,7 +235,7 @@ ConfigurationOfXPath >> baseline155: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.8' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline158: spec [
 	<version: '1.5.8-baseline' imports: #('1-master-baseline')>
 	spec
@@ -246,7 +246,7 @@ ConfigurationOfXPath >> baseline158: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.9' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline160: spec [
 	<version: '1.6.0-baseline' imports: #('1-master-baseline')>
 	spec
@@ -257,7 +257,7 @@ ConfigurationOfXPath >> baseline160: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.10' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline162: spec [
 	<version: '1.6.2-baseline' imports: #('1-master-baseline')>
 	spec
@@ -268,7 +268,7 @@ ConfigurationOfXPath >> baseline162: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline163: spec [
 	<version: '1.6.3-baseline' imports: #('1-master-baseline')>
 	spec
@@ -279,7 +279,7 @@ ConfigurationOfXPath >> baseline163: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline165: spec [
 	<version: '1.6.5-baseline' imports: #('1-master-baseline')>
 	spec
@@ -290,7 +290,7 @@ ConfigurationOfXPath >> baseline165: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline166: spec [
 	<version: '1.6.6-baseline' imports: #('1-master-baseline')>
 	spec
@@ -301,7 +301,7 @@ ConfigurationOfXPath >> baseline166: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline167: spec [
 	<version: '1.6.7-baseline' imports: #('1-master-baseline')>
 	spec
@@ -312,7 +312,7 @@ ConfigurationOfXPath >> baseline167: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline168: spec [
 	<version: '1.6.8-baseline' imports: #('1-master-baseline')>
 	spec
@@ -323,7 +323,7 @@ ConfigurationOfXPath >> baseline168: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline169: spec [
 	<version: '1.6.9-baseline' imports: #('1-master-baseline')>
 	spec
@@ -334,7 +334,7 @@ ConfigurationOfXPath >> baseline169: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline170: spec [
 	<version: '1.7.0-baseline' imports: #('1-master-baseline')>
 	spec
@@ -345,7 +345,7 @@ ConfigurationOfXPath >> baseline170: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline171: spec [
 	<version: '1.7.1-baseline' imports: #('1-master-baseline')>
 	spec
@@ -356,7 +356,7 @@ ConfigurationOfXPath >> baseline171: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline172: spec [
 	<version: '1.7.2-baseline' imports: #('1-master-baseline')>
 	spec
@@ -367,7 +367,7 @@ ConfigurationOfXPath >> baseline172: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline173: spec [
 	<version: '1.7.3-baseline' imports: #('1-master-baseline')>
 	spec
@@ -378,7 +378,7 @@ ConfigurationOfXPath >> baseline173: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline174: spec [
 	<version: '1.7.4-baseline' imports: #('1-master-baseline')>
 	spec
@@ -389,7 +389,7 @@ ConfigurationOfXPath >> baseline174: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline176: spec [
 	<version: '1.7.6-baseline' imports: #('1-master-baseline')>
 	spec
@@ -400,7 +400,7 @@ ConfigurationOfXPath >> baseline176: spec [
 	spec for: #gemstone do: [ spec package: 'XPath-GemstoneCompatibility' with: 'XPath-GemstoneCompatibility-monty.11' ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline177: spec [
 	<version: '1.7.7-baseline' imports: #('1-master-baseline')>
 	spec
@@ -416,7 +416,7 @@ ConfigurationOfXPath >> baseline177: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline177. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline180: spec [
 	<version: '1.8.0-baseline' imports: #('1-master-baseline')>
 	spec
@@ -432,7 +432,7 @@ ConfigurationOfXPath >> baseline180: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline182: spec [
 	<version: '1.8.2-baseline' imports: #('1.8.2-master-baseline')>
 	spec
@@ -454,7 +454,7 @@ ConfigurationOfXPath >> baseline182: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline180. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline183: spec [
 	<version: '1.8.3-baseline' imports: #('1.8.2-master-baseline')>
 	spec
@@ -476,7 +476,7 @@ ConfigurationOfXPath >> baseline183: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline183. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline189: spec [
 	<version: '1.8.9-baseline' imports: #('1.8.2-master-baseline')>
 	spec
@@ -499,7 +499,7 @@ ConfigurationOfXPath >> baseline189: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline190: spec [
 	<version: '1.9.0-baseline' imports: #('1.8.2-master-baseline')>
 	spec
@@ -522,7 +522,7 @@ ConfigurationOfXPath >> baseline190: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline191: spec [
 	<version: '1.9.1-baseline' imports: #('1.8.2-master-baseline')>
 	spec
@@ -545,7 +545,7 @@ ConfigurationOfXPath >> baseline191: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline192: spec [
 	<version: '1.9.2-baseline' imports: #('1.8.2-master-baseline')>
 	spec
@@ -568,7 +568,7 @@ ConfigurationOfXPath >> baseline192: spec [
 		spec postLoadDoIt: #initializeClassesForGSBaseline189. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline194: spec [
 	<version: '1.9.4-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -595,7 +595,7 @@ ConfigurationOfXPath >> baseline194: spec [
 			with: 'XPath-GTExtensions-monty.12'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline198: spec [
 	<version: '1.9.8-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -622,7 +622,7 @@ ConfigurationOfXPath >> baseline198: spec [
 			with: 'XPath-GTExtensions-monty.18'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline200: spec [
 	<version: '2.0.0-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -649,7 +649,7 @@ ConfigurationOfXPath >> baseline200: spec [
 			with: 'XPath-GTExtensions-monty.20'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline201: spec [
 	<version: '2.0.1-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -676,7 +676,7 @@ ConfigurationOfXPath >> baseline201: spec [
 			with: 'XPath-GTExtensions-monty.21'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline202: spec [
 	<version: '2.0.2-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -703,7 +703,7 @@ ConfigurationOfXPath >> baseline202: spec [
 			with: 'XPath-GTExtensions-monty.26'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline205: spec [
 	<version: '2.0.5-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -730,7 +730,7 @@ ConfigurationOfXPath >> baseline205: spec [
 			with: 'XPath-GTExtensions-monty.27'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline206: spec [
 	<version: '2.0.6-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -757,7 +757,7 @@ ConfigurationOfXPath >> baseline206: spec [
 			with: 'XPath-GTExtensions-monty.27'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline209: spec [
 	<version: '2.0.9-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -784,7 +784,7 @@ ConfigurationOfXPath >> baseline209: spec [
 			with: 'XPath-GTExtensions-monty.27'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline210: spec [
 	<version: '2.1.0-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -811,7 +811,7 @@ ConfigurationOfXPath >> baseline210: spec [
 			with: 'XPath-GTExtensions-monty.28'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline211: spec [
 	<version: '2.1.1-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -838,7 +838,7 @@ ConfigurationOfXPath >> baseline211: spec [
 			with: 'XPath-GTExtensions-monty.29'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline212: spec [
 	<version: '2.1.2-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -865,7 +865,7 @@ ConfigurationOfXPath >> baseline212: spec [
 			with: 'XPath-GTExtensions-monty.30'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baseline213: spec [
 	<version: '2.1.3-baseline' imports: #('1.9.4-master-baseline')>
 	spec
@@ -892,7 +892,7 @@ ConfigurationOfXPath >> baseline213: spec [
 			with: 'XPath-GTExtensions-monty.30'. ]
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baselineMaster182: spec [
 	<version: '1.8.2-master-baseline' imports: #('1-master-baseline')>
 
@@ -905,7 +905,7 @@ ConfigurationOfXPath >> baselineMaster182: spec [
 			with: [ spec requires: 'XPath-Core' ]. ].
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baselineMaster194: spec [
 	<version: '1.9.4-master-baseline' imports: #('1.8.2-master-baseline')>
 
@@ -921,7 +921,7 @@ ConfigurationOfXPath >> baselineMaster194: spec [
 				with: [ spec requires: 'XPath-Core' ]. ].
 ]
 
-{ #category : #baselines }
+{ #category : #'outdated - baselines' }
 ConfigurationOfXPath >> baselineMaster1: spec [
 	<version: '1-master-baseline'>
 
@@ -1126,11 +1126,11 @@ ConfigurationOfXPath >> project [
 ConfigurationOfXPath >> stable: spec [
 	<symbolicVersion: #'stable'>
 
-	spec for: #'common' version: '2.1.4'.
+	spec for: #'common' version: '2.2.0'.
 
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version101: spec [ 
         <version: '1.0.1' imports: #('1.0.1-baseline')>
 
@@ -1141,7 +1141,7 @@ ConfigurationOfXPath >> version101: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version102: spec [ 
         <version: '1.0.2' imports: #('1.0.1-baseline')>
 
@@ -1152,7 +1152,7 @@ ConfigurationOfXPath >> version102: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version103: spec [ 
         <version: '1.0.3' imports: #('1.0.1-baseline')>
 
@@ -1163,7 +1163,7 @@ ConfigurationOfXPath >> version103: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version104: spec [ 
         <version: '1.0.4' imports: #('1.0.1-baseline')>
 
@@ -1174,7 +1174,7 @@ ConfigurationOfXPath >> version104: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version105: spec [ 
         <version: '1.0.5' imports: #('1.0.5-baseline')>
 
@@ -1185,7 +1185,7 @@ ConfigurationOfXPath >> version105: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version106: spec [ 
         <version: '1.0.6' imports: #('1.0.6-baseline')>
 
@@ -1196,7 +1196,7 @@ ConfigurationOfXPath >> version106: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version107: spec [ 
         <version: '1.0.7' imports: #('1.0.6-baseline')>
 
@@ -1207,7 +1207,7 @@ ConfigurationOfXPath >> version107: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version108: spec [ 
         <version: '1.0.8' imports: #('1.0.6-baseline')>
 
@@ -1218,7 +1218,7 @@ ConfigurationOfXPath >> version108: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version109: spec [ 
         <version: '1.0.9' imports: #('1.0.6-baseline')>
 
@@ -1229,7 +1229,7 @@ ConfigurationOfXPath >> version109: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version110: spec [ 
         <version: '1.1.0' imports: #('1.0.6-baseline')>
 
@@ -1240,7 +1240,7 @@ ConfigurationOfXPath >> version110: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version111: spec [ 
         <version: '1.1.1' imports: #('1.0.6-baseline')>
 
@@ -1251,7 +1251,7 @@ ConfigurationOfXPath >> version111: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version112: spec [ 
         <version: '1.1.2' imports: #('1.0.6-baseline')>
 
@@ -1262,7 +1262,7 @@ ConfigurationOfXPath >> version112: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version113: spec [ 
         <version: '1.1.3' imports: #('1.0.6-baseline')>
 
@@ -1273,7 +1273,7 @@ ConfigurationOfXPath >> version113: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version114: spec [ 
         <version: '1.1.4' imports: #('1.0.6-baseline')>
 
@@ -1284,7 +1284,7 @@ ConfigurationOfXPath >> version114: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version115: spec [ 
         <version: '1.1.5' imports: #('1.0.6-baseline')>
 
@@ -1295,7 +1295,7 @@ ConfigurationOfXPath >> version115: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version116: spec [ 
         <version: '1.1.6' imports: #('1.0.6-baseline')>
 
@@ -1306,7 +1306,7 @@ ConfigurationOfXPath >> version116: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version117: spec [ 
         <version: '1.1.7' imports: #('1.0.6-baseline')>
 
@@ -1317,7 +1317,7 @@ ConfigurationOfXPath >> version117: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version118: spec [ 
         <version: '1.1.8' imports: #('1.0.6-baseline')>
 
@@ -1328,7 +1328,7 @@ ConfigurationOfXPath >> version118: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version119: spec [ 
         <version: '1.1.9' imports: #('1.0.6-baseline')>
 
@@ -1339,7 +1339,7 @@ ConfigurationOfXPath >> version119: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version120: spec [ 
         <version: '1.2.0' imports: #('1.0.6-baseline')>
 
@@ -1350,7 +1350,7 @@ ConfigurationOfXPath >> version120: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version121: spec [ 
         <version: '1.2.1' imports: #('1.0.6-baseline')>
 
@@ -1361,7 +1361,7 @@ ConfigurationOfXPath >> version121: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version122: spec [ 
         <version: '1.2.2' imports: #('1.0.6-baseline')>
 
@@ -1372,7 +1372,7 @@ ConfigurationOfXPath >> version122: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version123: spec [ 
         <version: '1.2.3' imports: #('1.0.6-baseline')>
 
@@ -1383,7 +1383,7 @@ ConfigurationOfXPath >> version123: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version124: spec [ 
         <version: '1.2.4' imports: #('1.0.6-baseline')>
 
@@ -1394,7 +1394,7 @@ ConfigurationOfXPath >> version124: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version125: spec [ 
         <version: '1.2.5' imports: #('1.0.6-baseline')>
 
@@ -1405,7 +1405,7 @@ ConfigurationOfXPath >> version125: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version126: spec [ 
         <version: '1.2.6' imports: #('1.0.6-baseline')>
 
@@ -1416,7 +1416,7 @@ ConfigurationOfXPath >> version126: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version127: spec [ 
         <version: '1.2.7' imports: #('1.0.6-baseline')>
 
@@ -1427,7 +1427,7 @@ ConfigurationOfXPath >> version127: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version128: spec [ 
         <version: '1.2.8' imports: #('1.0.6-baseline')>
 
@@ -1438,7 +1438,7 @@ ConfigurationOfXPath >> version128: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version129: spec [ 
         <version: '1.2.9' imports: #('1.0.6-baseline')>
 
@@ -1449,7 +1449,7 @@ ConfigurationOfXPath >> version129: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version130: spec [ 
         <version: '1.3.0' imports: #('1.0.6-baseline')>
 
@@ -1460,7 +1460,7 @@ ConfigurationOfXPath >> version130: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version131: spec [ 
         <version: '1.3.1' imports: #('1.0.6-baseline')>
 
@@ -1471,7 +1471,7 @@ ConfigurationOfXPath >> version131: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version132: spec [ 
         <version: '1.3.2' imports: #('1.0.6-baseline')>
 
@@ -1482,7 +1482,7 @@ ConfigurationOfXPath >> version132: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version133: spec [ 
         <version: '1.3.3' imports: #('1.0.6-baseline')>
 
@@ -1493,7 +1493,7 @@ ConfigurationOfXPath >> version133: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version134: spec [ 
         <version: '1.3.4' imports: #('1.3.4-baseline')>
 
@@ -1504,7 +1504,7 @@ ConfigurationOfXPath >> version134: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version135: spec [ 
         <version: '1.3.5' imports: #('1.3.4-baseline')>
 
@@ -1515,7 +1515,7 @@ ConfigurationOfXPath >> version135: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version136: spec [ 
         <version: '1.3.6' imports: #('1.3.4-baseline')>
 
@@ -1526,7 +1526,7 @@ ConfigurationOfXPath >> version136: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version137: spec [ 
         <version: '1.3.7' imports: #('1.3.4-baseline')>
 
@@ -1537,7 +1537,7 @@ ConfigurationOfXPath >> version137: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version138: spec [ 
         <version: '1.3.8' imports: #('1.3.4-baseline')>
 
@@ -1548,7 +1548,7 @@ ConfigurationOfXPath >> version138: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version139: spec [ 
         <version: '1.3.9' imports: #('1.3.4-baseline')>
 
@@ -1559,7 +1559,7 @@ ConfigurationOfXPath >> version139: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version140: spec [ 
         <version: '1.4.0' imports: #('1.3.4-baseline')>
 
@@ -1570,7 +1570,7 @@ ConfigurationOfXPath >> version140: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version141: spec [ 
         <version: '1.4.1' imports: #('1.3.4-baseline')>
 
@@ -1581,7 +1581,7 @@ ConfigurationOfXPath >> version141: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version142: spec [ 
         <version: '1.4.2' imports: #('1.3.4-baseline')>
 
@@ -1592,7 +1592,7 @@ ConfigurationOfXPath >> version142: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version143: spec [ 
         <version: '1.4.3' imports: #('1.3.4-baseline')>
 
@@ -1603,7 +1603,7 @@ ConfigurationOfXPath >> version143: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version144: spec [ 
         <version: '1.4.4' imports: #('1.3.4-baseline')>
 
@@ -1614,7 +1614,7 @@ ConfigurationOfXPath >> version144: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version145: spec [ 
         <version: '1.4.5' imports: #('1.3.4-baseline')>
 
@@ -1625,7 +1625,7 @@ ConfigurationOfXPath >> version145: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version146: spec [ 
         <version: '1.4.6' imports: #('1.3.4-baseline')>
 
@@ -1636,7 +1636,7 @@ ConfigurationOfXPath >> version146: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version147: spec [ 
         <version: '1.4.7' imports: #('1.3.4-baseline')>
 
@@ -1647,7 +1647,7 @@ ConfigurationOfXPath >> version147: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version148: spec [ 
         <version: '1.4.8' imports: #('1.3.4-baseline')>
 
@@ -1658,7 +1658,7 @@ ConfigurationOfXPath >> version148: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version149: spec [ 
         <version: '1.4.9' imports: #('1.4.9-baseline')>
 
@@ -1669,7 +1669,7 @@ ConfigurationOfXPath >> version149: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version150: spec [ 
         <version: '1.5.0' imports: #('1.4.9-baseline')>
 
@@ -1680,7 +1680,7 @@ ConfigurationOfXPath >> version150: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version151: spec [ 
         <version: '1.5.1' imports: #('1.5.1-baseline')>
 
@@ -1691,7 +1691,7 @@ ConfigurationOfXPath >> version151: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version152: spec [ 
         <version: '1.5.2' imports: #('1.5.1-baseline')>
 
@@ -1702,7 +1702,7 @@ ConfigurationOfXPath >> version152: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version153: spec [ 
         <version: '1.5.3' imports: #('1.5.1-baseline')>
 
@@ -1713,7 +1713,7 @@ ConfigurationOfXPath >> version153: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version154: spec [ 
         <version: '1.5.4' imports: #('1.5.1-baseline')>
 
@@ -1724,7 +1724,7 @@ ConfigurationOfXPath >> version154: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version155: spec [ 
         <version: '1.5.5' imports: #('1.5.5-baseline')>
 
@@ -1735,7 +1735,7 @@ ConfigurationOfXPath >> version155: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version156: spec [ 
         <version: '1.5.6' imports: #('1.5.5-baseline')>
 
@@ -1746,7 +1746,7 @@ ConfigurationOfXPath >> version156: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version157: spec [ 
         <version: '1.5.7' imports: #('1.5.5-baseline')>
 
@@ -1757,7 +1757,7 @@ ConfigurationOfXPath >> version157: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version158: spec [ 
         <version: '1.5.8' imports: #('1.5.8-baseline')>
 
@@ -1768,7 +1768,7 @@ ConfigurationOfXPath >> version158: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version159: spec [ 
         <version: '1.5.9' imports: #('1.5.8-baseline')>
 
@@ -1779,7 +1779,7 @@ ConfigurationOfXPath >> version159: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version160: spec [ 
         <version: '1.6.0' imports: #('1.6.0-baseline')>
 
@@ -1790,7 +1790,7 @@ ConfigurationOfXPath >> version160: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version161: spec [ 
         <version: '1.6.1' imports: #('1.6.0-baseline')>
 
@@ -1801,7 +1801,7 @@ ConfigurationOfXPath >> version161: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version162: spec [ 
         <version: '1.6.2' imports: #('1.6.2-baseline')>
 
@@ -1812,7 +1812,7 @@ ConfigurationOfXPath >> version162: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version163: spec [ 
         <version: '1.6.3' imports: #('1.6.3-baseline')>
 
@@ -1823,7 +1823,7 @@ ConfigurationOfXPath >> version163: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version164: spec [ 
         <version: '1.6.4' imports: #('1.6.3-baseline')>
 
@@ -1834,7 +1834,7 @@ ConfigurationOfXPath >> version164: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version165: spec [ 
         <version: '1.6.5' imports: #('1.6.5-baseline')>
 
@@ -1845,7 +1845,7 @@ ConfigurationOfXPath >> version165: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version166: spec [ 
         <version: '1.6.6' imports: #('1.6.6-baseline')>
 
@@ -1856,7 +1856,7 @@ ConfigurationOfXPath >> version166: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version167: spec [ 
         <version: '1.6.7' imports: #('1.6.7-baseline')>
 
@@ -1867,7 +1867,7 @@ ConfigurationOfXPath >> version167: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version168: spec [ 
         <version: '1.6.8' imports: #('1.6.8-baseline')>
 
@@ -1878,7 +1878,7 @@ ConfigurationOfXPath >> version168: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version169: spec [ 
         <version: '1.6.9' imports: #('1.6.9-baseline')>
 
@@ -1889,7 +1889,7 @@ ConfigurationOfXPath >> version169: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version170: spec [ 
         <version: '1.7.0' imports: #('1.7.0-baseline')>
 
@@ -1900,7 +1900,7 @@ ConfigurationOfXPath >> version170: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version171: spec [ 
         <version: '1.7.1' imports: #('1.7.1-baseline')>
 
@@ -1911,7 +1911,7 @@ ConfigurationOfXPath >> version171: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version172: spec [ 
         <version: '1.7.2' imports: #('1.7.2-baseline')>
 
@@ -1922,7 +1922,7 @@ ConfigurationOfXPath >> version172: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version173: spec [ 
         <version: '1.7.3' imports: #('1.7.3-baseline')>
 
@@ -1933,7 +1933,7 @@ ConfigurationOfXPath >> version173: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version174: spec [ 
         <version: '1.7.4' imports: #('1.7.4-baseline')>
 
@@ -1944,7 +1944,7 @@ ConfigurationOfXPath >> version174: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version175: spec [ 
         <version: '1.7.5' imports: #('1.7.4-baseline')>
 
@@ -1955,7 +1955,7 @@ ConfigurationOfXPath >> version175: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version176: spec [ 
         <version: '1.7.6' imports: #('1.7.6-baseline')>
 
@@ -1966,7 +1966,7 @@ ConfigurationOfXPath >> version176: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version177: spec [ 
         <version: '1.7.7' imports: #('1.7.7-baseline')>
 
@@ -1977,7 +1977,7 @@ ConfigurationOfXPath >> version177: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version178: spec [ 
         <version: '1.7.8' imports: #('1.7.7-baseline')>
 
@@ -1988,7 +1988,7 @@ ConfigurationOfXPath >> version178: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version179: spec [ 
         <version: '1.7.9' imports: #('1.7.7-baseline')>
 
@@ -1999,7 +1999,7 @@ ConfigurationOfXPath >> version179: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version180: spec [ 
         <version: '1.8.0' imports: #('1.8.0-baseline')>
 
@@ -2010,7 +2010,7 @@ ConfigurationOfXPath >> version180: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version181: spec [ 
         <version: '1.8.1' imports: #('1.8.0-baseline')>
 
@@ -2021,7 +2021,7 @@ ConfigurationOfXPath >> version181: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version182: spec [ 
         <version: '1.8.2' imports: #('1.8.2-baseline')>
 
@@ -2032,7 +2032,7 @@ ConfigurationOfXPath >> version182: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version183: spec [ 
         <version: '1.8.3' imports: #('1.8.3-baseline')>
 
@@ -2043,7 +2043,7 @@ ConfigurationOfXPath >> version183: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version184: spec [ 
         <version: '1.8.4' imports: #('1.8.3-baseline')>
 
@@ -2054,7 +2054,7 @@ ConfigurationOfXPath >> version184: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version185: spec [ 
         <version: '1.8.5' imports: #('1.8.3-baseline')>
 
@@ -2065,7 +2065,7 @@ ConfigurationOfXPath >> version185: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version186: spec [ 
         <version: '1.8.6' imports: #('1.8.3-baseline')>
 
@@ -2076,7 +2076,7 @@ ConfigurationOfXPath >> version186: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version187: spec [ 
         <version: '1.8.7' imports: #('1.8.3-baseline')>
 
@@ -2087,7 +2087,7 @@ ConfigurationOfXPath >> version187: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version188: spec [ 
         <version: '1.8.8' imports: #('1.8.3-baseline')>
 
@@ -2098,7 +2098,7 @@ ConfigurationOfXPath >> version188: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version189: spec [ 
         <version: '1.8.9' imports: #('1.8.9-baseline')>
 
@@ -2109,7 +2109,7 @@ ConfigurationOfXPath >> version189: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version190: spec [ 
         <version: '1.9.0' imports: #('1.9.0-baseline')>
 
@@ -2120,7 +2120,7 @@ ConfigurationOfXPath >> version190: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version191: spec [ 
         <version: '1.9.1' imports: #('1.9.1-baseline')>
 
@@ -2131,7 +2131,7 @@ ConfigurationOfXPath >> version191: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version192: spec [ 
         <version: '1.9.2' imports: #('1.9.2-baseline')>
 
@@ -2142,7 +2142,7 @@ ConfigurationOfXPath >> version192: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version193: spec [ 
         <version: '1.9.3' imports: #('1.9.2-baseline')>
 
@@ -2153,7 +2153,7 @@ ConfigurationOfXPath >> version193: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version194: spec [ 
         <version: '1.9.4' imports: #('1.9.4-baseline')>
 
@@ -2164,7 +2164,7 @@ ConfigurationOfXPath >> version194: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version195: spec [ 
         <version: '1.9.5' imports: #('1.9.4-baseline')>
 
@@ -2175,7 +2175,7 @@ ConfigurationOfXPath >> version195: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version196: spec [ 
         <version: '1.9.6' imports: #('1.9.4-baseline')>
 
@@ -2186,7 +2186,7 @@ ConfigurationOfXPath >> version196: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version197: spec [ 
         <version: '1.9.7' imports: #('1.9.4-baseline')>
 
@@ -2197,7 +2197,7 @@ ConfigurationOfXPath >> version197: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version198: spec [ 
         <version: '1.9.8' imports: #('1.9.8-baseline')>
 
@@ -2208,7 +2208,7 @@ ConfigurationOfXPath >> version198: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version199: spec [ 
         <version: '1.9.9' imports: #('1.9.8-baseline')>
 
@@ -2219,7 +2219,7 @@ ConfigurationOfXPath >> version199: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version200: spec [ 
         <version: '2.0.0' imports: #('2.0.0-baseline')>
 
@@ -2230,7 +2230,7 @@ ConfigurationOfXPath >> version200: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version201: spec [ 
         <version: '2.0.1' imports: #('2.0.1-baseline')>
 
@@ -2241,7 +2241,7 @@ ConfigurationOfXPath >> version201: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version202: spec [ 
         <version: '2.0.2' imports: #('2.0.2-baseline')>
 
@@ -2252,7 +2252,7 @@ ConfigurationOfXPath >> version202: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version203: spec [ 
         <version: '2.0.3' imports: #('2.0.2-baseline')>
 
@@ -2263,7 +2263,7 @@ ConfigurationOfXPath >> version203: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version204: spec [ 
         <version: '2.0.4' imports: #('2.0.2-baseline')>
 
@@ -2274,7 +2274,7 @@ ConfigurationOfXPath >> version204: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version205: spec [ 
         <version: '2.0.5' imports: #('2.0.5-baseline')>
 
@@ -2285,7 +2285,7 @@ ConfigurationOfXPath >> version205: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version206: spec [ 
         <version: '2.0.6' imports: #('2.0.6-baseline')>
 
@@ -2296,7 +2296,7 @@ ConfigurationOfXPath >> version206: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version207: spec [ 
         <version: '2.0.7' imports: #('2.0.6-baseline')>
 
@@ -2307,7 +2307,7 @@ ConfigurationOfXPath >> version207: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version208: spec [ 
         <version: '2.0.8' imports: #('2.0.6-baseline')>
 
@@ -2318,7 +2318,7 @@ ConfigurationOfXPath >> version208: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version209: spec [ 
         <version: '2.0.9' imports: #('2.0.9-baseline')>
 
@@ -2329,7 +2329,7 @@ ConfigurationOfXPath >> version209: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version210: spec [ 
         <version: '2.1.0' imports: #('2.1.0-baseline')>
 
@@ -2340,7 +2340,7 @@ ConfigurationOfXPath >> version210: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version211: spec [ 
         <version: '2.1.1' imports: #('2.1.1-baseline')>
 
@@ -2351,7 +2351,7 @@ ConfigurationOfXPath >> version211: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version212: spec [ 
         <version: '2.1.2' imports: #('2.1.2-baseline')>
 
@@ -2362,7 +2362,7 @@ ConfigurationOfXPath >> version212: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version213: spec [ 
         <version: '2.1.3' imports: #('2.1.3-baseline')>
 
@@ -2373,7 +2373,7 @@ ConfigurationOfXPath >> version213: spec [
                 ].
 ]
 
-{ #category : #versions }
+{ #category : #'outdated - versions' }
 ConfigurationOfXPath >> version214: spec [ 
         <version: '2.1.4' imports: #('2.1.3-baseline')>
 
@@ -2382,4 +2382,16 @@ ConfigurationOfXPath >> version214: spec [
 			spec package: 'XPath-Core' with: 'XPath-Core-monty.129'.
 			spec package: 'XPath-Tests' with: 'XPath-Tests-monty.97'.
                 ].
+]
+
+{ #category : #versions }
+ConfigurationOfXPath >> version220: spec [
+	<version: '2.2.0'>
+
+	spec for: #'common' do: [ 
+		spec
+			baseline: 'XPath' with: [ 
+				spec 
+					className: 'BaselineOfXPath';
+					repository: 'github://pharo-contributions/XML-XPath:2.2.0/src' ]]
 ]
