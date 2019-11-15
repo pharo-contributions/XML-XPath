@@ -23,7 +23,7 @@ BaselineOfXPath >> baselineOf: spec [
 			spec 
 				package: 'XPath-Core' with: [ spec requires: #('XMLParser') ];
 				package: 'XPath-GTExtensions' with: [ spec requires: #('XMLWriter' 'XPath-Core') ];
-				package: 'XPath-Tests' with: [ spec requires: #('XMLParser Tests' ) ].
+				package: 'XPath-Tests' with: [ spec requires: #('XMLParser Tests' 'XPath-Core') ].
 			
 			"Groups"
 			spec
