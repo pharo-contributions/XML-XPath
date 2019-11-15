@@ -1,3 +1,6 @@
+"
+Unit tests for xpath booleans
+"
 Class {
 	#name : #XPathBooleanTest,
 	#superclass : #TestCase,
@@ -18,7 +21,7 @@ XPathBooleanTest >> testAsXPathComparable [
 	comparable := true asXPathComparable.
 	self
 		assert: comparable class == XPathBooleanComparable;
-		assert: comparable value.
+		assert: comparable value
 ]
 
 { #category : #tests }
@@ -43,6 +46,6 @@ XPathBooleanTest >> testAsXPathNumber [
 { #category : #tests }
 XPathBooleanTest >> testAsXPathString [
 	self
-		assert: true asXPathString = 'true';
-		assert: false asXPathString = 'false'
+		assert: true asXPathString equals: 'true';
+		assert: false asXPathString equals: 'false'
 ]

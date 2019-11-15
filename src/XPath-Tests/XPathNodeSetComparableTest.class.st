@@ -1,3 +1,6 @@
+"
+Unit test for XPath node set comparisions
+"
 Class {
 	#name : #XPathNodeSetComparableTest,
 	#superclass : #XPathComparableTest,
@@ -17,17 +20,17 @@ XPathNodeSetComparableTest >> defaultComparable [
 { #category : #tests }
 XPathNodeSetComparableTest >> testEqualToBoolean [
 	self assert:
-		self comparableNodeSetWithStringValues =
+		self comparableNodeSetWithStringValues equals:
 			self comparableTrueValue.
 	self deny:
-		self comparableEmptyNodeSet =
+		self comparableEmptyNodeSet equals:
 			self comparableTrueValue.
 	self deny:
-		self comparableNodeSetWithStringValues =
+		self comparableNodeSetWithStringValues equals:
 			self comparableFalseValue.
 	self assert:
-		self comparableEmptyNodeSet =
-			self comparableFalseValue.
+		self comparableEmptyNodeSet equals:
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -40,16 +43,16 @@ XPathNodeSetComparableTest >> testEqualToNodeSet [
 
 	"as long as two node sets have one string value in common, they are equal"
 	self assert:
-		self comparableNodeSetWithStringValues =
+		self comparableNodeSetWithStringValues equals:
 			self comparableNodeSetWithStringValues.
 	self assert:
-		self comparableNodeSetWithStringValues =
+		self comparableNodeSetWithStringValues equals:
 			self comparableNodeSetWithSameStringValue.
 	self assert:
-		self comparableNodeSetWithSameStringValue =
+		self comparableNodeSetWithSameStringValue equals:
 			self comparableNodeSetWithStringValues.
 	self assert:
-		self comparableNodeSetWithSameStringValue =
+		self comparableNodeSetWithSameStringValue equals:
 			self comparableNodeSetWithSameStringValue.
 
 	"if they don't have at least one string value in common, they aren't equal"
@@ -81,16 +84,16 @@ XPathNodeSetComparableTest >> testEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableEmptyNodeSet =
-			self comparableNodeSetWithSameStringValue.
+			self comparableNodeSetWithSameStringValue
 ]
 
 { #category : #tests }
 XPathNodeSetComparableTest >> testEqualToNumber [
 	self assert:
-		self comparableNodeSetWithNumberValues =
+		self comparableNodeSetWithNumberValues equals:
 			self comparableNumberValue.
 	self assert:
-		self comparableNodeSetWithSameNumberValue =
+		self comparableNodeSetWithSameNumberValue equals:
 			self comparableNumberValue.
 	self deny:
 		self comparableEmptyNodeSet =
@@ -104,7 +107,7 @@ XPathNodeSetComparableTest >> testEqualToNumber [
 			self comparableDisjointNumberValue.
 	self deny:
 		self comparableEmptyNodeSet =
-			self comparableDisjointNumberValue.
+			self comparableDisjointNumberValue
 ]
 
 { #category : #tests }
@@ -115,10 +118,10 @@ XPathNodeSetComparableTest >> testEqualToString [
 		node-set such that the result of performing the comparison on the
 		string-value of the node and the other string is true.'"
 	self assert:
-		self comparableNodeSetWithStringValues =
+		self comparableNodeSetWithStringValues equals:
 			self comparableStringValue.
 	self assert:
-		self comparableNodeSetWithSameStringValue =
+		self comparableNodeSetWithSameStringValue equals:
 			self comparableStringValue.
 	self deny:
 		self comparableNodeSetWithDisjointStringValues =
@@ -128,7 +131,7 @@ XPathNodeSetComparableTest >> testEqualToString [
 			self comparableStringValue.
 	self deny:
 		self comparableEmptyNodeSet =
-			self comparableEmptyStringValue.
+			self comparableEmptyStringValue
 ]
 
 { #category : #tests }
@@ -144,7 +147,7 @@ XPathNodeSetComparableTest >> testGreaterThanBoolean [
 			self comparableFalseValue.
 	self deny:
 		self comparableEmptyNodeSet >
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -196,7 +199,7 @@ XPathNodeSetComparableTest >> testGreaterThanNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableEmptyNodeSet >
-			self comparableNodeSetWithSameNumberValue.
+			self comparableNodeSetWithSameNumberValue
 ]
 
 { #category : #tests }
@@ -219,7 +222,7 @@ XPathNodeSetComparableTest >> testGreaterThanNumber [
 			self comparableDisjointNumberValue.
 	self deny:
 		self comparableEmptyNodeSet >
-			self comparableDisjointNumberValue.
+			self comparableDisjointNumberValue
 ]
 
 { #category : #tests }
@@ -235,7 +238,7 @@ XPathNodeSetComparableTest >> testGreaterThanOrEqualToBoolean [
 			self comparableFalseValue.
 	self assert:
 		self comparableEmptyNodeSet >=
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -287,7 +290,7 @@ XPathNodeSetComparableTest >> testGreaterThanOrEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableEmptyNodeSet >=
-			self comparableNodeSetWithSameNumberValue.
+			self comparableNodeSetWithSameNumberValue
 ]
 
 { #category : #tests }
@@ -310,7 +313,7 @@ XPathNodeSetComparableTest >> testGreaterThanOrEqualToNumber [
 			self comparableDisjointNumberValue.
 	self deny:
 		self comparableEmptyNodeSet >=
-			self comparableDisjointNumberValue.
+			self comparableDisjointNumberValue
 ]
 
 { #category : #tests }
@@ -333,7 +336,7 @@ XPathNodeSetComparableTest >> testGreaterThanOrEqualToString [
 			self comparableDisjointNumberStringValue.
 	self deny:
 		self comparableEmptyNodeSet >=
-			self comparableDisjointNumberStringValue.
+			self comparableDisjointNumberStringValue
 ]
 
 { #category : #tests }
@@ -356,7 +359,7 @@ XPathNodeSetComparableTest >> testGreaterThanString [
 			self comparableDisjointNumberStringValue.
 	self deny:
 		self comparableEmptyNodeSet >
-			self comparableDisjointNumberStringValue.
+			self comparableDisjointNumberStringValue
 ]
 
 { #category : #tests }
@@ -372,7 +375,7 @@ XPathNodeSetComparableTest >> testLessThanBoolean [
 			self comparableFalseValue.
 	self deny:
 		self comparableEmptyNodeSet <
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -424,7 +427,7 @@ XPathNodeSetComparableTest >> testLessThanNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableEmptyNodeSet <
-			self comparableNodeSetWithSameNumberValue.
+			self comparableNodeSetWithSameNumberValue
 ]
 
 { #category : #tests }
@@ -447,7 +450,7 @@ XPathNodeSetComparableTest >> testLessThanNumber [
 			self comparableDisjointNumberValue.
 	self deny:
 		self comparableEmptyNodeSet <
-			self comparableDisjointNumberValue.
+			self comparableDisjointNumberValue
 ]
 
 { #category : #tests }
@@ -463,7 +466,7 @@ XPathNodeSetComparableTest >> testLessThanOrEqualToBoolean [
 			self comparableFalseValue.
 	self assert:
 		self comparableEmptyNodeSet <=
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -515,7 +518,7 @@ XPathNodeSetComparableTest >> testLessThanOrEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableEmptyNodeSet <=
-			self comparableNodeSetWithSameNumberValue.
+			self comparableNodeSetWithSameNumberValue
 ]
 
 { #category : #tests }
@@ -538,7 +541,7 @@ XPathNodeSetComparableTest >> testLessThanOrEqualToNumber [
 			self comparableDisjointNumberValue.
 	self deny:
 		self comparableEmptyNodeSet <=
-			self comparableDisjointNumberValue.
+			self comparableDisjointNumberValue
 ]
 
 { #category : #tests }
@@ -561,7 +564,7 @@ XPathNodeSetComparableTest >> testLessThanOrEqualToString [
 			self comparableDisjointNumberStringValue.
 	self deny:
 		self comparableEmptyNodeSet <=
-			self comparableDisjointNumberStringValue.
+			self comparableDisjointNumberStringValue
 ]
 
 { #category : #tests }
@@ -584,7 +587,7 @@ XPathNodeSetComparableTest >> testLessThanString [
 			self comparableDisjointNumberStringValue.
 	self deny:
 		self comparableEmptyNodeSet <
-			self comparableDisjointNumberStringValue.
+			self comparableDisjointNumberStringValue
 ]
 
 { #category : #tests }
@@ -600,7 +603,7 @@ XPathNodeSetComparableTest >> testNotEqualToBoolean [
 			self comparableFalseValue.
 	self deny:
 		self comparableEmptyNodeSet ~=
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -656,7 +659,7 @@ XPathNodeSetComparableTest >> testNotEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableEmptyNodeSet ~=
-			self comparableNodeSetWithSameStringValue.
+			self comparableNodeSetWithSameStringValue
 ]
 
 { #category : #tests }
@@ -679,7 +682,7 @@ XPathNodeSetComparableTest >> testNotEqualToNumber [
 			self comparableDisjointNumberValue.
 	self deny:
 		self comparableEmptyNodeSet ~=
-			self comparableDisjointNumberValue.
+			self comparableDisjointNumberValue
 ]
 
 { #category : #tests }
@@ -703,5 +706,5 @@ XPathNodeSetComparableTest >> testNotEqualToString [
 			self comparableStringValue.
 	self deny:
 		self comparableEmptyNodeSet ~=
-			self comparableEmptyStringValue.
+			self comparableEmptyStringValue
 ]

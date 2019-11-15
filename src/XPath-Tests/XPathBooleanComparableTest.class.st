@@ -1,3 +1,6 @@
+"
+Unit test for XPath boolean comparisions
+"
 Class {
 	#name : #XPathBooleanComparableTest,
 	#superclass : #XPathComparableTest,
@@ -17,45 +20,45 @@ XPathBooleanComparableTest >> defaultComparable [
 { #category : #tests }
 XPathBooleanComparableTest >> testEqualToBoolean [
 	self assert:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableTrueValue.
 	self deny:
-		self comparableFalseValue =
+		self comparableFalseValue equals:
 			self comparableTrueValue.
 	self deny:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableFalseValue.
 	self assert:
-		self comparableFalseValue =
-			self comparableFalseValue.
+		self comparableFalseValue equals:
+			self comparableFalseValue
 ]
 
 { #category : #tests }
 XPathBooleanComparableTest >> testEqualToNodeSet [
 	self assert:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableNodeSetWithStringValues.
 	self deny:
-		self comparableFalseValue =
+		self comparableFalseValue equals:
 			self comparableNodeSetWithStringValues.
 	self deny:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableEmptyNodeSet.
 	self assert:
-		self comparableFalseValue =
-			self comparableEmptyNodeSet.
+		self comparableFalseValue equals:
+			self comparableEmptyNodeSet
 ]
 
 { #category : #tests }
 XPathBooleanComparableTest >> testEqualToNumber [
 	self assert:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableNumberValue.
 	self deny:
-		self comparableFalseValue =
+		self comparableFalseValue equals:
 			self comparableNumberValue.
 	self assert:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableInfinityValue.
 	self deny:
 		self comparableFalseValue =
@@ -71,36 +74,36 @@ XPathBooleanComparableTest >> testEqualToNumber [
 		self comparableTrueValue =
 			self comparableZeroValue.
 	self assert:
-		self comparableFalseValue =
+		self comparableFalseValue equals:
 			self comparableZeroValue.
 	self deny:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableNegativeZeroValue.
 	self assert:
-		self comparableFalseValue =
+		self comparableFalseValue equals:
 			self comparableNegativeZeroValue.
 	self deny:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableNaNValue.
 	self assert:
-		self comparableFalseValue =
-			self comparableNaNValue.
+		self comparableFalseValue equals:
+			self comparableNaNValue
 ]
 
 { #category : #tests }
 XPathBooleanComparableTest >> testEqualToString [
 	self assert:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableStringValue.
 	self deny:
-		self comparableFalseValue =
+		self comparableFalseValue equals:
 			self comparableStringValue.
 	self deny:
-		self comparableTrueValue =
+		self comparableTrueValue equals:
 			self comparableEmptyStringValue.
 	self assert:
-		self comparableFalseValue =
-			self comparableEmptyStringValue.
+		self comparableFalseValue equals:
+			self comparableEmptyStringValue
 ]
 
 { #category : #tests }
@@ -116,7 +119,7 @@ XPathBooleanComparableTest >> testGreaterThanBoolean [
 			self comparableFalseValue.
 	self deny:
 		self comparableFalseValue >
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -132,7 +135,7 @@ XPathBooleanComparableTest >> testGreaterThanNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableFalseValue >
-			self comparableEmptyNodeSet.
+			self comparableEmptyNodeSet
 ]
 
 { #category : #tests }
@@ -167,7 +170,7 @@ XPathBooleanComparableTest >> testGreaterThanNumber [
 			self comparableNegativeZeroValue.
 	self deny:
 		self comparableFalseValue >
-			self comparableNegativeZeroValue.
+			self comparableNegativeZeroValue
 ]
 
 { #category : #tests }
@@ -183,7 +186,7 @@ XPathBooleanComparableTest >> testGreaterThanOrEqualToBoolean [
 			self comparableFalseValue.
 	self assert:
 		self comparableFalseValue >=
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -199,7 +202,7 @@ XPathBooleanComparableTest >> testGreaterThanOrEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self assert:
 		self comparableFalseValue >=
-			self comparableEmptyNodeSet.
+			self comparableEmptyNodeSet
 ]
 
 { #category : #tests }
@@ -234,7 +237,7 @@ XPathBooleanComparableTest >> testGreaterThanOrEqualToNumber [
 			self comparableNegativeZeroValue.
 	self assert:
 		self comparableFalseValue >=
-			self comparableNegativeZeroValue.
+			self comparableNegativeZeroValue
 ]
 
 { #category : #tests }
@@ -250,7 +253,7 @@ XPathBooleanComparableTest >> testGreaterThanOrEqualToString [
 			self comparableZeroStringValue.
 	self assert:
 		self comparableFalseValue >=
-			self comparableZeroStringValue.
+			self comparableZeroStringValue
 ]
 
 { #category : #tests }
@@ -266,7 +269,7 @@ XPathBooleanComparableTest >> testGreaterThanString [
 			self comparableZeroStringValue.
 	self deny:
 		self comparableFalseValue >
-			self comparableZeroStringValue.
+			self comparableZeroStringValue
 ]
 
 { #category : #tests }
@@ -282,7 +285,7 @@ XPathBooleanComparableTest >> testLessThanBoolean [
 			self comparableFalseValue.
 	self deny:
 		self comparableFalseValue <
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -298,7 +301,7 @@ XPathBooleanComparableTest >> testLessThanNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableFalseValue <
-			self comparableEmptyNodeSet.
+			self comparableEmptyNodeSet
 ]
 
 { #category : #tests }
@@ -333,7 +336,7 @@ XPathBooleanComparableTest >> testLessThanNumber [
 			self comparableNegativeZeroValue.
 	self deny:
 		self comparableFalseValue <
-			self comparableNegativeZeroValue.
+			self comparableNegativeZeroValue
 ]
 
 { #category : #tests }
@@ -349,7 +352,7 @@ XPathBooleanComparableTest >> testLessThanOrEqualToBoolean [
 			self comparableFalseValue.
 	self assert:
 		self comparableFalseValue <=
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -365,7 +368,7 @@ XPathBooleanComparableTest >> testLessThanOrEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self assert:
 		self comparableFalseValue <=
-			self comparableEmptyNodeSet.
+			self comparableEmptyNodeSet
 ]
 
 { #category : #tests }
@@ -400,7 +403,7 @@ XPathBooleanComparableTest >> testLessThanOrEqualToNumber [
 			self comparableNegativeZeroValue.
 	self assert:
 		self comparableFalseValue <=
-			self comparableNegativeZeroValue.
+			self comparableNegativeZeroValue
 ]
 
 { #category : #tests }
@@ -416,7 +419,7 @@ XPathBooleanComparableTest >> testLessThanOrEqualToString [
 			self comparableZeroStringValue.
 	self assert:
 		self comparableFalseValue <=
-			self comparableZeroStringValue.
+			self comparableZeroStringValue
 ]
 
 { #category : #tests }
@@ -432,7 +435,7 @@ XPathBooleanComparableTest >> testLessThanString [
 			self comparableZeroStringValue.
 	self deny:
 		self comparableFalseValue <
-			self comparableZeroStringValue.
+			self comparableZeroStringValue
 ]
 
 { #category : #tests }
@@ -448,7 +451,7 @@ XPathBooleanComparableTest >> testNotEqualToBoolean [
 			self comparableFalseValue.
 	self deny:
 		self comparableFalseValue ~=
-			self comparableFalseValue.
+			self comparableFalseValue
 ]
 
 { #category : #tests }
@@ -464,7 +467,7 @@ XPathBooleanComparableTest >> testNotEqualToNodeSet [
 			self comparableEmptyNodeSet.
 	self deny:
 		self comparableFalseValue ~=
-			self comparableEmptyNodeSet.
+			self comparableEmptyNodeSet
 ]
 
 { #category : #tests }
@@ -505,7 +508,7 @@ XPathBooleanComparableTest >> testNotEqualToNumber [
 			self comparableNaNValue.
 	self deny:
 		self comparableFalseValue ~=
-			self comparableNaNValue.
+			self comparableNaNValue
 ]
 
 { #category : #tests }
@@ -521,5 +524,5 @@ XPathBooleanComparableTest >> testNotEqualToString [
 			self comparableEmptyStringValue.
 	self deny:
 		self comparableFalseValue ~=
-			self comparableEmptyStringValue.
+			self comparableEmptyStringValue
 ]
