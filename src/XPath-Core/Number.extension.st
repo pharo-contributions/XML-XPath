@@ -109,6 +109,21 @@ Number >> hasSameXPathSignAs: aNumber [
 				or: [aNumber isXPathNegativeZero])
 ]
 
+{ #category : #'*XPath-Core' }
+Number >> isXPathNegativeZero [
+	"use #asFloat to convert non-floats and DecimalFloats that don't
+	understand #signBit before testing it"
+	^ self isZero
+		and: [self asFloat signBit = 1]
+]
+
+{ #category : #'*XPath-Core' }
+Number >> isXPathPositiveZero [
+	"see the #isXPathNegativeZero comment"
+	^ self isZero
+		and: [self asFloat signBit isZero]
+]
+
 { #category : #'*XPath-Core-evaluating' }
 Number >> xpathCeiling [
 	"'The ceiling function returns the smallest (closest to negative infinity)
