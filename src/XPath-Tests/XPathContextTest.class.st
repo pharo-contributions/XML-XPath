@@ -1,3 +1,6 @@
+"
+Unit tests for XPathContext
+"
 Class {
 	#name : #XPathContextTest,
 	#superclass : #TestCase,
@@ -61,7 +64,7 @@ XPathContextTest >> testAddFunction [
 			assert: (context addFunction: each) == each;
 			assert: (context includesFunction: each);
 			deny: context functions == oldFunctionSet;
-			deny: context functions = oldFunctionSet].
+			deny: context functions = oldFunctionSet]
 ]
 
 { #category : #tests }
@@ -74,7 +77,7 @@ XPathContextTest >> testDeclarePrefixURI [
 			(context
 				declarePrefix: key
 				uri: value) == context.
-		self assert: (context resolvePrefix: key) = value.
+		self assert: (context resolvePrefix: key) equals: value.
 		self assert:
 			(context
 				declarePrefix: key
@@ -90,7 +93,7 @@ XPathContextTest >> testFunctionNamed [
 	self functions do: [:each |
 		self assert: (context functionNamed: each prototypeName) == each.
 		context removeFunction: each.
-		self assert: (context functionNamed: each prototypeName) isNil].
+		self assert: (context functionNamed: each prototypeName) isNil ]
 ]
 
 { #category : #tests }
@@ -107,7 +110,7 @@ XPathContextTest >> testFunctionNamedIfAbsent [
 		self assert:
 			(context
 				functionNamed: each prototypeName
-				ifAbsent: [#absent]) = #absent].
+				ifAbsent: [#absent]) equals: #absent ]
 ]
 
 { #category : #tests }
@@ -117,19 +120,19 @@ XPathContextTest >> testFunctions [
 	context := self newContext.
 	functions := self functions.
 	self
-		assert: context functions = functions;
+		assert: context functions equals: functions;
 		assert: context functions == functions.
 
 	functions := self functionSetClass default.
 	self
 		assert: (context functions: functions) == context;
-		assert: context functions = functions;
+		assert: context functions equals: functions;
 		assert: context functions == functions.
 
 	self
 		assert: (context functions: functions asArray) == context;
-		assert: context functions = functions;
-		deny: context functions == functions.
+		assert: context functions equals: functions;
+		deny: context functions == functions
 ]
 
 { #category : #tests }
@@ -140,7 +143,7 @@ XPathContextTest >> testHasFunctions [
 	self assert: context hasFunctions.
 
 	context functions: self newFunctionSet.
-	self deny: context hasFunctions.
+	self deny: context hasFunctions
 ]
 
 { #category : #tests }
@@ -151,7 +154,7 @@ XPathContextTest >> testHasNamespaces [
 	self deny: context hasNamespaces.
 
 	context declareNamespaces: self namespaces.
-	self assert: context hasNamespaces.
+	self assert: context hasNamespaces
 ]
 
 { #category : #tests }
@@ -165,7 +168,7 @@ XPathContextTest >> testHasVariables [
 	self assert: context hasVariables.
 
 	context removeVariables.
-	self deny: context hasVariables.
+	self deny: context hasVariables
 ]
 
 { #category : #tests }
@@ -176,7 +179,7 @@ XPathContextTest >> testIncludesFunction [
 	self functions do: [:each |
 		self assert: (context includesFunction: each).
 		context removeFunction: each.
-		self deny: (context includesFunction: each)].
+		self deny: (context includesFunction: each)]
 ]
 
 { #category : #tests }
@@ -189,7 +192,7 @@ XPathContextTest >> testIncludesVariable [
 		context
 			variableAt: key
 			put: value.
-		self assert: (context includesVariable: key)].
+		self assert: (context includesVariable: key)]
 ]
 
 { #category : #tests }
@@ -202,7 +205,7 @@ XPathContextTest >> testIsDeclaredPrefix [
 		context
 			declarePrefix: key
 			uri: value.
-		self assert: (context isDeclaredPrefix: key)].
+		self assert: (context isDeclaredPrefix: key)]
 ]
 
 { #category : #tests }
@@ -225,7 +228,7 @@ XPathContextTest >> testIsDeclaredPrefixURI [
 		self deny:
 			(context
 				isDeclaredPrefix: key
-				uri: 'newNS')].
+				uri: 'newNS')]
 ]
 
 { #category : #tests }
@@ -245,7 +248,7 @@ XPathContextTest >> testRemoveFunction [
 	
 		self
 			should: [context removeFunction: each]
-			raise: Error].
+			raise: Error]
 ]
 
 { #category : #tests }
@@ -270,7 +273,7 @@ XPathContextTest >> testRemoveFunctionIfAbsent [
 			assert:
 				(context
 					removeFunction: each
-					ifAbsent: [#absent]) == #absent].
+					ifAbsent: [#absent]) == #absent]
 ]
 
 { #category : #tests }
@@ -280,7 +283,7 @@ XPathContextTest >> testRemoveFunctions [
 	context := self newContext.
 	self
 		assert: context removeFunctions == context;
-		deny: context hasFunctions.
+		deny: context hasFunctions
 ]
 
 { #category : #tests }
@@ -290,10 +293,10 @@ XPathContextTest >> testRemoveVariable [
 	context := self newContext.
 	context variables: self variables.
 	self variables keysAndValuesDo: [:key :value |
-		self assert: (context removeVariable: key) = value.
+		self assert: (context removeVariable: key) equals: value.
 		self
 			should: [context removeVariable: key]
-			raise: Error].
+			raise: Error]
 ]
 
 { #category : #tests }
@@ -306,11 +309,11 @@ XPathContextTest >> testRemoveVariableIfAbsent [
 		self assert:
 			(context
 				removeVariable: key
-				ifAbsent: [#absent]) = value.
+				ifAbsent: [#absent]) equals: value.
 		self assert:
 			(context
 				removeVariable: key
-				ifAbsent: [#absent]) = #absent].
+				ifAbsent: [#absent]) equals: #absent]
 ]
 
 { #category : #tests }
@@ -321,7 +324,7 @@ XPathContextTest >> testRemoveVariables [
 	context variables: self variables.
 	self
 		assert: context removeVariables == context;
-		deny: context hasVariables.
+		deny: context hasVariables
 ]
 
 { #category : #tests }
@@ -330,16 +333,16 @@ XPathContextTest >> testResolvePrefix [
 
 	context := self newContext.
 	self namespaces keysAndValuesDo: [:key :value |
-		self assert: (context resolvePrefix: key) = ''.
+		self assert: (context resolvePrefix: key) equals: ''.
 		context
 			declarePrefix: key
 			uri: value.
-		self assert: (context resolvePrefix: key) = value].
+		self assert: (context resolvePrefix: key) equals: value].
 
 	self assert:
-		(context resolvePrefix: 'xml') = XMLNamespaceScope xmlNamespaceURI.
+		(context resolvePrefix: 'xml') equals: XMLNamespaceScope xmlNamespaceURI.
 	self assert:
-		(context resolvePrefix: 'xmlns') = XMLNamespaceScope xmlnsNamespaceURI.
+		(context resolvePrefix: 'xmlns') equals: XMLNamespaceScope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
@@ -351,23 +354,23 @@ XPathContextTest >> testResolvePrefixIfUnresolvable [
 		self assert:
 			(context
 				resolvePrefix: key
-				ifUnresolvable: ['unresolvable']) = 'unresolvable'.
+				ifUnresolvable: ['unresolvable']) equals: 'unresolvable'.
 		context
 			declarePrefix: key
 			uri: value.
 		self assert:
 			(context
 				resolvePrefix: key
-				ifUnresolvable: [self fail]) = value].
+				ifUnresolvable: [self fail]) equals: value].
 
 	self assert:
 		(context
 			resolvePrefix: 'xml'
-			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlNamespaceURI.
+			ifUnresolvable: [self fail]) equals: XMLNamespaceScope xmlNamespaceURI.
 	self assert:
 		(context
 			resolvePrefix: 'xmlns'
-			ifUnresolvable: [self fail]) = XMLNamespaceScope xmlnsNamespaceURI.
+			ifUnresolvable: [self fail]) equals: XMLNamespaceScope xmlnsNamespaceURI
 ]
 
 { #category : #tests }
@@ -383,25 +386,25 @@ XPathContextTest >> testResolvePrefixesOfNamespaceURI [
 			declarePrefix: key
 			uri: value.
 		self assert:
-			(context resolvePrefixesOfNamespaceURI: value) =
+			(context resolvePrefixesOfNamespaceURI: value) equals:
 				(Set with: key).
 
 		context
 			declarePrefix: 'newPrefix'
 			uri: value.
 		self assert:
-			(context resolvePrefixesOfNamespaceURI: value) =
+			(context resolvePrefixesOfNamespaceURI: value) equals:
 				(Set with: key with: 'newPrefix')].
 
 	self assert:
 		(context resolvePrefixesOfNamespaceURI:
-			XMLNamespaceScope xmlNamespaceURI) =
+			XMLNamespaceScope xmlNamespaceURI) equals:
 				(Set with: 'xml').
 
 	self assert:
 		(context resolvePrefixesOfNamespaceURI:
-			XMLNamespaceScope xmlnsNamespaceURI) =
-				(Set with: 'xmlns').
+			XMLNamespaceScope xmlnsNamespaceURI) equals:
+				(Set with: 'xmlns')
 ]
 
 { #category : #tests }
@@ -414,7 +417,7 @@ XPathContextTest >> testUndeclarePrefix [
 		self
 			assert: (context isDeclaredPrefix: each);
 			assert: (context undeclarePrefix: each) == context;
-			deny: (context isDeclaredPrefix: each)].
+			deny: (context isDeclaredPrefix: each)]
 ]
 
 { #category : #tests }
@@ -426,7 +429,7 @@ XPathContextTest >> testUndeclarePrefixes [
 	self
 		assert: context hasNamespaces;
 		assert: context undeclarePrefixes == context;
-		deny: context hasNamespaces.
+		deny: context hasNamespaces
 ]
 
 { #category : #tests }
@@ -439,7 +442,7 @@ XPathContextTest >> testVariableAt [
 		context
 			variableAt: key
 			put: value.
-		self assert: (context variableAt: key) = value].
+		self assert: (context variableAt: key) equals: value]
 ]
 
 { #category : #tests }
@@ -451,14 +454,14 @@ XPathContextTest >> testVariableAtIfAbsent [
 		self assert:
 			(context
 				variableAt: key
-				ifAbsent: [#absent]) = #absent.
+				ifAbsent: [#absent]) equals: #absent.
 		context
 			variableAt: key
 			put: value.
 		self assert:
 			(context
 				variableAt: key
-				ifAbsent: [#absent]) = value].
+				ifAbsent: [#absent]) equals: value]
 ]
 
 { #category : #tests }
@@ -470,13 +473,13 @@ XPathContextTest >> testVariableAtIfAbsentPut [
 		self assert:
 			(context
 				variableAt: key
-				ifAbsentPut: [value]) = value.
-		self assert: (context variableAt: key) = value.
+				ifAbsentPut: [value]) equals: value.
+		self assert: (context variableAt: key) equals: value.
 		self assert:
 			(context
 				variableAt: key
-				ifAbsentPut: [#new]) = value.
-		self assert: (context variableAt: key) = value].
+				ifAbsentPut: [#new]) equals: value.
+		self assert: (context variableAt: key) equals: value]
 ]
 
 { #category : #tests }
@@ -488,8 +491,8 @@ XPathContextTest >> testVariableAtPut [
 		self assert:
 			(context
 				variableAt: key
-				put: value) = value.
-		self assert: (context variableAt: key) = value].
+				put: value) equals: value.
+		self assert: (context variableAt: key) equals: value]
 ]
 
 { #category : #tests }
@@ -504,13 +507,13 @@ XPathContextTest >> testVariables [
 	variables := self variables.
 	self
 		assert: (context variables: variables) == context;
-		assert: context variables = variables;
+		assert: context variables equals: variables;
 		deny: context variables == variables.
 
 	variables := Array with: 'newName' -> 'newValue'.
 	self
 		assert: (context variables: variables) == context;
-		assert: context variables associations asArray = variables.
+		assert: context variables associations asArray equals: variables
 ]
 
 { #category : #accessing }

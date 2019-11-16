@@ -1,3 +1,6 @@
+"
+Unit tests for XPathFunctionSet
+"
 Class {
 	#name : #XPathFunctionSetTest,
 	#superclass : #XMLAbstractSetTest,
@@ -85,8 +88,8 @@ XPathFunctionSetTest >> testAsFunctionSet [
 	function := self setElements anyOne.
 	self
 		assert: set asXPathFunctionSet == set;
-		assert: (function asXPathFunctionSet) = (self setClass with: function);
-		assert: self setElements asXPathFunctionSet = self setWithElements.
+		assert: (function asXPathFunctionSet) equals: (self setClass with: function);
+		assert: self setElements asXPathFunctionSet equals: self setWithElements
 ]
 
 { #category : #tests }
@@ -98,8 +101,8 @@ XPathFunctionSetTest >> testCopy [
 	set := self setWithElements.
 	copy := set copy.
 	self
-		assert: set functionsByName = copy functionsByName;
-		deny: set functionsByName == copy functionsByName.
+		assert: set functionsByName equals: copy functionsByName;
+		deny: set functionsByName == copy functionsByName
 ]
 
 { #category : #tests }
@@ -113,7 +116,7 @@ XPathFunctionSetTest >> testFunctionNamed [
 	self
 		shouldnt: [set functionNamed: self absentSetElement prototypeName]
 		raise: Error.
-	self assert: (set functionNamed: self absentSetElement prototypeName) isNil.
+	self assert: (set functionNamed: self absentSetElement prototypeName) isNil
 ]
 
 { #category : #tests }
@@ -129,7 +132,7 @@ XPathFunctionSetTest >> testFunctionNamedIfAbsent [
 	self assert:
 		(set
 			functionNamed: self absentSetElement prototypeName
-			ifAbsent: [self absentSetElement]) == self absentSetElement.
+			ifAbsent: [self absentSetElement]) == self absentSetElement
 ]
 
 { #category : #tests }
@@ -147,7 +150,7 @@ XPathFunctionSetTest >> testIncludes [
 			set add: sameNameFunction.
 			self
 				deny: (set includes: function);
-				assert: (set includes: sameNameFunction)].
+				assert: (set includes: sameNameFunction)]
 ]
 
 { #category : #tests }
@@ -166,7 +169,7 @@ XPathFunctionSetTest >> testIncludesFunctionNamed [
 
 	set := self setWithDisjointElements.
 	self disjointSetElements do: [:each |
-		self assert: (set includesFunctionNamed: each prototypeName)].
+		self assert: (set includesFunctionNamed: each prototypeName)]
 ]
 
 { #category : #tests }
@@ -189,11 +192,11 @@ XPathFunctionSetTest >> testMinusFunction [
 			equaling: self setWithElements].
 
 	self assert:
-		(self setElements first - self setElements second) =
+		(self setElements first - self setElements second) equals:
 			(self setClass with: self setElements first).
 	self assert:
-		(self setElements first - self setElements first) =
-			self emptySet.
+		(self setElements first - self setElements first) equals:
+			self emptySet
 ]
 
 { #category : #tests }
@@ -218,7 +221,7 @@ XPathFunctionSetTest >> testMinusSet [
 		should: [firstSet - firstSet]
 		subtract: firstSet
 		from: firstSet
-		equaling: self emptySet.
+		equaling: self emptySet
 ]
 
 { #category : #tests }
@@ -242,14 +245,14 @@ XPathFunctionSetTest >> testPlusFunction [
 			equaling: (self setClass newFrom: (self setElements copyWith: each))].
 
 	self assert:
-		(self setElements first + self setElements second) =
+		(self setElements first + self setElements second) equals:
 			(self setClass
 				with: self setElements first
 				with: self setElements second).
 
 	self assert:
-		(self setElements first + self setElements first) =
-			(self setClass with: self setElements first).
+		(self setElements first + self setElements first) equals:
+			(self setClass with: self setElements first)
 ]
 
 { #category : #tests }
@@ -276,7 +279,7 @@ XPathFunctionSetTest >> testPlusSet [
 		and: secondSet
 		equaling:
 			(self setClass newFrom:
-				self setWithDisjointElements, self setWithElements).
+				self setWithDisjointElements, self setWithElements)
 ]
 
 { #category : #tests }
@@ -291,7 +294,7 @@ XPathFunctionSetTest >> testRemoveFunctionNamed [
 		self
 			should: [set removeFunctionNamed: each prototypeName]
 			raise: Error].
-	self assert: set isEmpty.
+	self assert: set isEmpty
 ]
 
 { #category : #tests }
@@ -310,7 +313,7 @@ XPathFunctionSetTest >> testRemoveFunctionNamedIfAbsent [
 				(set
 					removeFunctionNamed: each prototypeName
 					ifAbsent: [self absentSetElement]) == self absentSetElement].
-	self assert: set isEmpty.
+	self assert: set isEmpty
 ]
 
 { #category : #tests }
@@ -326,15 +329,15 @@ XPathFunctionSetTest >> testRemoveIfAbsent [
 			self assert:
 				(set
 					remove: sameNameFunction
-					ifAbsent: [self absentSetElement]) = self absentSetElement.
+					ifAbsent: [self absentSetElement]) equals: self absentSetElement.
 
 			set add: sameNameFunction.
 			self assert:
 				(set
 					remove: function
-					ifAbsent: [self absentSetElement]) = self absentSetElement.
+					ifAbsent: [self absentSetElement]) equals: self absentSetElement.
 			self assert:
 				(set
 					remove: sameNameFunction
-					ifAbsent: [self fail]) = sameNameFunction].
+					ifAbsent: [self fail]) equals: sameNameFunction]
 ]
