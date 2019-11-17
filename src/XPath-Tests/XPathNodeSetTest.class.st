@@ -1,3 +1,6 @@
+"
+Unit tests for XPathNodeSet
+"
 Class {
 	#name : #XPathNodeSetTest,
 	#superclass : #XMLNodeListTest,
