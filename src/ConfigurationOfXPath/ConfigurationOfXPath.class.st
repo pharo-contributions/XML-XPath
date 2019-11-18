@@ -977,10 +977,22 @@ ConfigurationOfXPath >> customProjectAttributes [
 ]
 
 { #category : #'symbolic versions' }
+ConfigurationOfXPath >> dev: spec [
+	<version: #'dev'>
+
+	spec for: #'common' do: [ 
+		spec
+			baseline: 'XPath' with: [ 
+				spec 
+					className: 'BaselineOfXPath';
+					repository: 'github://pharo-contributions/XML-XPath:master/src' ]]
+]
+
+{ #category : #'symbolic versions' }
 ConfigurationOfXPath >> development: spec [
 	<symbolicVersion: #'development'>
 
-	spec for: #'common' version: '2.1.3-baseline'.
+	spec for: #'common' version: 'dev'
 ]
 
 { #category : #doits }
