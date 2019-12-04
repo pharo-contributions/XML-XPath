@@ -8,7 +8,7 @@ XPathASTNode >> asHighlightedText [
 ]
 
 { #category : #'*XPath-GTExtensions' }
-XPathASTNode classSide >> gtExampleXPathASTNode [
+XPathASTNode class >> gtExampleXPathASTNode [
 	<gtExample>
 	<label: 'addressbook/person[1]/address/@city'>
 	

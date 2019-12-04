@@ -25,7 +25,7 @@ XPath >> addTreeViewForASTGeneratedWith: aBlock titled: aTitle on: aComposite [
 ]
 
 { #category : #'*XPath-GTExtensions' }
-XPath classSide >> gtExampleXPath [
+XPath class >> gtExampleXPath [
 	<gtExample>
 	<label: 'addressbook/person[1]/address/@city'>
 

@@ -25,7 +25,7 @@ Class {
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultAxisColor [
 	^ defaultAxisColor
-		ifNil: [defaultAxisColor := self textColorForShoutProperty: #self]
+		ifNil: [defaultAxisColor := TextColor color: (Color r: 0.0 g: 0.5 b: 0.5) ]
 ]
 
 { #category : #accessing }
@@ -36,7 +36,7 @@ XPathExpressionHighlightDefaults class >> defaultAxisColor: aTextColor [
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultFunctionCallColor [
 	^ defaultFunctionCallColor
-		ifNil: [defaultFunctionCallColor := self textColorForShoutProperty: #keyword].
+		ifNil: [ defaultFunctionCallColor := TextColor color: Color black ].
 ]
 
 { #category : #accessing }
@@ -47,7 +47,7 @@ XPathExpressionHighlightDefaults class >> defaultFunctionCallColor: aTextColor [
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultNodeTestColor [
 	^ defaultNodeTestColor
-		ifNil: [defaultNodeTestColor := self textColorForShoutProperty: #instVar]
+		ifNil: [ defaultNodeTestColor := TextColor color: (Color r: 0.0 g: 0.0 b: 0.5) ]
 ]
 
 { #category : #accessing }
@@ -58,7 +58,7 @@ XPathExpressionHighlightDefaults class >> defaultNodeTestColor: aTextColor [
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultNumberLiteralColor [
 	^ defaultNumberLiteralColor
-		ifNil: [defaultNumberLiteralColor := self textColorForShoutProperty: #number]
+		ifNil: [ defaultNumberLiteralColor := TextColor color: (Color r: 0.5 g: 0.0 b: 0.0) ]
 ]
 
 { #category : #accessing }
@@ -69,7 +69,7 @@ XPathExpressionHighlightDefaults class >> defaultNumberLiteralColor: aTextColor 
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultOperatorColor [
 	^ defaultOperatorColor
-		ifNil: [defaultOperatorColor := self textColorForShoutProperty: #binary]
+		ifNil: [defaultOperatorColor := TextColor color: Color black ]
 ]
 
 { #category : #accessing }
@@ -81,8 +81,7 @@ XPathExpressionHighlightDefaults class >> defaultOperatorColor: aTextColor [
 XPathExpressionHighlightDefaults class >> defaultPredicateLevelFiveColor [
 	^ defaultPredicateLevelFiveColor
 		ifNil: [
-			defaultPredicateLevelFiveColor :=
-				self textColorForShoutProperty: #blockStart5]
+			defaultPredicateLevelFiveColor := TextColor color: (Color r: 0.92 g: 0.552 b: 0.0)]
 ]
 
 { #category : #accessing }
@@ -94,8 +93,7 @@ XPathExpressionHighlightDefaults class >> defaultPredicateLevelFiveColor: aTextC
 XPathExpressionHighlightDefaults class >> defaultPredicateLevelFourColor [
 	^ defaultPredicateLevelFourColor
 		ifNil: [
-			defaultPredicateLevelFourColor :=
-				self textColorForShoutProperty: #blockStart4]
+			defaultPredicateLevelFourColor := TextColor color: (Color r: 0.0 g: 0.92 b: 0.0)]
 ]
 
 { #category : #accessing }
@@ -107,8 +105,7 @@ XPathExpressionHighlightDefaults class >> defaultPredicateLevelFourColor: aTextC
 XPathExpressionHighlightDefaults class >> defaultPredicateLevelOneColor [
 	^ defaultPredicateLevelOneColor
 		ifNil: [
-			defaultPredicateLevelOneColor :=
-				self textColorForShoutProperty: #blockStart1]
+			defaultPredicateLevelOneColor := TextColor color: (Color r: 0.0 g: 0.5 b: 0.0)]
 ]
 
 { #category : #accessing }
@@ -120,8 +117,7 @@ XPathExpressionHighlightDefaults class >> defaultPredicateLevelOneColor: aTextCo
 XPathExpressionHighlightDefaults class >> defaultPredicateLevelSixColor [
 	^ defaultPredicateLevelSixColor
 		ifNil: [
-			defaultPredicateLevelSixColor :=
-				self textColorForShoutProperty: #blockStart6]
+			defaultPredicateLevelSixColor := TextColor color: (Color r: 0.92 g: 0.0 b: 0.92) ]
 ]
 
 { #category : #accessing }
@@ -133,8 +129,7 @@ XPathExpressionHighlightDefaults class >> defaultPredicateLevelSixColor: aTextCo
 XPathExpressionHighlightDefaults class >> defaultPredicateLevelThreeColor [
 	^ defaultPredicateLevelThreeColor
 		ifNil: [
-			defaultPredicateLevelThreeColor :=
-				self textColorForShoutProperty: #blockStart3]
+			defaultPredicateLevelThreeColor := TextColor color: (Color r: 0.5 g: 0.0 b: 0.0) ]
 ]
 
 { #category : #accessing }
@@ -146,8 +141,7 @@ XPathExpressionHighlightDefaults class >> defaultPredicateLevelThreeColor: aText
 XPathExpressionHighlightDefaults class >> defaultPredicateLevelTwoColor [
 	^ defaultPredicateLevelTwoColor
 		ifNil: [
-			defaultPredicateLevelTwoColor :=
-				self textColorForShoutProperty: #blockStart2]
+			defaultPredicateLevelTwoColor := TextColor color: (Color r: 0.5 g: 0.0 b: 0.5) ]
 ]
 
 { #category : #accessing }
@@ -158,7 +152,7 @@ XPathExpressionHighlightDefaults class >> defaultPredicateLevelTwoColor: aTextCo
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultStringLiteralColor [
 	^ defaultStringLiteralColor
-		ifNil: [defaultStringLiteralColor := self textColorForShoutProperty: #string]
+		ifNil: [defaultStringLiteralColor := TextColor color: (Color r: 0.5 g: 0.0 b: 0.5) ]
 ]
 
 { #category : #accessing }
@@ -169,7 +163,7 @@ XPathExpressionHighlightDefaults class >> defaultStringLiteralColor: aTextColor 
 { #category : #accessing }
 XPathExpressionHighlightDefaults class >> defaultVariableReferenceColor [
 	^ defaultVariableReferenceColor
-		ifNil: [defaultVariableReferenceColor := self textColorForShoutProperty: #globalVar]
+		ifNil: [defaultVariableReferenceColor := TextColor color: (Color r: 0.0 g: 0.0 b: 0.5) ]
 ]
 
 { #category : #accessing }

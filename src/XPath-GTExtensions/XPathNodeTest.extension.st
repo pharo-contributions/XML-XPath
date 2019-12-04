@@ -1,7 +1,7 @@
 Extension { #name : #XPathNodeTest }
 
 { #category : #'*XPath-GTExtensions' }
-XPathNodeTest classSide >> generateASTTreeViewLabels [
+XPathNodeTest class >> generateASTTreeViewLabels [
 	"
 	self generateASTTreeViewLabels
 	"
