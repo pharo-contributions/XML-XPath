@@ -22,13 +22,18 @@ BaselineOfXPath >> baselineOf: spec [
 			"Packages"
 			spec 
 				package: 'XPath-Core' with: [ spec requires: #('XMLParser') ];
-				package: 'XPath-GTExtensions' with: [ spec requires: #('XMLWriter' 'XPath-Core') ];
+				
 				package: 'XPath-Tests' with: [ spec requires: #('XMLParser Tests' 'XPath-Core') ].
+			spec
+				for: #'pharo8.x'
+				do: [ spec package: 'XPath-GTExtensions' 
+							with: [ spec requires: #('XMLWriter' 'XPath-Core') ]].
 			
 			"Groups"
 			spec
 				group: 'Core' with: #('XPath-Core');
-				group: 'Tools' with: #('XMLParser Tools' 'XPath-GTExtensions'); 
+				group: 'Tools' with: #('XMLParser Tools'); 
+				group: 'P8Tools' with: #('XMLParser Tools' 'XPath-GTExtensions' ); 
 				group: 'Tests' with: #('XPath-Tests');	
 				group: 'all' with: #('Core' 'Tools' 'Tests');
 				group: 'default' with: #('all')	
