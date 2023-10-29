@@ -48,7 +48,7 @@ BaselineOfXPath >> xmlParserOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLParser:3.5.x/src' ]. 
+				repository: 'github://pharo-contributions/XML-XMLParser:v3.6.0/src' ]. 
 				
 	spec 
 		project: 'XMLParser Tests' copyFrom: 'XMLParser' with: [ spec loads: #('Tests') ]; 	
@@ -63,7 +63,7 @@ BaselineOfXPath >> xmlWriterOn: spec [
       with: [ 
 			spec
 				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLWriter:2.9.x/src' ]. 
+				repository: 'github://pharo-contributions/XML-XMLWriter:v3.1.0/src' ]. 
 				
 	spec 
 		project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ]; 	
