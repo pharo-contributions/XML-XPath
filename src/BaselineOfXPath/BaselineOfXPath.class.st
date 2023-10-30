@@ -11,33 +11,33 @@ Class {
 BaselineOfXPath >> baselineOf: spec [
 
 	<baseline>
-	spec
-		for: #common
-		do: [
-			
-			self 
-				xmlParserOn: spec;	
-				xmlWriterOn: spec.
-			
-			"Packages"
-			spec 
-				package: 'XPath-Core' with: [ spec requires: #('XMLParser') ];
-				
-				package: 'XPath-Tests' with: [ spec requires: #('XMLParser Tests' 'XPath-Core') ].
+	spec for: #common do: [
+		self xmlParserOn: spec.
+
+		"Packages"
+		spec
+			package: 'XPath-Core' with: [ spec requires: #( 'XMLParser' ) ];
+			package: 'XPath-Tests'
+			with: [ spec requires: #( 'XMLParser Tests' 'XPath-Core' ) ];
+			package: 'XPath-Inspector'
+			with: [ spec requires: #( 'XMLParser Tools' 'XPath-Core' ) ].
+
+		"Core group"
+		spec group: 'Core' with: #( 'XPath-Core' ).
+
+		"Tools group"
+		spec group: 'Tools' with: #( 'XPath-Inspector' ).
+		spec for: #( #'pharo8.x' #'pharo7.x' #'pharo6.x' ) do: [
 			spec
-				for: #'pharo8.x'
-				do: [ spec package: 'XPath-GTExtensions' 
-							with: [ spec requires: #('XMLWriter' 'XPath-Core') ]].
-			
-			"Groups"
-			spec
-				group: 'Core' with: #('XPath-Core');
-				group: 'Tools' with: #('XMLParser Tools'); 
-				group: 'P8Tools' with: #('XMLParser Tools' 'XPath-GTExtensions' ); 
-				group: 'Tests' with: #('XPath-Tests');	
-				group: 'all' with: #('Core' 'Tools' 'Tests');
-				group: 'default' with: #('all')	
-	]
+				package: 'XPath-GTExtensions'
+				with: [ spec requires: #( 'XMLParser Tools' 'XPath-Core' ) ];
+				group: 'Tools' with: #( 'XPath-GTExtensions' ) ].
+
+		"Other groups"
+		spec
+			group: 'Tests' with: #( 'XPath-Tests' );
+			group: 'all' with: #( 'Tools' 'Tests' );
+			group: 'default' with: #( 'all' ) ]
 ]
 
 { #category : #baseline }
@@ -53,19 +53,4 @@ BaselineOfXPath >> xmlParserOn: spec [
 	spec 
 		project: 'XMLParser Tests' copyFrom: 'XMLParser' with: [ spec loads: #('Tests') ]; 	
 		project: 'XMLParser Tools' copyFrom: 'XMLParser' with: [ spec loads: #('Tools') ] 
-]
-
-{ #category : #baseline }
-BaselineOfXPath >> xmlWriterOn: spec [
-
-	spec
-		baseline: 'XMLWriter'
-      with: [ 
-			spec
-				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLWriter:v3.1.0/src' ]. 
-				
-	spec 
-		project: 'XMLWriter Tests' copyFrom: 'XMLWriter' with: [ spec loads: #('Tests') ]; 	
-		project: 'XMLWriter Tools' copyFrom: 'XMLWriter' with: [ spec loads: #('Tools') ] 
 ]
