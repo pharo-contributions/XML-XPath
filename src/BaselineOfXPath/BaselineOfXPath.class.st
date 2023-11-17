@@ -43,14 +43,16 @@ BaselineOfXPath >> baselineOf: spec [
 { #category : #baseline }
 BaselineOfXPath >> xmlParserOn: spec [
 
+	spec baseline: 'XMLParser' with: [
+		spec
+			loads: #( 'Core' );
+			repository: 'github://pharo-contributions/XML-XMLParser:v3.6.1/src' ].
+
 	spec
-		baseline: 'XMLParser'
-      with: [ 
-			spec
-				loads: #('Core');
-				repository: 'github://pharo-contributions/XML-XMLParser:v3.6.0/src' ]. 
-				
-	spec 
-		project: 'XMLParser Tests' copyFrom: 'XMLParser' with: [ spec loads: #('Tests') ]; 	
-		project: 'XMLParser Tools' copyFrom: 'XMLParser' with: [ spec loads: #('Tools') ] 
+		project: 'XMLParser Tests'
+		copyFrom: 'XMLParser'
+		with: [ spec loads: #( 'Tests' ) ];
+		project: 'XMLParser Tools'
+		copyFrom: 'XMLParser'
+		with: [ spec loads: #( 'Tools' ) ]
 ]
