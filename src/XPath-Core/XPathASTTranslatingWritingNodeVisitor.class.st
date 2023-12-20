@@ -882,7 +882,7 @@ XPathASTTranslatingWritingNodeVisitor >> visitNumberLiteral: aNumberLiteral [
 								ifFalse: [self emitNumberLiteral: '0.0']]
 						ifFalse: [
 							"#asString should be OK for all others"
-							self emitNumberLiteral: number asString]]].
+							self emitNumberLiteral: number storeString]]].
 	^ aNumberLiteral.
 ]
 
