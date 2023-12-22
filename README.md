@@ -22,7 +22,7 @@ Metacello new
 
 A simple example on how to use the XPath class:
 
-```
+```Smalltalk
 doc := XMLDOMParser parse: aStream.
 path := XPath for: 'entry/content/@src'.
 urls := path in: doc.
