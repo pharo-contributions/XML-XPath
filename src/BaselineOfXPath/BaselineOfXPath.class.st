@@ -46,7 +46,7 @@ BaselineOfXPath >> xmlParserOn: spec [
 	spec baseline: 'XMLParser' with: [
 		spec
 			loads: #( 'Core' );
-			repository: 'github://pharo-contributions/XML-XMLParser:v3.6.x/src' ].
+			repository: 'github://pharo-contributions/XML-XMLParser:v3' ].
 
 	spec
 		project: 'XMLParser Tests'
